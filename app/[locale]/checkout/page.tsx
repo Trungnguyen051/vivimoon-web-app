@@ -10,6 +10,8 @@ import { checkoutSchema, type CheckoutForm } from '@/lib/checkout/schema';
 import { OrderSummary } from '@/components/commerce/order-summary';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
 import { cartLinesToGa4Items } from '@/lib/analytics/events';
 
@@ -50,44 +52,50 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
   };
 
   return (
-    <div className="grid gap-8 md:grid-cols-3">
-      <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4 md:col-span-2">
-        <h1 className="text-2xl font-bold">{dict.checkout.title}</h1>
+    <div className="grid gap-10 md:grid-cols-3 md:gap-12">
+      <form onSubmit={handleSubmit(onSubmit)} noValidate className="md:col-span-2">
+        <div className="flex flex-col gap-8">
+          <h1 className="text-3xl font-semibold tracking-tight">{dict.checkout.title}</h1>
 
-        {isSubmitted && erroredFields.length > 0 ? (
-          <div role="alert" className="rounded-lg border border-destructive/40 bg-destructive/10 p-4 text-sm">
-            <p className="font-medium text-destructive">{dict.checkout.errors.summary}</p>
-            <ul className="mt-2 list-disc space-y-1 pl-5">
-              {erroredFields.map((f) => (
-                <li key={f.name}>
-                  <a href={`#${f.name}`} className="text-destructive underline">{f.label}</a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ) : null}
+          {isSubmitted && erroredFields.length > 0 ? (
+            <Alert variant="destructive" className="border-destructive/40">
+              <AlertTitle>{dict.checkout.errors.summary}</AlertTitle>
+              <AlertDescription>
+                <ul className="flex list-disc flex-col gap-1 pl-4">
+                  {erroredFields.map((f) => (
+                    <li key={f.name}>
+                      <a href={`#${f.name}`} className="underline underline-offset-4">{f.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              </AlertDescription>
+            </Alert>
+          ) : null}
 
-        {fields.map((f) => {
-          const hasError = Boolean(errors[f.name]);
-          return (
-            <div key={f.name} className="space-y-1.5">
-              <label htmlFor={f.name} className="text-sm font-medium">{f.label}</label>
-              <Input
-                id={f.name}
-                type={f.type}
-                autoComplete={f.autoComplete}
-                aria-invalid={hasError}
-                aria-describedby={hasError ? `${f.name}-error` : undefined}
-                className="h-11"
-                {...register(f.name)}
-              />
-              {hasError ? <p id={`${f.name}-error`} className="text-xs text-destructive">{f.message}</p> : null}
-            </div>
-          );
-        })}
+          <FieldGroup>
+            {fields.map((f) => {
+              const hasError = Boolean(errors[f.name]);
+              return (
+                <Field key={f.name} data-invalid={hasError || undefined}>
+                  <FieldLabel htmlFor={f.name}>{f.label}</FieldLabel>
+                  <Input
+                    id={f.name}
+                    type={f.type}
+                    autoComplete={f.autoComplete}
+                    aria-invalid={hasError}
+                    aria-describedby={hasError ? `${f.name}-error` : undefined}
+                    className="h-11"
+                    {...register(f.name)}
+                  />
+                  {hasError ? <FieldError id={`${f.name}-error`}>{f.message}</FieldError> : null}
+                </Field>
+              );
+            })}
+          </FieldGroup>
 
-        <p className="text-sm text-muted-foreground">{dict.checkout.payNote}</p>
-        <Button type="submit" className="h-11 w-full text-base">{dict.checkout.placeOrder}</Button>
+          <p className="text-sm text-muted-foreground">{dict.checkout.payNote}</p>
+          <Button type="submit" className="h-12 w-full text-base">{dict.checkout.placeOrder}</Button>
+        </div>
       </form>
       <OrderSummary subtotal={subtotal} currency={currency} locale={locale} dict={dict} />
     </div>

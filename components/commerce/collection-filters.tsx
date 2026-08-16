@@ -1,37 +1,78 @@
 'use client';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
+import {
+  Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue,
+} from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
 
 const TYPES = ['clear', 'colored', 'toric', 'multifocal'];
 const REPLACEMENTS = ['daily', 'biweekly', 'monthly'];
 const SORTS = ['newest', 'price-asc', 'price-desc', 'bestselling'];
+const ALL = 'all';
 
 export function CollectionFilters({ dict }: { dict: Dictionary }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
+  const hasFilters = ['type', 'replacement', 'sort'].some((k) => params.get(k));
 
   const setParam = (key: string, value: string) => {
     const next = new URLSearchParams(params.toString());
-    if (value) next.set(key, value); else next.delete(key);
+    if (value && value !== ALL) next.set(key, value);
+    else next.delete(key);
     router.push(`${pathname}?${next.toString()}`);
   };
 
   return (
-    <div className="mb-6 flex flex-wrap gap-3">
-      <select aria-label={dict.filters.type} value={params.get('type') ?? ''} onChange={(e) => setParam('type', e.target.value)} className="rounded border px-2 py-1 text-sm">
-        <option value="">{dict.filters.type}</option>
-        {TYPES.map((t) => <option key={t} value={t}>{dict.filters.types[t as keyof typeof dict.filters.types]}</option>)}
-      </select>
-      <select aria-label={dict.filters.replacement} value={params.get('replacement') ?? ''} onChange={(e) => setParam('replacement', e.target.value)} className="rounded border px-2 py-1 text-sm">
-        <option value="">{dict.filters.replacement}</option>
-        {REPLACEMENTS.map((r) => <option key={r} value={r}>{dict.filters.replacements[r as keyof typeof dict.filters.replacements]}</option>)}
-      </select>
-      <select aria-label={dict.filters.sort} value={params.get('sort') ?? ''} onChange={(e) => setParam('sort', e.target.value)} className="rounded border px-2 py-1 text-sm">
-        <option value="">{dict.filters.sort}</option>
-        {SORTS.map((s) => <option key={s} value={s}>{dict.filters.sorts[s as keyof typeof dict.filters.sorts]}</option>)}
-      </select>
-      <button onClick={() => router.push(pathname)} className="text-sm underline">{dict.filters.clear}</button>
+    <div className="flex flex-wrap items-center gap-2.5">
+      <Select value={params.get('type') ?? ALL} onValueChange={(v) => setParam('type', v)}>
+        <SelectTrigger className="w-40" aria-label={dict.filters.type}>
+          <SelectValue placeholder={dict.filters.type} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem value={ALL}>{dict.filters.type}</SelectItem>
+            {TYPES.map((t) => (
+              <SelectItem key={t} value={t}>{dict.filters.types[t as keyof typeof dict.filters.types]}</SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+
+      <Select value={params.get('replacement') ?? ALL} onValueChange={(v) => setParam('replacement', v)}>
+        <SelectTrigger className="w-40" aria-label={dict.filters.replacement}>
+          <SelectValue placeholder={dict.filters.replacement} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem value={ALL}>{dict.filters.replacement}</SelectItem>
+            {REPLACEMENTS.map((r) => (
+              <SelectItem key={r} value={r}>{dict.filters.replacements[r as keyof typeof dict.filters.replacements]}</SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+
+      <Select value={params.get('sort') ?? ALL} onValueChange={(v) => setParam('sort', v)}>
+        <SelectTrigger className="w-40" aria-label={dict.filters.sort}>
+          <SelectValue placeholder={dict.filters.sort} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectItem value={ALL}>{dict.filters.sort}</SelectItem>
+            {SORTS.map((s) => (
+              <SelectItem key={s} value={s}>{dict.filters.sorts[s as keyof typeof dict.filters.sorts]}</SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+
+      {hasFilters ? (
+        <Button variant="ghost" size="sm" onClick={() => router.push(pathname)}>
+          {dict.filters.clear}
+        </Button>
+      ) : null}
     </div>
   );
 }

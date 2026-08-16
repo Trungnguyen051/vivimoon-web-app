@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { X } from 'lucide-react';
 import type { CartLine } from '@/features/cart/cart.types';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
@@ -13,24 +14,37 @@ export function CartLineItem({
   onRemove: (variantId: string) => void;
 }) {
   return (
-    <div className="flex items-center gap-4 border-b py-4">
-      <div className="relative h-20 w-20 overflow-hidden rounded bg-muted">
-        {line.image ? <Image src={line.image} alt={line.name} fill className="object-cover" sizes="80px" /> : null}
+    <div className="flex gap-4 border-b py-6 first:pt-0">
+      <div className="relative size-24 shrink-0 overflow-hidden rounded-lg bg-muted">
+        {line.image ? <Image src={line.image} alt={line.name} fill className="object-cover" sizes="96px" /> : null}
       </div>
-      <div className="flex-1">
-        <p className="font-medium">{line.name}</p>
-        <p className="text-sm text-muted-foreground">{line.packSize}{line.color ? ` · ${line.color}` : ''}</p>
-        <QuantityStepper
-          className="mt-2"
-          value={line.quantity}
-          onChange={(next) => onQty(line.variantId, next)}
-          decreaseLabel={dict.common.decreaseQty}
-          increaseLabel={dict.common.increaseQty}
-        />
-      </div>
-      <div className="text-right">
-        <p className="font-semibold">{formatPrice(line.unitPrice * line.quantity, line.currency, locale)}</p>
-        <button onClick={() => onRemove(line.variantId)} className="text-sm text-muted-foreground underline">{dict.cart.remove}</button>
+      <div className="flex flex-1 flex-col">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="font-medium leading-snug">{line.name}</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {line.packSize}{line.color ? ` · ${line.color}` : ''}
+            </p>
+          </div>
+          <button
+            onClick={() => onRemove(line.variantId)}
+            aria-label={dict.cart.remove}
+            className="-mr-1 flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <X className="size-4" />
+          </button>
+        </div>
+        <div className="mt-auto flex items-end justify-between gap-3 pt-4">
+          <QuantityStepper
+            value={line.quantity}
+            onChange={(next) => onQty(line.variantId, next)}
+            decreaseLabel={dict.common.decreaseQty}
+            increaseLabel={dict.common.increaseQty}
+          />
+          <p className="font-semibold tabular-nums">
+            {formatPrice(line.unitPrice * line.quantity, line.currency, locale)}
+          </p>
+        </div>
       </div>
     </div>
   );

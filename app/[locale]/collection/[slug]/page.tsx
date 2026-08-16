@@ -3,8 +3,10 @@ import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary, type Dictionary } from '@/lib/i18n/dictionaries';
 import { productRepository } from '@/lib/data';
 import type { ProductQuery } from '@/lib/data';
+import { SearchX } from 'lucide-react';
 import { ProductGrid } from '@/components/commerce/product-grid';
 import { CollectionFilters } from '@/components/commerce/collection-filters';
+import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import type { LensType, ReplacementSchedule } from '@/lib/types';
 
 function resolveTitle(dict: Dictionary, key: string): string {
@@ -48,16 +50,26 @@ export default async function CollectionPage({
   const products = filtered.filter((p) => ids.has(p.id));
 
   return (
-    <div>
-      <h1 className="mb-4 text-2xl font-bold">{resolveTitle(dict, collection.title)}</h1>
-      <CollectionFilters dict={dict} />
+    <div className="space-y-8">
+      <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{resolveTitle(dict, collection.title)}</h1>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <CollectionFilters dict={dict} />
+        {products.length > 0 ? (
+          <p className="text-sm text-muted-foreground">{products.length} {dict.collection.productsLabel}</p>
+        ) : null}
+      </div>
       {products.length === 0 ? (
-        <p className="py-16 text-center text-muted-foreground">{dict.collection.noResults}</p>
+        <Empty className="rounded-xl border py-16">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <SearchX />
+            </EmptyMedia>
+            <EmptyTitle>{dict.collection.noResults}</EmptyTitle>
+            <EmptyDescription>{dict.filters.clear}</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       ) : (
-        <>
-          <p className="mb-4 text-sm text-muted-foreground">{products.length} {dict.collection.productsLabel}</p>
-          <ProductGrid products={products} locale={l} listId={collection.slug} />
-        </>
+        <ProductGrid products={products} locale={l} listId={collection.slug} />
       )}
     </div>
   );

@@ -21,7 +21,7 @@ export default async function LocaleLayout({
     <>
       <AnnouncementBar text={dict.announcement.freeShipping} />
       <Header locale={locale as Locale} dict={dict} />
-      <main className="mx-auto max-w-7xl px-4 py-8">{children}</main>
+      <main className="mx-auto w-full max-w-7xl px-4 py-10 md:py-14">{children}</main>
       <Footer locale={locale as Locale} dict={dict} />
     </>
   );
