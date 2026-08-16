@@ -8,7 +8,12 @@ export const vi: Dictionary = {
     newArrivals: 'Hàng mới về', bestsellers: 'Bán chạy', sale: 'Giảm giá',
     colored: 'Lens màu', daily: 'Lens hằng ngày',
   },
-  filters: { type: 'Loại lens', replacement: 'Thời gian dùng', color: 'Màu', sort: 'Sắp xếp', clear: 'Xóa bộ lọc' },
+  filters: {
+    type: 'Loại lens', replacement: 'Thời gian dùng', color: 'Màu', sort: 'Sắp xếp', clear: 'Xóa bộ lọc',
+    types: { clear: 'Trong suốt', colored: 'Có màu', toric: 'Loạn thị', multifocal: 'Đa tròng' },
+    replacements: { daily: 'Hằng ngày', biweekly: 'Hai tuần', monthly: 'Hằng tháng' },
+    sorts: { newest: 'Mới nhất', 'price-asc': 'Giá: thấp đến cao', 'price-desc': 'Giá: cao đến thấp', bestselling: 'Bán chạy' },
+  },
   pdp: {
     specs: 'Thông số', related: 'Gợi ý cho bạn', reviews: 'Đánh giá',
     material: 'Chất liệu', waterContent: 'Độ ẩm', baseCurve: 'Độ cong',
@@ -25,5 +30,10 @@ export const vi: Dictionary = {
     success: 'Cảm ơn bạn! Đơn hàng đã được xác nhận.', orderId: 'Mã đơn hàng',
     errors: { required: 'Bắt buộc', invalidEmail: 'Email không hợp lệ' },
   },
-  footer: { policies: 'Chính sách', about: 'Về Vivimoon', customerCare: 'Chăm sóc khách hàng' },
+  footer: {
+    policies: 'Chính sách', about: 'Về Vivimoon', customerCare: 'Chăm sóc khách hàng',
+    tagline: 'Vivimoon — kính áp tròng chất lượng cao.',
+    shipping: 'Vận chuyển', returns: 'Đổi trả', privacy: 'Bảo mật',
+    hotline: 'Đường dây nóng', rights: '© 2026 Vivimoon',
+  },
 };

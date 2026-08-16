@@ -21,6 +21,21 @@ export default function CartPage({ params }: { params: Promise<{ locale: string 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleRemove = (variantId: string) => {
+    const line = lines.find((l) => l.variantId === variantId);
+    if (line) {
+      track({
+        name: 'remove_from_cart',
+        params: {
+          currency: line.currency,
+          value: line.unitPrice * line.quantity,
+          items: cartLinesToGa4Items([line]),
+        },
+      });
+    }
+    remove(variantId);
+  };
+
   if (lines.length === 0) {
     return (
       <div className="py-16 text-center">
@@ -36,8 +51,8 @@ export default function CartPage({ params }: { params: Promise<{ locale: string 
         <h1 className="mb-4 text-2xl font-bold">{dict.cart.title}</h1>
         {lines.map((l) => (
           <CartLineItem key={l.variantId} line={l} locale={locale} dict={dict}
-            onQty={(id, q) => (q < 1 ? remove(id) : updateQty(id, q))}
-            onRemove={remove} />
+            onQty={(id, q) => (q < 1 ? handleRemove(id) : updateQty(id, q))}
+            onRemove={handleRemove} />
         ))}
       </div>
       <OrderSummary subtotal={subtotal} currency={currency} locale={locale} dict={dict} ctaHref={`/${locale}/checkout`} ctaLabel={dict.cart.checkout} />
