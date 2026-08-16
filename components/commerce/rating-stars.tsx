@@ -7,7 +7,7 @@ export function RatingStars({ rating, className }: { rating: number; className?:
       {[1, 2, 3, 4, 5].map((i) => (
         <Star
           key={i}
-          className={cn('h-4 w-4', i <= Math.round(rating) ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground')}
+          className={cn('size-3.5', i <= Math.round(rating) ? 'fill-foreground text-foreground' : 'fill-transparent text-muted-foreground/40')}
         />
       ))}
     </div>

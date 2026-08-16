@@ -11,15 +11,13 @@ export function SpecTable({ specs, dict }: { specs: ProductSpecs; dict: Dictiona
     [dict.pdp.manufacturer, specs.manufacturer],
   ];
   return (
-    <table className="w-full text-sm">
-      <tbody>
-        {rows.map(([k, v]) => (
-          <tr key={k} className="border-b">
-            <th scope="row" className="py-2 text-left font-medium text-muted-foreground">{k}</th>
-            <td className="py-2 text-right">{v}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border bg-border md:grid-cols-3">
+      {rows.map(([k, v]) => (
+        <div key={k} className="flex flex-col gap-1.5 bg-background p-5">
+          <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{k}</dt>
+          <dd className="text-sm font-medium text-foreground">{v}</dd>
+        </div>
+      ))}
+    </dl>
   );
 }

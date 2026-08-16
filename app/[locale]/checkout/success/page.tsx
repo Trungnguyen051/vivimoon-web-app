@@ -3,6 +3,7 @@ import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { isLocale, type Locale, defaultLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { useCart } from '@/features/cart/use-cart';
@@ -34,15 +35,21 @@ export default function SuccessPage({ params }: { params: Promise<{ locale: stri
   }, []);
 
   return (
-    <div className="flex flex-col items-center py-16 text-center">
-      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-        <CheckCircle2 className="h-8 w-8 text-primary" />
-      </div>
-      <h1 className="mb-2 text-2xl font-bold">{dict.checkout.success}</h1>
-      {orderId ? <p className="text-muted-foreground">{dict.checkout.orderId}: {orderId}</p> : null}
-      <Button asChild className="mt-6 h-11 px-6 text-base">
-        <Link href={`/${locale}`}>{dict.common.shopNow}</Link>
-      </Button>
-    </div>
+    <Empty className="py-24">
+      <EmptyHeader>
+        <EmptyMedia variant="icon" className="bg-primary/10 text-primary">
+          <CheckCircle2 />
+        </EmptyMedia>
+        <EmptyTitle>{dict.checkout.success}</EmptyTitle>
+        {orderId ? (
+          <EmptyDescription>{dict.checkout.orderId}: {orderId}</EmptyDescription>
+        ) : null}
+      </EmptyHeader>
+      <EmptyContent>
+        <Button asChild className="h-11 px-6 text-base">
+          <Link href={`/${locale}`}>{dict.common.shopNow}</Link>
+        </Button>
+      </EmptyContent>
+    </Empty>
   );
 }

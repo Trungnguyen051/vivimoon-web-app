@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { ShoppingCart, User, Search } from 'lucide-react';
+import { ShoppingBag, User, Search } from 'lucide-react';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { MegaNav } from './mega-nav';
@@ -11,24 +11,44 @@ import { useCart } from '@/features/cart/use-cart';
 export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const { count } = useCart();
   return (
-    <header className="border-b">
-      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-4 md:gap-6">
+    <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
+      <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3.5 md:gap-8">
         <MobileNav locale={locale} dict={dict} />
-        <Link href={`/${locale}`} className="font-heading text-xl font-bold">Vivimoon</Link>
+        <Link
+          href={`/${locale}`}
+          className="text-lg font-semibold tracking-[0.2em] uppercase"
+        >
+          Vivimoon
+        </Link>
         <MegaNav locale={locale} dict={dict} />
-        <div className="ml-auto flex items-center gap-1 md:gap-4">
-          <div className="hidden items-center gap-2 rounded border px-2 md:flex">
-            <Search className="h-4 w-4 text-muted-foreground" />
-            <input aria-label={dict.common.search} placeholder={dict.common.search} className="bg-transparent py-1 text-sm outline-none" />
+        <div className="ml-auto flex items-center gap-1 md:gap-2">
+          <div className="hidden items-center gap-2 rounded-full border px-3.5 py-2 text-muted-foreground transition-colors focus-within:border-ring md:flex">
+            <Search className="size-4" />
+            <input
+              aria-label={dict.common.search}
+              placeholder={dict.common.search}
+              className="w-28 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+            />
           </div>
-          <button aria-label="Account" className="hidden h-11 w-11 items-center justify-center rounded-md hover:bg-muted md:flex">
-            <User className="h-5 w-5" />
+          <button
+            aria-label="Account"
+            className="hidden size-11 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:flex"
+          >
+            <User className="size-5" />
           </button>
-          <Link href={`/${locale}/cart`} aria-label={dict.cart.title} className="relative flex h-11 w-11 items-center justify-center rounded-md hover:bg-muted">
-            <ShoppingCart className="h-5 w-5" />
-            {count > 0 ? <span className="absolute right-1.5 top-1.5 min-w-4 rounded-full bg-primary px-1 text-center text-xs leading-4 text-primary-foreground">{count}</span> : null}
+          <Link
+            href={`/${locale}/cart`}
+            aria-label={dict.cart.title}
+            className="relative flex size-11 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          >
+            <ShoppingBag className="size-5" />
+            {count > 0 ? (
+              <span className="absolute right-1 top-1 flex min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-medium leading-4 text-primary-foreground">
+                {count}
+              </span>
+            ) : null}
           </Link>
-          <div className="hidden md:block">
+          <div className="ml-1 hidden md:block">
             <LocaleSwitcher currentLocale={locale} />
           </div>
         </div>

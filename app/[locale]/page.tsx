@@ -18,8 +18,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const coloredProducts = colored ? await productRepository.getProductsByIds(colored.productIds) : [];
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-16 md:space-y-24">
       <HeroCarousel
+        ctaLabel={dict.common.shopNow}
         slides={[
           { image: '/images/hero-1.jpg', href: `/${l}/collection/new-arrivals`, alt: dict.collection.newArrivals },
           { image: '/images/hero-2.jpg', href: `/${l}/collection/sale`, alt: dict.collection.sale },

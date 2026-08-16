@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react';
 import type { Product, Variant } from '@/lib/types';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
+import { Truck } from 'lucide-react';
 import { VariantSelector } from './variant-selector';
 import { PriceTag } from './price-tag';
 import { QuantityStepper } from './quantity-stepper';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/features/cart/use-cart';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
 import { toGa4Items } from '@/lib/analytics/events';
@@ -32,10 +34,11 @@ export function AddToCart({ product, locale, dict }: { product: Product; locale:
   };
 
   return (
-    <div className="space-y-6">
-      <PriceTag price={variant.price} compareAtPrice={variant.compareAtPrice} currency={variant.currency} locale={locale} className="text-2xl" />
+    <div className="flex flex-col gap-6">
+      <PriceTag price={variant.price} compareAtPrice={variant.compareAtPrice} currency={variant.currency} locale={locale} className="text-3xl" />
+      <Separator />
       <VariantSelector product={product} dict={dict} onVariantChange={setVariant} />
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         <span className="text-sm font-medium">{dict.pdp.quantity}</span>
         <QuantityStepper
           value={qty}
@@ -44,7 +47,11 @@ export function AddToCart({ product, locale, dict }: { product: Product; locale:
           increaseLabel={dict.common.increaseQty}
         />
       </div>
-      <Button onClick={onAdd} className="h-11 w-full text-base">{dict.common.addToCart}</Button>
+      <Button onClick={onAdd} className="h-12 w-full text-base">{dict.common.addToCart}</Button>
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <Truck className="size-4" />
+        {dict.pdp.freeship}
+      </div>
     </div>
   );
 }

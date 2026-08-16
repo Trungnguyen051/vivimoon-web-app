@@ -23,6 +23,7 @@ export const en = {
   cart: {
     title: 'Your Cart', empty: 'Your cart is empty', subtotal: 'Subtotal',
     checkout: 'Checkout', remove: 'Remove',
+    orderSummary: 'Order summary', shipping: 'Shipping', free: 'Free', total: 'Total',
   },
   checkout: {
     title: 'Checkout', fullName: 'Full name', email: 'Email', address: 'Address',

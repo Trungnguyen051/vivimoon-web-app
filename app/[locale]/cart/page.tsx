@@ -6,6 +6,7 @@ import { isLocale, type Locale, defaultLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { useCart } from '@/features/cart/use-cart';
 import { Button } from '@/components/ui/button';
+import { Empty, EmptyContent, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { CartLineItem } from '@/components/commerce/cart-line-item';
 import { OrderSummary } from '@/components/commerce/order-summary';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
@@ -40,29 +41,35 @@ export default function CartPage({ params }: { params: Promise<{ locale: string 
 
   if (lines.length === 0) {
     return (
-      <div className="flex flex-col items-center py-16 text-center">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-          <ShoppingBag className="h-7 w-7 text-muted-foreground" />
-        </div>
-        <p className="mb-6 text-lg">{dict.cart.empty}</p>
-        <Button asChild className="h-11 px-6 text-base">
-          <Link href={`/${locale}`}>{dict.common.shopNow}</Link>
-        </Button>
-      </div>
+      <Empty className="py-24">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <ShoppingBag />
+          </EmptyMedia>
+          <EmptyTitle>{dict.cart.empty}</EmptyTitle>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button asChild className="h-11 px-6 text-base">
+            <Link href={`/${locale}`}>{dict.common.shopNow}</Link>
+          </Button>
+        </EmptyContent>
+      </Empty>
     );
   }
 
   return (
-    <div className="grid gap-8 md:grid-cols-3">
-      <div className="md:col-span-2">
-        <h1 className="mb-4 text-2xl font-bold">{dict.cart.title}</h1>
-        {lines.map((l) => (
-          <CartLineItem key={l.variantId} line={l} locale={locale} dict={dict}
-            onQty={(id, q) => (q < 1 ? handleRemove(id) : updateQty(id, q))}
-            onRemove={handleRemove} />
-        ))}
+    <div className="space-y-8">
+      <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{dict.cart.title}</h1>
+      <div className="grid gap-10 md:grid-cols-3 md:gap-12">
+        <div className="md:col-span-2">
+          {lines.map((l) => (
+            <CartLineItem key={l.variantId} line={l} locale={locale} dict={dict}
+              onQty={(id, q) => (q < 1 ? handleRemove(id) : updateQty(id, q))}
+              onRemove={handleRemove} />
+          ))}
+        </div>
+        <OrderSummary subtotal={subtotal} currency={currency} locale={locale} dict={dict} ctaHref={`/${locale}/checkout`} ctaLabel={dict.cart.checkout} />
       </div>
-      <OrderSummary subtotal={subtotal} currency={currency} locale={locale} dict={dict} ctaHref={`/${locale}/checkout`} ctaLabel={dict.cart.checkout} />
     </div>
   );
 }
