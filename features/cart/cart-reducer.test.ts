@@ -38,4 +38,11 @@ describe('cartReducer', () => {
     expect(cartCount(s)).toBe(2);
     expect(cartSubtotal(s)).toBe(50);
   });
+  it('HYDRATE sets lines (idempotent, does not merge)', () => {
+    const s1 = cartReducer(empty, { type: 'HYDRATE', lines: [line] });
+    const s2 = cartReducer(s1, { type: 'HYDRATE', lines: [line] });
+    expect(s2.lines).toHaveLength(1);
+    expect(s2.lines[0].quantity).toBe(1);
+    expect(s2.hydrated).toBe(true);
+  });
 });

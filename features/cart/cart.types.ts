@@ -15,10 +15,12 @@ export interface CartLine {
 
 export interface CartState {
   lines: CartLine[];
+  hydrated?: boolean;
 }
 
 export type CartAction =
   | { type: 'ADD'; line: CartLine }
   | { type: 'UPDATE_QTY'; variantId: string; quantity: number }
   | { type: 'REMOVE'; variantId: string }
-  | { type: 'CLEAR' };
+  | { type: 'CLEAR' }
+  | { type: 'HYDRATE'; lines: CartLine[] };

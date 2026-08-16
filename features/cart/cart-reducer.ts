@@ -6,6 +6,7 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
       const existing = state.lines.find((l) => l.variantId === action.line.variantId);
       if (existing) {
         return {
+          ...state,
           lines: state.lines.map((l) =>
             l.variantId === action.line.variantId
               ? { ...l, quantity: l.quantity + action.line.quantity }
@@ -13,18 +14,21 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
           ),
         };
       }
-      return { lines: [...state.lines, action.line] };
+      return { ...state, lines: [...state.lines, action.line] };
     }
     case 'UPDATE_QTY':
       return {
+        ...state,
         lines: state.lines.map((l) =>
           l.variantId === action.variantId ? { ...l, quantity: Math.max(1, action.quantity) } : l,
         ),
       };
     case 'REMOVE':
-      return { lines: state.lines.filter((l) => l.variantId !== action.variantId) };
+      return { ...state, lines: state.lines.filter((l) => l.variantId !== action.variantId) };
     case 'CLEAR':
-      return { lines: [] };
+      return { ...state, lines: [] };
+    case 'HYDRATE':
+      return { ...state, lines: action.lines, hydrated: true };
     default:
       return state;
   }

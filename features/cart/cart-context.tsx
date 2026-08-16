@@ -1,27 +1,24 @@
 'use client';
-import { createContext, useEffect, useReducer, type ReactNode } from 'react';
+import { createContext, useEffect, useReducer, type Dispatch, type ReactNode } from 'react';
 import { cartReducer } from './cart-reducer';
 import { loadCart, saveCart } from './cart-storage';
 import type { CartAction, CartState } from './cart.types';
 
 export const CartContext = createContext<{
   state: CartState;
-  dispatch: React.Dispatch<CartAction>;
+  dispatch: Dispatch<CartAction>;
 } | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(cartReducer, { lines: [] });
 
   useEffect(() => {
-    const stored = loadCart();
-    if (stored.lines.length) {
-      stored.lines.forEach((line) => dispatch({ type: 'ADD', line }));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    dispatch({ type: 'HYDRATE', lines: loadCart().lines });
   }, []);
 
   useEffect(() => {
-    saveCart(state);
+    if (!state.hydrated) return;
+    saveCart({ lines: state.lines });
   }, [state]);
 
   return <CartContext.Provider value={{ state, dispatch }}>{children}</CartContext.Provider>;
