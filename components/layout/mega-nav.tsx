@@ -11,7 +11,7 @@ export function MegaNav({ locale, dict }: { locale: Locale; dict: Dictionary }) 
     { label: dict.nav.sale, slug: 'sale' },
   ];
   return (
-    <nav className="flex gap-6">
+    <nav className="flex min-w-0 gap-6 overflow-x-auto">
       {items.map((it) => (
         <Link key={it.slug} href={`/${locale}/collection/${it.slug}`} className="text-sm font-medium hover:text-primary">
           {it.label}

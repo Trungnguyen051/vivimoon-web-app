@@ -13,6 +13,12 @@ import { Input } from '@/components/ui/input';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
 import { cartLinesToGa4Items } from '@/lib/analytics/events';
 
+// Module-scope helper: keeps the impure Date.now() call out of the component body
+// so it isn't evaluated during render.
+function generateOrderId(): string {
+  return `VVM-${Date.now()}`;
+}
+
 export default function CheckoutPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = use(params);
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
@@ -28,7 +34,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
   }, []);
 
   const onSubmit = () => {
-    const orderId = `VVM-${Date.now()}`;
+    const orderId = generateOrderId();
     // Persist a minimal order snapshot for the success page.
     sessionStorage.setItem('vivimoon-last-order', JSON.stringify({ orderId, currency, value: subtotal, lines }));
     router.push(`/${locale}/checkout/success`);

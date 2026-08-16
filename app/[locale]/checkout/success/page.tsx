@@ -19,6 +19,10 @@ export default function SuccessPage({ params }: { params: Promise<{ locale: stri
     const raw = sessionStorage.getItem('vivimoon-last-order');
     if (raw) {
       const order = JSON.parse(raw) as { orderId: string; currency: string; value: number; lines: { sku: string; name: string; unitPrice: number; quantity: number }[] };
+      // Reading sessionStorage must happen post-hydration (SSR has no sessionStorage and
+      // an eager read would mismatch the server-rendered empty state), so the setState here
+      // is an intentional one-time sync of external storage into render state.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setOrderId(order.orderId);
       track({ name: 'purchase', params: { transaction_id: order.orderId, currency: order.currency, value: order.value, items: cartLinesToGa4Items(order.lines) } });
       sessionStorage.removeItem('vivimoon-last-order');

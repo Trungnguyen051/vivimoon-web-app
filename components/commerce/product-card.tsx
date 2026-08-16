@@ -30,6 +30,7 @@ export function ProductCard({
         onClick={onSelect}
         className="relative block aspect-square overflow-hidden rounded-md bg-muted"
         aria-hidden="true"
+        tabIndex={-1}
       >
         {src ? <Image src={src} alt={product.name} fill className="object-cover" sizes="(max-width:768px) 50vw, 25vw" /> : null}
         {product.badges[0] ? <Badge className="absolute left-2 top-2 capitalize">{product.badges[0]}</Badge> : null}
