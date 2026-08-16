@@ -38,15 +38,15 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
     <div className="grid gap-8 md:grid-cols-3">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 md:col-span-2">
         <h1 className="text-2xl font-bold">{dict.checkout.title}</h1>
-        <div><Input placeholder={dict.checkout.fullName} {...register('fullName')} />{errors.fullName && <p className="text-xs text-red-600">Required</p>}</div>
-        <div><Input placeholder={dict.checkout.email} {...register('email')} />{errors.email && <p className="text-xs text-red-600">Invalid email</p>}</div>
-        <div><Input placeholder={dict.checkout.address} {...register('address')} />{errors.address && <p className="text-xs text-red-600">Required</p>}</div>
-        <div><Input placeholder={dict.checkout.city} {...register('city')} />{errors.city && <p className="text-xs text-red-600">Required</p>}</div>
-        <div><Input placeholder={dict.checkout.phone} {...register('phone')} />{errors.phone && <p className="text-xs text-red-600">Required</p>}</div>
+        <div><Input placeholder={dict.checkout.fullName} {...register('fullName')} />{errors.fullName && <p className="text-xs text-red-600">{dict.checkout.errors.required}</p>}</div>
+        <div><Input placeholder={dict.checkout.email} {...register('email')} />{errors.email && <p className="text-xs text-red-600">{dict.checkout.errors.invalidEmail}</p>}</div>
+        <div><Input placeholder={dict.checkout.address} {...register('address')} />{errors.address && <p className="text-xs text-red-600">{dict.checkout.errors.required}</p>}</div>
+        <div><Input placeholder={dict.checkout.city} {...register('city')} />{errors.city && <p className="text-xs text-red-600">{dict.checkout.errors.required}</p>}</div>
+        <div><Input placeholder={dict.checkout.phone} {...register('phone')} />{errors.phone && <p className="text-xs text-red-600">{dict.checkout.errors.required}</p>}</div>
         <p className="text-sm text-muted-foreground">{dict.checkout.payNote}</p>
         <Button type="submit" className="w-full">{dict.checkout.placeOrder}</Button>
       </form>
-      <OrderSummary subtotal={subtotal} currency={currency} locale={locale} dict={dict} ctaHref="#" ctaLabel={dict.checkout.placeOrder} />
+      <OrderSummary subtotal={subtotal} currency={currency} locale={locale} dict={dict} />
     </div>
   );
 }

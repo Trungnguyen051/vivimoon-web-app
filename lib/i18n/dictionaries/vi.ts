@@ -23,6 +23,7 @@ export const vi: Dictionary = {
     title: 'Thanh toán', fullName: 'Họ tên', email: 'Email', address: 'Địa chỉ',
     city: 'Thành phố', phone: 'Số điện thoại', placeOrder: 'Đặt hàng', payNote: 'Thanh toán được mô phỏng trong bản demo.',
     success: 'Cảm ơn bạn! Đơn hàng đã được xác nhận.', orderId: 'Mã đơn hàng',
+    errors: { required: 'Bắt buộc', invalidEmail: 'Email không hợp lệ' },
   },
   footer: { policies: 'Chính sách', about: 'Về Vivimoon', customerCare: 'Chăm sóc khách hàng' },
 };

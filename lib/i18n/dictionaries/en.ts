@@ -21,6 +21,7 @@ export const en = {
     title: 'Checkout', fullName: 'Full name', email: 'Email', address: 'Address',
     city: 'City', phone: 'Phone', placeOrder: 'Place order', payNote: 'Payment is simulated in this demo.',
     success: 'Thank you! Your order is confirmed.', orderId: 'Order ID',
+    errors: { required: 'Required', invalidEmail: 'Invalid email' },
   },
   footer: { policies: 'Policies', about: 'About Vivimoon', customerCare: 'Customer Care' },
 };
