@@ -2,11 +2,12 @@ import type { Dictionary } from './en';
 
 export const vi: Dictionary = {
   nav: { new: 'Mới', men: 'Nam', women: 'Nữ', sport: 'Thể thao', accessories: 'Phụ kiện', sale: 'Giảm giá' },
-  common: { shopNow: 'Mua ngay', seeMore: 'Xem thêm', addToCart: 'Thêm vào giỏ', search: 'Tìm kiếm...' },
+  common: { shopNow: 'Mua ngay', seeMore: 'Xem thêm', addToCart: 'Thêm vào giỏ', search: 'Tìm kiếm...', decreaseQty: 'Giảm số lượng', increaseQty: 'Tăng số lượng', menu: 'Menu' },
   announcement: { freeShipping: 'Miễn phí vận chuyển cho đơn từ 1.000.000đ' },
   collection: {
     newArrivals: 'Hàng mới về', bestsellers: 'Bán chạy', sale: 'Giảm giá',
     colored: 'Lens màu', daily: 'Lens hằng ngày',
+    productsLabel: 'sản phẩm', noResults: 'Không có sản phẩm phù hợp với bộ lọc.',
   },
   filters: {
     type: 'Loại lens', replacement: 'Thời gian dùng', color: 'Màu', sort: 'Sắp xếp', clear: 'Xóa bộ lọc',
@@ -19,6 +20,7 @@ export const vi: Dictionary = {
     material: 'Chất liệu', waterContent: 'Độ ẩm', baseCurve: 'Độ cong',
     diameter: 'Đường kính', uvProtection: 'Chống tia UV', manufacturer: 'Nhà sản xuất',
     packSize: 'Quy cách', color: 'Màu', quantity: 'Số lượng', freeship: 'Miễn phí ship',
+    noReviews: 'Chưa có đánh giá.',
   },
   cart: {
     title: 'Giỏ hàng', empty: 'Giỏ hàng trống', subtotal: 'Tạm tính',
@@ -28,7 +30,7 @@ export const vi: Dictionary = {
     title: 'Thanh toán', fullName: 'Họ tên', email: 'Email', address: 'Địa chỉ',
     city: 'Thành phố', phone: 'Số điện thoại', placeOrder: 'Đặt hàng', payNote: 'Thanh toán được mô phỏng trong bản demo.',
     success: 'Cảm ơn bạn! Đơn hàng đã được xác nhận.', orderId: 'Mã đơn hàng',
-    errors: { required: 'Bắt buộc', invalidEmail: 'Email không hợp lệ' },
+    errors: { required: 'Bắt buộc', invalidEmail: 'Email không hợp lệ', summary: 'Vui lòng sửa các mục sau trước khi đặt hàng.' },
   },
   footer: {
     policies: 'Chính sách', about: 'Về Vivimoon', customerCare: 'Chăm sóc khách hàng',

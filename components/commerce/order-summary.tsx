@@ -17,7 +17,7 @@ export function OrderSummary({
         <span className="font-semibold">{formatPrice(subtotal, currency, locale)}</span>
       </div>
       {ctaHref && ctaLabel ? (
-        <Button asChild className="w-full">
+        <Button asChild className="h-11 w-full text-base">
           <Link href={ctaHref}>{ctaLabel}</Link>
         </Button>
       ) : null}

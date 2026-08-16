@@ -1,10 +1,11 @@
 export const en = {
   nav: { new: 'New', men: 'Men', women: 'Women', sport: 'Sport', accessories: 'Accessories', sale: 'Sale' },
-  common: { shopNow: 'Shop Now', seeMore: 'See more', addToCart: 'Add to cart', search: 'Search...' },
+  common: { shopNow: 'Shop Now', seeMore: 'See more', addToCart: 'Add to cart', search: 'Search...', decreaseQty: 'Decrease quantity', increaseQty: 'Increase quantity', menu: 'Menu' },
   announcement: { freeShipping: 'Free shipping on orders over $50' },
   collection: {
     newArrivals: 'New Arrivals', bestsellers: 'Bestsellers', sale: 'Sale',
     colored: 'Colored Lenses', daily: 'Daily Lenses',
+    productsLabel: 'products', noResults: 'No products match your filters.',
   },
   filters: {
     type: 'Lens type', replacement: 'Replacement', color: 'Color', sort: 'Sort', clear: 'Clear filters',
@@ -17,6 +18,7 @@ export const en = {
     material: 'Material', waterContent: 'Water content', baseCurve: 'Base curve',
     diameter: 'Diameter', uvProtection: 'UV protection', manufacturer: 'Manufacturer',
     packSize: 'Pack size', color: 'Color', quantity: 'Quantity', freeship: 'Freeship',
+    noReviews: 'No reviews yet.',
   },
   cart: {
     title: 'Your Cart', empty: 'Your cart is empty', subtotal: 'Subtotal',
@@ -26,7 +28,7 @@ export const en = {
     title: 'Checkout', fullName: 'Full name', email: 'Email', address: 'Address',
     city: 'City', phone: 'Phone', placeOrder: 'Place order', payNote: 'Payment is simulated in this demo.',
     success: 'Thank you! Your order is confirmed.', orderId: 'Order ID',
-    errors: { required: 'Required', invalidEmail: 'Invalid email' },
+    errors: { required: 'Required', invalidEmail: 'Invalid email', summary: 'Please fix the following before placing your order.' },
   },
   footer: {
     policies: 'Policies', about: 'About Vivimoon', customerCare: 'Customer Care',

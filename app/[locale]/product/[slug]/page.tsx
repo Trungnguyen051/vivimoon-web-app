@@ -31,8 +31,8 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
             <RatingStars rating={product.rating} />
             <span className="text-sm text-muted-foreground">({product.reviewCount})</span>
           </div>
+          <p className="leading-relaxed text-muted-foreground">{product.description}</p>
           <AddToCart product={product} locale={l} dict={dict} />
-          <p className="text-sm text-muted-foreground">{product.description}</p>
         </div>
       </div>
 

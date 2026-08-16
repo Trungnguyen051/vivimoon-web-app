@@ -17,7 +17,7 @@ export function PriceTag({
           <span className="text-sm text-muted-foreground line-through">
             {formatPrice(compareAtPrice, currency, locale)}
           </span>
-          <span className="text-xs font-medium text-red-600">-{discount}%</span>
+          <span className="text-xs font-medium text-destructive">-{discount}%</span>
         </>
       ) : null}
     </div>

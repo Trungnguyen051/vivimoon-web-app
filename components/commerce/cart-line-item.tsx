@@ -3,6 +3,7 @@ import type { CartLine } from '@/features/cart/cart.types';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { formatPrice } from '@/lib/utils/format';
+import { QuantityStepper } from './quantity-stepper';
 
 export function CartLineItem({
   line, locale, dict, onQty, onRemove,
@@ -19,11 +20,13 @@ export function CartLineItem({
       <div className="flex-1">
         <p className="font-medium">{line.name}</p>
         <p className="text-sm text-muted-foreground">{line.packSize}{line.color ? ` · ${line.color}` : ''}</p>
-        <div className="mt-2 flex items-center rounded border w-fit">
-          <button aria-label="Decrease" onClick={() => onQty(line.variantId, line.quantity - 1)} className="px-2">-</button>
-          <span className="w-8 text-center">{line.quantity}</span>
-          <button aria-label="Increase" onClick={() => onQty(line.variantId, line.quantity + 1)} className="px-2">+</button>
-        </div>
+        <QuantityStepper
+          className="mt-2"
+          value={line.quantity}
+          onChange={(next) => onQty(line.variantId, next)}
+          decreaseLabel={dict.common.decreaseQty}
+          increaseLabel={dict.common.increaseQty}
+        />
       </div>
       <div className="text-right">
         <p className="font-semibold">{formatPrice(line.unitPrice * line.quantity, line.currency, locale)}</p>

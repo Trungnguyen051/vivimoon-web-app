@@ -28,8 +28,8 @@ export function CollectionCarousel({
             ))}
           </div>
         </div>
-        <button aria-label="Previous slide" onClick={() => embla?.scrollPrev()} className="absolute -left-3 top-1/3 rounded-full bg-white/90 p-2 shadow"><ChevronLeft className="h-5 w-5" /></button>
-        <button aria-label="Next slide" onClick={() => embla?.scrollNext()} className="absolute -right-3 top-1/3 rounded-full bg-white/90 p-2 shadow"><ChevronRight className="h-5 w-5" /></button>
+        <button aria-label="Previous slide" onClick={() => embla?.scrollPrev()} className="absolute -left-3 top-1/3 flex h-11 w-11 items-center justify-center rounded-full bg-background/90 text-foreground shadow backdrop-blur-sm transition-colors hover:bg-background"><ChevronLeft className="h-5 w-5" /></button>
+        <button aria-label="Next slide" onClick={() => embla?.scrollNext()} className="absolute -right-3 top-1/3 flex h-11 w-11 items-center justify-center rounded-full bg-background/90 text-foreground shadow backdrop-blur-sm transition-colors hover:bg-background"><ChevronRight className="h-5 w-5" /></button>
       </div>
     </section>
   );

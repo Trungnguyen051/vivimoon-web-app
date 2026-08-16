@@ -51,7 +51,14 @@ export default async function CollectionPage({
     <div>
       <h1 className="mb-4 text-2xl font-bold">{resolveTitle(dict, collection.title)}</h1>
       <CollectionFilters dict={dict} />
-      <ProductGrid products={products} locale={l} listId={collection.slug} />
+      {products.length === 0 ? (
+        <p className="py-16 text-center text-muted-foreground">{dict.collection.noResults}</p>
+      ) : (
+        <>
+          <p className="mb-4 text-sm text-muted-foreground">{products.length} {dict.collection.productsLabel}</p>
+          <ProductGrid products={products} locale={l} listId={collection.slug} />
+        </>
+      )}
     </div>
   );
 }
