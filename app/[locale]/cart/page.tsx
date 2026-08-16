@@ -1,9 +1,11 @@
 'use client';
 import { use, useEffect } from 'react';
 import Link from 'next/link';
+import { ShoppingBag } from 'lucide-react';
 import { isLocale, type Locale, defaultLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { useCart } from '@/features/cart/use-cart';
+import { Button } from '@/components/ui/button';
 import { CartLineItem } from '@/components/commerce/cart-line-item';
 import { OrderSummary } from '@/components/commerce/order-summary';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
@@ -38,9 +40,14 @@ export default function CartPage({ params }: { params: Promise<{ locale: string 
 
   if (lines.length === 0) {
     return (
-      <div className="py-16 text-center">
-        <p className="mb-4 text-lg">{dict.cart.empty}</p>
-        <Link href={`/${locale}`} className="underline">{dict.common.shopNow}</Link>
+      <div className="flex flex-col items-center py-16 text-center">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+          <ShoppingBag className="h-7 w-7 text-muted-foreground" />
+        </div>
+        <p className="mb-6 text-lg">{dict.cart.empty}</p>
+        <Button asChild className="h-11 px-6 text-base">
+          <Link href={`/${locale}`}>{dict.common.shopNow}</Link>
+        </Button>
       </div>
     );
   }

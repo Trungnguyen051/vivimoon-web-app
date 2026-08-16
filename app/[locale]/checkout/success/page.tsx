@@ -1,6 +1,8 @@
 'use client';
 import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { CheckCircle2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { isLocale, type Locale, defaultLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { useCart } from '@/features/cart/use-cart';
@@ -32,10 +34,15 @@ export default function SuccessPage({ params }: { params: Promise<{ locale: stri
   }, []);
 
   return (
-    <div className="py-16 text-center">
+    <div className="flex flex-col items-center py-16 text-center">
+      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+        <CheckCircle2 className="h-8 w-8 text-primary" />
+      </div>
       <h1 className="mb-2 text-2xl font-bold">{dict.checkout.success}</h1>
       {orderId ? <p className="text-muted-foreground">{dict.checkout.orderId}: {orderId}</p> : null}
-      <Link href={`/${locale}`} className="mt-6 inline-block underline">{dict.common.shopNow}</Link>
+      <Button asChild className="mt-6 h-11 px-6 text-base">
+        <Link href={`/${locale}`}>{dict.common.shopNow}</Link>
+      </Button>
     </div>
   );
 }

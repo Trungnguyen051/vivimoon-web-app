@@ -7,7 +7,7 @@ export function ReviewsList({ reviews, dict }: { reviews: Review[]; dict: Dictio
     <section className="space-y-4">
       <h2 className="text-xl font-semibold">{dict.pdp.reviews}</h2>
       {reviews.length === 0 ? (
-        <p className="text-sm text-muted-foreground">—</p>
+        <p className="text-sm text-muted-foreground">{dict.pdp.noReviews}</p>
       ) : (
         reviews.map((r) => (
           <div key={r.id} className="border-b pb-4">

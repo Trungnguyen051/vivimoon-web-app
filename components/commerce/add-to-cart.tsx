@@ -5,6 +5,7 @@ import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { VariantSelector } from './variant-selector';
 import { PriceTag } from './price-tag';
+import { QuantityStepper } from './quantity-stepper';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/features/cart/use-cart';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
@@ -36,13 +37,14 @@ export function AddToCart({ product, locale, dict }: { product: Product; locale:
       <VariantSelector product={product} dict={dict} onVariantChange={setVariant} />
       <div className="flex items-center gap-3">
         <span className="text-sm font-medium">{dict.pdp.quantity}</span>
-        <div className="flex items-center rounded border">
-          <button aria-label="Decrease" onClick={() => setQty((q) => Math.max(1, q - 1))} className="px-3 py-1">-</button>
-          <span className="w-8 text-center">{qty}</span>
-          <button aria-label="Increase" onClick={() => setQty((q) => q + 1)} className="px-3 py-1">+</button>
-        </div>
+        <QuantityStepper
+          value={qty}
+          onChange={(next) => setQty(Math.max(1, next))}
+          decreaseLabel={dict.common.decreaseQty}
+          increaseLabel={dict.common.increaseQty}
+        />
       </div>
-      <Button onClick={onAdd} className="w-full">{dict.common.addToCart}</Button>
+      <Button onClick={onAdd} className="h-11 w-full text-base">{dict.common.addToCart}</Button>
     </div>
   );
 }
