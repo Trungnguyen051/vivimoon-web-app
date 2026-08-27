@@ -1,7 +1,10 @@
 # Vivimoon Storefront — Baseline Design Spec
 
 **Date:** 2026-08-16
-**Status:** Approved (design), pending implementation plan
+**Status:** ⚠️ **Superseded** on 2026-08-27 by [`2026-08-27-vivimoon-client-scope-design.md`](./2026-08-27-vivimoon-client-scope-design.md).
+> The baseline described here was delivered. The client scope converts most of its non-goals (§1) into requirements. Kept as history — do not build from it.
+
+**Original status:** Approved (design), pending implementation plan
 **Related:** [`docs/research/coolmate-website-analysis.md`](../../research/coolmate-website-analysis.md)
 
 ---
