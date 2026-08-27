@@ -67,7 +67,12 @@ browser ──▶ /api/*  (our Next.js route handlers)  ──▶  MOCK:  conten
                     └── reads httpOnly auth cookie
 ```
 
-Application code — pages, components, stores — always calls `/api/*`. It does not know or care which mode a resource is in.
+Nothing in the application knows or cares which mode a resource is in. But there are two doors into the seam, and the difference matters:
+
+- **Server Components import the resource module directly.** In mock mode that reads fixtures in-process; in proxy mode it fetches upstream server-to-server. A Server Component calling our own `/api/*` would need an absolute self-URL and would pay a pointless extra HTTP hop on every render.
+- **Client Components call `/api/*`.** The route handlers are the browser's only door, and they delegate to the same resource module.
+
+One seam, one implementation, two entry points — chosen by where the code runs, not by what it wants.
 
 This buys four things:
 1. **No CORS negotiation** with Vivimoon's backend; the browser never learns the upstream origin.
@@ -446,10 +451,12 @@ No E2E in this phase.
 Each is independently demoable and gets its own implementation plan.
 
 **M1 — Foundation**
-API seam, zod schemas, mock fixtures, route handlers, conformance harness, `ProductRepository` removal, zustand migration, auth flows, account info.
+API seam, zod schemas, mock fixtures, route handlers, conformance harness, `ProductRepository` removal, zustand + session store, auth flows, account info.
 
 **M2 — Purchase core**
-Rx selector, cart line identity, server pricing, auto-voucher, guest and logged-in checkout, shipping quote, payment method selection, order placement.
+Rx selector, **cart migration to zustand**, cart line identity, server pricing, auto-voucher, guest and logged-in checkout, shipping quote, payment method selection, order placement.
+
+> The cart's move off React Context lands in M2, not M1, because the Rx line-identity change rewrites the reducer's keying, the persisted shape, and every consumer. One pass through that code is cheaper than two, and a standalone store migration would be a refactor with no user-visible outcome. M1 installs zustand and adds `useSessionStore`, which is new code with nothing to migrate.
 
 **M3 — Account & orders**
 Order history, saved addresses, favorites, vouchers, order tracking, loyalty balance and award.
