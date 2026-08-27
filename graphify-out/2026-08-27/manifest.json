@@ -582,16 +582,16 @@
     "semantic_hash": "89e09a08bac1643f4a6ebe48abf230d2"
   },
   "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md": {
-    "mtime": 1787825816.9539423,
-    "seen": 1787825850.5327659,
-    "ast_hash": "947d5edebd2ce15494271171fd8c3704",
-    "semantic_hash": ""
+    "mtime": 1786867834.1359751,
+    "seen": 1787625522.045953,
+    "ast_hash": "0781b75f7e11d641d205c03f3d0c8cba",
+    "semantic_hash": "0781b75f7e11d641d205c03f3d0c8cba"
   },
   "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md": {
-    "mtime": 1787825816.9529622,
-    "seen": 1787825850.532768,
-    "ast_hash": "79f10b1cc0ef74c1b2c68e6f90473957",
-    "semantic_hash": ""
+    "mtime": 1786865501.97091,
+    "seen": 1787625522.045954,
+    "ast_hash": "1337ea8a9efe2e1c5bc06028d28d68a0",
+    "semantic_hash": "1337ea8a9efe2e1c5bc06028d28d68a0"
   },
   "public/images/cat-best.jpg": {
     "mtime": 1786869560.651516,
@@ -736,41 +736,5 @@
     "seen": 1787625522.04597,
     "ast_hash": "80ea9b537cf3edf502698ef56cb76cdc",
     "semantic_hash": "80ea9b537cf3edf502698ef56cb76cdc"
-  },
-  "docs/superpowers/specs/2026-08-27-vivimoon-client-scope-design.md": {
-    "mtime": 1787825796.0242965,
-    "seen": 1787825850.532769,
-    "ast_hash": "2f25f5a09002ec91cd6f098445a83ffb",
-    "semantic_hash": ""
-  },
-  "public/file.svg": {
-    "mtime": 1786866383.0,
-    "seen": 1787825850.5327702,
-    "ast_hash": "d09f95206c3fa0bb9bd9fefabfd0ea71",
-    "semantic_hash": ""
-  },
-  "public/globe.svg": {
-    "mtime": 1786866383.0,
-    "seen": 1787825850.532771,
-    "ast_hash": "2aaafa6a49b6563925fe440891e32717",
-    "semantic_hash": ""
-  },
-  "public/next.svg": {
-    "mtime": 1786866383.0,
-    "seen": 1787825850.532796,
-    "ast_hash": "8e061864f388b47f33a1c3780831193e",
-    "semantic_hash": ""
-  },
-  "public/vercel.svg": {
-    "mtime": 1786866383.0,
-    "seen": 1787825850.5327969,
-    "ast_hash": "c0af2f507b369b085b35ef4bbe3bcf1e",
-    "semantic_hash": ""
-  },
-  "public/window.svg": {
-    "mtime": 1786866383.0,
-    "seen": 1787825850.5327969,
-    "ast_hash": "a2760511c65806022ad20adf74370ff3",
-    "semantic_hash": ""
   }
 }
