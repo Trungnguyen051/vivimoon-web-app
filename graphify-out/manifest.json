@@ -738,9 +738,9 @@
     "semantic_hash": "80ea9b537cf3edf502698ef56cb76cdc"
   },
   "docs/superpowers/specs/2026-08-27-vivimoon-client-scope-design.md": {
-    "mtime": 1787826384.6499047,
-    "seen": 1787826401.645361,
-    "ast_hash": "17fea20ffe674bc97a8b66f845f365af",
+    "mtime": 1787826729.9846528,
+    "seen": 1787841563.742739,
+    "ast_hash": "102df410d9ce743768e5ab725772ee6e",
     "semantic_hash": ""
   },
   "public/file.svg": {
@@ -771,6 +771,12 @@
     "mtime": 1786866383.0,
     "seen": 1787825850.5327969,
     "ast_hash": "a2760511c65806022ad20adf74370ff3",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-08-27-vivimoon-m1-foundation.md": {
+    "mtime": 1787841544.7894502,
+    "seen": 1787841563.7427351,
+    "ast_hash": "9cd9c6b23d5a4818786176c96f246d18",
     "semantic_hash": ""
   }
 }
