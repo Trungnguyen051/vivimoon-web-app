@@ -866,9 +866,12 @@ describe('mockCatalog', () => {
 
   it('returns only reviews for the requested product', async () => {
     const all = await mockCatalog.listProducts();
-    const target = all.find(async (p) => (await mockCatalog.getReviews(p.id)).length > 0) ?? all[0];
-    const list = await mockCatalog.getReviews(target.id);
-    expect(list.every((r) => r.productId === target.id)).toBe(true);
+    const withReviews = await Promise.all(
+      all.map(async (p) => ({ product: p, reviews: await mockCatalog.getReviews(p.id) })),
+    );
+    const target = withReviews.find((x) => x.reviews.length > 0);
+    if (!target) throw new Error('fixtures have no product with reviews');
+    expect(target.reviews.every((r) => r.productId === target.product.id)).toBe(true);
   });
 
   it('lists collections', async () => {
