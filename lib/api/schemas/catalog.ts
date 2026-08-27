@@ -88,8 +88,5 @@ export type ProductSpecs = z.infer<typeof productSpecsSchema>;
 export type Variant = z.infer<typeof variantSchema>;
 export type Product = z.infer<typeof productSchema>;
 export type Collection = z.infer<typeof collectionSchema>;
-// z.input, not z.infer: `source` has a `.default()`, so it's optional on the
-// way in (hand-authored fixtures may omit it) even though `.parse()` always
-// fills it in on the way out.
-export type Review = z.input<typeof reviewSchema>;
+export type Review = z.infer<typeof reviewSchema>;
 export type ProductQuery = z.infer<typeof productQuerySchema>;

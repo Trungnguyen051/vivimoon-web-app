@@ -10,6 +10,7 @@ export const reviews: Review[] = [
     body: 'No dryness even after 12 hours.',
     createdAt: '2026-06-01',
     hasImages: false,
+    source: 'vivimoon',
   },
   {
     id: 'r2',
@@ -20,5 +21,6 @@ export const reviews: Review[] = [
     body: 'Great for daily wear, slightly tricky to insert.',
     createdAt: '2026-06-10',
     hasImages: true,
+    source: 'vivimoon',
   },
 ];
