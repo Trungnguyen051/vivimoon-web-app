@@ -14,3 +14,6 @@ Task 1: complete (commits 4e1ddb1..ebda1d0, review clean — approved, no Critic
   - npm "Unknown user config python" warning is pre-existing global npm config, not repo.
   Resolved by controller: ApiErrorSchema/apiErrorSchema casing drift on plan line 114 (fixed);
   full-suite + tsc claims verified independently before review dispatch (35/35, tsc clean).
+Task 2: implemented (59f2cfe) + controller-directed fix (cbc3765) — awaiting review
+  Plan defect #3: Task 2 Step 6 claimed Review.source is "optional on input", but the
+  alias used z.infer (output type), where .default() makes it required. Plan corrected.

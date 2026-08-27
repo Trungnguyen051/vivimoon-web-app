@@ -620,7 +620,11 @@ export type { Review, ReviewSource } from '@/lib/api/schemas/catalog';
 - [ ] **Step 6: Typecheck and run the full suite**
 
 Run: `npx tsc --noEmit && npm test`
-Expected: no type errors; all tests pass. `content/products.ts` still typechecks because the inferred `Product` is structurally identical to the old interface, except `Review.source` which now has a default and is therefore optional on input.
+Expected: no type errors; all tests pass. `content/products.ts` and `content/collections.ts` still typecheck because the inferred `Product` and `Collection` are structurally identical to the old interfaces.
+
+`content/reviews.ts` is the exception and needs one change. `z.infer` yields zod's **output** type, and `.default('vivimoon')` makes `source` **required** there — the default guarantees the field is populated after a parse. Add `source: 'vivimoon'` to every entry in `content/reviews.ts`.
+
+Do not reach for `z.input` to dodge this. The mock path returns fixtures **unparsed**, so an optional `source` would be `undefined` at runtime for every seed review, and M4's source badge would render nothing. Typing the fixture array with a required `source` makes TypeScript enforce the field whenever a review is added. The schema keeps its `.default()` to tolerate an upstream API that omits it.
 
 - [ ] **Step 7: Commit**
 
