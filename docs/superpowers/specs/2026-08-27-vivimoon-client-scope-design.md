@@ -178,7 +178,8 @@ POST   /api/shipping/quote   { address, lines[] }       → ShippingOption[]
 POST   /api/orders           { lines[], address, shippingOptionId, paymentMethod, voucherCode? } → Order
 GET    /api/orders                                      → Order[]
 GET    /api/orders/:id                                  → Order
-GET    /api/orders/track?code=&contact=                 → OrderTracking
+POST   /api/orders/track/request   { orderCode, email }  → { ok }        # emails a signed link
+GET    /api/orders/track?token=                         → OrderTracking
 POST   /api/payments/intent  { orderId, method }        → PaymentIntent
 GET    /api/payments/:id                                → PaymentIntent
 ```
@@ -247,6 +248,27 @@ interface LineRx { sameBothEyes: boolean; left: RxEye; right: RxEye }
 ```
 
 `sph` is always captured. `cyl`/`axis` appear only when the product is `toric`; `add` only when `multifocal`. Both are derived from the existing `LensType`, so `RxSelector` stays generic over which fields a product requires.
+
+### Rx ranges
+
+Vivimoon has not yet confirmed stocked ranges, so these are **contact-lens industry standards**, held as data in `lib/products/rx-ranges.ts` and adjustable without code changes:
+
+| Field | Range | Step | Applies to |
+|---|---|---|---|
+| `sph` (plano) | `0.00` | — | cosmetic lenses sold without correction |
+| `sph` (myopia) | `-0.25` … `-6.00` | `0.25` | all |
+| `sph` (myopia, high) | `-6.50` … `-10.00` | `0.50` | all |
+| `sph` (hyperopia) | `+0.25` … `+6.00` | `0.25` | all |
+| `cyl` | `-0.75`, `-1.25`, `-1.75`, `-2.25` | discrete | `toric` only |
+| `axis` | `10°` … `180°` | `10°` | `toric` only |
+| `add` | `LOW` / `MID` / `HIGH` | discrete | `multifocal` only |
+
+Two details that differ from spectacle prescriptions and are easy to get wrong:
+
+- **The step widens above -6.00.** Manufacturers do not produce 0.25 increments in high powers, so a selector offering `-7.25` would be offering a lens nobody makes.
+- **Multifocal ADD is banded, not numeric.** Contact lens multifocals ship as LOW/MID/HIGH, unlike the numeric ADD on a glasses prescription.
+
+The range table is per-product-overridable: a product declares which subset it stocks, and `RxSelector` renders only that. This means a narrowed real catalogue needs no selector changes.
 
 ```ts
 interface User    { id; phone; email?; name; dob?; avatarUrl?; createdAt }
@@ -317,7 +339,7 @@ The call is debounced on quantity change, with the previous total shown in a pen
 
 ## 8. State Management
 
-**zustand** replaces React Context for client-global state, persisted to **`sessionStorage`**.
+**zustand** replaces React Context for client-global state, persisted to **`localStorage`**.
 
 Three stores, and only three:
 
@@ -331,7 +353,7 @@ Everything else — order history, addresses, vouchers, loyalty, favorites, cata
 
 ```ts
 // features/cart/cart-store.ts
-export const CART_STORAGE = createJSONStorage(() => sessionStorage);   // single swap point
+export const CART_STORAGE = createJSONStorage(() => localStorage);   // single swap point
 
 export const useCartStore = create<CartStore>()(
   persist(
@@ -345,7 +367,7 @@ Three deliberate choices:
 
 - **`cartReducer` survives unchanged** as a pure function; the store delegates to it. The existing `cart-reducer.test.ts` continues to cover cart logic, and the store is tested separately for persistence and hydration.
 - **`skipHydration: true`** with an explicit `rehydrate()` on mount avoids SSR/client mismatch. This replaces the hand-rolled `hydrated` flag and both `useEffect`s in `cart-context.tsx`.
-- **`CART_STORAGE` is exported as a single constant.** `sessionStorage` is per-tab and cleared when the tab closes, so a cart does not survive a browser restart or a link opened in a new tab. If Vivimoon wants cross-session carts, changing that one line to `localStorage` is the entire change.
+- **`CART_STORAGE` is exported as a single constant.** `localStorage` is deliberate: carts survive a browser restart and are shared across tabs, which is standard e-commerce behavior and matches the delivered baseline. `sessionStorage` was considered and rejected — being per-tab, it silently discards a cart when the tab closes. Swapping the driver is a one-line change in this constant if that decision is ever revisited.
 
 `features/cart/cart-context.tsx` and `cart-storage.ts` are deleted.
 
@@ -359,7 +381,7 @@ Three deliberate choices:
 - Client mutations call our route handlers, which read the cookie and forward.
 - `middleware.ts` extends beyond locale handling to guard `/account/*` and `/checkout` (logged-in variant), redirecting to sign-in with a `next` parameter.
 - Google is mocked as an endpoint returning a session; real OAuth is Vivimoon's concern, absorbed at proxy time.
-- **Guest → member cart merge:** on login, the sessionStorage cart is posted to `/api/cart/price` under the new session and any member voucher is applied. Guest cart lines always win over a stale server cart.
+- **Guest → member cart merge:** on login, the persisted guest cart is posted to `/api/cart/price` under the new session and any member voucher is applied. Guest cart lines always win over a stale server cart.
 
 ---
 
@@ -367,7 +389,13 @@ Three deliberate choices:
 
 **Onboarding.** Phone-first, matching Vietnamese norms. No password complexity rules (per checklist). OTP optional at signup, required for reset.
 
-**Order tracking.** One lookup form serving guest and logged-in users, by order code plus phone or email. Logged-in users reach the same view from order history without re-entering credentials.
+**Order tracking.** Guests submit order code plus email; the backend emails a **signed, expiring link** rather than rendering the order inline. This prevents order enumeration — code plus email alone would let anyone who guesses a code probe for valid ones, and order records carry a delivery address.
+
+The link carries a token consumed by `GET /api/orders/track?token=`. Token issuance, signing, and expiry are Vivimoon's backend concern; the frontend only requests a link and renders whatever the token resolves to. The request form returns the same neutral acknowledgement whether or not the order exists, so it cannot be used as an oracle.
+
+In mock mode the "email" is written to the server log and returned in the response body under `devLink` — **gated on `API_MODE !== 'proxy'`** so it cannot leak in production.
+
+Logged-in users skip all of this and reach the same tracking view from order history.
 
 **Reviews.** Read-only, rendered with a source badge linking to the original Shopee/TikTok listing. No authoring UI. Ingestion is entirely Vivimoon's backend concern.
 
@@ -392,6 +420,8 @@ Four items lack Vivimoon business input. None blocks the build. Each ships with 
 
 Each file carries a header comment naming what is provisional and who owns it.
 
+**Payment methods are also provisional.** Vivimoon's payment solution is not finalised, so the build ships the three named methods (QR Pay, ZaloPay, SePay) and no others. Cash-on-delivery is deliberately excluded for now rather than guessed at. The method set lives in `lib/payments/methods.ts`, and because the checkout UI branches on the `PaymentIntent` response shape — `qrCode` versus `redirectUrl` — rather than on the method name, adding COD or a fourth provider is a config entry plus whatever settlement copy it needs, not a new UI branch.
+
 ---
 
 ## 12. Testing
@@ -401,8 +431,10 @@ Vitest + RTL continue. Added:
 - **Contract:** every fixture parses against its zod schema. Guarantees mock data cannot drift from the contract.
 - **Route handlers:** each mock endpoint returns a schema-valid envelope and correct error codes.
 - **Cart + Rx:** line identity (same variant, different Rx ⇒ two lines), quantity merge, `sameBothEyes` normalization.
-- **Store:** persistence to `sessionStorage`, `skipHydration` correctness, guest→member merge.
+- **Store:** persistence to `localStorage`, `skipHydration` correctness, cross-tab consistency, guest→member merge.
 - **Schemas:** Rx validation per lens type, VN address validation, checkout, voucher application.
+- **Order tracking:** the link-request endpoint returns an identical acknowledgement for known and unknown order codes (no enumeration oracle), and `devLink` is absent whenever `API_MODE=proxy`.
+- **Rx ranges:** the selector offers no step the range table excludes — in particular nothing between `-6.00` and `-10.00` off the `0.50` grid.
 - **Analytics:** new events fire with correct payloads; `track()` stays a no-op when unconfigured.
 
 No E2E in this phase.
@@ -439,10 +471,20 @@ The repository interface existed to swap mock↔real in-process. That job now be
 
 ---
 
-## 15. Open Questions for Vivimoon
+## 15. Decisions and Open Questions
 
-1. **COD.** The checklist lists QR Pay, ZaloPay, and SePay but no cash-on-delivery, which remains dominant in Vietnamese e-commerce. Intentional, or an oversight? A seam is left either way.
-2. **Cart persistence.** `sessionStorage` means carts do not survive closing the tab. Confirm this is intended.
-3. **Rx ranges.** Which SPH range and step do Vivimoon stock, and do toric products need CYL/AXIS at launch?
-4. **Guest order tracking.** Is order code plus phone sufficient, or is an emailed magic link required?
-5. **Locales.** The checklist is silent on language. EN/VI is retained — confirm English is still needed.
+### Resolved — 2026-08-27
+
+| Question | Decision |
+|---|---|
+| Cart persistence | **`localStorage`**, not `sessionStorage`. Carts survive browser restart and are shared across tabs. |
+| Guest order tracking | **Emailed signed link**, not inline lookup. Prevents order enumeration (§10). |
+| Locales | **EN/VI retained.** |
+| COD | **Excluded for now**, pending Vivimoon's payment solution plan. Seam left (§11). |
+
+### Still open
+
+1. **Payment solution.** The final method set is not confirmed. The build ships QR Pay, ZaloPay, and SePay; revisit once Vivimoon's plan lands. Blocks nothing — the method set is config.
+2. **Rx ranges.** Industry-standard defaults are specified in §6. Confirm against what Vivimoon actually stocks, and whether toric CYL/AXIS is needed at launch or can follow. Blocks nothing — the ranges are data.
+
+Neither open item blocks any milestone. Both resolve to editing one data file.
