@@ -1,7 +1,5 @@
 import type { Product, Collection, Review } from '@/lib/types';
-import { products } from '@/content/products';
-import { collections } from '@/content/collections';
-import { reviews } from '@/content/reviews';
+import { products, collections, reviews } from '@/content/mock';
 import { minPrice, type ProductQuery, type ProductRepository } from './product-repository';
 
 export class MockProductRepository implements ProductRepository {
