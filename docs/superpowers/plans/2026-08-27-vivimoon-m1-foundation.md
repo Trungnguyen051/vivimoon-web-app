@@ -395,7 +395,7 @@ Domain types are currently hand-written interfaces in `lib/types/`. They become 
 - Modify: `lib/types/product.ts`, `lib/types/collection.ts`, `lib/types/review.ts`
 
 **Interfaces:**
-- Consumes: `envelopeSchema` from Task 1
+- Consumes: nothing from Task 1. (`envelopeSchema` wraps these schemas at the call site — `lib/api/upstream/fetch.ts` in Task 6 — not inside `catalog.ts`.)
 - Produces: `productSchema`, `variantSchema`, `productSpecsSchema`, `collectionSchema`, `reviewSchema`, `productQuerySchema`, and the inferred types `Product`, `Variant`, `ProductSpecs`, `Collection`, `Review`, `ProductQuery`, `LensType`, `ReplacementSchedule`, `ProductBadge`, `Currency`, `ReviewSource`
 
 - [ ] **Step 1: Write the failing test**
@@ -795,6 +795,8 @@ The `ProductRepository` interface existed to swap mock↔real in-process. That j
 - Consumes: `resolveMode` (Task 1), catalog schemas (Task 2), `content/mock` (Task 3)
 - Produces: `catalog` — an object with `getProductBySlug(slug)`, `listProducts(query?)`, `getCollection(slug)`, `listCollections()`, `getProductsByIds(ids)`, `getRelatedProducts(product, limit?)`, `getReviews(productId)`, all returning Promises
 - Produces: `minPrice(product: Product): number`
+
+> **Deliberately dropped:** the old `ProductQuery` carried a `badges?: ProductBadge[]` filter and `MockProductRepository` implemented it, but no page or component ever passed it. `productQuerySchema` (Task 2) omits it and `mockCatalog` does not reimplement it. This is dead code being removed with the layer it lived in, not an oversight — do not add it back.
 
 - [ ] **Step 1: Write the failing test**
 
