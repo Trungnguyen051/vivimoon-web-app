@@ -1,10 +1,10 @@
 {
   "0": "cn",
   "1": "types/index.ts",
-  "2": "cart/page.tsx",
+  "2": "checkout/page.tsx",
   "3": "dictionaries.ts",
   "4": "dependencies",
-  "5": "use-cart.ts",
+  "5": "cart-line-item.tsx",
   "6": "devDependencies",
   "7": "compilerOptions",
   "8": "components.json",
@@ -17,7 +17,6 @@
   "15": "Product Detail Page (PDP) structure",
   "16": "Two-tier component architecture (ui/ vs commerce/)",
   "17": "Vivimoon — Client Scope Design Spec",
-  "18": "add-to-cart.tsx",
   "19": "AGENTS.md: This is NOT the Next.js you know",
   "20": "Torica Biweekly Product Image (Blank Placeholder)",
   "21": "Cat Colored (blank placeholder image)",
@@ -50,12 +49,5 @@
   "48": "Torica Biweekly Product Image 2 (Blank Placeholder)",
   "49": "smoke.test.ts",
   "50": "vitest.config.mts",
-  "51": "vitest.setup.ts",
-  "52": "checkout/page.tsx",
-  "53": "sheet.tsx",
-  "54": "product/[slug]/page.tsx",
-  "55": "order-summary.tsx",
-  "56": "dialog.tsx",
-  "57": "field.tsx",
-  "58": "cn.ts"
+  "51": "vitest.setup.ts"
 }

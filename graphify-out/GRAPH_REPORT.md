@@ -1,26 +1,26 @@
 # Graph Report - vivimoon-web-app  (2026-08-27)
 
 ## Corpus Check
-- 100 files · ~33,393 words
+- 100 files · ~33,939 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 610 nodes · 1140 edges · 59 communities (41 shown, 18 thin omitted)
+- 613 nodes · 1143 edges · 51 communities (33 shown, 18 thin omitted)
 - Extraction: 97% EXTRACTED · 2% INFERRED · 1% AMBIGUOUS · INFERRED: 22 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `29b282db`
+- Built from commit: `f57ce5fe`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - cn
 - types/index.ts
-- cart/page.tsx
+- checkout/page.tsx
 - dictionaries.ts
 - dependencies
-- use-cart.ts
+- cart-line-item.tsx
 - devDependencies
 - compilerOptions
 - components.json
@@ -33,7 +33,6 @@
 - Product Detail Page (PDP) structure
 - Two-tier component architecture (ui/ vs commerce/)
 - Vivimoon — Client Scope Design Spec
-- add-to-cart.tsx
 - AGENTS.md: This is NOT the Next.js you know
 - Torica Biweekly Product Image (Blank Placeholder)
 - Cat Colored (blank placeholder image)
@@ -63,13 +62,6 @@
 - FocalPro Daily 2 (Blank Placeholder Image)
 - Mystic Daily Product Image 2 (Blank Placeholder)
 - Torica Biweekly Product Image 2 (Blank Placeholder)
-- checkout/page.tsx
-- sheet.tsx
-- product/[slug]/page.tsx
-- order-summary.tsx
-- dialog.tsx
-- field.tsx
-- cn.ts
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 101 edges
@@ -86,14 +78,14 @@
 ## Surprising Connections (you probably didn't know these)
 - `README.md: Vivimoon Next.js project README` --semantically_similar_to--> `Tech stack (Next.js App Router, React 19, TS strict, Tailwind v4, shadcn/ui, embla, RHF+zod, GA4, Vitest)`  [INFERRED] [semantically similar]
   README.md → docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md
-- `AlertAction()` --calls--> `cn()`  [EXTRACTED]
-  components/ui/alert.tsx → lib/utils/cn.ts
-- `BreadcrumbEllipsis()` --calls--> `cn()`  [EXTRACTED]
-  components/ui/breadcrumb.tsx → lib/utils/cn.ts
-- `CardDescription()` --calls--> `cn()`  [EXTRACTED]
-  components/ui/card.tsx → lib/utils/cn.ts
-- `CardAction()` --calls--> `cn()`  [EXTRACTED]
-  components/ui/card.tsx → lib/utils/cn.ts
+- `SelectLabel()` --calls--> `cn()`  [EXTRACTED]
+  components/ui/select.tsx → lib/utils/cn.ts
+- `SelectSeparator()` --calls--> `cn()`  [EXTRACTED]
+  components/ui/select.tsx → lib/utils/cn.ts
+- `SelectScrollUpButton()` --calls--> `cn()`  [EXTRACTED]
+  components/ui/select.tsx → lib/utils/cn.ts
+- `SelectScrollDownButton()` --calls--> `cn()`  [EXTRACTED]
+  components/ui/select.tsx → lib/utils/cn.ts
 
 ## Import Cycles
 - None detected.
@@ -103,31 +95,31 @@
 - **Four swappable architecture seams (data, theming, i18n, analytics) isolating volatility** — docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productrepository, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_theming_seam, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_i18n_seam, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_analytics_seam [EXTRACTED 1.00]
 - **Coolmate apparel patterns re-modeled for Vivimoon contact-lens domain** — docs_research_coolmate_website_analysis_product_card, docs_research_coolmate_website_analysis_pdp, docs_research_coolmate_website_analysis_color_variant_url_pattern, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productcard, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant [INFERRED 0.85]
 
-## Communities (59 total, 18 thin omitted)
+## Communities (51 total, 18 thin omitted)
 
 ### Community 0 - "cn"
-Cohesion: 0.25
-Nodes (11): Accordion(), AccordionContent(), AccordionItem(), AccordionTrigger(), Skeleton(), Tabs(), TabsContent(), TabsList() (+3 more)
+Cohesion: 0.05
+Nodes (57): HeroCarousel(), Slide, ProductGallery(), RatingStars(), Footer(), Accordion(), AccordionContent(), AccordionItem() (+49 more)
 
 ### Community 1 - "types/index.ts"
-Cohesion: 0.10
-Nodes (17): SpecTable(), collections, products, reviews, productRepository, MockProductRepository, repo, minPrice() (+9 more)
+Cohesion: 0.09
+Nodes (20): CategoryGrid(), CollectionCarousel(), minVariant(), ProductCard(), product, collections, products, reviews (+12 more)
 
-### Community 2 - "cart/page.tsx"
-Cohesion: 0.14
-Nodes (26): CartPage(), CheckoutPage(), generateOrderId(), SuccessPage(), CollectionPage(), resolveTitle(), LocaleLayout(), HomePage() (+18 more)
+### Community 2 - "checkout/page.tsx"
+Cohesion: 0.09
+Nodes (42): CartPage(), CheckoutPage(), generateOrderId(), SuccessPage(), CollectionPage(), resolveTitle(), LocaleLayout(), HomePage() (+34 more)
 
 ### Community 3 - "dictionaries.ts"
-Cohesion: 0.10
-Nodes (24): CartLineItem(), dict, line, OrderSummary(), PriceTag(), minVariant(), ProductCard(), product (+16 more)
+Cohesion: 0.11
+Nodes (23): SpecTable(), dict, product, VariantSelector(), LocaleSwitcher(), MegaNav(), MobileNav(), getNavItems() (+15 more)
 
 ### Community 4 - "dependencies"
 Cohesion: 0.05
 Nodes (41): class-variance-authority, clsx, embla-carousel-react, @hookform/resolvers, lucide-react, next, @next/third-parties, dependencies (+33 more)
 
-### Community 5 - "use-cart.ts"
-Cohesion: 0.18
-Nodes (16): geistMono, geistSans, metadata, CartContext, CartProvider(), cartCount(), cartReducer(), cartSubtotal() (+8 more)
+### Community 5 - "cart-line-item.tsx"
+Cohesion: 0.12
+Nodes (22): geistMono, geistSans, metadata, CartLineItem(), dict, line, PriceTag(), QuantityStepper() (+14 more)
 
 ### Community 6 - "devDependencies"
 Cohesion: 0.06
@@ -174,12 +166,8 @@ Cohesion: 0.15
 Nodes (14): Task 12: Carousels & CategoryGrid, Task 13: Layout chrome (AnnouncementBar, Header, MegaNav, LocaleSwitcher, Footer), Task 14: Home page, Task 15: Collection listing page + filters, CartLineItem component, CategoryGrid component, CollectionCarousel component, Two-tier component architecture (ui/ vs commerce/) (+6 more)
 
 ### Community 17 - "Vivimoon — Client Scope Design Spec"
-Cohesion: 0.07
-Nodes (28): 10. Feature Notes, 11. Blocked Items, 12. Testing, 13. Milestones, 14. Files Removed or Changed, 15. Open Questions for Vivimoon, 1. Overview, 2. Feature Scope (+20 more)
-
-### Community 18 - "add-to-cart.tsx"
-Cohesion: 0.19
-Nodes (13): AddToCart(), ProductGrid(), dict, product, VariantSelector(), Gtag, product, track() (+5 more)
+Cohesion: 0.06
+Nodes (31): 10. Feature Notes, 11. Blocked Items, 12. Testing, 13. Milestones, 14. Files Removed or Changed, 15. Decisions and Open Questions, 1. Overview, 2. Feature Scope (+23 more)
 
 ### Community 19 - "AGENTS.md: This is NOT the Next.js you know"
 Cohesion: 0.40
@@ -225,34 +213,6 @@ Nodes (3): Ocean Biweekly Product Image 2 (Blank Placeholder), Ocean Product Lin
 Cohesion: 0.67
 Nodes (3): Torica Monthly Product Photo 2 (blank placeholder), Blank Placeholder Image Asset, Torica Monthly Product
 
-### Community 52 - "checkout/page.tsx"
-Cohesion: 0.19
-Nodes (11): Alert(), AlertAction(), AlertDescription(), AlertTitle(), alertVariants, FieldError(), FieldGroup(), FieldLabel() (+3 more)
-
-### Community 53 - "sheet.tsx"
-Cohesion: 0.16
-Nodes (11): Button(), buttonVariants, Sheet(), SheetClose(), SheetContent(), SheetDescription(), SheetFooter(), SheetHeader() (+3 more)
-
-### Community 54 - "product/[slug]/page.tsx"
-Cohesion: 0.26
-Nodes (9): ProductGallery(), RatingStars(), Breadcrumb(), BreadcrumbEllipsis(), BreadcrumbItem(), BreadcrumbLink(), BreadcrumbList(), BreadcrumbPage() (+1 more)
-
-### Community 55 - "order-summary.tsx"
-Cohesion: 0.29
-Nodes (8): Card(), CardAction(), CardContent(), CardDescription(), CardFooter(), CardHeader(), CardTitle(), Separator()
-
-### Community 56 - "dialog.tsx"
-Cohesion: 0.18
-Nodes (6): DialogContent(), DialogDescription(), DialogFooter(), DialogHeader(), DialogOverlay(), DialogTitle()
-
-### Community 57 - "field.tsx"
-Cohesion: 0.22
-Nodes (9): Field(), FieldContent(), FieldDescription(), FieldLegend(), FieldSeparator(), FieldSet(), FieldTitle(), fieldVariants (+1 more)
-
-### Community 58 - "cn.ts"
-Cohesion: 0.40
-Nodes (3): QuantityStepper(), Badge(), badgeVariants
-
 ## Ambiguous Edges - Review These
 - `Empty/Unrendered Placeholder Asset` → `Torica Biweekly Product Image (Blank Placeholder)`  [AMBIGUOUS]
   public/images/products/torica-biweekly-1.jpg · relation: conceptually_related_to
@@ -276,7 +236,7 @@ Nodes (3): QuantityStepper(), Badge(), badgeVariants
   public/images/products/mystic-daily-1.jpg · relation: semantically_similar_to
 
 ## Knowledge Gaps
-- **211 isolated node(s):** `geistSans`, `geistMono`, `metadata`, `$schema`, `style` (+206 more)
+- **212 isolated node(s):** `geistSans`, `geistMono`, `metadata`, `$schema`, `style` (+207 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
