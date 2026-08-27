@@ -111,7 +111,7 @@ package.json                                  # + zustand, + test:contract
 **Interfaces:**
 - Produces: `resolveMode(resource: ResourceName): ApiMode`, `RESOURCES`, `upstreamBaseUrl()`, `upstreamTimeoutMs()`
 - Produces: `apiOk<T>(data: T): Response`, `apiFail(code, message, opts?): Response`
-- Produces: `envelopeSchema<T>(inner: T)`, `ApiErrorSchema`
+- Produces: `envelopeSchema<T>(inner: T)`, `apiErrorSchema`
 
 - [ ] **Step 1: Write the failing test**
 
