@@ -142,7 +142,7 @@ describe('resolveMode', () => {
     process.env.API_MODE_CATALOG = 'upstream';
     process.env.UPSTREAM_API_BASE_URL = 'https://api.example.com';
     expect(resolveMode('catalog')).toBe('upstream');
-    expect(resolveMode('auth')).toBe('mock');
+    expect(resolveMode('identity')).toBe('mock');
   });
 
   it('rejects an unknown mode value loudly', () => {
