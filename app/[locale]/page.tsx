@@ -1,6 +1,6 @@
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
-import { productRepository } from '@/lib/data';
+import { catalog } from '@/lib/api/resources/catalog';
 import { HeroCarousel } from '@/components/commerce/hero-carousel';
 import { CategoryGrid } from '@/components/commerce/category-grid';
 import { CollectionCarousel } from '@/components/commerce/collection-carousel';
@@ -12,10 +12,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const l = locale as Locale;
   const dict = getDictionary(l);
 
-  const bestsellers = await productRepository.getCollection('bestsellers');
-  const colored = await productRepository.getCollection('colored-lenses');
-  const bestProducts = bestsellers ? await productRepository.getProductsByIds(bestsellers.productIds) : [];
-  const coloredProducts = colored ? await productRepository.getProductsByIds(colored.productIds) : [];
+  const [bestsellers, colored] = await Promise.all([
+    catalog.getCollection('bestsellers'),
+    catalog.getCollection('colored-lenses'),
+  ]);
+  const [bestProducts, coloredProducts] = await Promise.all([
+    bestsellers ? catalog.getProductsByIds(bestsellers.productIds) : [],
+    colored ? catalog.getProductsByIds(colored.productIds) : [],
+  ]);
 
   return (
     <div className="space-y-16 md:space-y-24">

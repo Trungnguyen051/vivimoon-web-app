@@ -2,6 +2,8 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+> ⚠️ **Delivered and superseded** on 2026-08-27. All 20 tasks were implemented — the checkboxes were never marked off, so do not read this as a to-do list. Succeeded by the milestone plans for [`2026-08-27-vivimoon-client-scope-design.md`](../specs/2026-08-27-vivimoon-client-scope-design.md).
+
 **Goal:** Build a bilingual (EN/VI) contact-lens e-commerce storefront with a complete Browse → Product → Cart → Checkout (stubbed payment) flow, scalable component architecture, and GA4 analytics.
 
 **Architecture:** Next.js App Router with thin route files that compose prop-driven components. Four swappable seams isolate volatility: a `ProductRepository` data interface (mock impl now), design tokens for theming, dictionary-based i18n, and a typed analytics wrapper over GA4. Domain (commerce) components never fetch data — pages fetch via the repository and pass typed props down.

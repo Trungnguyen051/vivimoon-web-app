@@ -10,6 +10,7 @@ export const reviews: Review[] = [
     body: 'No dryness even after 12 hours.',
     createdAt: '2026-06-01',
     hasImages: false,
+    source: 'vivimoon',
   },
   {
     id: 'r2',
@@ -20,5 +21,17 @@ export const reviews: Review[] = [
     body: 'Great for daily wear, slightly tricky to insert.',
     createdAt: '2026-06-10',
     hasImages: true,
+    source: 'vivimoon',
+  },
+  {
+    id: 'r3',
+    productId: 'p-breeze-daily',
+    author: 'Linh T.',
+    rating: 5,
+    title: 'Lightweight all day',
+    body: 'Barely notice I have them on, even after long shifts.',
+    createdAt: '2026-06-15',
+    hasImages: false,
+    source: 'vivimoon',
   },
 ];

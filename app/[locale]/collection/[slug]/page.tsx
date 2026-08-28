@@ -1,13 +1,12 @@
 import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary, type Dictionary } from '@/lib/i18n/dictionaries';
-import { productRepository } from '@/lib/data';
-import type { ProductQuery } from '@/lib/data';
+import { catalog } from '@/lib/api/resources/catalog';
+import { parseProductQueryLoose } from '@/lib/api/schemas/catalog';
 import { SearchX } from 'lucide-react';
 import { ProductGrid } from '@/components/commerce/product-grid';
 import { CollectionFilters } from '@/components/commerce/collection-filters';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import type { LensType, ReplacementSchedule } from '@/lib/types';
 
 function resolveTitle(dict: Dictionary, key: string): string {
   const parts = key.split('.');
@@ -34,18 +33,13 @@ export default async function CollectionPage({
   const l = locale as Locale;
   const dict = getDictionary(l);
 
-  const collection = await productRepository.getCollection(slug);
+  const collection = await catalog.getCollection(slug);
   if (!collection) notFound();
 
   // Start from the collection's products, then apply URL filters via listProducts intersection.
-  const base = await productRepository.getProductsByIds(collection.productIds);
-  const query: ProductQuery = {
-    type: sp.type as LensType | undefined,
-    replacement: sp.replacement as ReplacementSchedule | undefined,
-    color: sp.color,
-    sort: sp.sort as ProductQuery['sort'],
-  };
-  const filtered = await productRepository.listProducts(query);
+  const base = await catalog.getProductsByIds(collection.productIds);
+  const query = parseProductQueryLoose(sp);
+  const filtered = await catalog.listProducts(query);
   const ids = new Set(base.map((p) => p.id));
   const products = filtered.filter((p) => ids.has(p.id));
 
