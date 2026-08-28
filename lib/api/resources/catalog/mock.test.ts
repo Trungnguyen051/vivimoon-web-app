@@ -19,6 +19,7 @@ describe('mockCatalog', () => {
 
   it('filters by replacement schedule', async () => {
     const list = await mockCatalog.listProducts({ replacement: 'daily' });
+    expect(list.length).toBeGreaterThan(0);
     expect(list.every((p) => p.replacement === 'daily')).toBe(true);
   });
 
@@ -62,7 +63,10 @@ describe('mockCatalog', () => {
 
   it('honours the related-products limit', async () => {
     const p = (await mockCatalog.listProducts())[0];
-    expect((await mockCatalog.getRelatedProducts(p, 2)).length).toBeLessThanOrEqual(2);
+    const unlimited = await mockCatalog.getRelatedProducts(p);
+    if (unlimited.length <= 2) throw new Error('fixtures have no product with more than 2 related products');
+    const limited = await mockCatalog.getRelatedProducts(p, 2);
+    expect(limited.length).toBe(2);
   });
 
   it('returns only reviews for the requested product', async () => {
