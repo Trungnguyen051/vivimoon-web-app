@@ -4,6 +4,7 @@ import { getDictionary } from '@/lib/i18n/dictionaries';
 import { AnnouncementBar } from '@/components/layout/announcement-bar';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
+import { SessionSync } from '@/features/session/session-sync';
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -19,6 +20,7 @@ export default async function LocaleLayout({
   const dict = getDictionary(locale as Locale);
   return (
     <>
+      <SessionSync />
       <AnnouncementBar text={dict.announcement.freeShipping} />
       <Header locale={locale as Locale} dict={dict} />
       <main className="mx-auto w-full max-w-7xl px-4 py-10 md:py-14">{children}</main>
