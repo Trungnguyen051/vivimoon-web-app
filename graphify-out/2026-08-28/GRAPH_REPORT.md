@@ -1,26 +1,26 @@
 # Graph Report - vivimoon-web-app  (2026-08-28)
 
 ## Corpus Check
-- 110 files · ~52,630 words
+- 116 files · ~53,690 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 662 nodes · 1196 edges · 68 communities (49 shown, 19 thin omitted)
+- 675 nodes · 1245 edges · 68 communities (49 shown, 19 thin omitted)
 - Extraction: 97% EXTRACTED · 2% INFERRED · 1% AMBIGUOUS · INFERRED: 22 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `a7843e32`
+- Built from commit: `b4808001`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - cn
 - add-to-cart.tsx
-- cart/page.tsx
+- mobile-nav.tsx
 - dictionaries.ts
 - dependencies
-- use-cart.ts
+- cart-line-item.tsx
 - devDependencies
 - compilerOptions
 - components.json
@@ -71,7 +71,7 @@
 - checkout/page.tsx
 - tabs.tsx
 - api/config.ts
-- common.ts
+- catalog/index.ts
 - 5. Migration Strategy
 - 1. Overview
 - 15. Decisions and Open Questions
@@ -114,28 +114,28 @@
 ## Communities (68 total, 19 thin omitted)
 
 ### Community 0 - "cn"
-Cohesion: 0.19
-Nodes (17): Accordion(), AccordionContent(), AccordionItem(), AccordionTrigger(), Field(), FieldContent(), FieldDescription(), FieldError() (+9 more)
+Cohesion: 0.21
+Nodes (15): Accordion(), AccordionContent(), AccordionItem(), AccordionTrigger(), Field(), FieldContent(), FieldDescription(), FieldLegend() (+7 more)
 
 ### Community 1 - "add-to-cart.tsx"
-Cohesion: 0.14
-Nodes (20): AddToCart(), OrderSummary(), PriceTag(), minVariant(), ProductCard(), product, ProductGrid(), dict (+12 more)
+Cohesion: 0.17
+Nodes (16): AddToCart(), PriceTag(), minVariant(), ProductCard(), product, ProductGrid(), dict, product (+8 more)
 
-### Community 2 - "cart/page.tsx"
-Cohesion: 0.21
-Nodes (20): CartPage(), CheckoutPage(), generateOrderId(), SuccessPage(), CollectionPage(), resolveTitle(), LocaleLayout(), HomePage() (+12 more)
+### Community 2 - "mobile-nav.tsx"
+Cohesion: 0.26
+Nodes (9): Sheet(), SheetClose(), SheetContent(), SheetDescription(), SheetFooter(), SheetHeader(), SheetOverlay(), SheetTitle() (+1 more)
 
 ### Community 3 - "dictionaries.ts"
-Cohesion: 0.10
-Nodes (27): CartLineItem(), dict, line, AnnouncementBar(), Footer(), Header(), LocaleSwitcher(), MegaNav() (+19 more)
+Cohesion: 0.09
+Nodes (40): CartPage(), CheckoutPage(), SuccessPage(), CollectionPage(), resolveTitle(), LocaleLayout(), HomePage(), ProductPage() (+32 more)
 
 ### Community 4 - "dependencies"
 Cohesion: 0.05
 Nodes (42): class-variance-authority, clsx, embla-carousel-react, @hookform/resolvers, lucide-react, next, @next/third-parties, dependencies (+34 more)
 
-### Community 5 - "use-cart.ts"
-Cohesion: 0.18
-Nodes (17): geistMono, geistSans, metadata, CartContext, CartProvider(), cartCount(), cartReducer(), cartSubtotal() (+9 more)
+### Community 5 - "cart-line-item.tsx"
+Cohesion: 0.12
+Nodes (21): geistMono, geistSans, metadata, CartLineItem(), dict, line, OrderSummary(), CartContext (+13 more)
 
 ### Community 6 - "devDependencies"
 Cohesion: 0.06
@@ -234,16 +234,16 @@ Cohesion: 0.67
 Nodes (3): Torica Monthly Product Photo 2 (blank placeholder), Blank Placeholder Image Asset, Torica Monthly Product
 
 ### Community 52 - "order-summary.tsx"
-Cohesion: 0.29
-Nodes (8): Card(), CardAction(), CardContent(), CardDescription(), CardFooter(), CardHeader(), CardTitle(), Separator()
+Cohesion: 0.36
+Nodes (7): Card(), CardAction(), CardContent(), CardDescription(), CardFooter(), CardHeader(), CardTitle()
 
 ### Community 53 - "product/[slug]/page.tsx"
-Cohesion: 0.14
-Nodes (15): CategoryGrid(), CollectionCarousel(), HeroCarousel(), Slide, ReviewsList(), SpecTable(), Breadcrumb(), BreadcrumbEllipsis() (+7 more)
+Cohesion: 0.23
+Nodes (10): ProductGallery(), RatingStars(), ReviewsList(), Breadcrumb(), BreadcrumbEllipsis(), BreadcrumbItem(), BreadcrumbLink(), BreadcrumbList() (+2 more)
 
 ### Community 54 - "cn.ts"
-Cohesion: 0.18
-Nodes (6): ProductGallery(), QuantityStepper(), RatingStars(), Badge(), badgeVariants, Skeleton()
+Cohesion: 0.20
+Nodes (6): HeroCarousel(), Slide, QuantityStepper(), Badge(), badgeVariants, Skeleton()
 
 ### Community 55 - "dialog.tsx"
 Cohesion: 0.16
@@ -251,11 +251,11 @@ Nodes (8): Button(), buttonVariants, DialogContent(), DialogDescription(), Dialo
 
 ### Community 56 - "catalog.ts"
 Cohesion: 0.09
-Nodes (25): collections, products, reviews, Catalog, minPrice(), mockCatalog, Collection, collectionSchema (+17 more)
+Nodes (25): SpecTable(), collections, products, reviews, mockCatalog, Collection, collectionSchema, currencySchema (+17 more)
 
 ### Community 57 - "checkout/page.tsx"
-Cohesion: 0.26
-Nodes (8): Alert(), AlertAction(), AlertDescription(), AlertTitle(), alertVariants, Input(), CheckoutForm, checkoutSchema
+Cohesion: 0.18
+Nodes (12): generateOrderId(), Alert(), AlertAction(), AlertDescription(), AlertTitle(), alertVariants, FieldError(), FieldGroup() (+4 more)
 
 ### Community 58 - "tabs.tsx"
 Cohesion: 0.40
@@ -265,9 +265,9 @@ Nodes (5): Tabs(), TabsContent(), TabsList(), tabsListVariants, TabsTrigger()
 Cohesion: 0.24
 Nodes (11): ApiMode, DEPENDS_ON, isAnyUpstream(), rawMode(), readMode(), resolveMode(), ResourceName, RESOURCES (+3 more)
 
-### Community 60 - "common.ts"
-Cohesion: 0.22
-Nodes (6): ApiError, apiErrorSchema, ERROR_CODES, ErrorCode, HTTP_STATUS, okEnvelopeSchema
+### Community 60 - "catalog/index.ts"
+Cohesion: 0.17
+Nodes (16): GET(), GET(), GET(), GET(), GET(), catalog, Catalog, minPrice() (+8 more)
 
 ### Community 61 - "5. Migration Strategy"
 Cohesion: 0.33

@@ -18,9 +18,9 @@
     "semantic_hash": "0200bab9dc0d760cd2c6e903f5f68325"
   },
   "app/[locale]/collection/[slug]/page.tsx": {
-    "mtime": 1787877785.5888665,
-    "seen": 1787877891.391664,
-    "ast_hash": "c228d412f53c6f3ed78369ff73917890",
+    "mtime": 1787879355.4328043,
+    "seen": 1787908881.392777,
+    "ast_hash": "b85b283874bf2e3e99b260e22180b664",
     "semantic_hash": ""
   },
   "app/[locale]/layout.tsx": {
@@ -462,10 +462,10 @@
     "semantic_hash": "ae157670cda977774e2ecc41b77c14ba"
   },
   "middleware.ts": {
-    "mtime": 1786867656.896562,
-    "seen": 1787625522.045943,
-    "ast_hash": "a0f0a0aaf5d95bd7855d9ee5d6e2c7e6",
-    "semantic_hash": "a0f0a0aaf5d95bd7855d9ee5d6e2c7e6"
+    "mtime": 1787908793.1581237,
+    "seen": 1787908881.392871,
+    "ast_hash": "cc66b15da32d6fa4abb027a03130a8f4",
+    "semantic_hash": ""
   },
   "next.config.ts": {
     "mtime": 1786869554.3976572,
@@ -762,9 +762,9 @@
     "semantic_hash": ""
   },
   "content/mock/reviews.ts": {
-    "mtime": 1787842772.5597472,
-    "seen": 1787877891.391742,
-    "ast_hash": "543d31dd1c967cc253bb388fd3a29bf5",
+    "mtime": 1787879368.304412,
+    "seen": 1787908881.392836,
+    "ast_hash": "c6d1f3551d19cf3eb955f351a9a312dd",
     "semantic_hash": ""
   },
   "lib/api/config.test.ts": {
@@ -786,14 +786,14 @@
     "semantic_hash": ""
   },
   "lib/api/resources/catalog/mock.test.ts": {
-    "mtime": 1787877740.553845,
-    "seen": 1787877891.391763,
-    "ast_hash": "6f8458ba836e762a87b79d9af28ae85f",
+    "mtime": 1787879391.7922592,
+    "seen": 1787908881.39285,
+    "ast_hash": "03fddddf1ddf9f614eba95185a7f162d",
     "semantic_hash": ""
   },
   "lib/api/resources/catalog/mock.ts": {
-    "mtime": 1787877765.6919682,
-    "seen": 1787877891.3917649,
+    "mtime": 1787879418.1387696,
+    "seen": 1787908881.3928509,
     "ast_hash": "310c1cde5db82173687a5675e64c15aa",
     "semantic_hash": ""
   },
@@ -804,15 +804,15 @@
     "semantic_hash": ""
   },
   "lib/api/schemas/catalog.test.ts": {
-    "mtime": 1787842412.9349155,
-    "seen": 1787877891.391767,
-    "ast_hash": "00971e94e9c4e60d76d47ff69d811d8a",
+    "mtime": 1787879364.1814291,
+    "seen": 1787908881.392853,
+    "ast_hash": "4764205a0947b010b366e18c135451f7",
     "semantic_hash": ""
   },
   "lib/api/schemas/catalog.ts": {
-    "mtime": 1787842766.8539503,
-    "seen": 1787877891.391768,
-    "ast_hash": "8cc26a5230211ba9c3ecec1af1b823b3",
+    "mtime": 1787879351.0222116,
+    "seen": 1787908881.392854,
+    "ast_hash": "d901f1ac7cdc91be3b3da6ac6fe1e801",
     "semantic_hash": ""
   },
   "lib/api/schemas/common.ts": {
@@ -828,9 +828,45 @@
     "semantic_hash": ""
   },
   ".superpowers/sdd/progress.md": {
-    "mtime": 1787877884.9152732,
-    "seen": 1787877891.391807,
-    "ast_hash": "fffd148b9f0d387a7a2f185c91ae4b59",
+    "mtime": 1787908765.083252,
+    "seen": 1787908881.3928802,
+    "ast_hash": "17fbc7768d43f98118704ca416876dcf",
+    "semantic_hash": ""
+  },
+  "app/api/collections/[slug]/route.ts": {
+    "mtime": 1787908822.1361375,
+    "seen": 1787908881.392782,
+    "ast_hash": "d48d402064b542c1ff3ee11ffd2044a7",
+    "semantic_hash": ""
+  },
+  "app/api/collections/route.ts": {
+    "mtime": 1787908818.9854517,
+    "seen": 1787908881.3927832,
+    "ast_hash": "a98b5c37bbe263e8892dbb227930bd19",
+    "semantic_hash": ""
+  },
+  "app/api/products/[slug]/reviews/route.ts": {
+    "mtime": 1787908816.2816849,
+    "seen": 1787908881.3927839,
+    "ast_hash": "736f930a292fbd2bf95e9196c98e417e",
+    "semantic_hash": ""
+  },
+  "app/api/products/[slug]/route.ts": {
+    "mtime": 1787908813.240694,
+    "seen": 1787908881.3927839,
+    "ast_hash": "cc258a6197a21dfb93bce68bdcf89b59",
+    "semantic_hash": ""
+  },
+  "app/api/products/route.test.ts": {
+    "mtime": 1787908801.2650647,
+    "seen": 1787908881.3927848,
+    "ast_hash": "ee42d772cc0600e54ec66a874636bea8",
+    "semantic_hash": ""
+  },
+  "app/api/products/route.ts": {
+    "mtime": 1787908810.2571917,
+    "seen": 1787908881.392786,
+    "ast_hash": "e75a49c024bb026f1371ecbcb163246e",
     "semantic_hash": ""
   }
 }

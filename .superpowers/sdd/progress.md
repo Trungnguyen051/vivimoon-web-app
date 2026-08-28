@@ -84,3 +84,24 @@ Task 5: complete (commit b480800, implemented + verified — no subagent dispatc
   all 5 new routes listed as dynamic (ƒ). Manually curled the running dev server:
   ?type=colored filters correctly, /ghost slug 404s with not_found, ?sort=cheapest
   400s with validation_failed, /api/collections returns the fixture list.
+Task 6: complete (commit 29a21c1, implemented + verified — no subagent dispatched).
+  Added parseOrThrow/UpstreamShapeError (lib/api/upstream/validate.ts), upstreamFetch/
+  UpstreamRequestError (lib/api/upstream/fetch.ts), and the live-API conformance suite
+  (tests/contract/upstream.test.ts, skipped unless UPSTREAM_API_BASE_URL is set) +
+  test:contract:upstream script, all matching the plan verbatim.
+  Plan deviation (implementer-discovered, not brief-originated): the plan's
+  `parseOrThrow(envelopeSchema(schema), json, context)` does not typecheck as
+  written. zod v3's discriminatedUnion widens the `ok` literal to `boolean` when
+  threaded through two levels of generics (envelopeSchema<T> instantiated inside
+  parseOrThrow<T2>), so `envelope.ok` narrowing fails with "Property 'error'/'data'
+  does not exist". Fixed by asserting the parsed value against a local
+  `Envelope<T> = { ok: true; data: T } | { ok: false; error: ApiError }` type
+  instead of trusting z.infer through the nested generic instantiation.
+  TDD honoured: lib/api/upstream/validate.test.ts written first, failed on
+  unresolved './validate', passed 3/3 after impl.
+  Verified: tsc exit 0, full suite 73/73 (6 upstream tests correctly skipped with no
+  UPSTREAM_API_BASE_URL), `npm run test:contract` (8 pass, 6 skip), `npm run build`
+  succeeds. Negative-path check per plan Step 8: pointed
+  UPSTREAM_API_BASE_URL at an unreachable host (127.0.0.1:9) and ran
+  test:contract:upstream — all 6 tests failed with "network error", proving the
+  suite actually attempts the call rather than silently passing.

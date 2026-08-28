@@ -159,7 +159,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "cartaction",
       "source_file": "features/cart/cart.types.ts",
@@ -172,7 +172,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "cartline",
       "source_file": "features/cart/cart.types.ts",
@@ -185,7 +185,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "cartstate",
       "source_file": "features/cart/cart.types.ts",
@@ -198,24 +198,37 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "currency",
       "source_file": "lib/api/schemas/catalog.ts",
       "source_location": "L105"
     },
     {
-      "id": "components_commerce_hero_carousel_slide",
-      "label": "Slide",
+      "id": "lib_api_schemas_catalog_productspecs",
+      "label": "ProductSpecs",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 54,
-      "community_name": "cn.ts",
+      "community": 53,
+      "community_name": "product/[slug]/page.tsx",
       "file_type": "code",
-      "norm_label": "slide",
-      "source_file": "components/commerce/hero-carousel.tsx",
-      "source_location": "L9"
+      "norm_label": "productspecs",
+      "source_file": "lib/api/schemas/catalog.ts",
+      "source_location": "L107"
+    },
+    {
+      "id": "lib_api_resources_catalog_mock_catalog",
+      "label": "Catalog",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 56,
+      "community_name": "catalog.ts",
+      "file_type": "code",
+      "norm_label": "catalog",
+      "source_file": "lib/api/resources/catalog/mock.ts",
+      "source_location": "L62"
     },
     {
       "id": "lib_api_schemas_catalog_collection",
@@ -268,19 +281,6 @@
       "norm_label": "productquery",
       "source_file": "lib/api/schemas/catalog.ts",
       "source_location": "L112"
-    },
-    {
-      "id": "lib_api_schemas_catalog_productspecs",
-      "label": "ProductSpecs",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 56,
-      "community_name": "catalog.ts",
-      "file_type": "code",
-      "norm_label": "productspecs",
-      "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L107"
     },
     {
       "id": "lib_api_schemas_catalog_replacementschedule",
@@ -361,26 +361,13 @@
       "source_location": "L10"
     },
     {
-      "id": "lib_api_resources_catalog_mock_catalog",
-      "label": "Catalog",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 60,
-      "community_name": "catalog/index.ts",
-      "file_type": "code",
-      "norm_label": "catalog",
-      "source_file": "lib/api/resources/catalog/mock.ts",
-      "source_location": "L62"
-    },
-    {
       "id": "lib_api_schemas_common_apierror",
       "label": "ApiError",
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 60,
-      "community_name": "catalog/index.ts",
+      "community": 59,
+      "community_name": "api/config.ts",
       "file_type": "code",
       "norm_label": "apierror",
       "source_file": "lib/api/schemas/common.ts",
@@ -392,12 +379,64 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 60,
-      "community_name": "catalog/index.ts",
+      "community": 59,
+      "community_name": "api/config.ts",
       "file_type": "code",
       "norm_label": "errorcode",
       "source_file": "lib/api/schemas/common.ts",
       "source_location": "L30"
+    },
+    {
+      "id": "lib_api_upstream_fetch_envelope",
+      "label": "Envelope",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": "envelope",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L12"
+    },
+    {
+      "id": "lib_api_upstream_fetch_upstreamrequesterror",
+      "label": "UpstreamRequestError",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": "upstreamrequesterror",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L14"
+    },
+    {
+      "id": "lib_api_upstream_validate_upstreamshapeerror",
+      "label": "UpstreamShapeError",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": "upstreamshapeerror",
+      "source_file": "lib/api/upstream/validate.ts",
+      "source_location": "L7"
+    },
+    {
+      "id": "components_commerce_hero_carousel_slide",
+      "label": "Slide",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 60,
+      "community_name": "catalog/index.ts",
+      "file_type": "code",
+      "norm_label": "slide",
+      "source_file": "components/commerce/hero-carousel.tsx",
+      "source_location": "L9"
     },
     {
       "id": "components_ui_accordion_accordion",
@@ -484,6 +523,42 @@
       "source_location": "L131"
     },
     {
+      "id": "components_ui_field_fielderror",
+      "label": "FieldError()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "cn",
+      "file_type": "code",
+      "norm_label": "fielderror()",
+      "source_file": "components/ui/field.tsx",
+      "source_location": "L176"
+    },
+    {
+      "id": "components_ui_field_fieldgroup",
+      "label": "FieldGroup()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "cn",
+      "file_type": "code",
+      "norm_label": "fieldgroup()",
+      "source_file": "components/ui/field.tsx",
+      "source_location": "L41"
+    },
+    {
+      "id": "components_ui_field_fieldlabel",
+      "label": "FieldLabel()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "cn",
+      "file_type": "code",
+      "norm_label": "fieldlabel()",
+      "source_file": "components/ui/field.tsx",
+      "source_location": "L101"
+    },
+    {
       "id": "components_ui_field_fieldlegend",
       "label": "FieldLegend()",
       "_callable": true,
@@ -544,16 +619,16 @@
       "source_location": "L8"
     },
     {
-      "id": "components_ui_separator_separator",
-      "label": "Separator()",
+      "id": "components_ui_skeleton_skeleton",
+      "label": "Skeleton()",
       "_callable": true,
       "_origin": "ast",
       "community": 0,
       "community_name": "cn",
       "file_type": "code",
-      "norm_label": "separator()",
-      "source_file": "components/ui/separator.tsx",
-      "source_location": "L8"
+      "norm_label": "skeleton()",
+      "source_file": "components/ui/skeleton.tsx",
+      "source_location": "L3"
     },
     {
       "id": "lib_utils_cn_cn",
@@ -628,6 +703,18 @@
       "source_location": "L9"
     },
     {
+      "id": "components_commerce_quantity_stepper_quantitystepper",
+      "label": "QuantityStepper()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "add-to-cart.tsx",
+      "file_type": "code",
+      "norm_label": "quantitystepper()",
+      "source_file": "components/commerce/quantity-stepper.tsx",
+      "source_location": "L8"
+    },
+    {
       "id": "components_commerce_variant_selector_variantselector",
       "label": "VariantSelector()",
       "_callable": true,
@@ -640,6 +727,18 @@
       "source_location": "L7"
     },
     {
+      "id": "lib_analytics_analytics_track",
+      "label": "track()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "add-to-cart.tsx",
+      "file_type": "code",
+      "norm_label": "track()",
+      "source_file": "lib/analytics/analytics.ts",
+      "source_location": "L5"
+    },
+    {
       "id": "lib_analytics_events_toga4items",
       "label": "toGa4Items()",
       "_callable": true,
@@ -650,6 +749,18 @@
       "norm_label": "toga4items()",
       "source_file": "lib/analytics/events.ts",
       "source_location": "L12"
+    },
+    {
+      "id": "lib_analytics_use_analytics_useanalytics",
+      "label": "useAnalytics()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "add-to-cart.tsx",
+      "file_type": "code",
+      "norm_label": "useanalytics()",
+      "source_file": "lib/analytics/use-analytics.ts",
+      "source_location": "L4"
     },
     {
       "id": "components_commerce_collection_filters_collectionfilters",
@@ -784,12 +895,24 @@
       "source_location": "L28"
     },
     {
+      "id": "components_ui_button_button",
+      "label": "Button()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "sheet.tsx",
+      "file_type": "code",
+      "norm_label": "button()",
+      "source_file": "components/ui/button.tsx",
+      "source_location": "L44"
+    },
+    {
       "id": "components_ui_sheet_sheet",
       "label": "Sheet()",
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "mobile-nav.tsx",
+      "community_name": "sheet.tsx",
       "file_type": "code",
       "norm_label": "sheet()",
       "source_file": "components/ui/sheet.tsx",
@@ -801,7 +924,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "mobile-nav.tsx",
+      "community_name": "sheet.tsx",
       "file_type": "code",
       "norm_label": "sheetclose()",
       "source_file": "components/ui/sheet.tsx",
@@ -813,7 +936,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "mobile-nav.tsx",
+      "community_name": "sheet.tsx",
       "file_type": "code",
       "norm_label": "sheetcontent()",
       "source_file": "components/ui/sheet.tsx",
@@ -825,7 +948,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "mobile-nav.tsx",
+      "community_name": "sheet.tsx",
       "file_type": "code",
       "norm_label": "sheetdescription()",
       "source_file": "components/ui/sheet.tsx",
@@ -837,7 +960,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "mobile-nav.tsx",
+      "community_name": "sheet.tsx",
       "file_type": "code",
       "norm_label": "sheetfooter()",
       "source_file": "components/ui/sheet.tsx",
@@ -849,7 +972,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "mobile-nav.tsx",
+      "community_name": "sheet.tsx",
       "file_type": "code",
       "norm_label": "sheetheader()",
       "source_file": "components/ui/sheet.tsx",
@@ -861,7 +984,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "mobile-nav.tsx",
+      "community_name": "sheet.tsx",
       "file_type": "code",
       "norm_label": "sheetoverlay()",
       "source_file": "components/ui/sheet.tsx",
@@ -873,7 +996,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "mobile-nav.tsx",
+      "community_name": "sheet.tsx",
       "file_type": "code",
       "norm_label": "sheetportal()",
       "source_file": "components/ui/sheet.tsx",
@@ -885,7 +1008,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "mobile-nav.tsx",
+      "community_name": "sheet.tsx",
       "file_type": "code",
       "norm_label": "sheettitle()",
       "source_file": "components/ui/sheet.tsx",
@@ -897,71 +1020,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 2,
-      "community_name": "mobile-nav.tsx",
+      "community_name": "sheet.tsx",
       "file_type": "code",
       "norm_label": "sheettrigger()",
       "source_file": "components/ui/sheet.tsx",
       "source_location": "L14"
-    },
-    {
-      "id": "app_locale_cart_page_cartpage",
-      "label": "CartPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "cartpage()",
-      "source_file": "app/[locale]/cart/page.tsx",
-      "source_location": "L15"
-    },
-    {
-      "id": "app_locale_checkout_page_checkoutpage",
-      "label": "CheckoutPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "checkoutpage()",
-      "source_file": "app/[locale]/checkout/page.tsx",
-      "source_location": "L24"
-    },
-    {
-      "id": "app_locale_checkout_success_page_successpage",
-      "label": "SuccessPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "successpage()",
-      "source_file": "app/[locale]/checkout/success/page.tsx",
-      "source_location": "L13"
-    },
-    {
-      "id": "app_locale_collection_slug_page_collectionpage",
-      "label": "CollectionPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "collectionpage()",
-      "source_file": "app/[locale]/collection/[slug]/page.tsx",
-      "source_location": "L24"
-    },
-    {
-      "id": "app_locale_collection_slug_page_resolvetitle",
-      "label": "resolveTitle()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "resolvetitle()",
-      "source_file": "app/[locale]/collection/[slug]/page.tsx",
-      "source_location": "L11"
     },
     {
       "id": "app_locale_layout_generatestaticparams",
@@ -976,64 +1039,28 @@
       "source_location": "L8"
     },
     {
-      "id": "app_locale_layout_localelayout",
-      "label": "LocaleLayout()",
+      "id": "components_commerce_cart_line_item_cartlineitem",
+      "label": "CartLineItem()",
       "_callable": true,
       "_origin": "ast",
       "community": 3,
       "community_name": "dictionaries.ts",
       "file_type": "code",
-      "norm_label": "localelayout()",
-      "source_file": "app/[locale]/layout.tsx",
-      "source_location": "L12"
-    },
-    {
-      "id": "app_locale_page_homepage",
-      "label": "HomePage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "homepage()",
-      "source_file": "app/[locale]/page.tsx",
+      "norm_label": "cartlineitem()",
+      "source_file": "components/commerce/cart-line-item.tsx",
       "source_location": "L9"
     },
     {
-      "id": "app_locale_product_slug_page_productpage",
-      "label": "ProductPage()",
+      "id": "components_commerce_order_summary_ordersummary",
+      "label": "OrderSummary()",
       "_callable": true,
       "_origin": "ast",
       "community": 3,
       "community_name": "dictionaries.ts",
       "file_type": "code",
-      "norm_label": "productpage()",
-      "source_file": "app/[locale]/product/[slug]/page.tsx",
-      "source_location": "L16"
-    },
-    {
-      "id": "components_commerce_category_grid_categorygrid",
-      "label": "CategoryGrid()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "categorygrid()",
-      "source_file": "components/commerce/category-grid.tsx",
-      "source_location": "L5"
-    },
-    {
-      "id": "components_commerce_collection_carousel_collectioncarousel",
-      "label": "CollectionCarousel()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "collectioncarousel()",
-      "source_file": "components/commerce/collection-carousel.tsx",
-      "source_location": "L9"
+      "norm_label": "ordersummary()",
+      "source_file": "components/commerce/order-summary.tsx",
+      "source_location": "L10"
     },
     {
       "id": "components_layout_announcement_bar_announcementbar",
@@ -1120,160 +1147,16 @@
       "source_location": "L6"
     },
     {
-      "id": "components_ui_empty_empty",
-      "label": "Empty()",
+      "id": "lib_utils_format_formatprice",
+      "label": "formatPrice()",
       "_callable": true,
       "_origin": "ast",
       "community": 3,
       "community_name": "dictionaries.ts",
       "file_type": "code",
-      "norm_label": "empty()",
-      "source_file": "components/ui/empty.tsx",
-      "source_location": "L5"
-    },
-    {
-      "id": "components_ui_empty_emptycontent",
-      "label": "EmptyContent()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "emptycontent()",
-      "source_file": "components/ui/empty.tsx",
-      "source_location": "L84"
-    },
-    {
-      "id": "components_ui_empty_emptydescription",
-      "label": "EmptyDescription()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "emptydescription()",
-      "source_file": "components/ui/empty.tsx",
-      "source_location": "L71"
-    },
-    {
-      "id": "components_ui_empty_emptyheader",
-      "label": "EmptyHeader()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "emptyheader()",
-      "source_file": "components/ui/empty.tsx",
-      "source_location": "L18"
-    },
-    {
-      "id": "components_ui_empty_emptymedia",
-      "label": "EmptyMedia()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "emptymedia()",
-      "source_file": "components/ui/empty.tsx",
-      "source_location": "L43"
-    },
-    {
-      "id": "components_ui_empty_emptytitle",
-      "label": "EmptyTitle()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "emptytitle()",
-      "source_file": "components/ui/empty.tsx",
-      "source_location": "L58"
-    },
-    {
-      "id": "features_cart_use_cart_usecart",
-      "label": "useCart()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "usecart()",
-      "source_file": "features/cart/use-cart.ts",
-      "source_location": "L7"
-    },
-    {
-      "id": "lib_analytics_analytics_track",
-      "label": "track()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "track()",
-      "source_file": "lib/analytics/analytics.ts",
-      "source_location": "L5"
-    },
-    {
-      "id": "lib_analytics_events_cartlinestoga4items",
-      "label": "cartLinesToGa4Items()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "cartlinestoga4items()",
-      "source_file": "lib/analytics/events.ts",
-      "source_location": "L26"
-    },
-    {
-      "id": "lib_analytics_use_analytics_useanalytics",
-      "label": "useAnalytics()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "useanalytics()",
-      "source_file": "lib/analytics/use-analytics.ts",
-      "source_location": "L4"
-    },
-    {
-      "id": "lib_api_schemas_catalog_parseproductqueryloose",
-      "label": "parseProductQueryLoose()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "parseproductqueryloose()",
-      "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L94"
-    },
-    {
-      "id": "lib_i18n_config_islocale",
-      "label": "isLocale()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "islocale()",
-      "source_file": "lib/i18n/config.ts",
-      "source_location": "L5"
-    },
-    {
-      "id": "lib_i18n_dictionaries_getdictionary",
-      "label": "getDictionary()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "getdictionary()",
-      "source_file": "lib/i18n/dictionaries.ts",
-      "source_location": "L7"
+      "norm_label": "formatprice()",
+      "source_file": "lib/utils/format.ts",
+      "source_location": "L1"
     },
     {
       "id": "middleware_middleware",
@@ -1305,35 +1188,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "rootlayout()",
       "source_file": "app/layout.tsx",
       "source_location": "L24"
-    },
-    {
-      "id": "components_commerce_cart_line_item_cartlineitem",
-      "label": "CartLineItem()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "cart-line-item.tsx",
-      "file_type": "code",
-      "norm_label": "cartlineitem()",
-      "source_file": "components/commerce/cart-line-item.tsx",
-      "source_location": "L9"
-    },
-    {
-      "id": "components_commerce_order_summary_ordersummary",
-      "label": "OrderSummary()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "cart-line-item.tsx",
-      "file_type": "code",
-      "norm_label": "ordersummary()",
-      "source_file": "components/commerce/order-summary.tsx",
-      "source_location": "L10"
     },
     {
       "id": "features_cart_cart_context_cartprovider",
@@ -1341,7 +1200,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "cartprovider()",
       "source_file": "features/cart/cart-context.tsx",
@@ -1353,7 +1212,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "cartcount()",
       "source_file": "features/cart/cart-reducer.ts",
@@ -1365,7 +1224,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "cartreducer()",
       "source_file": "features/cart/cart-reducer.ts",
@@ -1377,7 +1236,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "cartsubtotal()",
       "source_file": "features/cart/cart-reducer.ts",
@@ -1389,7 +1248,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "loadcart()",
       "source_file": "features/cart/cart-storage.ts",
@@ -1401,23 +1260,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "savecart()",
       "source_file": "features/cart/cart-storage.ts",
       "source_location": "L17"
-    },
-    {
-      "id": "lib_utils_format_formatprice",
-      "label": "formatPrice()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "cart-line-item.tsx",
-      "file_type": "code",
-      "norm_label": "formatprice()",
-      "source_file": "lib/utils/format.ts",
-      "source_location": "L1"
     },
     {
       "id": "components_ui_card_card",
@@ -1504,6 +1351,18 @@
       "source_location": "L36"
     },
     {
+      "id": "components_ui_separator_separator",
+      "label": "Separator()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 52,
+      "community_name": "order-summary.tsx",
+      "file_type": "code",
+      "norm_label": "separator()",
+      "source_file": "components/ui/separator.tsx",
+      "source_location": "L8"
+    },
+    {
       "id": "components_commerce_product_gallery_productgallery",
       "label": "ProductGallery()",
       "_callable": true,
@@ -1538,6 +1397,18 @@
       "norm_label": "reviewslist()",
       "source_file": "components/commerce/reviews-list.tsx",
       "source_location": "L7"
+    },
+    {
+      "id": "components_commerce_spec_table_spectable",
+      "label": "SpecTable()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 53,
+      "community_name": "product/[slug]/page.tsx",
+      "file_type": "code",
+      "norm_label": "spectable()",
+      "source_file": "components/commerce/spec-table.tsx",
+      "source_location": "L4"
     },
     {
       "id": "components_ui_breadcrumb_breadcrumb",
@@ -1624,64 +1495,16 @@
       "source_location": "L72"
     },
     {
-      "id": "components_commerce_hero_carousel_herocarousel",
-      "label": "HeroCarousel()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 54,
-      "community_name": "cn.ts",
-      "file_type": "code",
-      "norm_label": "herocarousel()",
-      "source_file": "components/commerce/hero-carousel.tsx",
-      "source_location": "L11"
-    },
-    {
-      "id": "components_commerce_quantity_stepper_quantitystepper",
-      "label": "QuantityStepper()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 54,
-      "community_name": "cn.ts",
-      "file_type": "code",
-      "norm_label": "quantitystepper()",
-      "source_file": "components/commerce/quantity-stepper.tsx",
-      "source_location": "L8"
-    },
-    {
       "id": "components_ui_badge_badge",
       "label": "Badge()",
       "_callable": true,
       "_origin": "ast",
       "community": 54,
-      "community_name": "cn.ts",
+      "community_name": "badge.tsx",
       "file_type": "code",
       "norm_label": "badge()",
       "source_file": "components/ui/badge.tsx",
       "source_location": "L30"
-    },
-    {
-      "id": "components_ui_skeleton_skeleton",
-      "label": "Skeleton()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 54,
-      "community_name": "cn.ts",
-      "file_type": "code",
-      "norm_label": "skeleton()",
-      "source_file": "components/ui/skeleton.tsx",
-      "source_location": "L3"
-    },
-    {
-      "id": "components_ui_button_button",
-      "label": "Button()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 55,
-      "community_name": "dialog.tsx",
-      "file_type": "code",
-      "norm_label": "button()",
-      "source_file": "components/ui/button.tsx",
-      "source_location": "L44"
     },
     {
       "id": "components_ui_dialog_dialog",
@@ -1804,18 +1627,6 @@
       "source_location": "L16"
     },
     {
-      "id": "components_commerce_spec_table_spectable",
-      "label": "SpecTable()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 56,
-      "community_name": "catalog.ts",
-      "file_type": "code",
-      "norm_label": "spectable()",
-      "source_file": "components/commerce/spec-table.tsx",
-      "source_location": "L4"
-    },
-    {
       "id": "content_mock_collections_bybadge",
       "label": "byBadge()",
       "_callable": true,
@@ -1826,6 +1637,18 @@
       "norm_label": "bybadge()",
       "source_file": "content/mock/collections.ts",
       "source_location": "L4"
+    },
+    {
+      "id": "lib_api_resources_catalog_mock_minprice",
+      "label": "minPrice()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 56,
+      "community_name": "catalog.ts",
+      "file_type": "code",
+      "norm_label": "minprice()",
+      "source_file": "lib/api/resources/catalog/mock.ts",
+      "source_location": "L5"
     },
     {
       "id": "lib_api_schemas_catalog_blanktoundefined",
@@ -1852,6 +1675,30 @@
       "source_location": "L13"
     },
     {
+      "id": "app_locale_cart_page_cartpage",
+      "label": "CartPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "cartpage()",
+      "source_file": "app/[locale]/cart/page.tsx",
+      "source_location": "L15"
+    },
+    {
+      "id": "app_locale_checkout_page_checkoutpage",
+      "label": "CheckoutPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "checkoutpage()",
+      "source_file": "app/[locale]/checkout/page.tsx",
+      "source_location": "L24"
+    },
+    {
       "id": "app_locale_checkout_page_generateorderid",
       "label": "generateOrderId()",
       "_callable": true,
@@ -1862,6 +1709,78 @@
       "norm_label": "generateorderid()",
       "source_file": "app/[locale]/checkout/page.tsx",
       "source_location": "L20"
+    },
+    {
+      "id": "app_locale_checkout_success_page_successpage",
+      "label": "SuccessPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "successpage()",
+      "source_file": "app/[locale]/checkout/success/page.tsx",
+      "source_location": "L13"
+    },
+    {
+      "id": "app_locale_collection_slug_page_collectionpage",
+      "label": "CollectionPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "collectionpage()",
+      "source_file": "app/[locale]/collection/[slug]/page.tsx",
+      "source_location": "L24"
+    },
+    {
+      "id": "app_locale_collection_slug_page_resolvetitle",
+      "label": "resolveTitle()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "resolvetitle()",
+      "source_file": "app/[locale]/collection/[slug]/page.tsx",
+      "source_location": "L11"
+    },
+    {
+      "id": "app_locale_layout_localelayout",
+      "label": "LocaleLayout()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "localelayout()",
+      "source_file": "app/[locale]/layout.tsx",
+      "source_location": "L12"
+    },
+    {
+      "id": "app_locale_page_homepage",
+      "label": "HomePage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "homepage()",
+      "source_file": "app/[locale]/page.tsx",
+      "source_location": "L9"
+    },
+    {
+      "id": "app_locale_product_slug_page_productpage",
+      "label": "ProductPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "productpage()",
+      "source_file": "app/[locale]/product/[slug]/page.tsx",
+      "source_location": "L16"
     },
     {
       "id": "components_ui_alert_alert",
@@ -1912,40 +1831,76 @@
       "source_location": "L37"
     },
     {
-      "id": "components_ui_field_fielderror",
-      "label": "FieldError()",
+      "id": "components_ui_empty_empty",
+      "label": "Empty()",
       "_callable": true,
       "_origin": "ast",
       "community": 57,
       "community_name": "checkout/page.tsx",
       "file_type": "code",
-      "norm_label": "fielderror()",
-      "source_file": "components/ui/field.tsx",
-      "source_location": "L176"
+      "norm_label": "empty()",
+      "source_file": "components/ui/empty.tsx",
+      "source_location": "L5"
     },
     {
-      "id": "components_ui_field_fieldgroup",
-      "label": "FieldGroup()",
+      "id": "components_ui_empty_emptycontent",
+      "label": "EmptyContent()",
       "_callable": true,
       "_origin": "ast",
       "community": 57,
       "community_name": "checkout/page.tsx",
       "file_type": "code",
-      "norm_label": "fieldgroup()",
-      "source_file": "components/ui/field.tsx",
-      "source_location": "L41"
+      "norm_label": "emptycontent()",
+      "source_file": "components/ui/empty.tsx",
+      "source_location": "L84"
     },
     {
-      "id": "components_ui_field_fieldlabel",
-      "label": "FieldLabel()",
+      "id": "components_ui_empty_emptydescription",
+      "label": "EmptyDescription()",
       "_callable": true,
       "_origin": "ast",
       "community": 57,
       "community_name": "checkout/page.tsx",
       "file_type": "code",
-      "norm_label": "fieldlabel()",
-      "source_file": "components/ui/field.tsx",
-      "source_location": "L101"
+      "norm_label": "emptydescription()",
+      "source_file": "components/ui/empty.tsx",
+      "source_location": "L71"
+    },
+    {
+      "id": "components_ui_empty_emptyheader",
+      "label": "EmptyHeader()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "emptyheader()",
+      "source_file": "components/ui/empty.tsx",
+      "source_location": "L18"
+    },
+    {
+      "id": "components_ui_empty_emptymedia",
+      "label": "EmptyMedia()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "emptymedia()",
+      "source_file": "components/ui/empty.tsx",
+      "source_location": "L43"
+    },
+    {
+      "id": "components_ui_empty_emptytitle",
+      "label": "EmptyTitle()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "emptytitle()",
+      "source_file": "components/ui/empty.tsx",
+      "source_location": "L58"
     },
     {
       "id": "components_ui_input_input",
@@ -1958,6 +1913,66 @@
       "norm_label": "input()",
       "source_file": "components/ui/input.tsx",
       "source_location": "L5"
+    },
+    {
+      "id": "features_cart_use_cart_usecart",
+      "label": "useCart()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "usecart()",
+      "source_file": "features/cart/use-cart.ts",
+      "source_location": "L7"
+    },
+    {
+      "id": "lib_analytics_events_cartlinestoga4items",
+      "label": "cartLinesToGa4Items()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "cartlinestoga4items()",
+      "source_file": "lib/analytics/events.ts",
+      "source_location": "L26"
+    },
+    {
+      "id": "lib_api_schemas_catalog_parseproductqueryloose",
+      "label": "parseProductQueryLoose()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "parseproductqueryloose()",
+      "source_file": "lib/api/schemas/catalog.ts",
+      "source_location": "L94"
+    },
+    {
+      "id": "lib_i18n_config_islocale",
+      "label": "isLocale()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "islocale()",
+      "source_file": "lib/i18n/config.ts",
+      "source_location": "L5"
+    },
+    {
+      "id": "lib_i18n_dictionaries_getdictionary",
+      "label": "getDictionary()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "getdictionary()",
+      "source_file": "lib/i18n/dictionaries.ts",
+      "source_location": "L7"
     },
     {
       "id": "components_ui_tabs_tabs",
@@ -2080,6 +2095,66 @@
       "source_location": "L65"
     },
     {
+      "id": "lib_api_schemas_common_envelopeschema",
+      "label": "envelopeSchema()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": "envelopeschema()",
+      "source_file": "lib/api/schemas/common.ts",
+      "source_location": "L11"
+    },
+    {
+      "id": "lib_api_upstream_fetch_upstreamfetch",
+      "label": "upstreamFetch()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": "upstreamfetch()",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L25"
+    },
+    {
+      "id": "lib_api_upstream_fetch_upstreamrequesterror_constructor",
+      "label": ".constructor()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": ".constructor()",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L15"
+    },
+    {
+      "id": "lib_api_upstream_validate_parseorthrow",
+      "label": "parseOrThrow()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": "parseorthrow()",
+      "source_file": "lib/api/upstream/validate.ts",
+      "source_location": "L18"
+    },
+    {
+      "id": "lib_api_upstream_validate_upstreamshapeerror_constructor",
+      "label": ".constructor()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": ".constructor()",
+      "source_file": "lib/api/upstream/validate.ts",
+      "source_location": "L8"
+    },
+    {
       "id": "app_api_collections_route_get",
       "label": "GET()",
       "_callable": true,
@@ -2152,16 +2227,40 @@
       "source_location": "L4"
     },
     {
-      "id": "lib_api_resources_catalog_mock_minprice",
-      "label": "minPrice()",
+      "id": "components_commerce_category_grid_categorygrid",
+      "label": "CategoryGrid()",
       "_callable": true,
       "_origin": "ast",
       "community": 60,
       "community_name": "catalog/index.ts",
       "file_type": "code",
-      "norm_label": "minprice()",
-      "source_file": "lib/api/resources/catalog/mock.ts",
+      "norm_label": "categorygrid()",
+      "source_file": "components/commerce/category-grid.tsx",
       "source_location": "L5"
+    },
+    {
+      "id": "components_commerce_collection_carousel_collectioncarousel",
+      "label": "CollectionCarousel()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 60,
+      "community_name": "catalog/index.ts",
+      "file_type": "code",
+      "norm_label": "collectioncarousel()",
+      "source_file": "components/commerce/collection-carousel.tsx",
+      "source_location": "L9"
+    },
+    {
+      "id": "components_commerce_hero_carousel_herocarousel",
+      "label": "HeroCarousel()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 60,
+      "community_name": "catalog/index.ts",
+      "file_type": "code",
+      "norm_label": "herocarousel()",
+      "source_file": "components/commerce/hero-carousel.tsx",
+      "source_location": "L11"
     },
     {
       "id": "lib_api_response_apifail",
@@ -2186,18 +2285,6 @@
       "norm_label": "apiok()",
       "source_file": "lib/api/response.ts",
       "source_location": "L4"
-    },
-    {
-      "id": "lib_api_schemas_common_envelopeschema",
-      "label": "envelopeSchema()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 60,
-      "community_name": "catalog/index.ts",
-      "file_type": "code",
-      "norm_label": "envelopeschema()",
-      "source_file": "lib/api/schemas/common.ts",
-      "source_location": "L11"
     },
     {
       "id": "components_ui_accordion",
@@ -2244,14 +2331,14 @@
       "source_location": "L1"
     },
     {
-      "id": "components_ui_separator",
-      "label": "separator.tsx",
+      "id": "components_ui_skeleton",
+      "label": "skeleton.tsx",
       "_origin": "ast",
       "community": 0,
       "community_name": "cn",
       "file_type": "code",
-      "norm_label": "separator.tsx",
-      "source_file": "components/ui/separator.tsx",
+      "norm_label": "skeleton.tsx",
+      "source_file": "components/ui/skeleton.tsx",
       "source_location": "L1"
     },
     {
@@ -2263,6 +2350,17 @@
       "file_type": "code",
       "norm_label": "add-to-cart.tsx",
       "source_file": "components/commerce/add-to-cart.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_commerce_collection_carousel",
+      "label": "collection-carousel.tsx",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "add-to-cart.tsx",
+      "file_type": "code",
+      "norm_label": "collection-carousel.tsx",
+      "source_file": "components/commerce/collection-carousel.tsx",
       "source_location": "L1"
     },
     {
@@ -2318,6 +2416,17 @@
       "file_type": "code",
       "norm_label": "product-grid.tsx",
       "source_file": "components/commerce/product-grid.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_commerce_quantity_stepper",
+      "label": "quantity-stepper.tsx",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "add-to-cart.tsx",
+      "file_type": "code",
+      "norm_label": "quantity-stepper.tsx",
+      "source_file": "components/commerce/quantity-stepper.tsx",
       "source_location": "L1"
     },
     {
@@ -2409,6 +2518,17 @@
       "source_location": "L1"
     },
     {
+      "id": "lib_analytics_use_analytics",
+      "label": "use-analytics.ts",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "add-to-cart.tsx",
+      "file_type": "code",
+      "norm_label": "use-analytics.ts",
+      "source_file": "lib/analytics/use-analytics.ts",
+      "source_location": "L1"
+    },
+    {
       "id": "lib_types_index",
       "label": "types/index.ts",
       "_origin": "ast",
@@ -2417,6 +2537,17 @@
       "file_type": "code",
       "norm_label": "types/index.ts",
       "source_file": "lib/types/index.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib_utils_cn",
+      "label": "cn.ts",
+      "_origin": "ast",
+      "community": 1,
+      "community_name": "add-to-cart.tsx",
+      "file_type": "code",
+      "norm_label": "cn.ts",
+      "source_file": "lib/utils/cn.ts",
       "source_location": "L1"
     },
     {
@@ -2835,58 +2966,36 @@
       "source_location": "L4198"
     },
     {
-      "id": "components_layout_mobile_nav",
-      "label": "mobile-nav.tsx",
+      "id": "components_ui_button",
+      "label": "button.tsx",
       "_origin": "ast",
       "community": 2,
-      "community_name": "mobile-nav.tsx",
+      "community_name": "sheet.tsx",
       "file_type": "code",
-      "norm_label": "mobile-nav.tsx",
-      "source_file": "components/layout/mobile-nav.tsx",
+      "norm_label": "button.tsx",
+      "source_file": "components/ui/button.tsx",
       "source_location": "L1"
+    },
+    {
+      "id": "components_ui_button_buttonvariants",
+      "label": "buttonVariants",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "sheet.tsx",
+      "file_type": "code",
+      "norm_label": "buttonvariants",
+      "source_file": "components/ui/button.tsx",
+      "source_location": "L7"
     },
     {
       "id": "components_ui_sheet",
       "label": "sheet.tsx",
       "_origin": "ast",
       "community": 2,
-      "community_name": "mobile-nav.tsx",
+      "community_name": "sheet.tsx",
       "file_type": "code",
       "norm_label": "sheet.tsx",
       "source_file": "components/ui/sheet.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "app_locale_cart_page",
-      "label": "cart/page.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "cart/page.tsx",
-      "source_file": "app/[locale]/cart/page.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "app_locale_checkout_success_page",
-      "label": "success/page.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "success/page.tsx",
-      "source_file": "app/[locale]/checkout/success/page.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "app_locale_collection_slug_page",
-      "label": "collection/[slug]/page.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "collection/[slug]/page.tsx",
-      "source_file": "app/[locale]/collection/[slug]/page.tsx",
       "source_location": "L1"
     },
     {
@@ -2901,48 +3010,48 @@
       "source_location": "L1"
     },
     {
-      "id": "app_locale_page",
-      "label": "[locale]/page.tsx",
+      "id": "components_commerce_cart_line_item",
+      "label": "cart-line-item.tsx",
       "_origin": "ast",
       "community": 3,
       "community_name": "dictionaries.ts",
       "file_type": "code",
-      "norm_label": "[locale]/page.tsx",
-      "source_file": "app/[locale]/page.tsx",
+      "norm_label": "cart-line-item.tsx",
+      "source_file": "components/commerce/cart-line-item.tsx",
       "source_location": "L1"
     },
     {
-      "id": "components_commerce_category_grid",
-      "label": "category-grid.tsx",
+      "id": "components_commerce_cart_line_item_test",
+      "label": "cart-line-item.test.tsx",
       "_origin": "ast",
       "community": 3,
       "community_name": "dictionaries.ts",
       "file_type": "code",
-      "norm_label": "category-grid.tsx",
-      "source_file": "components/commerce/category-grid.tsx",
+      "norm_label": "cart-line-item.test.tsx",
+      "source_file": "components/commerce/cart-line-item.test.tsx",
       "source_location": "L1"
     },
     {
-      "id": "components_commerce_collection_carousel",
-      "label": "collection-carousel.tsx",
+      "id": "components_commerce_cart_line_item_test_dict",
+      "label": "dict",
       "_origin": "ast",
       "community": 3,
       "community_name": "dictionaries.ts",
       "file_type": "code",
-      "norm_label": "collection-carousel.tsx",
-      "source_file": "components/commerce/collection-carousel.tsx",
-      "source_location": "L1"
+      "norm_label": "dict",
+      "source_file": "components/commerce/cart-line-item.test.tsx",
+      "source_location": "L8"
     },
     {
-      "id": "components_commerce_reviews_list",
-      "label": "reviews-list.tsx",
+      "id": "components_commerce_cart_line_item_test_line",
+      "label": "line",
       "_origin": "ast",
       "community": 3,
       "community_name": "dictionaries.ts",
       "file_type": "code",
-      "norm_label": "reviews-list.tsx",
-      "source_file": "components/commerce/reviews-list.tsx",
-      "source_location": "L1"
+      "norm_label": "line",
+      "source_file": "components/commerce/cart-line-item.test.tsx",
+      "source_location": "L9"
     },
     {
       "id": "components_layout_announcement_bar",
@@ -3000,6 +3109,17 @@
       "source_location": "L1"
     },
     {
+      "id": "components_layout_mobile_nav",
+      "label": "mobile-nav.tsx",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "dictionaries.ts",
+      "file_type": "code",
+      "norm_label": "mobile-nav.tsx",
+      "source_file": "components/layout/mobile-nav.tsx",
+      "source_location": "L1"
+    },
+    {
       "id": "components_layout_nav_items",
       "label": "nav-items.ts",
       "_origin": "ast",
@@ -3008,39 +3128,6 @@
       "file_type": "code",
       "norm_label": "nav-items.ts",
       "source_file": "components/layout/nav-items.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "components_ui_empty",
-      "label": "empty.tsx",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "empty.tsx",
-      "source_file": "components/ui/empty.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "components_ui_empty_emptymediavariants",
-      "label": "emptyMediaVariants",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "emptymediavariants",
-      "source_file": "components/ui/empty.tsx",
-      "source_location": "L28"
-    },
-    {
-      "id": "lib_analytics_use_analytics",
-      "label": "use-analytics.ts",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "use-analytics.ts",
-      "source_file": "lib/analytics/use-analytics.ts",
       "source_location": "L1"
     },
     {
@@ -3055,17 +3142,6 @@
       "source_location": "L1"
     },
     {
-      "id": "lib_i18n_config_defaultlocale",
-      "label": "defaultLocale",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "defaultlocale",
-      "source_file": "lib/i18n/config.ts",
-      "source_location": "L3"
-    },
-    {
       "id": "lib_i18n_config_locales",
       "label": "locales",
       "_origin": "ast",
@@ -3074,17 +3150,6 @@
       "file_type": "code",
       "norm_label": "locales",
       "source_file": "lib/i18n/config.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "lib_i18n_config_test",
-      "label": "i18n/config.test.ts",
-      "_origin": "ast",
-      "community": 3,
-      "community_name": "dictionaries.ts",
-      "file_type": "code",
-      "norm_label": "i18n/config.test.ts",
-      "source_file": "lib/i18n/config.test.ts",
       "source_location": "L1"
     },
     {
@@ -3152,6 +3217,28 @@
       "norm_label": "vi",
       "source_file": "lib/i18n/dictionaries/vi.ts",
       "source_location": "L3"
+    },
+    {
+      "id": "lib_utils_format",
+      "label": "format.ts",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "dictionaries.ts",
+      "file_type": "code",
+      "norm_label": "format.ts",
+      "source_file": "lib/utils/format.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib_utils_format_test",
+      "label": "format.test.ts",
+      "_origin": "ast",
+      "community": 3,
+      "community_name": "dictionaries.ts",
+      "file_type": "code",
+      "norm_label": "format.test.ts",
+      "source_file": "lib/utils/format.test.ts",
+      "source_location": "L1"
     },
     {
       "id": "middleware",
@@ -3272,7 +3359,7 @@
       "file_type": "code",
       "norm_label": "dependencies",
       "source_file": "package.json",
-      "source_location": "L14"
+      "source_location": "L15"
     },
     {
       "id": "package_dependencies_class_variance_authority",
@@ -3283,7 +3370,7 @@
       "file_type": "code",
       "norm_label": "class-variance-authority",
       "source_file": "package.json",
-      "source_location": "L17"
+      "source_location": "L18"
     },
     {
       "id": "package_dependencies_clsx",
@@ -3294,7 +3381,7 @@
       "file_type": "code",
       "norm_label": "clsx",
       "source_file": "package.json",
-      "source_location": "L18"
+      "source_location": "L19"
     },
     {
       "id": "package_dependencies_embla_carousel_react",
@@ -3305,7 +3392,7 @@
       "file_type": "code",
       "norm_label": "embla-carousel-react",
       "source_file": "package.json",
-      "source_location": "L19"
+      "source_location": "L20"
     },
     {
       "id": "package_dependencies_hookform_resolvers",
@@ -3316,7 +3403,7 @@
       "file_type": "code",
       "norm_label": "@hookform/resolvers",
       "source_file": "package.json",
-      "source_location": "L15"
+      "source_location": "L16"
     },
     {
       "id": "package_dependencies_lucide_react",
@@ -3327,7 +3414,7 @@
       "file_type": "code",
       "norm_label": "lucide-react",
       "source_file": "package.json",
-      "source_location": "L20"
+      "source_location": "L21"
     },
     {
       "id": "package_dependencies_next",
@@ -3338,7 +3425,7 @@
       "file_type": "code",
       "norm_label": "next",
       "source_file": "package.json",
-      "source_location": "L21"
+      "source_location": "L22"
     },
     {
       "id": "package_dependencies_next_third_parties",
@@ -3349,7 +3436,7 @@
       "file_type": "code",
       "norm_label": "@next/third-parties",
       "source_file": "package.json",
-      "source_location": "L16"
+      "source_location": "L17"
     },
     {
       "id": "package_dependencies_radix_ui",
@@ -3360,7 +3447,7 @@
       "file_type": "code",
       "norm_label": "radix-ui",
       "source_file": "package.json",
-      "source_location": "L22"
+      "source_location": "L23"
     },
     {
       "id": "package_dependencies_react",
@@ -3371,7 +3458,7 @@
       "file_type": "code",
       "norm_label": "react",
       "source_file": "package.json",
-      "source_location": "L23"
+      "source_location": "L24"
     },
     {
       "id": "package_dependencies_react_dom",
@@ -3382,7 +3469,7 @@
       "file_type": "code",
       "norm_label": "react-dom",
       "source_file": "package.json",
-      "source_location": "L24"
+      "source_location": "L25"
     },
     {
       "id": "package_dependencies_react_hook_form",
@@ -3393,7 +3480,7 @@
       "file_type": "code",
       "norm_label": "react-hook-form",
       "source_file": "package.json",
-      "source_location": "L25"
+      "source_location": "L26"
     },
     {
       "id": "package_dependencies_shadcn",
@@ -3404,7 +3491,7 @@
       "file_type": "code",
       "norm_label": "shadcn",
       "source_file": "package.json",
-      "source_location": "L26"
+      "source_location": "L27"
     },
     {
       "id": "package_dependencies_tailwind_merge",
@@ -3415,7 +3502,7 @@
       "file_type": "code",
       "norm_label": "tailwind-merge",
       "source_file": "package.json",
-      "source_location": "L27"
+      "source_location": "L28"
     },
     {
       "id": "package_dependencies_tw_animate_css",
@@ -3426,7 +3513,7 @@
       "file_type": "code",
       "norm_label": "tw-animate-css",
       "source_file": "package.json",
-      "source_location": "L28"
+      "source_location": "L29"
     },
     {
       "id": "package_dependencies_zod",
@@ -3437,7 +3524,7 @@
       "file_type": "code",
       "norm_label": "zod",
       "source_file": "package.json",
-      "source_location": "L29"
+      "source_location": "L30"
     },
     {
       "id": "package_name",
@@ -3539,6 +3626,17 @@
       "source_location": "L12"
     },
     {
+      "id": "package_scripts_test_contract_upstream",
+      "label": "test:contract:upstream",
+      "_origin": "ast",
+      "community": 4,
+      "community_name": "dependencies",
+      "file_type": "code",
+      "norm_label": "test:contract:upstream",
+      "source_file": "package.json",
+      "source_location": "L13"
+    },
+    {
       "id": "package_scripts_test_watch",
       "label": "test:watch",
       "_origin": "ast",
@@ -3569,7 +3667,7 @@
       "file_type": "concept",
       "norm_label": "class-variance-authority",
       "source_file": "package.json",
-      "source_location": "L17"
+      "source_location": "L18"
     },
     {
       "id": "clsx",
@@ -3580,7 +3678,7 @@
       "file_type": "concept",
       "norm_label": "clsx",
       "source_file": "package.json",
-      "source_location": "L18"
+      "source_location": "L19"
     },
     {
       "id": "embla_carousel_react",
@@ -3591,7 +3689,7 @@
       "file_type": "concept",
       "norm_label": "embla-carousel-react",
       "source_file": "package.json",
-      "source_location": "L19"
+      "source_location": "L20"
     },
     {
       "id": "hookform_resolvers",
@@ -3602,7 +3700,7 @@
       "file_type": "concept",
       "norm_label": "@hookform/resolvers",
       "source_file": "package.json",
-      "source_location": "L15"
+      "source_location": "L16"
     },
     {
       "id": "lucide_react",
@@ -3613,7 +3711,7 @@
       "file_type": "concept",
       "norm_label": "lucide-react",
       "source_file": "package.json",
-      "source_location": "L20"
+      "source_location": "L21"
     },
     {
       "id": "next",
@@ -3624,7 +3722,7 @@
       "file_type": "concept",
       "norm_label": "next",
       "source_file": "package.json",
-      "source_location": "L21"
+      "source_location": "L22"
     },
     {
       "id": "next_third_parties",
@@ -3635,7 +3733,7 @@
       "file_type": "concept",
       "norm_label": "@next/third-parties",
       "source_file": "package.json",
-      "source_location": "L16"
+      "source_location": "L17"
     },
     {
       "id": "radix_ui",
@@ -3646,7 +3744,7 @@
       "file_type": "concept",
       "norm_label": "radix-ui",
       "source_file": "package.json",
-      "source_location": "L22"
+      "source_location": "L23"
     },
     {
       "id": "react",
@@ -3657,7 +3755,7 @@
       "file_type": "concept",
       "norm_label": "react",
       "source_file": "package.json",
-      "source_location": "L23"
+      "source_location": "L24"
     },
     {
       "id": "react_dom",
@@ -3668,7 +3766,7 @@
       "file_type": "concept",
       "norm_label": "react-dom",
       "source_file": "package.json",
-      "source_location": "L24"
+      "source_location": "L25"
     },
     {
       "id": "react_hook_form",
@@ -3679,7 +3777,7 @@
       "file_type": "concept",
       "norm_label": "react-hook-form",
       "source_file": "package.json",
-      "source_location": "L25"
+      "source_location": "L26"
     },
     {
       "id": "shadcn",
@@ -3690,7 +3788,7 @@
       "file_type": "concept",
       "norm_label": "shadcn",
       "source_file": "package.json",
-      "source_location": "L26"
+      "source_location": "L27"
     },
     {
       "id": "tailwind_merge",
@@ -3701,7 +3799,7 @@
       "file_type": "concept",
       "norm_label": "tailwind-merge",
       "source_file": "package.json",
-      "source_location": "L27"
+      "source_location": "L28"
     },
     {
       "id": "tw_animate_css",
@@ -3712,7 +3810,7 @@
       "file_type": "concept",
       "norm_label": "tw-animate-css",
       "source_file": "package.json",
-      "source_location": "L28"
+      "source_location": "L29"
     },
     {
       "id": "zod",
@@ -3723,7 +3821,7 @@
       "file_type": "concept",
       "norm_label": "zod",
       "source_file": "package.json",
-      "source_location": "L29"
+      "source_location": "L30"
     },
     {
       "id": "tests_smoke_test",
@@ -3741,7 +3839,7 @@
       "label": "app/layout.tsx",
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "app/layout.tsx",
       "source_file": "app/layout.tsx",
@@ -3752,7 +3850,7 @@
       "label": "geistMono",
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "geistmono",
       "source_file": "app/layout.tsx",
@@ -3763,7 +3861,7 @@
       "label": "geistSans",
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "geistsans",
       "source_file": "app/layout.tsx",
@@ -3774,62 +3872,18 @@
       "label": "metadata",
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "metadata",
       "source_file": "app/layout.tsx",
       "source_location": "L19"
     },
     {
-      "id": "components_commerce_cart_line_item",
-      "label": "cart-line-item.tsx",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "cart-line-item.tsx",
-      "file_type": "code",
-      "norm_label": "cart-line-item.tsx",
-      "source_file": "components/commerce/cart-line-item.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "components_commerce_cart_line_item_test",
-      "label": "cart-line-item.test.tsx",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "cart-line-item.tsx",
-      "file_type": "code",
-      "norm_label": "cart-line-item.test.tsx",
-      "source_file": "components/commerce/cart-line-item.test.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "components_commerce_cart_line_item_test_dict",
-      "label": "dict",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "cart-line-item.tsx",
-      "file_type": "code",
-      "norm_label": "dict",
-      "source_file": "components/commerce/cart-line-item.test.tsx",
-      "source_location": "L8"
-    },
-    {
-      "id": "components_commerce_cart_line_item_test_line",
-      "label": "line",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "cart-line-item.tsx",
-      "file_type": "code",
-      "norm_label": "line",
-      "source_file": "components/commerce/cart-line-item.test.tsx",
-      "source_location": "L9"
-    },
-    {
       "id": "features_cart_cart_context",
       "label": "cart-context.tsx",
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "cart-context.tsx",
       "source_file": "features/cart/cart-context.tsx",
@@ -3840,7 +3894,7 @@
       "label": "CartContext",
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "cartcontext",
       "source_file": "features/cart/cart-context.tsx",
@@ -3851,7 +3905,7 @@
       "label": "cart-reducer.ts",
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "cart-reducer.ts",
       "source_file": "features/cart/cart-reducer.ts",
@@ -3862,7 +3916,7 @@
       "label": "cart-reducer.test.ts",
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "cart-reducer.test.ts",
       "source_file": "features/cart/cart-reducer.test.ts",
@@ -3873,7 +3927,7 @@
       "label": "empty",
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "empty",
       "source_file": "features/cart/cart-reducer.test.ts",
@@ -3884,7 +3938,7 @@
       "label": "line",
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "line",
       "source_file": "features/cart/cart-reducer.test.ts",
@@ -3895,7 +3949,7 @@
       "label": "cart-storage.ts",
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "cart-storage.ts",
       "source_file": "features/cart/cart-storage.ts",
@@ -3906,7 +3960,7 @@
       "label": "cart.types.ts",
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "cart.types.ts",
       "source_file": "features/cart/cart.types.ts",
@@ -3917,32 +3971,10 @@
       "label": "use-cart.ts",
       "_origin": "ast",
       "community": 5,
-      "community_name": "cart-line-item.tsx",
+      "community_name": "use-cart.ts",
       "file_type": "code",
       "norm_label": "use-cart.ts",
       "source_file": "features/cart/use-cart.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "lib_utils_format",
-      "label": "format.ts",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "cart-line-item.tsx",
-      "file_type": "code",
-      "norm_label": "format.ts",
-      "source_file": "lib/utils/format.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "lib_utils_format_test",
-      "label": "format.test.ts",
-      "_origin": "ast",
-      "community": 5,
-      "community_name": "cart-line-item.tsx",
-      "file_type": "code",
-      "norm_label": "format.test.ts",
-      "source_file": "lib/utils/format.test.ts",
       "source_location": "L1"
     },
     {
@@ -3990,6 +4022,17 @@
       "source_location": "L1"
     },
     {
+      "id": "components_ui_separator",
+      "label": "separator.tsx",
+      "_origin": "ast",
+      "community": 52,
+      "community_name": "order-summary.tsx",
+      "file_type": "code",
+      "norm_label": "separator.tsx",
+      "source_file": "components/ui/separator.tsx",
+      "source_location": "L1"
+    },
+    {
       "id": "app_locale_product_slug_page",
       "label": "product/[slug]/page.tsx",
       "_origin": "ast",
@@ -4023,6 +4066,17 @@
       "source_location": "L1"
     },
     {
+      "id": "components_commerce_spec_table",
+      "label": "spec-table.tsx",
+      "_origin": "ast",
+      "community": 53,
+      "community_name": "product/[slug]/page.tsx",
+      "file_type": "code",
+      "norm_label": "spec-table.tsx",
+      "source_file": "components/commerce/spec-table.tsx",
+      "source_location": "L1"
+    },
+    {
       "id": "components_ui_breadcrumb",
       "label": "breadcrumb.tsx",
       "_origin": "ast",
@@ -4034,33 +4088,11 @@
       "source_location": "L1"
     },
     {
-      "id": "components_commerce_hero_carousel",
-      "label": "hero-carousel.tsx",
-      "_origin": "ast",
-      "community": 54,
-      "community_name": "cn.ts",
-      "file_type": "code",
-      "norm_label": "hero-carousel.tsx",
-      "source_file": "components/commerce/hero-carousel.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "components_commerce_quantity_stepper",
-      "label": "quantity-stepper.tsx",
-      "_origin": "ast",
-      "community": 54,
-      "community_name": "cn.ts",
-      "file_type": "code",
-      "norm_label": "quantity-stepper.tsx",
-      "source_file": "components/commerce/quantity-stepper.tsx",
-      "source_location": "L1"
-    },
-    {
       "id": "components_ui_badge",
       "label": "badge.tsx",
       "_origin": "ast",
       "community": 54,
-      "community_name": "cn.ts",
+      "community_name": "badge.tsx",
       "file_type": "code",
       "norm_label": "badge.tsx",
       "source_file": "components/ui/badge.tsx",
@@ -4071,54 +4103,10 @@
       "label": "badgeVariants",
       "_origin": "ast",
       "community": 54,
-      "community_name": "cn.ts",
+      "community_name": "badge.tsx",
       "file_type": "code",
       "norm_label": "badgevariants",
       "source_file": "components/ui/badge.tsx",
-      "source_location": "L7"
-    },
-    {
-      "id": "components_ui_skeleton",
-      "label": "skeleton.tsx",
-      "_origin": "ast",
-      "community": 54,
-      "community_name": "cn.ts",
-      "file_type": "code",
-      "norm_label": "skeleton.tsx",
-      "source_file": "components/ui/skeleton.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "lib_utils_cn",
-      "label": "cn.ts",
-      "_origin": "ast",
-      "community": 54,
-      "community_name": "cn.ts",
-      "file_type": "code",
-      "norm_label": "cn.ts",
-      "source_file": "lib/utils/cn.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "components_ui_button",
-      "label": "button.tsx",
-      "_origin": "ast",
-      "community": 55,
-      "community_name": "dialog.tsx",
-      "file_type": "code",
-      "norm_label": "button.tsx",
-      "source_file": "components/ui/button.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "components_ui_button_buttonvariants",
-      "label": "buttonVariants",
-      "_origin": "ast",
-      "community": 55,
-      "community_name": "dialog.tsx",
-      "file_type": "code",
-      "norm_label": "buttonvariants",
-      "source_file": "components/ui/button.tsx",
       "source_location": "L7"
     },
     {
@@ -4130,17 +4118,6 @@
       "file_type": "code",
       "norm_label": "dialog.tsx",
       "source_file": "components/ui/dialog.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "components_commerce_spec_table",
-      "label": "spec-table.tsx",
-      "_origin": "ast",
-      "community": 56,
-      "community_name": "catalog.ts",
-      "file_type": "code",
-      "norm_label": "spec-table.tsx",
-      "source_file": "components/commerce/spec-table.tsx",
       "source_location": "L1"
     },
     {
@@ -4452,6 +4429,39 @@
       "source_location": "L1"
     },
     {
+      "id": "tests_contract_upstream_test",
+      "label": "upstream.test.ts",
+      "_origin": "ast",
+      "community": 56,
+      "community_name": "catalog.ts",
+      "file_type": "code",
+      "norm_label": "upstream.test.ts",
+      "source_file": "tests/contract/upstream.test.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_contract_upstream_test_configured",
+      "label": "configured",
+      "_origin": "ast",
+      "community": 56,
+      "community_name": "catalog.ts",
+      "file_type": "code",
+      "norm_label": "configured",
+      "source_file": "tests/contract/upstream.test.ts",
+      "source_location": "L16"
+    },
+    {
+      "id": "app_locale_cart_page",
+      "label": "cart/page.tsx",
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "cart/page.tsx",
+      "source_file": "app/[locale]/cart/page.tsx",
+      "source_location": "L1"
+    },
+    {
       "id": "app_locale_checkout_page",
       "label": "checkout/page.tsx",
       "_origin": "ast",
@@ -4460,6 +4470,39 @@
       "file_type": "code",
       "norm_label": "checkout/page.tsx",
       "source_file": "app/[locale]/checkout/page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_locale_checkout_success_page",
+      "label": "success/page.tsx",
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "success/page.tsx",
+      "source_file": "app/[locale]/checkout/success/page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_locale_collection_slug_page",
+      "label": "collection/[slug]/page.tsx",
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "collection/[slug]/page.tsx",
+      "source_file": "app/[locale]/collection/[slug]/page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_commerce_reviews_list",
+      "label": "reviews-list.tsx",
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "reviews-list.tsx",
+      "source_file": "components/commerce/reviews-list.tsx",
       "source_location": "L1"
     },
     {
@@ -4483,6 +4526,28 @@
       "norm_label": "alertvariants",
       "source_file": "components/ui/alert.tsx",
       "source_location": "L6"
+    },
+    {
+      "id": "components_ui_empty",
+      "label": "empty.tsx",
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "empty.tsx",
+      "source_file": "components/ui/empty.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_ui_empty_emptymediavariants",
+      "label": "emptyMediaVariants",
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "emptymediavariants",
+      "source_file": "components/ui/empty.tsx",
+      "source_location": "L28"
     },
     {
       "id": "components_ui_input",
@@ -4526,6 +4591,28 @@
       "file_type": "code",
       "norm_label": "schema.test.ts",
       "source_file": "lib/checkout/schema.test.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib_i18n_config_defaultlocale",
+      "label": "defaultLocale",
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "defaultlocale",
+      "source_file": "lib/i18n/config.ts",
+      "source_location": "L3"
+    },
+    {
+      "id": "lib_i18n_config_test",
+      "label": "i18n/config.test.ts",
+      "_origin": "ast",
+      "community": 57,
+      "community_name": "checkout/page.tsx",
+      "file_type": "code",
+      "norm_label": "i18n/config.test.ts",
+      "source_file": "lib/i18n/config.test.ts",
       "source_location": "L1"
     },
     {
@@ -4606,6 +4693,105 @@
       "source_location": "L4"
     },
     {
+      "id": "lib_api_schemas_common",
+      "label": "common.ts",
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": "common.ts",
+      "source_file": "lib/api/schemas/common.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib_api_schemas_common_apierrorschema",
+      "label": "apiErrorSchema",
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": "apierrorschema",
+      "source_file": "lib/api/schemas/common.ts",
+      "source_location": "L3"
+    },
+    {
+      "id": "lib_api_schemas_common_error_codes",
+      "label": "ERROR_CODES",
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": "error_codes",
+      "source_file": "lib/api/schemas/common.ts",
+      "source_location": "L21"
+    },
+    {
+      "id": "lib_api_schemas_common_http_status",
+      "label": "HTTP_STATUS",
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": "http_status",
+      "source_file": "lib/api/schemas/common.ts",
+      "source_location": "L32"
+    },
+    {
+      "id": "lib_api_schemas_common_okenvelopeschema",
+      "label": "okEnvelopeSchema",
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": "okenvelopeschema",
+      "source_file": "lib/api/schemas/common.ts",
+      "source_location": "L18"
+    },
+    {
+      "id": "lib_api_upstream_fetch",
+      "label": "fetch.ts",
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": "fetch.ts",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib_api_upstream_validate",
+      "label": "validate.ts",
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": "validate.ts",
+      "source_file": "lib/api/upstream/validate.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib_api_upstream_validate_test",
+      "label": "validate.test.ts",
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": "validate.test.ts",
+      "source_file": "lib/api/upstream/validate.test.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib_api_upstream_validate_test_schema",
+      "label": "schema",
+      "_origin": "ast",
+      "community": 59,
+      "community_name": "api/config.ts",
+      "file_type": "code",
+      "norm_label": "schema",
+      "source_file": "lib/api/upstream/validate.test.ts",
+      "source_location": "L5"
+    },
+    {
       "id": "package_devdependencies",
       "label": "devDependencies",
       "_origin": "ast",
@@ -4614,7 +4800,7 @@
       "file_type": "code",
       "norm_label": "devdependencies",
       "source_file": "package.json",
-      "source_location": "L31"
+      "source_location": "L32"
     },
     {
       "id": "package_devdependencies_eslint",
@@ -4625,7 +4811,7 @@
       "file_type": "code",
       "norm_label": "eslint",
       "source_file": "package.json",
-      "source_location": "L40"
+      "source_location": "L41"
     },
     {
       "id": "package_devdependencies_eslint_config_next",
@@ -4636,7 +4822,7 @@
       "file_type": "code",
       "norm_label": "eslint-config-next",
       "source_file": "package.json",
-      "source_location": "L41"
+      "source_location": "L42"
     },
     {
       "id": "package_devdependencies_jsdom",
@@ -4647,7 +4833,7 @@
       "file_type": "code",
       "norm_label": "jsdom",
       "source_file": "package.json",
-      "source_location": "L42"
+      "source_location": "L43"
     },
     {
       "id": "package_devdependencies_prettier",
@@ -4658,7 +4844,7 @@
       "file_type": "code",
       "norm_label": "prettier",
       "source_file": "package.json",
-      "source_location": "L43"
+      "source_location": "L44"
     },
     {
       "id": "package_devdependencies_prettier_plugin_tailwindcss",
@@ -4669,7 +4855,7 @@
       "file_type": "code",
       "norm_label": "prettier-plugin-tailwindcss",
       "source_file": "package.json",
-      "source_location": "L44"
+      "source_location": "L45"
     },
     {
       "id": "package_devdependencies_tailwindcss",
@@ -4680,7 +4866,7 @@
       "file_type": "code",
       "norm_label": "tailwindcss",
       "source_file": "package.json",
-      "source_location": "L45"
+      "source_location": "L46"
     },
     {
       "id": "package_devdependencies_tailwindcss_postcss",
@@ -4691,7 +4877,7 @@
       "file_type": "code",
       "norm_label": "@tailwindcss/postcss",
       "source_file": "package.json",
-      "source_location": "L32"
+      "source_location": "L33"
     },
     {
       "id": "package_devdependencies_testing_library_jest_dom",
@@ -4702,7 +4888,7 @@
       "file_type": "code",
       "norm_label": "@testing-library/jest-dom",
       "source_file": "package.json",
-      "source_location": "L33"
+      "source_location": "L34"
     },
     {
       "id": "package_devdependencies_testing_library_react",
@@ -4713,7 +4899,7 @@
       "file_type": "code",
       "norm_label": "@testing-library/react",
       "source_file": "package.json",
-      "source_location": "L34"
+      "source_location": "L35"
     },
     {
       "id": "package_devdependencies_testing_library_user_event",
@@ -4724,7 +4910,7 @@
       "file_type": "code",
       "norm_label": "@testing-library/user-event",
       "source_file": "package.json",
-      "source_location": "L35"
+      "source_location": "L36"
     },
     {
       "id": "package_devdependencies_types_node",
@@ -4735,7 +4921,7 @@
       "file_type": "code",
       "norm_label": "@types/node",
       "source_file": "package.json",
-      "source_location": "L36"
+      "source_location": "L37"
     },
     {
       "id": "package_devdependencies_types_react",
@@ -4746,7 +4932,7 @@
       "file_type": "code",
       "norm_label": "@types/react",
       "source_file": "package.json",
-      "source_location": "L37"
+      "source_location": "L38"
     },
     {
       "id": "package_devdependencies_types_react_dom",
@@ -4757,7 +4943,7 @@
       "file_type": "code",
       "norm_label": "@types/react-dom",
       "source_file": "package.json",
-      "source_location": "L38"
+      "source_location": "L39"
     },
     {
       "id": "package_devdependencies_typescript",
@@ -4768,7 +4954,7 @@
       "file_type": "code",
       "norm_label": "typescript",
       "source_file": "package.json",
-      "source_location": "L46"
+      "source_location": "L47"
     },
     {
       "id": "package_devdependencies_vitejs_plugin_react",
@@ -4779,7 +4965,7 @@
       "file_type": "code",
       "norm_label": "@vitejs/plugin-react",
       "source_file": "package.json",
-      "source_location": "L39"
+      "source_location": "L40"
     },
     {
       "id": "package_devdependencies_vitest",
@@ -4790,7 +4976,7 @@
       "file_type": "code",
       "norm_label": "vitest",
       "source_file": "package.json",
-      "source_location": "L47"
+      "source_location": "L48"
     },
     {
       "id": "eslint",
@@ -4801,7 +4987,7 @@
       "file_type": "concept",
       "norm_label": "eslint",
       "source_file": "package.json",
-      "source_location": "L40"
+      "source_location": "L41"
     },
     {
       "id": "eslint_config_next",
@@ -4812,7 +4998,7 @@
       "file_type": "concept",
       "norm_label": "eslint-config-next",
       "source_file": "package.json",
-      "source_location": "L41"
+      "source_location": "L42"
     },
     {
       "id": "jsdom",
@@ -4823,7 +5009,7 @@
       "file_type": "concept",
       "norm_label": "jsdom",
       "source_file": "package.json",
-      "source_location": "L42"
+      "source_location": "L43"
     },
     {
       "id": "prettier",
@@ -4834,7 +5020,7 @@
       "file_type": "concept",
       "norm_label": "prettier",
       "source_file": "package.json",
-      "source_location": "L43"
+      "source_location": "L44"
     },
     {
       "id": "prettier_plugin_tailwindcss",
@@ -4845,7 +5031,7 @@
       "file_type": "concept",
       "norm_label": "prettier-plugin-tailwindcss",
       "source_file": "package.json",
-      "source_location": "L44"
+      "source_location": "L45"
     },
     {
       "id": "tailwindcss",
@@ -4856,7 +5042,7 @@
       "file_type": "concept",
       "norm_label": "tailwindcss",
       "source_file": "package.json",
-      "source_location": "L45"
+      "source_location": "L46"
     },
     {
       "id": "tailwindcss_postcss",
@@ -4867,7 +5053,7 @@
       "file_type": "concept",
       "norm_label": "@tailwindcss/postcss",
       "source_file": "package.json",
-      "source_location": "L32"
+      "source_location": "L33"
     },
     {
       "id": "testing_library_jest_dom",
@@ -4878,7 +5064,7 @@
       "file_type": "concept",
       "norm_label": "@testing-library/jest-dom",
       "source_file": "package.json",
-      "source_location": "L33"
+      "source_location": "L34"
     },
     {
       "id": "testing_library_react",
@@ -4889,7 +5075,7 @@
       "file_type": "concept",
       "norm_label": "@testing-library/react",
       "source_file": "package.json",
-      "source_location": "L34"
+      "source_location": "L35"
     },
     {
       "id": "testing_library_user_event",
@@ -4900,7 +5086,7 @@
       "file_type": "concept",
       "norm_label": "@testing-library/user-event",
       "source_file": "package.json",
-      "source_location": "L35"
+      "source_location": "L36"
     },
     {
       "id": "types_node",
@@ -4911,7 +5097,7 @@
       "file_type": "concept",
       "norm_label": "@types/node",
       "source_file": "package.json",
-      "source_location": "L36"
+      "source_location": "L37"
     },
     {
       "id": "types_react",
@@ -4922,7 +5108,7 @@
       "file_type": "concept",
       "norm_label": "@types/react",
       "source_file": "package.json",
-      "source_location": "L37"
+      "source_location": "L38"
     },
     {
       "id": "types_react_dom",
@@ -4933,7 +5119,7 @@
       "file_type": "concept",
       "norm_label": "@types/react-dom",
       "source_file": "package.json",
-      "source_location": "L38"
+      "source_location": "L39"
     },
     {
       "id": "typescript",
@@ -4944,7 +5130,7 @@
       "file_type": "concept",
       "norm_label": "typescript",
       "source_file": "package.json",
-      "source_location": "L46"
+      "source_location": "L47"
     },
     {
       "id": "vitejs_plugin_react",
@@ -4955,7 +5141,7 @@
       "file_type": "concept",
       "norm_label": "@vitejs/plugin-react",
       "source_file": "package.json",
-      "source_location": "L39"
+      "source_location": "L40"
     },
     {
       "id": "vitest",
@@ -4966,7 +5152,7 @@
       "file_type": "concept",
       "norm_label": "vitest",
       "source_file": "package.json",
-      "source_location": "L47"
+      "source_location": "L48"
     },
     {
       "id": "app_api_collections_route",
@@ -5035,6 +5221,39 @@
       "source_location": "L1"
     },
     {
+      "id": "app_locale_page",
+      "label": "[locale]/page.tsx",
+      "_origin": "ast",
+      "community": 60,
+      "community_name": "catalog/index.ts",
+      "file_type": "code",
+      "norm_label": "[locale]/page.tsx",
+      "source_file": "app/[locale]/page.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_commerce_category_grid",
+      "label": "category-grid.tsx",
+      "_origin": "ast",
+      "community": 60,
+      "community_name": "catalog/index.ts",
+      "file_type": "code",
+      "norm_label": "category-grid.tsx",
+      "source_file": "components/commerce/category-grid.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_commerce_hero_carousel",
+      "label": "hero-carousel.tsx",
+      "_origin": "ast",
+      "community": 60,
+      "community_name": "catalog/index.ts",
+      "file_type": "code",
+      "norm_label": "hero-carousel.tsx",
+      "source_file": "components/commerce/hero-carousel.tsx",
+      "source_location": "L1"
+    },
+    {
       "id": "lib_api_resources_catalog_index",
       "label": "catalog/index.ts",
       "_origin": "ast",
@@ -5066,61 +5285,6 @@
       "norm_label": "response.ts",
       "source_file": "lib/api/response.ts",
       "source_location": "L1"
-    },
-    {
-      "id": "lib_api_schemas_common",
-      "label": "common.ts",
-      "_origin": "ast",
-      "community": 60,
-      "community_name": "catalog/index.ts",
-      "file_type": "code",
-      "norm_label": "common.ts",
-      "source_file": "lib/api/schemas/common.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "lib_api_schemas_common_apierrorschema",
-      "label": "apiErrorSchema",
-      "_origin": "ast",
-      "community": 60,
-      "community_name": "catalog/index.ts",
-      "file_type": "code",
-      "norm_label": "apierrorschema",
-      "source_file": "lib/api/schemas/common.ts",
-      "source_location": "L3"
-    },
-    {
-      "id": "lib_api_schemas_common_error_codes",
-      "label": "ERROR_CODES",
-      "_origin": "ast",
-      "community": 60,
-      "community_name": "catalog/index.ts",
-      "file_type": "code",
-      "norm_label": "error_codes",
-      "source_file": "lib/api/schemas/common.ts",
-      "source_location": "L21"
-    },
-    {
-      "id": "lib_api_schemas_common_http_status",
-      "label": "HTTP_STATUS",
-      "_origin": "ast",
-      "community": 60,
-      "community_name": "catalog/index.ts",
-      "file_type": "code",
-      "norm_label": "http_status",
-      "source_file": "lib/api/schemas/common.ts",
-      "source_location": "L32"
-    },
-    {
-      "id": "lib_api_schemas_common_okenvelopeschema",
-      "label": "okEnvelopeSchema",
-      "_origin": "ast",
-      "community": 60,
-      "community_name": "catalog/index.ts",
-      "file_type": "code",
-      "norm_label": "okenvelopeschema",
-      "source_file": "lib/api/schemas/common.ts",
-      "source_location": "L18"
     },
     {
       "id": "docs_superpowers_specs_2026_08_27_vivimoon_client_scope_design_5_migration_strategy",
@@ -10009,6 +10173,54 @@
       "weight": 1.0
     },
     {
+      "source": "lib_api_upstream_fetch_upstreamfetch",
+      "target": "lib_api_config_upstreamtimeoutms",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L33",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_fetch_upstreamfetch",
+      "target": "lib_api_config_upstreambaseurl",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L37",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_fetch_upstreamfetch",
+      "target": "lib_api_schemas_common_envelopeschema",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L66",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_fetch_upstreamfetch",
+      "target": "lib_api_upstream_validate_parseorthrow",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L66",
+      "weight": 1.0
+    },
+    {
       "source": "content_mock_index",
       "target": "content_mock_products",
       "relation": "re_exports",
@@ -13681,6 +13893,90 @@
       "weight": 1.0
     },
     {
+      "source": "lib_api_upstream_fetch",
+      "target": "lib_api_config_upstreambaseurl",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_fetch",
+      "target": "lib_api_config_upstreamtimeoutms",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_fetch",
+      "target": "lib_api_schemas_common_apierror",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_fetch",
+      "target": "lib_api_schemas_common_envelopeschema",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_fetch",
+      "target": "lib_api_upstream_validate_parseorthrow",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_validate_test",
+      "target": "lib_api_upstream_validate_parseorthrow",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "lib/api/upstream/validate.test.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_validate_test",
+      "target": "lib_api_upstream_validate_upstreamshapeerror",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "lib/api/upstream/validate.test.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
       "source": "lib_checkout_schema_test",
       "target": "lib_checkout_schema_checkoutschema",
       "relation": "imports",
@@ -13821,7 +14117,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L17",
+      "source_location": "L18",
       "weight": 1.0
     },
     {
@@ -13833,7 +14129,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L18",
+      "source_location": "L19",
       "weight": 1.0
     },
     {
@@ -13845,7 +14141,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0
     },
     {
@@ -13857,7 +14153,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L15",
+      "source_location": "L16",
       "weight": 1.0
     },
     {
@@ -13869,7 +14165,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0
     },
     {
@@ -13881,7 +14177,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L21",
+      "source_location": "L22",
       "weight": 1.0
     },
     {
@@ -13893,7 +14189,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L16",
+      "source_location": "L17",
       "weight": 1.0
     },
     {
@@ -13905,7 +14201,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -13917,7 +14213,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L23",
+      "source_location": "L24",
       "weight": 1.0
     },
     {
@@ -13929,7 +14225,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L24",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -13941,7 +14237,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L25",
+      "source_location": "L26",
       "weight": 1.0
     },
     {
@@ -13953,7 +14249,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L26",
+      "source_location": "L27",
       "weight": 1.0
     },
     {
@@ -13965,7 +14261,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L27",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -13977,7 +14273,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L28",
+      "source_location": "L29",
       "weight": 1.0
     },
     {
@@ -13989,7 +14285,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L29",
+      "source_location": "L30",
       "weight": 1.0
     },
     {
@@ -14001,7 +14297,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L40",
+      "source_location": "L41",
       "weight": 1.0
     },
     {
@@ -14013,7 +14309,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L41",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -14025,7 +14321,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L42",
+      "source_location": "L43",
       "weight": 1.0
     },
     {
@@ -14037,7 +14333,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L43",
+      "source_location": "L44",
       "weight": 1.0
     },
     {
@@ -14049,7 +14345,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L44",
+      "source_location": "L45",
       "weight": 1.0
     },
     {
@@ -14061,7 +14357,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -14073,7 +14369,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L32",
+      "source_location": "L33",
       "weight": 1.0
     },
     {
@@ -14085,7 +14381,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L33",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -14097,7 +14393,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L34",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -14109,7 +14405,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L35",
+      "source_location": "L36",
       "weight": 1.0
     },
     {
@@ -14121,7 +14417,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L36",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -14133,7 +14429,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L37",
+      "source_location": "L38",
       "weight": 1.0
     },
     {
@@ -14145,7 +14441,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L38",
+      "source_location": "L39",
       "weight": 1.0
     },
     {
@@ -14157,7 +14453,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L46",
+      "source_location": "L47",
       "weight": 1.0
     },
     {
@@ -14169,7 +14465,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L39",
+      "source_location": "L40",
       "weight": 1.0
     },
     {
@@ -14181,7 +14477,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "package.json",
-      "source_location": "L47",
+      "source_location": "L48",
       "weight": 1.0
     },
     {
@@ -14254,6 +14550,54 @@
       "context": "import",
       "source_file": "tests/contract/fixtures.test.ts",
       "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_contract_upstream_test",
+      "target": "lib_api_upstream_fetch_upstreamfetch",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/contract/upstream.test.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_contract_upstream_test",
+      "target": "lib_api_schemas_catalog_collectionschema",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/contract/upstream.test.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_contract_upstream_test",
+      "target": "lib_api_schemas_catalog_productschema",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/contract/upstream.test.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_contract_upstream_test",
+      "target": "lib_api_schemas_catalog_reviewschema",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/contract/upstream.test.ts",
+      "source_location": "L14",
       "weight": 1.0
     },
     {
@@ -16681,6 +17025,54 @@
       "weight": 1.0
     },
     {
+      "source": "lib_api_upstream_fetch",
+      "target": "lib_api_config",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L2",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_fetch",
+      "target": "lib_api_schemas_common",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_fetch",
+      "target": "lib_api_upstream_validate",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L4",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_validate_test",
+      "target": "lib_api_upstream_validate",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "lib/api/upstream/validate.test.ts",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
       "source": "lib_checkout_schema_test",
       "target": "lib_checkout_schema",
       "relation": "imports_from",
@@ -16798,6 +17190,30 @@
       "context": "import",
       "source_file": "tests/contract/fixtures.test.ts",
       "source_location": "L11",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_contract_upstream_test",
+      "target": "lib_api_upstream_fetch",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/contract/upstream.test.ts",
+      "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_contract_upstream_test",
+      "target": "lib_api_schemas_catalog",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "tests/contract/upstream.test.ts",
+      "source_location": "L14",
       "weight": 1.0
     },
     {
@@ -20093,6 +20509,72 @@
       "weight": 1.0
     },
     {
+      "source": "lib_api_upstream_fetch",
+      "target": "lib_api_upstream_fetch_envelope",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_fetch",
+      "target": "lib_api_upstream_fetch_upstreamrequesterror",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L14",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_fetch",
+      "target": "lib_api_upstream_fetch_upstreamfetch",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L25",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_validate",
+      "target": "lib_api_upstream_validate_parseorthrow",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/api/upstream/validate.ts",
+      "source_location": "L18",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_validate",
+      "target": "lib_api_upstream_validate_upstreamshapeerror",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/api/upstream/validate.ts",
+      "source_location": "L7",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_validate_test",
+      "target": "lib_api_upstream_validate_test_schema",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/api/upstream/validate.test.ts",
+      "source_location": "L5",
+      "weight": 1.0
+    },
+    {
       "source": "lib_checkout_schema",
       "target": "lib_checkout_schema_checkoutform",
       "relation": "contains",
@@ -20276,7 +20758,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L14",
+      "source_location": "L15",
       "weight": 1.0
     },
     {
@@ -20309,7 +20791,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L31",
+      "source_location": "L32",
       "weight": 1.0
     },
     {
@@ -20342,7 +20824,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L15",
+      "source_location": "L16",
       "weight": 1.0
     },
     {
@@ -20353,7 +20835,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L16",
+      "source_location": "L17",
       "weight": 1.0
     },
     {
@@ -20364,7 +20846,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L17",
+      "source_location": "L18",
       "weight": 1.0
     },
     {
@@ -20375,7 +20857,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L18",
+      "source_location": "L19",
       "weight": 1.0
     },
     {
@@ -20386,7 +20868,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L19",
+      "source_location": "L20",
       "weight": 1.0
     },
     {
@@ -20397,7 +20879,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0
     },
     {
@@ -20408,7 +20890,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L21",
+      "source_location": "L22",
       "weight": 1.0
     },
     {
@@ -20419,7 +20901,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L22",
+      "source_location": "L23",
       "weight": 1.0
     },
     {
@@ -20430,7 +20912,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L23",
+      "source_location": "L24",
       "weight": 1.0
     },
     {
@@ -20441,7 +20923,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L24",
+      "source_location": "L25",
       "weight": 1.0
     },
     {
@@ -20452,7 +20934,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L25",
+      "source_location": "L26",
       "weight": 1.0
     },
     {
@@ -20463,7 +20945,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L26",
+      "source_location": "L27",
       "weight": 1.0
     },
     {
@@ -20474,7 +20956,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L27",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -20485,7 +20967,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L28",
+      "source_location": "L29",
       "weight": 1.0
     },
     {
@@ -20496,7 +20978,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L29",
+      "source_location": "L30",
       "weight": 1.0
     },
     {
@@ -20507,7 +20989,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L32",
+      "source_location": "L33",
       "weight": 1.0
     },
     {
@@ -20518,7 +21000,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L33",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -20529,7 +21011,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L34",
+      "source_location": "L35",
       "weight": 1.0
     },
     {
@@ -20540,7 +21022,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L35",
+      "source_location": "L36",
       "weight": 1.0
     },
     {
@@ -20551,7 +21033,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L36",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -20562,7 +21044,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L37",
+      "source_location": "L38",
       "weight": 1.0
     },
     {
@@ -20573,7 +21055,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L38",
+      "source_location": "L39",
       "weight": 1.0
     },
     {
@@ -20584,7 +21066,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L39",
+      "source_location": "L40",
       "weight": 1.0
     },
     {
@@ -20595,7 +21077,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L40",
+      "source_location": "L41",
       "weight": 1.0
     },
     {
@@ -20606,7 +21088,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L41",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -20617,7 +21099,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L42",
+      "source_location": "L43",
       "weight": 1.0
     },
     {
@@ -20628,7 +21110,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L43",
+      "source_location": "L44",
       "weight": 1.0
     },
     {
@@ -20639,7 +21121,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L44",
+      "source_location": "L45",
       "weight": 1.0
     },
     {
@@ -20650,7 +21132,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L45",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -20661,7 +21143,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L46",
+      "source_location": "L47",
       "weight": 1.0
     },
     {
@@ -20672,7 +21154,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "package.json",
-      "source_location": "L47",
+      "source_location": "L48",
       "weight": 1.0
     },
     {
@@ -20706,6 +21188,17 @@
       "confidence_score": 1.0,
       "source_file": "package.json",
       "source_location": "L12",
+      "weight": 1.0
+    },
+    {
+      "source": "package_scripts",
+      "target": "package_scripts_test_contract_upstream",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "package.json",
+      "source_location": "L13",
       "weight": 1.0
     },
     {
@@ -20783,6 +21276,17 @@
       "confidence_score": 1.0,
       "source_file": "tests/contract/fixtures.test.ts",
       "source_location": "L13",
+      "weight": 1.0
+    },
+    {
+      "source": "tests_contract_upstream_test",
+      "target": "tests_contract_upstream_test_configured",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/contract/upstream.test.ts",
+      "source_location": "L16",
       "weight": 1.0
     },
     {
@@ -20981,6 +21485,28 @@
       "confidence_score": 1.0,
       "source_file": "tsconfig.json",
       "source_location": "L9",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_fetch_upstreamrequesterror",
+      "target": "lib_api_upstream_fetch_upstreamrequesterror_constructor",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/api/upstream/fetch.ts",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_upstream_validate_upstreamshapeerror",
+      "target": "lib_api_upstream_validate_upstreamshapeerror_constructor",
+      "relation": "method",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/api/upstream/validate.ts",
+      "source_location": "L8",
       "weight": 1.0
     },
     {
@@ -22834,5 +23360,5 @@
       "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md"
     }
   ],
-  "built_at_commit": "b4808001ef9fabb556ba9e1563f8c415bfd6355f"
+  "built_at_commit": "29a21c1e309c393b44be0cef2557a673bb684e5c"
 }

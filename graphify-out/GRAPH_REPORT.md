@@ -1,26 +1,26 @@
 # Graph Report - vivimoon-web-app  (2026-08-28)
 
 ## Corpus Check
-- 116 files · ~53,690 words
+- 120 files · ~54,593 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 675 nodes · 1245 edges · 68 communities (49 shown, 19 thin omitted)
+- 689 nodes · 1276 edges · 68 communities (48 shown, 20 thin omitted)
 - Extraction: 97% EXTRACTED · 2% INFERRED · 1% AMBIGUOUS · INFERRED: 22 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b4808001`
+- Built from commit: `29a21c1e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - cn
 - add-to-cart.tsx
-- mobile-nav.tsx
+- sheet.tsx
 - dictionaries.ts
 - dependencies
-- cart-line-item.tsx
+- use-cart.ts
 - devDependencies
 - compilerOptions
 - components.json
@@ -65,7 +65,7 @@
 - Torica Biweekly Product Image 2 (Blank Placeholder)
 - order-summary.tsx
 - product/[slug]/page.tsx
-- cn.ts
+- badge.tsx
 - dialog.tsx
 - catalog.ts
 - checkout/page.tsx
@@ -111,31 +111,31 @@
 - **Four swappable architecture seams (data, theming, i18n, analytics) isolating volatility** — docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productrepository, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_theming_seam, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_i18n_seam, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_analytics_seam [EXTRACTED 1.00]
 - **Coolmate apparel patterns re-modeled for Vivimoon contact-lens domain** — docs_research_coolmate_website_analysis_product_card, docs_research_coolmate_website_analysis_pdp, docs_research_coolmate_website_analysis_color_variant_url_pattern, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productcard, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant [INFERRED 0.85]
 
-## Communities (68 total, 19 thin omitted)
+## Communities (68 total, 20 thin omitted)
 
 ### Community 0 - "cn"
-Cohesion: 0.21
-Nodes (15): Accordion(), AccordionContent(), AccordionItem(), AccordionTrigger(), Field(), FieldContent(), FieldDescription(), FieldLegend() (+7 more)
+Cohesion: 0.17
+Nodes (18): Accordion(), AccordionContent(), AccordionItem(), AccordionTrigger(), Field(), FieldContent(), FieldDescription(), FieldError() (+10 more)
 
 ### Community 1 - "add-to-cart.tsx"
-Cohesion: 0.17
-Nodes (16): AddToCart(), PriceTag(), minVariant(), ProductCard(), product, ProductGrid(), dict, product (+8 more)
+Cohesion: 0.14
+Nodes (19): AddToCart(), PriceTag(), minVariant(), ProductCard(), product, ProductGrid(), QuantityStepper(), dict (+11 more)
 
-### Community 2 - "mobile-nav.tsx"
-Cohesion: 0.26
-Nodes (9): Sheet(), SheetClose(), SheetContent(), SheetDescription(), SheetFooter(), SheetHeader(), SheetOverlay(), SheetTitle() (+1 more)
+### Community 2 - "sheet.tsx"
+Cohesion: 0.16
+Nodes (11): Button(), buttonVariants, Sheet(), SheetClose(), SheetContent(), SheetDescription(), SheetFooter(), SheetHeader() (+3 more)
 
 ### Community 3 - "dictionaries.ts"
-Cohesion: 0.09
-Nodes (40): CartPage(), CheckoutPage(), SuccessPage(), CollectionPage(), resolveTitle(), LocaleLayout(), HomePage(), ProductPage() (+32 more)
+Cohesion: 0.12
+Nodes (20): CartLineItem(), dict, line, OrderSummary(), AnnouncementBar(), Footer(), Header(), LocaleSwitcher() (+12 more)
 
 ### Community 4 - "dependencies"
 Cohesion: 0.05
-Nodes (42): class-variance-authority, clsx, embla-carousel-react, @hookform/resolvers, lucide-react, next, @next/third-parties, dependencies (+34 more)
+Nodes (43): class-variance-authority, clsx, embla-carousel-react, @hookform/resolvers, lucide-react, next, @next/third-parties, dependencies (+35 more)
 
-### Community 5 - "cart-line-item.tsx"
-Cohesion: 0.12
-Nodes (21): geistMono, geistSans, metadata, CartLineItem(), dict, line, OrderSummary(), CartContext (+13 more)
+### Community 5 - "use-cart.ts"
+Cohesion: 0.18
+Nodes (16): geistMono, geistSans, metadata, CartContext, CartProvider(), cartCount(), cartReducer(), cartSubtotal() (+8 more)
 
 ### Community 6 - "devDependencies"
 Cohesion: 0.06
@@ -234,40 +234,36 @@ Cohesion: 0.67
 Nodes (3): Torica Monthly Product Photo 2 (blank placeholder), Blank Placeholder Image Asset, Torica Monthly Product
 
 ### Community 52 - "order-summary.tsx"
-Cohesion: 0.36
-Nodes (7): Card(), CardAction(), CardContent(), CardDescription(), CardFooter(), CardHeader(), CardTitle()
+Cohesion: 0.29
+Nodes (8): Card(), CardAction(), CardContent(), CardDescription(), CardFooter(), CardHeader(), CardTitle(), Separator()
 
 ### Community 53 - "product/[slug]/page.tsx"
-Cohesion: 0.23
-Nodes (10): ProductGallery(), RatingStars(), ReviewsList(), Breadcrumb(), BreadcrumbEllipsis(), BreadcrumbItem(), BreadcrumbLink(), BreadcrumbList() (+2 more)
-
-### Community 54 - "cn.ts"
-Cohesion: 0.20
-Nodes (6): HeroCarousel(), Slide, QuantityStepper(), Badge(), badgeVariants, Skeleton()
+Cohesion: 0.18
+Nodes (12): ProductGallery(), RatingStars(), ReviewsList(), SpecTable(), Breadcrumb(), BreadcrumbEllipsis(), BreadcrumbItem(), BreadcrumbLink() (+4 more)
 
 ### Community 55 - "dialog.tsx"
-Cohesion: 0.16
-Nodes (8): Button(), buttonVariants, DialogContent(), DialogDescription(), DialogFooter(), DialogHeader(), DialogOverlay(), DialogTitle()
+Cohesion: 0.18
+Nodes (6): DialogContent(), DialogDescription(), DialogFooter(), DialogHeader(), DialogOverlay(), DialogTitle()
 
 ### Community 56 - "catalog.ts"
 Cohesion: 0.09
-Nodes (25): SpecTable(), collections, products, reviews, mockCatalog, Collection, collectionSchema, currencySchema (+17 more)
+Nodes (26): collections, products, reviews, Catalog, minPrice(), mockCatalog, Collection, collectionSchema (+18 more)
 
 ### Community 57 - "checkout/page.tsx"
-Cohesion: 0.18
-Nodes (12): generateOrderId(), Alert(), AlertAction(), AlertDescription(), AlertTitle(), alertVariants, FieldError(), FieldGroup() (+4 more)
+Cohesion: 0.12
+Nodes (30): CartPage(), CheckoutPage(), generateOrderId(), SuccessPage(), CollectionPage(), resolveTitle(), LocaleLayout(), HomePage() (+22 more)
 
 ### Community 58 - "tabs.tsx"
 Cohesion: 0.40
 Nodes (5): Tabs(), TabsContent(), TabsList(), tabsListVariants, TabsTrigger()
 
 ### Community 59 - "api/config.ts"
-Cohesion: 0.24
-Nodes (11): ApiMode, DEPENDS_ON, isAnyUpstream(), rawMode(), readMode(), resolveMode(), ResourceName, RESOURCES (+3 more)
+Cohesion: 0.10
+Nodes (24): ApiMode, DEPENDS_ON, isAnyUpstream(), rawMode(), readMode(), resolveMode(), ResourceName, RESOURCES (+16 more)
 
 ### Community 60 - "catalog/index.ts"
-Cohesion: 0.17
-Nodes (16): GET(), GET(), GET(), GET(), GET(), catalog, Catalog, minPrice() (+8 more)
+Cohesion: 0.21
+Nodes (12): GET(), GET(), GET(), GET(), GET(), CategoryGrid(), CollectionCarousel(), HeroCarousel() (+4 more)
 
 ### Community 61 - "5. Migration Strategy"
 Cohesion: 0.33
@@ -312,9 +308,9 @@ Nodes (3): 4. API Contract, Endpoint catalogue, Envelope
   public/images/products/mystic-daily-1.jpg · relation: semantically_similar_to
 
 ## Knowledge Gaps
-- **246 isolated node(s):** `geistSans`, `geistMono`, `metadata`, `$schema`, `style` (+241 more)
+- **249 isolated node(s):** `geistSans`, `geistMono`, `metadata`, `$schema`, `style` (+244 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
