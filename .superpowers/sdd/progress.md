@@ -114,3 +114,81 @@ Task 7: complete (commit ab85c8c, implemented + verified — no subagent dispatc
   check that setUser never writes to localStorage/sessionStorage.
   Verified: tsc exit 0, full suite 78/78 (6 upstream tests still correctly skipped),
   `npm run build` succeeds.
+Task 8: REVIEW CLEAN (commit b8ec9f6, review clean — approved, no Critical/Important).
+  Auth schemas, content/mock/users.ts fixtures, mockAuth identity resource, and the
+  resolveMode('identity') resolver — 25 new tests (11 schema + 14 mock-auth) plus 2
+  extended fixture-conformance tests. All four security-sensitive behaviors verified:
+  identical unauthorized message for unknown-identifier vs wrong-password, OTP
+  single-use consumption, OTP issued regardless of identifier existence, email
+  identifier lands on User.email not .phone.
+  Verified: tsc clean, eslint 0 errors, full suite 105/111 (6 pre-existing upstream
+  skips), output pristine.
+  Minor carried to final review:
+  - lib/api/resources/auth/mock.test.ts: "verifies a signup OTP into a session" test
+    actually passes purpose:'login', not 'signup' — the 'signup' enum value is never
+    exercised by any test (not a functional bug, both purposes share a code path).
+  - mock.ts: updateUser is exported on Auth but has zero test coverage and isn't in
+    the brief's Produces list — reserved for Task 12's account resource, which will
+    be its first consumer.
+  - No test for resetPassword with an invalid/expired token, or getUserById missing id.
+Task 9: REVIEW CLEAN (commit 7793a95, review clean — approved, no Critical).
+  lib/auth/cookie.ts (HMAC sign/verify, timing-safe compare), lib/api/route-helpers.ts
+  (parseBody/authErrorResponse/startSession/endSession), and the 8 /api/auth/*
+  handlers (login, register, google, session, logout, otp/request, otp/verify,
+  password/reset) — 26 new tests. Reviewer independently verified all 8 security
+  checklist items (no-throw on hostile cookie input, timing-safe compare, no token
+  in any response body, devCode gate, session-only-on-success, logout cookie clear
+  incl. Path normalization, AuthError->HTTP status mapping, session GET returns
+  200/null not 401) with file:line evidence, plus confirmed the implementer's
+  mutation-testing claims held up in the diff.
+  Two Important findings, both labeled plan-mandated (matched the plan's own code
+  exactly) — escalated to the human per the plan-conflict rule rather than
+  auto-fixed or dismissed. Human chose to fix both, directly by the controller
+  (no fix subagent) given session token budget:
+  Fixed in commit 4d578c7:
+  - otp/request only stripped devCode when isAnyUpstream(); default mock config
+    (.env.example ships API_MODE_DEFAULT=mock) left the OTP code publicly
+    readable in the response if ever deployed. Now also strips when
+    NODE_ENV==='production', regardless of API mode. Regression test added.
+  - signSession(userId) was a pure, unexpiring function of the user id — a
+    leaked token stayed valid forever under the same secret, logout only clears
+    the browser's copy. Added issued-at to the signed payload
+    (`<userId>.<issuedAtMs>.<hmac>`) with a 30-day expiry check in
+    verifySession; external contract (returns userId or null) unchanged, so
+    Task 13's guard is unaffected. Existing "rejects a tampered payload" test
+    updated for the 3-part format; new "rejects an expired session" test added
+    (vi.useFakeTimers).
+  Verified after fix: tsc clean, full suite 133/139 (6 pre-existing upstream
+  skips, +2 new tests vs pre-fix 131).
+  Minor findings NOT fixed (carried to final whole-branch review):
+  - No automated test proves Next actually serializes Set-Cookie with the full
+    options object (httpOnly/sameSite/secure) from a Route Handler — the mocked
+    next/headers jar in auth-routes.test.ts discards the options argument, so
+    e.g. dropping `httpOnly` from sessionCookieOptions() would pass every test.
+  - Signature hex is not canonicalized (trailing garbage after valid hex bytes
+    is silently ignored by Buffer.from(...,'hex')), so multiple distinct cookie
+    strings decode to the same valid session — not a forgery path (HMAC still
+    required) but would matter if anything ever keys on the cookie string
+    itself (revocation list, cache key, rate limiter).
+  - readSessionUserId() throws (doesn't fail closed) if AUTH_COOKIE_SECRET is
+    unset and a cookie is present — doc comment on verifySession overstates
+    "never throws" for that case.
+  - otp/request's devCode strip is a denylist (`{devCode:_devCode,...rest}`);
+    prefer an allowlist so a future dev-only field on OtpChallenge doesn't
+    silently ship upstream by default.
+  - session GET has no Cache-Control: no-store (defensive only — cookies()
+    already forces the route dynamic).
+  - No test for authErrorResponse's rethrow branch, or a valid-signature
+    cookie for a since-deleted user (session route degrades correctly per
+    getUserById, but the stale cookie itself is never cleared).
+  Environment note from the implementer (unresolved, relevant to Task 10): no
+  .env.local in the tree, so a plain `npm run dev` on :3000 has no
+  AUTH_COOKIE_SECRET and login 500s there (fails closed — anonymous `session`
+  still returns 200/null). Task 10's browser-verification step will need the
+  env file copied first.
+
+--- PAUSED HERE (2026-08-28) --- resume at Task 10. User paused to conserve
+session token budget after the Task 9 fix-round. Tasks 1-9 complete and
+reviewed clean; Tasks 10-13 not yet started. Remaining before Task 10's
+browser-verification step: create .env.local with AUTH_COOKIE_SECRET set
+(see note above).

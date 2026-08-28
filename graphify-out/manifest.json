@@ -738,9 +738,9 @@
     "semantic_hash": ""
   },
   ".claude/settings.local.json": {
-    "mtime": 1786864030.591453,
-    "seen": 1787877891.391648,
-    "ast_hash": "1868416805ed60e3a4a49ff8e26b87aa",
+    "mtime": 1787929977.7687395,
+    "seen": 1787931365.63299,
+    "ast_hash": "a07c4a97f127ad59364f50fbcaba4737",
     "semantic_hash": ""
   },
   "content/mock/collections.ts": {
@@ -750,9 +750,9 @@
     "semantic_hash": ""
   },
   "content/mock/index.ts": {
-    "mtime": 1787843301.0489993,
-    "seen": 1787877891.3917398,
-    "ast_hash": "884d8d1d4ca837e44fdfe2f4f4c3b0a1",
+    "mtime": 1787930447.0971966,
+    "seen": 1787931365.633064,
+    "ast_hash": "a7ce3898ad2e43b5da4dac2132f90f4c",
     "semantic_hash": ""
   },
   "content/mock/products.ts": {
@@ -822,15 +822,15 @@
     "semantic_hash": ""
   },
   "tests/contract/fixtures.test.ts": {
-    "mtime": 1787843316.3534858,
-    "seen": 1787877891.391799,
-    "ast_hash": "b3b449ae0fb59774d91c5d19775154f3",
+    "mtime": 1787930454.0172372,
+    "seen": 1787931365.6331189,
+    "ast_hash": "83e66930e8f6b66cb386c7dabe717952",
     "semantic_hash": ""
   },
   ".superpowers/sdd/progress.md": {
-    "mtime": 1787909103.4967067,
-    "seen": 1787909225.640838,
-    "ast_hash": "3e0cde05a051c9536102bbf0de4859c3",
+    "mtime": 1787930851.071366,
+    "seen": 1787931365.633125,
+    "ast_hash": "0530fc3479ad6e74e31542e46ae383d2",
     "semantic_hash": ""
   },
   "app/api/collections/[slug]/route.ts": {
@@ -903,6 +903,114 @@
     "mtime": 1787909192.707747,
     "seen": 1787909225.640796,
     "ast_hash": "7ac10a39d9bceac2a3ef904aa061b58d",
+    "semantic_hash": ""
+  },
+  "app/api/auth/auth-routes.test.ts": {
+    "mtime": 1787931132.8205004,
+    "seen": 1787931365.633003,
+    "ast_hash": "a029e1438c2b20c219437049921fd943",
+    "semantic_hash": ""
+  },
+  "app/api/auth/google/route.ts": {
+    "mtime": 1787931066.8756013,
+    "seen": 1787931365.6330051,
+    "ast_hash": "f82acf0dcaf9b57e8cea973ec3dcd17a",
+    "semantic_hash": ""
+  },
+  "app/api/auth/login/route.ts": {
+    "mtime": 1787931061.214535,
+    "seen": 1787931365.6330051,
+    "ast_hash": "5792389125c9aa7963d4da99d6137f6c",
+    "semantic_hash": ""
+  },
+  "app/api/auth/logout/route.ts": {
+    "mtime": 1787931069.320152,
+    "seen": 1787931365.633006,
+    "ast_hash": "13b66b021edff0d58737364e43958c80",
+    "semantic_hash": ""
+  },
+  "app/api/auth/otp/request/route.ts": {
+    "mtime": 1787931124.2231266,
+    "seen": 1787931365.633007,
+    "ast_hash": "7422cfc0bb3b10feeb8544a8cf493c6a",
+    "semantic_hash": ""
+  },
+  "app/api/auth/otp/verify/route.ts": {
+    "mtime": 1787931124.229963,
+    "seen": 1787931365.6330082,
+    "ast_hash": "ea91f171de92688ccd88915d491acc15",
+    "semantic_hash": ""
+  },
+  "app/api/auth/password/reset/route.ts": {
+    "mtime": 1787931088.844146,
+    "seen": 1787931365.633009,
+    "ast_hash": "de022c1c4e91e8384acf2379a4b7b75d",
+    "semantic_hash": ""
+  },
+  "app/api/auth/register/route.ts": {
+    "mtime": 1787931064.0561793,
+    "seen": 1787931365.63301,
+    "ast_hash": "55ce23cb1c3df41b03d22d0a860f7fb9",
+    "semantic_hash": ""
+  },
+  "app/api/auth/session/route.ts": {
+    "mtime": 1787931068.28207,
+    "seen": 1787931365.63301,
+    "ast_hash": "24f65a20c0aa68908c75302c8dd73f5a",
+    "semantic_hash": ""
+  },
+  "content/mock/users.ts": {
+    "mtime": 1787930444.2864747,
+    "seen": 1787931365.633067,
+    "ast_hash": "0e0f8a5dcba0197e818d1bc8430c9570",
+    "semantic_hash": ""
+  },
+  "lib/api/resources/auth/index.ts": {
+    "mtime": 1787930503.0268214,
+    "seen": 1787931365.6330822,
+    "ast_hash": "52a382622014db055661cf61d05977e9",
+    "semantic_hash": ""
+  },
+  "lib/api/resources/auth/mock.test.ts": {
+    "mtime": 1787930474.6426861,
+    "seen": 1787931365.6330829,
+    "ast_hash": "cdcbbfb1dca97dfbe467629c918be3d7",
+    "semantic_hash": ""
+  },
+  "lib/api/resources/auth/mock.ts": {
+    "mtime": 1787930495.4863198,
+    "seen": 1787931365.6330838,
+    "ast_hash": "8c3f2d37b9339720bdceefbf922a85d9",
+    "semantic_hash": ""
+  },
+  "lib/api/route-helpers.ts": {
+    "mtime": 1787931056.816749,
+    "seen": 1787931365.633089,
+    "ast_hash": "13d515843b30c5016f28306c510953f3",
+    "semantic_hash": ""
+  },
+  "lib/api/schemas/auth.test.ts": {
+    "mtime": 1787930420.6033726,
+    "seen": 1787931365.63309,
+    "ast_hash": "51f7a1155eadb1aa40e75a8c7ffe1c3e",
+    "semantic_hash": ""
+  },
+  "lib/api/schemas/auth.ts": {
+    "mtime": 1787930435.2461786,
+    "seen": 1787931365.633091,
+    "ast_hash": "116e6d019eacfbbf89f0eac8d8b83288",
+    "semantic_hash": ""
+  },
+  "lib/auth/cookie.test.ts": {
+    "mtime": 1787930977.3463283,
+    "seen": 1787931365.633098,
+    "ast_hash": "7525ec2cc37c195d57525a5ad6b1a276",
+    "semantic_hash": ""
+  },
+  "lib/auth/cookie.ts": {
+    "mtime": 1787931139.9214478,
+    "seen": 1787931365.633099,
+    "ast_hash": "29c14d86d6d2a3e8fbd6f44dd08e00c0",
     "semantic_hash": ""
   }
 }
