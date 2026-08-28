@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
-import { productRepository } from '@/lib/data';
+import { catalog } from '@/lib/api/resources/catalog';
 import { ProductGallery } from '@/components/commerce/product-gallery';
 import { AddToCart } from '@/components/commerce/add-to-cart';
 import { SpecTable } from '@/components/commerce/spec-table';
@@ -19,11 +19,11 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
   const l = locale as Locale;
   const dict = getDictionary(l);
 
-  const product = await productRepository.getProductBySlug(slug);
+  const product = await catalog.getProductBySlug(slug);
   if (!product) notFound();
 
-  const related = await productRepository.getRelatedProducts(product, 8);
-  const reviews = await productRepository.getReviews(product.id);
+  const related = await catalog.getRelatedProducts(product, 8);
+  const reviews = await catalog.getReviews(product.id);
 
   return (
     <div className="space-y-16 md:space-y-24">
