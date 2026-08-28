@@ -105,3 +105,12 @@ Task 6: complete (commit 29a21c1, implemented + verified — no subagent dispatc
   UPSTREAM_API_BASE_URL at an unreachable host (127.0.0.1:9) and ran
   test:contract:upstream — all 6 tests failed with "network error", proving the
   suite actually attempts the call rather than silently passing.
+Task 7: complete (commit ab85c8c, implemented + verified — no subagent dispatched).
+  Installed zustand ^5.0.15. Added features/session/session-store.ts (useSessionStore)
+  matching the plan verbatim: unknown/authenticated/anonymous status, setUser/clear
+  actions, deliberately not persisted (httpOnly cookie is the source of truth).
+  TDD honoured: features/session/session-store.test.ts written first, failed on
+  unresolved './session-store', passed 5/5 after impl — including the negative
+  check that setUser never writes to localStorage/sessionStorage.
+  Verified: tsc exit 0, full suite 78/78 (6 upstream tests still correctly skipped),
+  `npm run build` succeeds.

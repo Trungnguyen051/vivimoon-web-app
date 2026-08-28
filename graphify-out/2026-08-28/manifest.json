@@ -474,9 +474,9 @@
     "semantic_hash": "84dcd1722791e5413eea0009ded341f8"
   },
   "package.json": {
-    "mtime": 1787843322.2344513,
-    "seen": 1787877891.391795,
-    "ast_hash": "5966b3dc0363c91ca4fba7c2b6d1ea2a",
+    "mtime": 1787909053.8507745,
+    "seen": 1787909093.045813,
+    "ast_hash": "523f2011d0e1de2abd33f03391dec22b",
     "semantic_hash": ""
   },
   "postcss.config.mjs": {
@@ -828,9 +828,9 @@
     "semantic_hash": ""
   },
   ".superpowers/sdd/progress.md": {
-    "mtime": 1787908765.083252,
-    "seen": 1787908881.3928802,
-    "ast_hash": "17fbc7768d43f98118704ca416876dcf",
+    "mtime": 1787908888.4889722,
+    "seen": 1787909093.045822,
+    "ast_hash": "ea7a646cdb4f4f2ac095ebbffaa691f1",
     "semantic_hash": ""
   },
   "app/api/collections/[slug]/route.ts": {
@@ -867,6 +867,30 @@
     "mtime": 1787908810.2571917,
     "seen": 1787908881.392786,
     "ast_hash": "e75a49c024bb026f1371ecbcb163246e",
+    "semantic_hash": ""
+  },
+  "lib/api/upstream/fetch.ts": {
+    "mtime": 1787909040.1162868,
+    "seen": 1787909093.045794,
+    "ast_hash": "7431558d3892fc4fbf8ee1a3548af079",
+    "semantic_hash": ""
+  },
+  "lib/api/upstream/validate.test.ts": {
+    "mtime": 1787908960.966931,
+    "seen": 1787909093.0457962,
+    "ast_hash": "2196b381d97ba5ca4663d111a05f768a",
+    "semantic_hash": ""
+  },
+  "lib/api/upstream/validate.ts": {
+    "mtime": 1787908971.0332327,
+    "seen": 1787909093.045797,
+    "ast_hash": "bcec097da93388500c58f5fd3159a381",
+    "semantic_hash": ""
+  },
+  "tests/contract/upstream.test.ts": {
+    "mtime": 1787908991.6592035,
+    "seen": 1787909093.0458171,
+    "ast_hash": "e804bd3f89c191a362942ad0a95517e4",
     "semantic_hash": ""
   }
 }
