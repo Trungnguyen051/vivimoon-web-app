@@ -7,8 +7,9 @@
  */
 import { describe, it, expect } from 'vitest';
 import { z } from 'zod';
-import { products, collections, reviews } from '@/content/mock';
+import { products, collections, reviews, users } from '@/content/mock';
 import { productSchema, collectionSchema, reviewSchema } from '@/lib/api/schemas/catalog';
+import { userSchema } from '@/lib/api/schemas/auth';
 
 function expectAllValid<T extends z.ZodTypeAny>(schema: T, rows: unknown[], label: string) {
   const failures: string[] = [];
@@ -62,5 +63,14 @@ describe('fixture conformance', () => {
   it('product slugs are unique', () => {
     const slugs = products.map((p) => p.slug);
     expect(slugs.length).toBe(new Set(slugs).size);
+  });
+
+  it('every user satisfies userSchema', () => {
+    expectAllValid(userSchema, users, 'user');
+  });
+
+  it('user phones are unique', () => {
+    const phones = users.map((u) => u.phone);
+    expect(phones.length).toBe(new Set(phones).size);
   });
 });
