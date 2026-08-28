@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { productSchema, reviewSchema, productQuerySchema } from './catalog';
+import { productSchema, reviewSchema, productQuerySchema, parseProductQueryLoose } from './catalog';
 
 const validProduct = {
   id: 'p1', slug: 'aqua', name: 'Aqua', brandId: 'b1', brandName: 'Brand',
@@ -67,5 +67,22 @@ describe('productQuerySchema', () => {
 
   it('rejects an unknown sort', () => {
     expect(() => productQuerySchema.parse({ sort: 'cheapest' })).toThrow();
+  });
+});
+
+describe('parseProductQueryLoose', () => {
+  it('keeps a valid field and drops an invalid one from a mixed query', () => {
+    const q = parseProductQueryLoose({ type: 'colored', sort: 'banana' });
+    expect(q).toEqual({ type: 'colored' });
+  });
+
+  it('behaves the same as productQuerySchema.parse for an all-valid query', () => {
+    const input = { type: 'colored', sort: 'price-asc' };
+    expect(parseProductQueryLoose(input)).toEqual(productQuerySchema.parse(input));
+  });
+
+  it('still drops blank-string params', () => {
+    const q = parseProductQueryLoose({ type: 'colored', color: '' });
+    expect(q).toEqual({ type: 'colored' });
   });
 });

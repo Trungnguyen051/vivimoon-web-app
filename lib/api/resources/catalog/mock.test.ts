@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { mockCatalog } from './mock';
+import { reviews } from '@/content/mock';
 
 describe('mockCatalog', () => {
   it('finds a product by slug', async () => {
@@ -27,6 +28,7 @@ describe('mockCatalog', () => {
     const all = await mockCatalog.listProducts();
     const color = all.flatMap((p) => p.variants.map((v) => v.color)).find(Boolean)!;
     const list = await mockCatalog.listProducts({ color });
+    expect(list.length).toBeGreaterThan(0);
     expect(list.every((p) => p.variants.some((v) => v.color === color))).toBe(true);
   });
 
@@ -77,6 +79,7 @@ describe('mockCatalog', () => {
     const target = withReviews.find((x) => x.reviews.length > 0);
     if (!target) throw new Error('fixtures have no product with reviews');
     expect(target.reviews.every((r) => r.productId === target.product.id)).toBe(true);
+    expect(target.reviews.length).toBeLessThan(reviews.length);
   });
 
   it('lists collections', async () => {

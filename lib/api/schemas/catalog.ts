@@ -79,6 +79,26 @@ export const productQuerySchema = z.object({
   sort: blankToUndefined(z.enum(['newest', 'price-asc', 'price-desc', 'bestselling'])),
 });
 
+/**
+ * Parses raw URL search params per-field, keeping every field that is
+ * individually valid and dropping only the ones that aren't.
+ *
+ * `productQuerySchema.safeParse` is all-or-nothing: a single bad param (e.g.
+ * an unrecognized `sort` value) fails the whole object, discarding otherwise
+ * valid filters like `type`. That's correct for API route handlers, which
+ * need to reject bad input and answer HTTP 400 naming the invalid field —
+ * they should keep using `productQuerySchema` directly. Pages rendering a
+ * user-facing URL should instead degrade gracefully per-field, so this is a
+ * separate, additive entry point rather than a change to `productQuerySchema`.
+ */
+export function parseProductQueryLoose(input: Record<string, unknown>): ProductQuery {
+  const kept: Record<string, unknown> = {};
+  for (const [key, fieldSchema] of Object.entries(productQuerySchema.shape)) {
+    if (fieldSchema.safeParse(input[key]).success) kept[key] = input[key];
+  }
+  return productQuerySchema.parse(kept);
+}
+
 export type LensType = z.infer<typeof lensTypeSchema>;
 export type ReplacementSchedule = z.infer<typeof replacementScheduleSchema>;
 export type ProductBadge = z.infer<typeof productBadgeSchema>;

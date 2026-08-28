@@ -23,4 +23,15 @@ export const reviews: Review[] = [
     hasImages: true,
     source: 'vivimoon',
   },
+  {
+    id: 'r3',
+    productId: 'p-breeze-daily',
+    author: 'Linh T.',
+    rating: 5,
+    title: 'Lightweight all day',
+    body: 'Barely notice I have them on, even after long shifts.',
+    createdAt: '2026-06-15',
+    hasImages: false,
+    source: 'vivimoon',
+  },
 ];

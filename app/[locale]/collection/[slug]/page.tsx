@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary, type Dictionary } from '@/lib/i18n/dictionaries';
 import { catalog } from '@/lib/api/resources/catalog';
-import { productQuerySchema } from '@/lib/api/schemas/catalog';
+import { parseProductQueryLoose } from '@/lib/api/schemas/catalog';
 import { SearchX } from 'lucide-react';
 import { ProductGrid } from '@/components/commerce/product-grid';
 import { CollectionFilters } from '@/components/commerce/collection-filters';
@@ -38,8 +38,7 @@ export default async function CollectionPage({
 
   // Start from the collection's products, then apply URL filters via listProducts intersection.
   const base = await catalog.getProductsByIds(collection.productIds);
-  const parsedQuery = productQuerySchema.safeParse(sp);
-  const query = parsedQuery.success ? parsedQuery.data : {};
+  const query = parseProductQueryLoose(sp);
   const filtered = await catalog.listProducts(query);
   const ids = new Set(base.map((p) => p.id));
   const products = filtered.filter((p) => ids.has(p.id));
