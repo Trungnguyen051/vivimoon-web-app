@@ -42,3 +42,18 @@ Task 4: complete (commit a7843e3, implemented + verified by controller — no su
     upstream (fail-fast, per plan). No test covers that throw path; brief-originated gap.
   - app/[locale]/product/[slug]/page.tsx keeps its sequential awaits for related/reviews;
     the plan only parallelised the home page, so this was left as-is rather than widened.
+Task 3: REVIEW CLEAN (subagent review, sonnet) — spec compliant, quality Approved,
+  no Critical/Important. Supersedes the earlier "no subagent dispatched" note above.
+  Reviewer ⚠️ "cannot verify test claims from diff" resolved by controller: tsc (exit 0),
+  npm test (52/52) and npm run test:contract (8/8) were run first-hand at 47f398f, and the
+  mutation check was performed by the controller — direct observation, not report claims.
+  Reviewer independently confirmed R100 renames (zero content drift) and that expectAllValid
+  uses safeParse against the real Task 2 schemas, so the harness is falsifiable, not a
+  rubber stamp.
+  Minor carried to final whole-branch review:
+  - tests/contract/fixtures.test.ts: `x.path.join('.')` yields an empty segment for
+    root-level issues, producing an opaque message if a future fixture fails that way.
+  - No negative-path test is committed; the mutation check was manual, so the harness's
+    "does it actually fail on bad data" property is not self-verifying in CI.
+  - Referential integrity is one-directional only (no check that every product is
+    reachable from some collection). Brief did not request it; disclosed, not a spec gap.
