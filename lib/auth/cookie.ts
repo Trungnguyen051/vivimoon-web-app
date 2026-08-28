@@ -14,26 +14,45 @@ function sign(payload: string): string {
   return createHmac('sha256', secret()).update(payload).digest('hex');
 }
 
-/** `<userId>.<hmac>` — opaque to the browser, which never reads it anyway. */
+/**
+ * `<userId>.<issuedAtMs>.<hmac>` — opaque to the browser, which never reads it
+ * anyway. The issued-at lets verifySession expire a token server-side; the
+ * cookie's own maxAge is only a client-side hint and does nothing once a
+ * value has been copied out of the browser.
+ */
 export function signSession(userId: string): string {
-  return `${userId}.${sign(userId)}`;
+  const payload = `${userId}.${Date.now()}`;
+  return `${payload}.${sign(payload)}`;
 }
 
 /**
- * Returns the user id only for a value this server signed. Every other input —
- * tampered, truncated, non-hex, absent — returns null instead of throwing, so a
- * hostile cookie signs the visitor out rather than crashing the render.
+ * Returns the user id only for a value this server signed and that has not
+ * expired. Every other input — tampered, truncated, non-hex, absent, expired —
+ * returns null instead of throwing, so a hostile or stale cookie signs the
+ * visitor out rather than crashing the render.
  */
 export function verifySession(value: string | undefined): string | null {
   if (!value) return null;
-  const index = value.lastIndexOf('.');
-  if (index <= 0) return null;
+  const sigIndex = value.lastIndexOf('.');
+  if (sigIndex <= 0) return null;
 
-  const payload = value.slice(0, index);
-  const provided = Buffer.from(value.slice(index + 1), 'hex');
+  const payload = value.slice(0, sigIndex);
+  const provided = Buffer.from(value.slice(sigIndex + 1), 'hex');
   const expected = Buffer.from(sign(payload), 'hex');
   if (provided.length !== expected.length) return null;
-  return timingSafeEqual(provided, expected) ? payload : null;
+  if (!timingSafeEqual(provided, expected)) return null;
+
+  // Signature verified — now safe to parse the payload it covers. The
+  // issued-at is always a plain number, so the last dot in the payload is
+  // always the userId/issuedAt boundary even when userId itself has dots.
+  const issuedAtIndex = payload.lastIndexOf('.');
+  if (issuedAtIndex <= 0) return null;
+  const userId = payload.slice(0, issuedAtIndex);
+  const issuedAt = Number(payload.slice(issuedAtIndex + 1));
+  if (!Number.isFinite(issuedAt)) return null;
+  if (Date.now() - issuedAt > MAX_AGE_SECONDS * 1000) return null;
+
+  return userId;
 }
 
 export function sessionCookieOptions() {

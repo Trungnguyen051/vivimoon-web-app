@@ -185,4 +185,17 @@ describe('auth routes', () => {
     expect(body.data.devCode).toBeUndefined();
     expect(JSON.stringify(body)).not.toContain('devCode');
   });
+
+  it('strips devCode in a production build even with mock config', async () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    try {
+      const body = await (
+        await otpRequest(post({ identifier: '0912345678', purpose: 'login' }))
+      ).json();
+      expect(body.data.otpId).toBeTruthy();
+      expect(body.data.devCode).toBeUndefined();
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
 });

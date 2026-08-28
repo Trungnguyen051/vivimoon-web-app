@@ -1,5 +1,7 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { signSession, verifySession, SESSION_COOKIE, sessionCookieOptions } from './cookie';
+
+const THIRTY_ONE_DAYS_MS = 31 * 24 * 60 * 60 * 1000;
 
 const saved = { ...process.env };
 beforeEach(() => {
@@ -15,8 +17,12 @@ describe('session cookie', () => {
   });
 
   it('rejects a tampered payload', () => {
-    const [, sig] = signSession('u-001').split('.');
-    expect(verifySession(`u-999.${sig}`)).toBeNull();
+    const token = signSession('u-001');
+    const sigIndex = token.lastIndexOf('.');
+    const sig = token.slice(sigIndex + 1);
+    const issuedAt = token.slice(0, sigIndex).split('.').pop();
+    // Same signature, different userId — the hmac no longer matches the payload.
+    expect(verifySession(`u-999.${issuedAt}.${sig}`)).toBeNull();
   });
 
   it('rejects a bad signature', () => {
@@ -62,6 +68,19 @@ describe('session cookie', () => {
 
   it('keeps a dot-bearing user id intact', () => {
     expect(verifySession(signSession('u.0.01'))).toBe('u.0.01');
+  });
+
+  it('rejects an expired session', () => {
+    vi.useFakeTimers();
+    try {
+      vi.setSystemTime(new Date('2026-01-01T00:00:00Z'));
+      const token = signSession('u-001');
+      expect(verifySession(token)).toBe('u-001'); // valid the instant it's issued
+      vi.setSystemTime(new Date('2026-01-01T00:00:00Z').getTime() + THIRTY_ONE_DAYS_MS);
+      expect(verifySession(token)).toBeNull();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('is httpOnly, lax and site-wide', () => {
