@@ -57,3 +57,19 @@ Task 3: REVIEW CLEAN (subagent review, sonnet) — spec compliant, quality Appro
     "does it actually fail on bad data" property is not self-verifying in CI.
   - Referential integrity is one-directional only (no check that every product is
     reachable from some collection). Brief did not request it; disclosed, not a spec gap.
+Task 4: REVIEW CLEAN (commits 2042448, 6da9b89 — review-driven fixes on a7843e3).
+  Reviewer findings resolved:
+  - Two vacuous test assertions in lib/api/resources/catalog/mock.test.ts
+    (filters-by-replacement-schedule, honours-the-related-products-limit) could pass
+    against broken logic; both now assert a non-empty/larger baseline before the
+    weaker check, matching their sibling tests.
+  - Collection page cast raw searchParams to LensType/ReplacementSchedule/sort instead
+    of validating them; a malformed query (?type=banana) silently rendered an empty
+    grid. Now parsed through productQuerySchema-derived validation.
+  - Follow-up: strict per-field validation over-corrected — one bad param (e.g. sort)
+    discarded an otherwise-valid one (e.g. type). Added parseProductQueryLoose
+    (per-field-lenient sibling; productQuerySchema itself is unchanged for API routes)
+    so the collection page keeps valid filters and drops only the invalid field.
+  - Strengthened "returns only reviews for the requested product" with a second
+    fixture product so a getReviews that ignores its argument now fails.
+  Verified independently: tsc exit 0, full suite 62/62.
