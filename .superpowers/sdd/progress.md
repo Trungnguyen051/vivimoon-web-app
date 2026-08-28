@@ -187,8 +187,15 @@ Task 9: REVIEW CLEAN (commit 7793a95, review clean — approved, no Critical).
   still returns 200/null). Task 10's browser-verification step will need the
   env file copied first.
 
---- PAUSED HERE (2026-08-28) --- resume at Task 10. User paused to conserve
-session token budget after the Task 9 fix-round. Tasks 1-9 complete and
-reviewed clean; Tasks 10-13 not yet started. Remaining before Task 10's
-browser-verification step: create .env.local with AUTH_COOKIE_SECRET set
-(see note above).
+Task 10: complete (commit 1b74ded, implemented + verified — no subagent dispatched).
+  Created .env.local from .env.example (AUTH_COOKIE_SECRET set) to unblock the
+  browser-verification step noted after Task 9; file is gitignored, not committed.
+  Full suite 141/6-skipped passing, tsc clean. Browser-verified via dev server:
+  GET /en/sign-in, /en/sign-up, /vi/sign-in all 200; POST /api/auth/login with
+  the mock user (0912345678/vivimoon123) set vivimoon_session as HttpOnly,
+  SameSite=lax; GET /api/auth/session read the cookie back correctly.
+
+--- PAUSED HERE (2026-08-29) --- resume at Task 11 (forgot-password OTP flow).
+User asked to stop using subagents going forward; Task 10 was implemented and
+verified directly by the controller. Tasks 1-10 complete and reviewed/verified;
+Tasks 11-13 not yet started.
