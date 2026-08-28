@@ -73,3 +73,14 @@ Task 4: REVIEW CLEAN (commits 2042448, 6da9b89 — review-driven fixes on a7843e
   - Strengthened "returns only reviews for the requested product" with a second
     fixture product so a getReviews that ignores its argument now fails.
   Verified independently: tsc exit 0, full suite 62/62.
+Task 5: complete (commit b480800, implemented + verified — no subagent dispatched).
+  Added GET /api/products, /api/products/:slug, /api/products/:slug/reviews,
+  /api/collections, /api/collections/:slug, all delegating to the catalog resource
+  module (Task 4) and wrapped in apiOk/apiFail (Task 1). Excluded /api from the
+  locale-redirect matcher in middleware.ts.
+  TDD honoured: app/api/products/route.test.ts written first, failed on unresolved
+  './route', passed 8/8 after the five handlers were added.
+  Verified: tsc exit 0, full suite 70/70 (62 + 8 new), `npm run build` succeeds with
+  all 5 new routes listed as dynamic (ƒ). Manually curled the running dev server:
+  ?type=colored filters correctly, /ghost slug 404s with not_found, ?sort=cheapest
+  400s with validation_failed, /api/collections returns the fixture list.

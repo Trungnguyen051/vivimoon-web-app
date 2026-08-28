@@ -1,7 +1,7 @@
 {
   "0": "cn",
-  "1": "types/index.ts",
-  "2": "checkout/page.tsx",
+  "1": "add-to-cart.tsx",
+  "2": "cart/page.tsx",
   "3": "dictionaries.ts",
   "4": "dependencies",
   "5": "use-cart.ts",
@@ -55,8 +55,16 @@
   "53": "product/[slug]/page.tsx",
   "54": "cn.ts",
   "55": "dialog.tsx",
-  "56": "Task 12: Carousels & CategoryGrid",
-  "57": "alert.tsx",
+  "56": "catalog.ts",
+  "57": "checkout/page.tsx",
   "58": "tabs.tsx",
-  "59": "Task 18: Cart page + line item + order summary"
+  "59": "api/config.ts",
+  "60": "common.ts",
+  "61": "5. Migration Strategy",
+  "62": "1. Overview",
+  "63": "15. Decisions and Open Questions",
+  "64": "3. Architecture — the proxy seam",
+  "65": "4. API Contract",
+  "66": "2026-08-27-vivimoon-m1-foundation.md",
+  "67": "progress.md"
 }
