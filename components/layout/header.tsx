@@ -30,12 +30,13 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
               className="w-28 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
             />
           </div>
-          <button
-            aria-label="Account"
+          <Link
+            href={`/${locale}/account`}
+            aria-label={dict.account.title}
             className="hidden size-11 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:flex"
           >
             <User className="size-5" />
-          </button>
+          </Link>
           <Link
             href={`/${locale}/cart`}
             aria-label={dict.cart.title}

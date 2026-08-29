@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { isLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
@@ -11,7 +12,10 @@ export default async function SignInPage({ params }: { params: Promise<{ locale:
   return (
     <div className="flex flex-col gap-8">
       <h1 className="text-3xl font-semibold tracking-tight">{dict.auth.signInTitle}</h1>
-      <SignInForm locale={locale} dict={dict.auth} />
+      {/* useSearchParams() in SignInForm needs a Suspense boundary for static prerendering. */}
+      <Suspense>
+        <SignInForm locale={locale} dict={dict.auth} />
+      </Suspense>
     </div>
   );
 }
