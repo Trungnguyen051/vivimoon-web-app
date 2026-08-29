@@ -195,7 +195,67 @@ Task 10: complete (commit 1b74ded, implemented + verified — no subagent dispat
   the mock user (0912345678/vivimoon123) set vivimoon_session as HttpOnly,
   SameSite=lax; GET /api/auth/session read the cookie back correctly.
 
---- PAUSED HERE (2026-08-29) --- resume at Task 11 (forgot-password OTP flow).
-User asked to stop using subagents going forward; Task 10 was implemented and
-verified directly by the controller. Tasks 1-10 complete and reviewed/verified;
-Tasks 11-13 not yet started.
+Task 11: complete (commit bf45ba9, implemented + verified — no subagent dispatched).
+  Forgot-password OTP flow (request/verify/reset, 3-stage form on one route).
+  Followed the plan verbatim; 4/4 form tests, full suite 145/6-skipped, tsc clean.
+
+Task 12: complete (commit 84b6eb6, implemented + verified — no subagent dispatched).
+  Account resource (get/update over mockAuth) and GET/PATCH /api/account.
+  Followed the plan verbatim; 9/9 route tests, full suite 154/6-skipped, tsc clean.
+
+Task 13: complete (commit 6d443ea, implemented + verified — no subagent dispatched).
+  Account page, AccountForm, and the route guard. Three deviations from the
+  plan's literal text, all found by actually running the verification steps
+  rather than trusting the plan's expected output:
+  - middleware.ts -> proxy.ts. This Next.js version (16.3.1) deprecated and
+    renamed the middleware file convention to proxy (dev server prints its own
+    deprecation warning; node_modules/next/dist/docs/.../proxy.md confirms).
+    Same guard logic and matcher, function renamed middleware -> proxy. The
+    deprecation warning is gone after the rename, and `next build` labels the
+    route "Proxy (Middleware)" rather than failing.
+  - Sign-in page now wraps SignInForm in <Suspense>. useSearchParams() in a
+    Client Component needs one for static prerendering; without it `next
+    build` fails prerendering /en/sign-in and /vi/sign-in with "should be
+    wrapped in a suspense boundary". This is Task 10's own code — `npm run
+    dev` never exercises static prerendering, so this only surfaces under
+    `next build`, which is why Task 10's own verification step didn't catch
+    it and Task 13 Step 9 (the first time `npm run build` was actually run)
+    did.
+  - Account page fetches its own GET /api/account (via headers()/cookies())
+    instead of importing the account resource directly. Root cause, confirmed
+    with a temporary diagnostic and reverted: Next.js compiles Route Handlers
+    and Server Component pages into separate module instances (verified
+    empirically — instance identity differs across a login POST and an
+    account page GET even within one process), so the mock's in-memory store
+    as mutated by PATCH /api/account was invisible to a direct resource call
+    from the page. Reproduced in both `next dev` and `next start`; before the
+    fix, saving a name and reloading showed the old name, and saving again
+    without touching the field would have silently reverted it. Asked the
+    user how to handle it (fix now vs. document as a known mock-only
+    limitation that disappears once a real upstream API replaces the
+    in-memory store) — user chose fix now. Verified via curl against a live
+    dev server and again against `next start`: patch, then reload, shows the
+    saved value.
+  Also found, NOT fixed, out of scope for M1 auth/account work: `npm run
+  lint` reports one pre-existing error in components/commerce/hero-carousel.tsx
+  (react-hooks/set-state-in-effect — calling setState synchronously in a
+  useEffect). That file has no changes on this branch and was last touched in
+  the pre-M1 baseline redesign; package.json/package-lock.json have not
+  changed either. An earlier ledger entry (Task 4-ish, "eslint 0 errors")
+  suggests lint was clean at that point, so this is likely a rule that
+  started firing after some intervening change outside this branch's own
+  commits — needs the user's attention separately from M1.
+  Step 8 (guard end-to-end) and Step 9 (full M1 verification) both run
+  through: tsc clean; lint has the one pre-existing unrelated error above;
+  full suite 158/6-skipped; test:contract 10/6-skipped; `npm run build`
+  succeeds (after the Suspense fix); API_MODE_CATALOG=upstream throws its
+  explanatory error once UPSTREAM_API_BASE_URL is also set (the plan's Step 9
+  grep command omits UPSTREAM_API_BASE_URL, but resolveMode() checks that
+  before reaching the "does not exist yet" branch — a plan-text gap, not a
+  code bug); API_MODE_COMMERCE=upstream with catalog still mocked correctly
+  refuses (config.test.ts 9/9).
+
+--- M1 COMPLETE (2026-08-29) --- Tasks 1-13 done. Remaining before sign-off:
+user's call on the pre-existing hero-carousel.tsx lint error (out of scope
+for this branch's own commits). See M1 Definition of Done below for the
+full checklist.

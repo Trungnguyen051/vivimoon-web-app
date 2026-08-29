@@ -1,15 +1,15 @@
 {
-  "0": "cn",
-  "1": "session-store.ts",
-  "2": "alert.tsx",
+  "0": "field.tsx",
+  "1": "(auth)/layout.tsx",
+  "2": "checkout/page.tsx",
   "3": "sheet.tsx",
   "4": "dependencies",
-  "5": "use-cart.ts",
+  "5": "cart-line-item.tsx",
   "6": "devDependencies",
   "7": "compilerOptions",
   "8": "components.json",
   "9": "Product domain type",
-  "10": "collection-filters.tsx",
+  "10": "cn",
   "11": "Coolmate.me Feature & Structure Analysis",
   "12": "i18n seam (locale-prefixed routes, getDictionary)",
   "13": "Vivimoon Storefront Baseline Design Spec",
@@ -56,8 +56,7 @@
   "54": "cn.ts",
   "55": "dialog.tsx",
   "56": "catalog.ts",
-  "57": "checkout/page.tsx",
-  "58": "tabs.tsx",
+  "57": "dictionaries.ts",
   "59": "api/config.ts",
   "60": "apiOk",
   "61": "5. Migration Strategy",
@@ -68,6 +67,5 @@
   "66": "2026-08-27-vivimoon-m1-foundation.md",
   "67": "progress.md",
   "68": "auth.ts",
-  "69": "Task 12: Carousels & CategoryGrid",
-  "70": "Task 18: Cart page + line item + order summary"
+  "69": "Task 12: Carousels & CategoryGrid"
 }
