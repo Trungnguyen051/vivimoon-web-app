@@ -124,7 +124,7 @@ tests/contract/fixtures.test.ts        # + voucher/shipping fixture conformance
 
 > **ADD is banded, not numeric.** Contact multifocals ship LOW/MID/HIGH, unlike a spectacle prescription's numeric ADD. Do not model it as a number.
 
-- [ ] **Step 1: Write the failing range test**
+- [x] **Step 1: Write the failing range test**
 
 Create `lib/products/rx-ranges.test.ts`. It must assert, at minimum:
 - `sphSteps()` contains `0.00`, `-0.25`, `-6.00`, `-6.50`, `-10.00`, `+6.00`
@@ -136,17 +136,17 @@ Create `lib/products/rx-ranges.test.ts`. It must assert, at minimum:
 
 Run: `npx vitest run lib/products/rx-ranges.test.ts` → FAIL on unresolved import.
 
-- [ ] **Step 2: Write `lib/products/rx-ranges.ts`**
+- [x] **Step 2: Write `lib/products/rx-ranges.ts`**
 
 Header comment must state: values are contact-lens industry standards, not Vivimoon-confirmed stock; owner is Vivimoon; narrowing is a data edit here with no selector changes (spec §11/§15).
 
 Floating-point care: build steps from integers and divide (`i * 25 / 100`), never accumulate `+= 0.25`, or `-2.75` becomes `-2.7500000000000004` and every `lineKey` in Task 3 destabilises. Round every emitted value to 2 decimals.
 
-- [ ] **Step 3: Verify the range test passes**
+- [x] **Step 3: Verify the range test passes**
 
 Run: `npx vitest run lib/products/rx-ranges.test.ts` → PASS.
 
-- [ ] **Step 4: Write the failing Rx schema test**
+- [x] **Step 4: Write the failing Rx schema test**
 
 Create `lib/api/schemas/rx.test.ts`:
 - a `spherical` variant accepts `{ sph: -2.5 }` per eye and rejects `{ sph: -7.25 }` (off-grid)
@@ -158,7 +158,7 @@ Create `lib/api/schemas/rx.test.ts`:
 
 Run → FAIL on unresolved import.
 
-- [ ] **Step 5: Write `lib/api/schemas/rx.ts`**
+- [x] **Step 5: Write `lib/api/schemas/rx.ts`**
 
 ```ts
 import { z } from 'zod';
@@ -191,11 +191,11 @@ export type RxInput = z.input<typeof rxSchema>;
 
 Then `rxSchemaForLensType(lensType)` narrows: `multifocal` makes `add` required on both eyes; every other type forbids `add`. **`cyl`/`axis` stay optional for all types in M2** — a toric product simply does not collect them yet.
 
-- [ ] **Step 6: Wire lens type onto the catalog schema**
+- [x] **Step 6: Wire lens type onto the catalog schema**
 
 In `lib/api/schemas/catalog.ts`, ensure `Product`/`Variant` expose the lens type the Rx branch keys on, and a `requiresRx: boolean` (cosmetic plano-only products do not prompt). Do **not** hand-write a duplicate interface — `lib/types/*` re-exports `z.infer<>` (M1 constraint).
 
-- [ ] **Step 7: Verify and commit**
+- [x] **Step 7: Verify and commit**
 
 Run: `npx vitest run lib/products lib/api/schemas/rx.test.ts` → PASS. `npx tsc --noEmit` → exit 0.
 
@@ -220,7 +220,7 @@ git commit -m "feat: add Rx range table and prescription schemas"
 
 > **This is the load-bearing task of M2.** Everything downstream — the reducer, the store, persistence, pricing, order lines — keys on this function's output. Get normalisation wrong and a shopper's cart silently splits or silently merges two different prescriptions into one line.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `lib/cart/line-key.test.ts`. Required cases:
 
@@ -248,19 +248,19 @@ The `null` vs `undefined` case is not hypothetical: the cart is persisted to `lo
 
 Run → FAIL on unresolved import.
 
-- [ ] **Step 2: Write `lib/cart/line-key.ts`**
+- [x] **Step 2: Write `lib/cart/line-key.ts`**
 
 Normalise before hashing: drop keys whose value is `null`/`undefined`, round every number to 2 decimals, expand `sameBothEyes` to explicit both-eye values, then serialise with **sorted keys** (a plain `JSON.stringify` preserves insertion order — that is the object-key-order bug above). Hash or simply use the canonical string; a readable `variantId::{canonical}` is preferable to an opaque digest because it makes a wrong key obvious in DevTools and in a failing test diff.
 
-- [ ] **Step 3: Verify it passes**
+- [x] **Step 3: Verify it passes**
 
 Run: `npx vitest run lib/cart/line-key.test.ts` → PASS, all cases.
 
-- [ ] **Step 4: Write `lib/api/schemas/cart.ts` and re-point `cart.types.ts`**
+- [x] **Step 4: Write `lib/api/schemas/cart.ts` and re-point `cart.types.ts`**
 
 `cartLineSchema` = the existing `CartLine` fields + `rx: rxSchema.optional()` + `lineKey: z.string()`. `features/cart/cart.types.ts` becomes `z.infer<>` re-exports (M1 constraint: schemas are the single source of truth). Keep `CartAction`, but **every action that identified a line by `variantId` now takes `lineKey`**.
 
-- [ ] **Step 5: Verify and commit**
+- [x] **Step 5: Verify and commit**
 
 `npx tsc --noEmit` → exit 0 (expect failures in `cart-reducer.ts`/`use-cart.ts` consumers — that is Task 3; if tsc must stay green per-commit, do Tasks 2 and 3 as one commit).
 
@@ -283,7 +283,7 @@ git commit -m "feat: derive cart line identity from variant and prescription"
 
 > `cartReducer` stays a **pure function** and the store delegates to it (spec §8). Do not fold reducer logic into the zustand `create` callback — the existing test file is the cart's behavioural spec and must keep covering it directly.
 
-- [ ] **Step 1: Extend the failing test**
+- [x] **Step 1: Extend the failing test**
 
 Add to `features/cart/cart-reducer.test.ts`:
 - `ADD` same variant + same Rx twice ⇒ **one line, quantity 2**
@@ -295,20 +295,20 @@ Add to `features/cart/cart-reducer.test.ts`:
 
 Run → FAIL.
 
-- [ ] **Step 2: Rewrite the reducer**
+- [x] **Step 2: Rewrite the reducer**
 
 Replace every `l.variantId === …` comparison with `l.lineKey === …`. `ADD` computes the incoming line's key via `lineKey()` if absent.
 
-- [ ] **Step 3: Delete `cartSubtotal`**
+- [x] **Step 3: Delete `cartSubtotal`**
 
 Remove it and every caller. Money is server-owned from Task 6 onward (Global Constraints). Until Task 7 lands, the cart page may show a pending state rather than a stale local total — that is intended, not a regression.
 
-- [ ] **Step 4: Verify**
+- [x] **Step 4: Verify**
 
 Run: `npx vitest run features/cart` → PASS.
 Run: `grep -rn "cartSubtotal\|unitPrice \*" app components features lib` → **no results**.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add features/cart
@@ -329,7 +329,7 @@ git commit -m "refactor: key cart lines on variant+Rx and remove client-side tot
 - Produces: `useCartStore` — persisted to `localStorage` under `vivimoon-cart`, `skipHydration: true`
 - Produces: `useCart()` — **same public shape as today** except `updateQty`/`remove` take `lineKey`, so page/component diffs stay small
 
-- [ ] **Step 1: Write the failing store test**
+- [x] **Step 1: Write the failing store test**
 
 Create `features/cart/cart-store.test.ts`:
 - actions delegate to `cartReducer` (add two same-variant-different-Rx lines ⇒ two lines)
@@ -342,7 +342,7 @@ Create `features/cart/cart-store.test.ts`:
 
 Run → FAIL on unresolved import.
 
-- [ ] **Step 2: Write the store**
+- [x] **Step 2: Write the store**
 
 ```ts
 'use client';
@@ -370,15 +370,15 @@ export const useCartStore = create<CartStore>()(
 );
 ```
 
-- [ ] **Step 3: Rehydrate on mount**
+- [x] **Step 3: Rehydrate on mount**
 
 `skipHydration: true` means nothing loads until you call `useCartStore.persist.rehydrate()`. Do it in one client component mounted in the layout — mirror `features/session/session-sync.tsx` from M1 Task 10 rather than inventing a second pattern. This replaces the hand-rolled `hydrated` flag and both `useEffect`s in `cart-context.tsx`.
 
-- [ ] **Step 4: Rewrite `use-cart.ts` over the store, delete the Context**
+- [x] **Step 4: Rewrite `use-cart.ts` over the store, delete the Context**
 
 Keep `useCart()`'s shape so consuming components barely change. Delete `cart-context.tsx` and `cart-storage.ts`. Remove `<CartProvider>` from the layout.
 
-- [ ] **Step 5: Verify**
+- [x] **Step 5: Verify**
 
 Run: `npx vitest run features/cart` → PASS.
 Run: `grep -rn "CartProvider\|cart-context\|cart-storage" app components features lib` → **no results**.
@@ -386,7 +386,7 @@ Run: `npx tsc --noEmit` → exit 0. `npm run build` → succeeds.
 
 Manual check: add to cart, reload the page, cart survives. Open a second tab, confirm both see the same cart.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add features/cart app
