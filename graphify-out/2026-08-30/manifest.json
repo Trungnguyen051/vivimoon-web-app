@@ -90,10 +90,10 @@
     "semantic_hash": "40b549f41aa914beccf1df37e8da3cb7"
   },
   "components/commerce/hero-carousel.tsx": {
-    "mtime": 1788105879.9797187,
-    "seen": 1788106448.089408,
-    "ast_hash": "0d618f6e2774fc7337de659fc5471560",
-    "semantic_hash": ""
+    "mtime": 1786876576.4054556,
+    "seen": 1787625522.045897,
+    "ast_hash": "6dc1994467a7ed328556f9cdb8748eeb",
+    "semantic_hash": "6dc1994467a7ed328556f9cdb8748eeb"
   },
   "components/commerce/order-summary.tsx": {
     "mtime": 1786876576.4057555,
@@ -690,9 +690,9 @@
     "semantic_hash": "80ea9b537cf3edf502698ef56cb76cdc"
   },
   "docs/superpowers/specs/2026-08-27-vivimoon-client-scope-design.md": {
-    "mtime": 1788106186.4622633,
-    "seen": 1788106448.089521,
-    "ast_hash": "1ff342bfb8eed496ffd093d694a81691",
+    "mtime": 1787826729.9846528,
+    "seen": 1787841563.742739,
+    "ast_hash": "102df410d9ce743768e5ab725772ee6e",
     "semantic_hash": ""
   },
   "public/file.svg": {
@@ -822,9 +822,9 @@
     "semantic_hash": ""
   },
   ".superpowers/sdd/progress.md": {
-    "mtime": 1788106445.8190744,
-    "seen": 1788106448.0895119,
-    "ast_hash": "5b305b02ddfa3bf159440398c45c20e2",
+    "mtime": 1787961650.060805,
+    "seen": 1787961656.1175969,
+    "ast_hash": "dfef83a7f43362615fcf8a75a2924777",
     "semantic_hash": ""
   },
   "app/api/collections/[slug]/route.ts": {
@@ -1131,12 +1131,6 @@
     "mtime": 1787960806.7161372,
     "seen": 1787961656.11759,
     "ast_hash": "e56770e7a12f0927cf40827392d8b3cb",
-    "semantic_hash": ""
-  },
-  "docs/superpowers/plans/2026-08-30-vivimoon-m2-purchase-core.md": {
-    "mtime": 1788106436.4142766,
-    "seen": 1788106448.089519,
-    "ast_hash": "1a47ed2bcb9614f5bb743dd05849176a",
     "semantic_hash": ""
   }
 }

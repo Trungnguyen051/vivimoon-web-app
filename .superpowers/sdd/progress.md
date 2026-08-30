@@ -259,3 +259,31 @@ Task 13: complete (commit 6d443ea, implemented + verified — no subagent dispat
 user's call on the pre-existing hero-carousel.tsx lint error (out of scope
 for this branch's own commits). See M1 Definition of Done below for the
 full checklist.
+
+M1 sign-off blocker resolved (2026-08-30, uncommitted in working tree):
+components/commerce/hero-carousel.tsx react-hooks/set-state-in-effect error fixed
+by a general-purpose subagent. The synchronous `onSelect()` in the effect body was
+replaced with embla's own 'init'/'reInit' subscriptions alongside the existing
+'select'. Verified first-hand by the controller, not taken from the report:
+`npm run lint` 0 errors (2 pre-existing unrelated warnings remain), tsc exit 0,
+suite 158 passed/6 skipped. Behaviour is unchanged at mount either way — no
+startIndex is passed, so embla's selectedScrollSnap() is 0 at init and already
+matches useState(0); the 'reInit' subscription is a small gain (dots now stay
+correct across an options-driven reInit, which the old code did not handle).
+
+Spec §15 open questions both closed by the user (2026-08-30):
+- Payment methods: QR Pay / ZaloPay / SePay only. COD deferred, not in M2.
+- Rx ranges: ship §6 industry defaults as-is against mock data; toric included.
+M2 (Purchase core) is unblocked and is the next milestone.
+
+--- M2 PLANNED (2026-08-30) ---
+Plan: docs/superpowers/plans/2026-08-30-vivimoon-m2-purchase-core.md (13 tasks).
+Scope per spec §13 minus toric, which the user deferred. Task order is
+foundation-first: Rx ranges/schemas (1) -> lineKey (2) -> reducer re-keying (3)
+-> zustand store (4), because everything downstream keys on lineKey.
+Two M1 findings carried into M2's Global Constraints so they are not rediscovered:
+proxy.ts (not middleware.ts), and pages must fetch their own /api/* for any state a
+route handler mutates (Route Handlers and Server Components are separate module
+instances). M1's "Server Components import resources directly" constraint is
+explicitly amended, not silently contradicted.
+Not yet started — no implementation commits on M2.

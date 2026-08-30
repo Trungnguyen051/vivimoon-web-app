@@ -472,7 +472,7 @@ Lens-matching quiz, multi-context viewer, comparison, mirrored reviews.
 
 The repository interface existed to swap mock↔real in-process. That job now belongs to the network boundary; keeping both would be two seams doing one job.
 
-**Changed:** six page files under `app/[locale]/` switch from repository calls to `lib/api`; `middleware.ts` gains auth guards; `lib/checkout/schema.ts` adopts the VN address model; dictionaries gain the new copy.
+**Changed:** six page files under `app/[locale]/` switch from repository calls to `lib/api`; `proxy.ts` (this Next.js deprecated the `middleware.ts` filename convention — see M1 Task 13) gains auth guards; `lib/checkout/schema.ts` adopts the VN address model; dictionaries gain the new copy.
 
 **Unchanged:** everything in `components/`. The baseline rule that commerce components never fetch data means the entire component layer survives a full backend replacement untouched.
 
@@ -489,9 +489,12 @@ The repository interface existed to swap mock↔real in-process. That job now be
 | Locales | **EN/VI retained.** |
 | COD | **Excluded for now**, pending Vivimoon's payment solution plan. Seam left (§11). |
 
-### Still open
+### Resolved — 2026-08-30
 
-1. **Payment solution.** The final method set is not confirmed. The build ships QR Pay, ZaloPay, and SePay; revisit once Vivimoon's plan lands. Blocks nothing — the method set is config.
-2. **Rx ranges.** Industry-standard defaults are specified in §6. Confirm against what Vivimoon actually stocks, and whether toric CYL/AXIS is needed at launch or can follow. Blocks nothing — the ranges are data.
+| Question | Decision |
+|---|---|
+| Payment method set | **Confirmed: QR Pay, ZaloPay, SePay — these three only.** COD stays out; it can wait and is not part of M2. The seam in §11 remains, so adding it later is a config entry in `lib/payments/methods.ts`, not a UI change. |
+| Toric at launch | **Deferred past M2.** M2 ships `sph` / plano / multifocal `add` only. The `cyl` and `axis` rows in §6 stay in the range table as data but no selector renders them yet. M2 must therefore key cart line identity on a normalised Rx object with `cyl`/`axis` already present and optional, so enabling toric later is a selector + validation change, not a re-keying of the cart. |
+| Rx range data | **Ship the industry-standard defaults in §6 as-is.** The catalogue is mock data, so there is nothing yet to confirm them against. Narrowing to real stock is a later data edit, per-product-overridable with no selector changes. |
 
-Neither open item blocks any milestone. Both resolve to editing one data file.
+Both prior open items are now closed. No open questions block any milestone.
