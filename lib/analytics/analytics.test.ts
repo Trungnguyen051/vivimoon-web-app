@@ -7,6 +7,7 @@ const product = {
   id: 'p1', slug: 'p1', name: 'Aqua', brandId: 'v', brandName: 'Vivimoon',
   type: 'clear', replacement: 'daily', description: '', images: [], badges: [],
   specs: { material: '', waterContent: '', baseCurve: '', diameter: '', uvProtection: false, manufacturer: '' },
+  requiresRx: true,
   variants: [{ id: 'v1', sku: 'SKU1', packSize: '30', price: 25, currency: 'USD', stock: 10 }],
   rating: 5, reviewCount: 1,
 } as Product;

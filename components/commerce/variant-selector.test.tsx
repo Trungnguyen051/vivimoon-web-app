@@ -10,6 +10,7 @@ const product: Product = {
   id: 'p1', slug: 'hazel', name: 'Hazel', brandId: 'v', brandName: 'Vivimoon',
   type: 'colored', replacement: 'monthly', description: '', images: ['/a.jpg'], badges: [],
   specs: { material: '', waterContent: '', baseCurve: '', diameter: '', uvProtection: false, manufacturer: '' },
+  requiresRx: true,
   variants: [
     { id: 'v1', sku: 'H-BR-10', color: '#8a5a2b', colorLabel: 'Brown', packSize: '10 lenses', price: 22, currency: 'USD', stock: 5 },
     { id: 'v2', sku: 'H-BR-30', color: '#8a5a2b', colorLabel: 'Brown', packSize: '30 lenses', price: 55, currency: 'USD', stock: 5 },
