@@ -10,6 +10,7 @@ import { QuantityStepper } from './quantity-stepper';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/features/cart/use-cart';
+import { lineKey } from '@/lib/cart/line-key';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
 import { toGa4Items } from '@/lib/analytics/events';
 
@@ -26,6 +27,8 @@ export function AddToCart({ product, locale, dict }: { product: Product; locale:
 
   const onAdd = () => {
     add({
+      // No prescription yet: the RxSelector arrives in M2 Task 5.
+      lineKey: lineKey(variant.id),
       productId: product.id, variantId: variant.id, name: product.name, sku: variant.sku,
       color: variant.colorLabel, packSize: variant.packSize, unitPrice: variant.price,
       currency: variant.currency, quantity: qty, image: product.images[0],

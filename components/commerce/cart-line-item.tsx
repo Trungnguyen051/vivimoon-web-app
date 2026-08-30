@@ -7,11 +7,13 @@ import { formatPrice } from '@/lib/utils/format';
 import { QuantityStepper } from './quantity-stepper';
 
 export function CartLineItem({
-  line, locale, dict, onQty, onRemove,
+  line, locale, dict, lineTotal = null, onQty, onRemove,
 }: {
   line: CartLine; locale: Locale; dict: Dictionary;
-  onQty: (variantId: string, qty: number) => void;
-  onRemove: (variantId: string) => void;
+  /** Server-priced line total. Null until POST /api/cart/price answers. */
+  lineTotal?: number | null;
+  onQty: (lineKey: string, qty: number) => void;
+  onRemove: (lineKey: string) => void;
 }) {
   return (
     <div className="flex gap-4 border-b py-6 first:pt-0">
@@ -27,7 +29,7 @@ export function CartLineItem({
             </p>
           </div>
           <button
-            onClick={() => onRemove(line.variantId)}
+            onClick={() => onRemove(line.lineKey)}
             aria-label={dict.cart.remove}
             className="-mr-1 flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
@@ -37,12 +39,12 @@ export function CartLineItem({
         <div className="mt-auto flex items-end justify-between gap-3 pt-4">
           <QuantityStepper
             value={line.quantity}
-            onChange={(next) => onQty(line.variantId, next)}
+            onChange={(next) => onQty(line.lineKey, next)}
             decreaseLabel={dict.common.decreaseQty}
             increaseLabel={dict.common.increaseQty}
           />
           <p className="font-semibold tabular-nums">
-            {formatPrice(line.unitPrice * line.quantity, line.currency, locale)}
+            {lineTotal === null ? '—' : formatPrice(lineTotal, line.currency, locale)}
           </p>
         </div>
       </div>

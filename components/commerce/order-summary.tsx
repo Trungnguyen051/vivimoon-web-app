@@ -10,9 +10,10 @@ import { Separator } from '@/components/ui/separator';
 export function OrderSummary({
   subtotal, currency, locale, dict, ctaHref, ctaLabel,
 }: {
-  subtotal: number; currency: Currency; locale: Locale; dict: Dictionary; ctaHref?: string; ctaLabel?: string;
+  /** Null until POST /api/cart/price answers. Money is server-owned (spec §7). */
+  subtotal: number | null; currency: Currency; locale: Locale; dict: Dictionary; ctaHref?: string; ctaLabel?: string;
 }) {
-  const price = (n: number) => formatPrice(n, currency, locale);
+  const price = (n: number | null) => (n === null ? '—' : formatPrice(n, currency, locale));
   return (
     <Card className="h-fit md:sticky md:top-24">
       <CardHeader>

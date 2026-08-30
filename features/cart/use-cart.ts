@@ -1,21 +1,30 @@
 'use client';
-import { useContext } from 'react';
-import { CartContext } from './cart-context';
-import { cartCount, cartSubtotal } from './cart-reducer';
-import type { CartLine } from './cart.types';
+import { useCartStore, selectCartCount } from './cart-store';
 
+/**
+ * Cart access for client components. Lines are addressed by `lineKey`, not
+ * `variantId` — the same variant at two powers is two lines (spec §7).
+ *
+ * There is no `subtotal` here on purpose: money is server-owned and comes from
+ * POST /api/cart/price.
+ */
 export function useCart() {
-  const ctx = useContext(CartContext);
-  if (!ctx) throw new Error('useCart must be used within CartProvider');
-  const { state, dispatch } = ctx;
+  const lines = useCartStore((s) => s.lines);
+  const hydrated = useCartStore((s) => s.hydrated);
+  const count = useCartStore(selectCartCount);
+  const add = useCartStore((s) => s.add);
+  const updateQty = useCartStore((s) => s.updateQty);
+  const remove = useCartStore((s) => s.remove);
+  const clear = useCartStore((s) => s.clear);
+
   return {
-    lines: state.lines,
-    count: cartCount(state),
-    subtotal: cartSubtotal(state),
-    currency: state.lines[0]?.currency ?? 'USD',
-    add: (line: CartLine) => dispatch({ type: 'ADD', line }),
-    updateQty: (variantId: string, quantity: number) => dispatch({ type: 'UPDATE_QTY', variantId, quantity }),
-    remove: (variantId: string) => dispatch({ type: 'REMOVE', variantId }),
-    clear: () => dispatch({ type: 'CLEAR' }),
+    lines,
+    hydrated,
+    count,
+    currency: lines[0]?.currency ?? 'USD',
+    add,
+    updateQty,
+    remove,
+    clear,
   };
 }

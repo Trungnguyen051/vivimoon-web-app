@@ -1,5 +1,5 @@
 'use client';
-import { use, useEffect } from 'react';
+import { use } from 'react';
 import Link from 'next/link';
 import { ShoppingBag } from 'lucide-react';
 import { isLocale, type Locale, defaultLocale } from '@/lib/i18n/config';
@@ -16,27 +16,22 @@ export default function CartPage({ params }: { params: Promise<{ locale: string 
   const { locale: raw } = use(params);
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const dict = getDictionary(locale);
-  const { lines, subtotal, currency, updateQty, remove } = useCart();
+  const { lines, currency, updateQty, remove } = useCart();
   const { track } = useAnalytics();
 
-  useEffect(() => {
-    track({ name: 'view_cart', params: { currency, value: subtotal, items: cartLinesToGa4Items(lines) } });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // `view_cart` carries the cart's value, which is server-owned. It fires in
+  // M2 Task 7 once POST /api/cart/price answers — reporting a locally computed
+  // total here would be the very drift the server-pricing rule exists to avoid.
 
-  const handleRemove = (variantId: string) => {
-    const line = lines.find((l) => l.variantId === variantId);
+  const handleRemove = (key: string) => {
+    const line = lines.find((l) => l.lineKey === key);
     if (line) {
       track({
         name: 'remove_from_cart',
-        params: {
-          currency: line.currency,
-          value: line.unitPrice * line.quantity,
-          items: cartLinesToGa4Items([line]),
-        },
+        params: { currency: line.currency, value: line.unitPrice, items: cartLinesToGa4Items([line]) },
       });
     }
-    remove(variantId);
+    remove(key);
   };
 
   if (lines.length === 0) {
@@ -63,12 +58,12 @@ export default function CartPage({ params }: { params: Promise<{ locale: string 
       <div className="grid gap-10 md:grid-cols-3 md:gap-12">
         <div className="md:col-span-2">
           {lines.map((l) => (
-            <CartLineItem key={l.variantId} line={l} locale={locale} dict={dict}
-              onQty={(id, q) => (q < 1 ? handleRemove(id) : updateQty(id, q))}
+            <CartLineItem key={l.lineKey} line={l} locale={locale} dict={dict}
+              onQty={(key, q) => (q < 1 ? handleRemove(key) : updateQty(key, q))}
               onRemove={handleRemove} />
           ))}
         </div>
-        <OrderSummary subtotal={subtotal} currency={currency} locale={locale} dict={dict} ctaHref={`/${locale}/checkout`} ctaLabel={dict.cart.checkout} />
+        <OrderSummary subtotal={null} currency={currency} locale={locale} dict={dict} ctaHref={`/${locale}/checkout`} ctaLabel={dict.cart.checkout} />
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 'use client';
-import { use, useEffect } from 'react';
+import { use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,8 +12,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { useAnalytics } from '@/lib/analytics/use-analytics';
-import { cartLinesToGa4Items } from '@/lib/analytics/events';
 
 // Module-scope helper: keeps the impure Date.now() call out of the component body
 // so it isn't evaluated during render.
@@ -26,8 +24,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const dict = getDictionary(locale);
   const router = useRouter();
-  const { lines, subtotal, currency } = useCart();
-  const { track } = useAnalytics();
+  const { lines, currency } = useCart();
   const { register, handleSubmit, formState: { errors, isSubmitted } } = useForm<CheckoutForm>({ resolver: zodResolver(checkoutSchema) });
 
   const fields = [
@@ -39,15 +36,15 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
   ];
   const erroredFields = fields.filter((f) => errors[f.name]);
 
-  useEffect(() => {
-    track({ name: 'begin_checkout', params: { currency, value: subtotal, items: cartLinesToGa4Items(lines) } });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // `begin_checkout` carries a server-owned value; it fires in M2 Task 7/10
+  // once pricing and order placement land.
 
   const onSubmit = () => {
     const orderId = generateOrderId();
     // Persist a minimal order snapshot for the success page.
-    sessionStorage.setItem('vivimoon-last-order', JSON.stringify({ orderId, currency, value: subtotal, lines }));
+    // Interim snapshot. M2 Task 10 replaces this with the placed order returned
+    // by POST /api/orders, which is where the authoritative total comes from.
+    sessionStorage.setItem('vivimoon-last-order', JSON.stringify({ orderId, currency, value: null, lines }));
     router.push(`/${locale}/checkout/success`);
   };
 
@@ -97,7 +94,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
           <Button type="submit" className="h-12 w-full text-base">{dict.checkout.placeOrder}</Button>
         </div>
       </form>
-      <OrderSummary subtotal={subtotal} currency={currency} locale={locale} dict={dict} />
+      <OrderSummary subtotal={null} currency={currency} locale={locale} dict={dict} />
     </div>
   );
 }
