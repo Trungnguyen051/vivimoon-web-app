@@ -18,9 +18,12 @@ export function HeroCarousel({ slides, ctaLabel }: { slides: Slide[]; ctaLabel: 
 
   useEffect(() => {
     if (!embla) return;
-    onSelect();
+    embla.on('init', onSelect);
+    embla.on('reInit', onSelect);
     embla.on('select', onSelect);
     return () => {
+      embla.off('init', onSelect);
+      embla.off('reInit', onSelect);
       embla.off('select', onSelect);
     };
   }, [embla, onSelect]);
