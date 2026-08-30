@@ -287,3 +287,25 @@ route handler mutates (Route Handlers and Server Components are separate module
 instances). M1's "Server Components import resources directly" constraint is
 explicitly amended, not silently contradicted.
 Not yet started — no implementation commits on M2.
+
+--- M2 IN PROGRESS (branch feat/m2-purchase-core) ---
+Task 1: complete (ab8550c). Rx range table + schemas. Two plan-text deviations,
+  both found by running it: the plan says "spherical" but the real lensTypeSchema
+  enum is clear|colored|toric|multifocal; and adding requiresRx broke tsc on 12
+  fixture literals because fixtures are typed as the OUTPUT type, where .default()
+  makes the field required — the same .default()/z.infer trap as M1 Task 2, in
+  reverse. Declared it explicitly on each fixture, matching reviewSchema's `source`.
+Tasks 2-4: complete (c3d60be), landed as one commit because re-keying the reducer
+  breaks cart-context.tsx, which Task 4 deletes.
+  Plan defect found by test, not by reading: the plan asserted skipHydration
+  prevents localStorage WRITES before rehydrate(). False — persist wraps setState
+  unconditionally, so a pre-hydration mutation overwrites the stored cart before
+  merge can union it; skipHydration skips only the initial READ. Store now exposes
+  a `hydrated` gate (the only real protection) and keeps a custom merge as defence
+  in depth for Task 11's guest-cart merge. Plan text was corrected before coding.
+  UPDATE_QTY <= 0 now removes rather than clamping to 1 — a deliberate behaviour
+  change from the baseline, documented in the commit.
+  Cart/checkout show "—" and the value-bearing analytics events stay unfired until
+  Task 7/10 give the server ownership of those totals.
+Gates at c3d60be: tsc 0, lint 0 errors, 227 passed / 6 skipped, build succeeds.
+Next: Task 5 (RxSelector + Rx-aware add to cart).
