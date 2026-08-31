@@ -1,5 +1,5 @@
 import { products, collections, reviews } from '@/content/mock';
-import type { Collection, Product, ProductQuery, Review } from '@/lib/api/schemas/catalog';
+import type { Collection, Product, ProductQuery, Review, Variant } from '@/lib/api/schemas/catalog';
 
 /** Lowest variant price, used for sorting. */
 export function minPrice(product: Product): number {
@@ -56,6 +56,19 @@ export const mockCatalog = {
 
   async getReviews(productId: string): Promise<Review[]> {
     return reviews.filter((r) => r.productId === productId);
+  },
+
+  /**
+   * Finds a variant by id across the whole catalogue, and the product it
+   * belongs to. This is the server-side price lookup pricing/mock.ts uses —
+   * variant ids are asserted globally unique in tests/contract/fixtures.test.ts.
+   */
+  async getVariantById(id: string): Promise<{ product: Product; variant: Variant } | null> {
+    for (const product of products) {
+      const variant = product.variants.find((v) => v.id === id);
+      if (variant) return { product, variant };
+    }
+    return null;
   },
 };
 

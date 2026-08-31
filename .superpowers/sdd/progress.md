@@ -373,3 +373,59 @@ resource: `account/index.ts` and `auth/index.ts` both call
 `resolveMode('identity')`. So `pricing/index.ts` calls
 `resolveMode('commerce')`, and `config.ts` / `.env.example` are untouched by
 Tasks 6, 8, 9 and 10.
+
+### M2 Task 6 — Server-owned pricing and auto-voucher (2026-08-31)
+
+Implemented by a Sonnet subagent under Opus orchestration.
+
+**The security property holds and is tested end to end.** `priceLineInputSchema`
+accepts only `{ lineKey, variantId, rx?, quantity }` — it does not list a price
+field at all, so zod's default key-stripping removes any client-supplied
+`unitPrice` in `parseBody` before pricing runs. There is nothing at runtime to
+"ignore"; the field cannot arrive. Asserted twice: at the resource level with a
+cast-through-`unknown` rigged body, and end to end through the route handler
+with an untyped JSON body claiming `unitPrice: 1`. Both assert against a
+non-trivial baseline (2 x 25 + 1 x 48 = 98) established first, so neither can
+pass vacuously.
+
+**Design decisions the brief left open, and how they went:**
+- Schemas live in `lib/api/schemas/cart.ts` — the spec names `cart.ts` as owner
+  of `POST /api/cart/price`.
+- **No new `ErrorCode`.** `not_found` (unknown variantId) and
+  `validation_failed` (bad quantity, empty cart, mixed currency) both fit.
+- **Vouchers do NOT stack.** Exactly one, or none — whichever eligible
+  candidate yields the largest discount. Stated in a comment and asserted.
+- A candidate whose computed discount is 0 is dropped *before* the "best"
+  comparison, so a `shipping`-type voucher cannot "apply" for zero benefit
+  while `shipping` is still 0 pre-Task 8. Tested explicitly.
+- `voucherApplies` checks `status` AND `expiresAt` independently: a voucher can
+  be flagged `active` with a past date if the backend has not swept it yet.
+  Fixture `STALE-ACTIVE60` exists solely to make that guard falsifiable.
+- Determinism without an injected clock: fixture `expiresAt` dates are 2099 and
+  2020, far from any real "now".
+- `getVariantById` was added to `mockCatalog` rather than kept as a private
+  helper in pricing — catalog owns the catalogue.
+- `pricing/mock.ts` imports the **resolved** `catalog` singleton, not
+  `mockCatalog` directly, so pricing picks up real prices automatically if
+  catalog migrates upstream while commerce is still mocked. Consistent with
+  `config.ts`'s `DEPENDS_ON` model.
+
+**Deviation from spec §4, deliberate:** the request body has no top-level
+`voucherCode?`. Task 6's interface is auto-apply-only and the implementer
+followed it literally. Accepting a client-specified code later is additive,
+not breaking.
+
+**Flagged as present but unreachable, so it does not read as covered:** the
+mixed-currency guard in `mock.ts` (all fixtures are USD) and the
+`lines.length === 0` guard (the route's `.min(1)` rejects that first). Both are
+defence for direct/future resource callers.
+
+**Resource seam:** `pricing/index.ts` calls `resolveMode('commerce')` per the
+correction recorded under Task 5. `git diff --stat lib/api/config.ts
+.env.example` is empty, as required.
+
+**Gates (verified independently by the orchestrator, not taken from the
+subagent's report):** `npx tsc --noEmit` exit 0 · `npm run lint` 0 errors /
+2 pre-existing warnings · `npx vitest run` 255 passed, 6 skipped (up 14 from
+the 241 baseline) · `npm run test:contract` passes · config/env diff empty ·
+money grep still the single annotated GA4 line.

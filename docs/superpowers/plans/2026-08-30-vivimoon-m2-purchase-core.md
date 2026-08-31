@@ -467,11 +467,11 @@ git commit -m "feat: add prescription selector and Rx-aware add to cart"
 
 > **The server re-prices from its own catalogue.** It must **not** trust `unitPrice` from the request body — a client that posts `unitPrice: 1` would otherwise buy at 1 VND. Accept `{ variantId, lineKey, rx?, quantity }` per line and look the price up server-side. This is the one genuine security property in M2.
 
-- [ ] **Step 1: Voucher fixtures + conformance**
+- [x] **Step 1: Voucher fixtures + conformance**
 
 `content/mock/vouchers.ts` per spec §6's `Voucher` shape (`percent | fixed | shipping`, `minSpend?`, `expiresAt`, `status`). Extend `tests/contract/fixtures.test.ts` so every voucher parses against its schema — M1's harness is mutation-tested and must stay falsifiable; add the fixture to the existing pattern, do not write a parallel one.
 
-- [ ] **Step 2: Write the failing pricing test**
+- [x] **Step 2: Write the failing pricing test**
 
 `lib/api/resources/pricing/mock.test.ts`:
 - subtotal is the sum of server-looked-up prices × quantity
@@ -484,15 +484,15 @@ git commit -m "feat: add prescription selector and Rx-aware add to cart"
 
 Run → FAIL.
 
-- [ ] **Step 3: Implement `mock.ts`, then `index.ts`, then the route handler**
+- [x] **Step 3: Implement `mock.ts`, then `index.ts`, then the route handler**
 
 Route handler mirrors M1 Task 5's handlers: parse body with the zod schema, delegate to the resource, wrap in `apiOk`/`apiFail`, map validation failure to `validation_failed`.
 
-- [ ] **Step 4: Route test**
+- [x] **Step 4: Route test**
 
 `app/api/cart/price/route.test.ts` — valid body returns a schema-valid envelope; malformed body returns `400 validation_failed`; unknown variant returns the typed error.
 
-- [ ] **Step 5: Verify and commit**
+- [x] **Step 5: Verify and commit**
 
 `npx vitest run lib/api/resources/pricing app/api/cart` → PASS. `npm run test:contract` → passes.
 
