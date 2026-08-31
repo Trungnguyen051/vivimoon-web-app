@@ -309,3 +309,67 @@ Tasks 2-4: complete (c3d60be), landed as one commit because re-keying the reduce
   Task 7/10 give the server ownership of those totals.
 Gates at c3d60be: tsc 0, lint 0 errors, 227 passed / 6 skipped, build succeeds.
 Next: Task 5 (RxSelector + Rx-aware add to cart).
+
+### M2 Task 5 — RxSelector and Rx-aware add-to-cart (2026-08-31)
+
+Implemented by a Sonnet subagent under Opus orchestration, per the user's
+instruction to hand implementation to a subagent.
+
+**Deviations from plan text, all deliberate:**
+- The plan's Step 2 test list named a `spherical` product. The enum is
+  `clear | colored | toric | multifocal`; tests use `clear`. Plan corrected.
+- Step 3 said "use `Select`/`Input`". Used a **native `<select>`**, not the
+  Radix `components/ui/select.tsx`. Two reasons: sph has ~101 options, which
+  is the wrong shape for a virtualised popover and worse on mobile; and Radix
+  renders no `<option>`s until the popover opens, which would have made the
+  plan's own "offers 0.00 / not -7.25 / no CYL control" assertions vacuous.
+  Precedent: `components/layout/locale-switcher.tsx`. Radix `Select` is still
+  the right control for the short filter lists in `collection-filters.tsx`.
+- Dropped the planned `requiresRx` prop from `RxSelector`. Whether to render
+  the selector and whether to gate the button are the PDP's decisions; a prop
+  meaning "don't render me" only invites an early `return null`.
+
+**Two design traps found before implementation (advisor pass):**
+1. `RxSelector` cannot be controlled over `RxInput` — `rxEyeSchema.sph` is a
+   required `z.number()`, so `RxInput` has no representation for "no power
+   picked yet", and the natural workaround (`sph: 0`) is *plano*, silently
+   pre-filling a valid prescription on a product that requires correction.
+   Introduced an explicit `RxDraft` (both fields optional) for the selector;
+   the cart line is built from `safeParse().data`, never the draft, so
+   `cartLineSchema.rx` keeps the parsed output shape and `lineKey` stays
+   stable across persisted carts.
+2. `add-to-cart.tsx` computes `variant.price * qty` for the GA4 `add_to_cart`
+   `value`. The Global Constraint's check was `grep "unitPrice \*"`, which
+   that line passes on a technicality. Widened to
+   `grep -rnE "(unitPrice|price) \*"` with exactly one expected hit, annotated
+   inline as a sanctioned analytics snapshot (GA4 requires a value at add
+   time, before any server price exists). Nothing a shopper *sees* is
+   computed client-side.
+
+**Fixed during review:** `formatSph` had been duplicated verbatim in
+`rx-selector.tsx` and `rx-summary.tsx`. Drift there is user-visible — a cart
+line labelled with a power the selector never offered — so it now lives in
+`lib/products/rx-ranges.ts` beside `sphSteps()`, which owns that domain.
+
+**Also fixed by the implementer:** the required-Rx hint was gated on
+`!canAdd`, so it rendered on mount before any interaction; and because the
+button is `disabled` while invalid, no "did they attempt to submit" flag can
+ever fire from `onAdd`. Now gated on interaction with `RxSelector`.
+
+**Gates (verified independently by the orchestrator, not taken from the
+subagent's report):** `npx tsc --noEmit` exit 0 · `npm run lint` 0 errors /
+2 pre-existing warnings · `npx vitest run` 241 passed, 6 skipped ·
+`grep -rnE "(unitPrice|price) \*" app components features` → exactly the one
+annotated GA4 line.
+
+**Plan correction made while Task 5 ran:** Task 6 (and 8, 9, 10) had invented
+four new resource names — `pricing`, `shipping`, `payments`, `orders` — for
+`lib/api/config.ts`. Spec §"Cutover order" puts cart pricing, vouchers,
+orders and payments in **Group D `commerce`**, which already exists in
+`RESOURCES` with the correct dependency rule (`catalog` + `identity` first)
+and already has an `API_MODE_COMMERCE` line in `.env.example`. The
+established pattern is one directory per *module*, several sharing a
+resource: `account/index.ts` and `auth/index.ts` both call
+`resolveMode('identity')`. So `pricing/index.ts` calls
+`resolveMode('commerce')`, and `config.ts` / `.env.example` are untouched by
+Tasks 6, 8, 9 and 10.

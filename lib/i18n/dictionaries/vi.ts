@@ -22,6 +22,16 @@ export const vi: Dictionary = {
     packSize: 'Quy cách', color: 'Màu', quantity: 'Số lượng', freeship: 'Miễn phí ship',
     noReviews: 'Chưa có đánh giá.',
   },
+  rx: {
+    rightEye: 'Mắt phải (OD)', leftEye: 'Mắt trái (OS)',
+    sameBothEyes: 'Giống nhau cho cả hai mắt',
+    sph: 'Độ cận/viễn (SPH)', selectPower: 'Chọn độ',
+    add: 'ADD', selectAdd: 'Chọn ADD',
+    addBands: { LOW: 'Thấp', MID: 'Trung bình', HIGH: 'Cao' },
+    plano: 'Không độ (Plano)',
+    required: 'Vui lòng chọn độ cho cả hai mắt để tiếp tục.',
+    summaryLabel: 'Độ',
+  },
   cart: {
     title: 'Giỏ hàng', empty: 'Giỏ hàng trống', subtotal: 'Tạm tính',
     checkout: 'Thanh toán', remove: 'Xóa',

@@ -42,6 +42,18 @@ export function sphSteps(): number[] {
   return [...new Set(all)].sort((a, b) => a - b);
 }
 
+/**
+ * Display form of an sph power: always two decimals, always signed except
+ * plano. Lives here rather than in a component because the selector's options
+ * and the cart/order line summaries must render the same power identically —
+ * if they drift, a shopper sees a line labelled with a power the selector
+ * never offered.
+ */
+export function formatSph(v: number): string {
+  if (v === 0) return '0.00';
+  return `${v > 0 ? '+' : ''}${v.toFixed(2)}`;
+}
+
 /** Multifocal only. Contact multifocals ship banded, not as a numeric ADD. */
 export const addBands = ['LOW', 'MID', 'HIGH'] as const;
 export type AddBand = (typeof addBands)[number];

@@ -4,7 +4,7 @@
 
 **Goal:** Take a shopper from "choose a prescription" to "order placed." The cart moves off React Context onto zustand, line identity widens from `variantId` to `variantId + Rx`, and every currency figure becomes server-owned.
 
-**Architecture:** M1's proxy seam is unchanged and is reused verbatim — new resources (`pricing`, `shipping`, `payments`, `orders`) drop into `lib/api/resources/<name>/{index,mock}.ts` behind the same `resolveMode()` config, and their route handlers wrap the same `apiOk`/`apiFail` envelope. Nothing in M2 introduces a second seam.
+**Architecture:** M1's proxy seam is unchanged and is reused verbatim — new modules (`pricing`, `shipping`, `payments`, `orders`) drop into `lib/api/resources/<name>/{index,mock}.ts` behind the same `resolveMode()` config — all four resolve the **existing** `commerce` resource, exactly as `account/` and `auth/` both resolve `identity`, and their route handlers wrap the same `apiOk`/`apiFail` envelope. Nothing in M2 introduces a second seam.
 
 **Tech Stack:** Next.js 16.3.1 App Router (note: `proxy.ts`, not `middleware.ts`), React 19, TypeScript strict, zod 3.25, zustand 5, Vitest + React Testing Library.
 
@@ -20,7 +20,7 @@ M1's Global Constraints all still apply. Read them. Three are **amended or added
 
 - **AMENDED — Server Components and mutable state.** M1 said "Server Components import `lib/api/resources/*` directly; never `fetch()` our own `/api/*`." That holds for **read-only catalog data**. It is **wrong for anything a Route Handler mutates**. M1 Task 13 established empirically that this Next.js compiles Route Handlers and Server Component pages into **separate module instances**, so an in-memory mock store mutated by `PATCH /api/account` is invisible to a direct resource import from a page. Therefore: **any page reading state that a route handler writes — cart pricing, orders, payment intents — must fetch its own `/api/*` endpoint** via `headers()`/`cookies()`, exactly as `app/[locale]/account/page.tsx` does. Copy that page's pattern; do not re-derive it. This is a mock-mode artifact that disappears at proxy cutover, and it costs one HTTP hop in dev.
 - **AMENDED — `middleware.ts` is `proxy.ts`.** This Next.js version deprecated and renamed the convention. The file exports `proxy`, not `middleware`. Spec §9 and §14 still say `middleware.ts`; the code is correct, the spec text is legacy.
-- **NEW — the client never computes money.** No `unitPrice * quantity` anywhere in `app/`, `components/`, or `features/` after Task 7. `cartSubtotal` is deleted. Every figure a shopper sees comes from `POST /api/cart/price`. A reviewer should be able to `grep -rn "unitPrice \*" app components features` and get nothing.
+- **NEW — the client never computes money.** No `unitPrice * quantity` anywhere in `app/`, `components/`, or `features/` after Task 7. `cartSubtotal` is deleted. Every figure a shopper sees comes from `POST /api/cart/price`. A reviewer should be able to `grep -rnE "(unitPrice|price) \*" app components features` and get exactly one hit: the GA4 `add_to_cart` `value` in `components/commerce/add-to-cart.tsx`, which is a sanctioned analytics snapshot (GA4 requires a `value` at add time, before any server price exists) and is annotated inline as such. Nothing that a shopper *sees* is computed on the client.
 - **NEW — pricing is a client call, and the cart page has no server-fetched price.** The amendment above does *not* extend to the cart. The cart lives in `localStorage` behind zustand `persist` with `skipHydration: true`, so it is unreadable until a client effect calls `rehydrate()` — there is no cart cookie and no server-side cart, and a Server Component therefore has **nothing to post** to `/api/cart/price`. All pricing calls are client-side, after rehydration, through `lib/api/client.ts`. The cart page renders a pending state until rehydrate and the first price resolve, which is the same state a reload needs anyway.
 - **NEW — `components/` still never fetches.** Unchanged from M1. The *feature* layer (`features/cart/`) owns the pricing calls, exactly as M1's client components already call `lib/api/client.ts`; components under `components/` stay pure and take props.
 - **NEW — no toric.** Per spec §15 (resolved 2026-08-30), `cyl` and `axis` ship as **optional fields present in the schema and the range table but rendered by no selector**. See Task 1 for why they must exist in the type from day one.
@@ -89,7 +89,7 @@ features/cart/cart-reducer.ts          # keys on lineKey; cartSubtotal DELETED
 features/cart/cart-reducer.test.ts     # + Rx line-identity cases
 lib/checkout/schema.ts                 # city -> province/district/ward
 lib/analytics/events.ts                # add_to_cart/purchase carry Rx-bearing items
-lib/api/config.ts                      # + pricing/shipping/payments/orders modes
+lib/api/config.ts                      # UNCHANGED — pricing/shipping/payments/orders all resolve the existing `commerce` resource
 lib/api/schemas/catalog.ts             # + lensType-driven Rx requirement on Variant
 lib/i18n/dictionaries/{en,vi}.ts       # + Rx, checkout, payment, order copy
 app/[locale]/product/[slug]/page.tsx   # + RxSelector, Buy Now
@@ -98,7 +98,7 @@ app/[locale]/checkout/page.tsx         # VN address, shipping, payment, placemen
 app/layout.tsx or app/[locale]/layout.tsx  # drop CartProvider
 proxy.ts                               # guard /checkout logged-in variant
 content/mock/index.ts                  # + vouchers, shipping rates
-.env.example                           # + API_MODE_{PRICING,SHIPPING,PAYMENTS,ORDERS}
+.env.example                           # UNCHANGED — API_MODE_COMMERCE already covers all four
 tests/contract/fixtures.test.ts        # + voucher/shipping fixture conformance
 ```
 
@@ -402,21 +402,21 @@ git commit -m "refactor: migrate cart from React Context to zustand"
 - Modify: `app/[locale]/product/[slug]/page.tsx`, the add-to-cart client component, `lib/i18n/dictionaries/{en,vi}.ts`
 
 **Interfaces:**
-- Produces: `<RxSelector value onChange lensType requiresRx ranges />` — controlled, renders **only** the steps the product stocks
+- Produces: `<RxSelector value onChange lensType ranges dict />` — controlled over an `RxDraft` (partial, pre-validation), renders **only** the steps the product stocks. No `requiresRx` prop: whether to render the selector at all, and whether a valid Rx gates the button, are the PDP's decisions (Step 4), not the component's.
 - Produces: `<RxSummary rx />` — compact one-line render for cart/checkout/order lines
 
 > **Renders no `cyl`/`axis` control.** Toric is deferred (§15). The fields exist in the type and the range table; the UI does not collect them in M2.
 
 > `components/` never fetches data (M1 constraint). `RxSelector` receives its ranges as props from the page.
 
-- [ ] **Step 1: Add dictionary copy first**
+- [x] **Step 1: Add dictionary copy first**
 
 `en` and `vi` together — `Dictionary` is typed from `en`, so a missing `vi` key is a compile error, which is the point. Keys needed: right/left eye, "same for both eyes", sph label, ADD label + LOW/MID/HIGH, plano / "no correction", the required-Rx validation message, and the cart/checkout Rx summary label.
 
-- [ ] **Step 2: Write the failing component test**
+- [x] **Step 2: Write the failing component test**
 
 `components/commerce/rx-selector.test.tsx`:
-- a `spherical` product renders an sph control per eye and **no** ADD control
+- a `clear` product renders an sph control per eye and **no** ADD control (the enum is `clear|colored|toric|multifocal`; there is no `spherical`)
 - a `multifocal` product renders ADD with exactly LOW/MID/HIGH
 - **no product renders a CYL or AXIS control** — assert this explicitly, so re-enabling toric later is a deliberate act that breaks a test rather than a silent leak
 - the sph options offer `0.00` (plano) and do **not** offer `-7.25`
@@ -425,19 +425,19 @@ git commit -m "refactor: migrate cart from React Context to zustand"
 
 Run → FAIL.
 
-- [ ] **Step 3: Build `RxSelector`, then `RxSummary`**
+- [x] **Step 3: Build `RxSelector`, then `RxSummary`**
 
 Use existing `components/ui/*` primitives (`Field`, `Select`/`Input`). Do not introduce a new form library — the codebase is RHF + zod.
 
-- [ ] **Step 4: Gate add-to-cart on a valid Rx**
+- [x] **Step 4: Gate add-to-cart on a valid Rx**
 
 In the PDP's add-to-cart client component: when `requiresRx`, the button stays disabled until `rxSchemaForLensType(lensType)` parses. On success, build the line **with** `rx` and `lineKey`, then `useCart().add(line)`.
 
-- [ ] **Step 5: Analytics**
+- [x] **Step 5: Analytics**
 
 `add_to_cart` fires as before. Rx is **not** a GA4 item field — do not invent one. `cartLinesToGa4Items` in `lib/analytics/events.ts` already takes a line snapshot; confirm it still compiles against the widened `CartLine` and that no raw `gtag` call appears (M1 constraint).
 
-- [ ] **Step 6: Verify and commit**
+- [x] **Step 6: Verify and commit**
 
 `npx vitest run components/commerce` → PASS. `npx tsc --noEmit` → 0.
 Manual: add the same variant at two different powers, confirm the cart shows **two lines**.
@@ -453,15 +453,17 @@ git commit -m "feat: add prescription selector and Rx-aware add to cart"
 
 **Files:**
 - Create: `content/mock/vouchers.ts`, `lib/api/resources/pricing/{index.ts,mock.ts,mock.test.ts}`, `app/api/cart/price/route.ts`, `app/api/cart/price/route.test.ts`
-- Modify: `lib/api/config.ts`, `content/mock/index.ts`, `tests/contract/fixtures.test.ts`, `.env.example`
+- Modify: `content/mock/index.ts`, `tests/contract/fixtures.test.ts`
 
 **Interfaces:**
 - Produces: `POST /api/cart/price` → `{ lines: PricedLine[], subtotal, discount, appliedVouchers, shipping, total, currency }`
 
 > **`shipping` is `0` until Task 8.** No address exists yet, so there is nothing to quote against. Return the field with `0` — present and typed from day one, never omitted — so Task 7's summary component is not written against a shape that changes under it.
-- Consumes: `apiOk`/`apiFail` (M1 Task 1), `resolveMode('pricing')` (M1 Task 1)
+- Consumes: `apiOk`/`apiFail` (M1 Task 1), `resolveMode('commerce')` (M1 Task 1)
 
 > Follow the M1 resource pattern exactly — `index.ts` picks mock vs upstream from env and throws a fail-fast error for upstream (which does not exist yet); `mock.ts` holds the logic. Copy `lib/api/resources/catalog/index.ts`.
+
+> **Do not add a `pricing` resource name to `lib/api/config.ts`.** Spec §"Cutover order" puts cart pricing, vouchers, orders and payments in **Group D `commerce`**, which already exists in `RESOURCES` with the right dependency rule (`commerce` requires `catalog` + `identity` upstream first) and already has an `API_MODE_COMMERCE` line in `.env.example`. The established pattern is one directory per *module*, several sharing a resource — `account/index.ts` and `auth/index.ts` both call `resolveMode('identity')`. So `pricing/index.ts` calls `resolveMode('commerce')`, and `config.ts` and `.env.example` are untouched by Tasks 6, 8, 9 and 10.
 
 > **The server re-prices from its own catalogue.** It must **not** trust `unitPrice` from the request body — a client that posts `unitPrice: 1` would otherwise buy at 1 VND. Accept `{ variantId, lineKey, rx?, quantity }` per line and look the price up server-side. This is the one genuine security property in M2.
 
@@ -495,7 +497,7 @@ Route handler mirrors M1 Task 5's handlers: parse body with the zod schema, dele
 `npx vitest run lib/api/resources/pricing app/api/cart` → PASS. `npm run test:contract` → passes.
 
 ```bash
-git add lib/api content/mock app/api/cart tests .env.example
+git add lib/api content/mock app/api/cart tests
 git commit -m "feat: add server-owned cart pricing with auto-voucher"
 ```
 

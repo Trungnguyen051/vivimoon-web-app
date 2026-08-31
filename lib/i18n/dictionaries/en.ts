@@ -20,6 +20,16 @@ export const en = {
     packSize: 'Pack size', color: 'Color', quantity: 'Quantity', freeship: 'Freeship',
     noReviews: 'No reviews yet.',
   },
+  rx: {
+    rightEye: 'Right eye (OD)', leftEye: 'Left eye (OS)',
+    sameBothEyes: 'Same for both eyes',
+    sph: 'Power (SPH)', selectPower: 'Select power',
+    add: 'ADD', selectAdd: 'Select ADD',
+    addBands: { LOW: 'Low', MID: 'Mid', HIGH: 'High' },
+    plano: 'Plano (no correction)',
+    required: 'Select a prescription for both eyes to continue.',
+    summaryLabel: 'Rx',
+  },
   cart: {
     title: 'Your Cart', empty: 'Your cart is empty', subtotal: 'Subtotal',
     checkout: 'Checkout', remove: 'Remove',
