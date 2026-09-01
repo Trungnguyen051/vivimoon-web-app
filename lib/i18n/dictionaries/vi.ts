@@ -41,7 +41,7 @@ export const vi: Dictionary = {
   checkout: {
     title: 'Thanh toán', recipient: 'Tên người nhận', email: 'Email', line1: 'Địa chỉ',
     ward: 'Phường/Xã', district: 'Quận/Huyện', province: 'Tỉnh/Thành phố',
-    phone: 'Số điện thoại', placeOrder: 'Đặt hàng', payNote: 'Thanh toán được mô phỏng trong bản demo.',
+    phone: 'Số điện thoại', paymentMethod: 'Phương thức thanh toán', placeOrder: 'Đặt hàng', payNote: 'Thanh toán được mô phỏng trong bản demo.',
     success: 'Cảm ơn bạn! Đơn hàng đã được xác nhận.', orderId: 'Mã đơn hàng',
     errors: {
       required: 'Bắt buộc', invalidEmail: 'Email không hợp lệ',

@@ -592,19 +592,19 @@ git commit -m "feat: adopt VN address model and add shipping quotes"
 
 > **The UI branches on the `PaymentIntent` response shape — `qrCode` vs `redirectUrl` — never on the method name.** That is what makes adding COD or a fourth provider later a config entry rather than a new UI branch (§11). A `switch (method)` in the checkout component defeats the entire design and must be rejected in review.
 
-- [ ] **Step 1: `lib/payments/methods.ts`**
+- [x] **Step 1: `lib/payments/methods.ts`**
 
 The three methods with a header comment: provisional pending Vivimoon's payment solution; COD deliberately excluded; owner is Vivimoon (§11 convention).
 
-- [ ] **Step 2: Payment intent resource + route**
+- [x] **Step 2: Payment intent resource + route**
 
 `POST /api/payments/intent` → `{ id, method, status, qrCode? , redirectUrl? }`. Mock: QR Pay returns a `qrCode` payload; ZaloPay and SePay return a `redirectUrl`. No real payment is processed anywhere in M2.
 
-- [ ] **Step 3: Picker component**
+- [x] **Step 3: Picker component**
 
 Renders from `lib/payments/methods.ts` — never a hardcoded list in JSX. Test: exactly three options render; adding a fourth entry to the config makes a fourth appear **with no component change** (assert this by importing and rendering against a stub list); **no COD option is present**.
 
-- [ ] **Step 4: Verify and commit**
+- [x] **Step 4: Verify and commit**
 
 ```bash
 git add lib/payments lib/api/resources/payments app/api/payments components/commerce

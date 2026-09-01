@@ -1,5 +1,5 @@
 'use client';
-import { use } from 'react';
+import { use, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -7,7 +7,9 @@ import { isLocale, type Locale, defaultLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { useCart } from '@/features/cart/use-cart';
 import { checkoutSchema, type CheckoutForm, type CheckoutFormInput } from '@/lib/checkout/schema';
+import { paymentMethods } from '@/lib/payments/methods';
 import { OrderSummary } from '@/components/commerce/order-summary';
+import { PaymentMethodPicker } from '@/components/commerce/payment-method-picker';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
@@ -25,6 +27,10 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
   const dict = getDictionary(locale);
   const router = useRouter();
   const { lines, currency } = useCart();
+  // Defaults to the first configured method, same posture as VariantSelector
+  // pre-selecting a pack — Task 10 (order placement) reads this on submit.
+  // Holds a PaymentMethodType (matches paymentIntentRequestSchema's `method`).
+  const [paymentMethod, setPaymentMethod] = useState<string>(paymentMethods[0].type);
   // `label` carries a zod .default('home'), so the resolver's output (CheckoutForm)
   // is not what useForm manages — CheckoutFormInput (pre-default) is.
   const { register, handleSubmit, formState: { errors, isSubmitted } } = useForm<
@@ -97,6 +103,8 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
               );
             })}
           </FieldGroup>
+
+          <PaymentMethodPicker value={paymentMethod} onChange={setPaymentMethod} dict={dict} />
 
           <p className="text-sm text-muted-foreground">{dict.checkout.payNote}</p>
           <Button type="submit" className="h-12 w-full text-base">{dict.checkout.placeOrder}</Button>

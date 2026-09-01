@@ -39,7 +39,7 @@ export const en = {
   checkout: {
     title: 'Checkout', recipient: 'Recipient name', email: 'Email', line1: 'Address',
     ward: 'Ward', district: 'District', province: 'Province',
-    phone: 'Phone', placeOrder: 'Place order', payNote: 'Payment is simulated in this demo.',
+    phone: 'Phone', paymentMethod: 'Payment method', placeOrder: 'Place order', payNote: 'Payment is simulated in this demo.',
     success: 'Thank you! Your order is confirmed.', orderId: 'Order ID',
     errors: {
       required: 'Required', invalidEmail: 'Invalid email',
