@@ -37,10 +37,15 @@ export const en = {
     discount: 'Discount',
   },
   checkout: {
-    title: 'Checkout', fullName: 'Full name', email: 'Email', address: 'Address',
-    city: 'City', phone: 'Phone', placeOrder: 'Place order', payNote: 'Payment is simulated in this demo.',
+    title: 'Checkout', recipient: 'Recipient name', email: 'Email', line1: 'Address',
+    ward: 'Ward', district: 'District', province: 'Province',
+    phone: 'Phone', placeOrder: 'Place order', payNote: 'Payment is simulated in this demo.',
     success: 'Thank you! Your order is confirmed.', orderId: 'Order ID',
-    errors: { required: 'Required', invalidEmail: 'Invalid email', summary: 'Please fix the following before placing your order.' },
+    errors: {
+      required: 'Required', invalidEmail: 'Invalid email',
+      invalidPhone: 'Enter a valid Vietnamese phone number',
+      summary: 'Please fix the following before placing your order.',
+    },
   },
   auth: {
     signInTitle: 'Sign in', signUpTitle: 'Create your account', signOut: 'Sign out',

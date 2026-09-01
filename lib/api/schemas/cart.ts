@@ -82,8 +82,21 @@ export const priceLineInputSchema = z.object({
   quantity: z.number().int().positive(),
 });
 
+/**
+ * A chosen shipping option to price in, resolved against the `shipping`
+ * resource's own quote for `province`/`district` (Task 8) — `optionId`
+ * alone is never trusted; the server looks up `province`/`district` again
+ * and takes that quote's `fee`, never a number the client sent.
+ */
+export const shippingSelectionSchema = z.object({
+  province: z.string().min(1),
+  district: z.string().min(1),
+  optionId: z.string().min(1),
+});
+
 export const priceCartRequestSchema = z.object({
   lines: z.array(priceLineInputSchema).min(1),
+  shipping: shippingSelectionSchema.optional(),
 });
 
 export const pricedLineSchema = z.object({
@@ -115,6 +128,7 @@ export type VoucherType = z.infer<typeof voucherTypeSchema>;
 export type VoucherStatus = z.infer<typeof voucherStatusSchema>;
 export type Voucher = z.infer<typeof voucherSchema>;
 export type PriceLineInput = z.infer<typeof priceLineInputSchema>;
+export type ShippingSelection = z.infer<typeof shippingSelectionSchema>;
 export type PriceCartRequest = z.infer<typeof priceCartRequestSchema>;
 export type PricedLine = z.infer<typeof pricedLineSchema>;
 export type PricedCart = z.infer<typeof pricedCartSchema>;

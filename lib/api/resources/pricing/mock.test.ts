@@ -17,6 +17,13 @@ function req(lines: PriceCartRequest['lines']): PriceCartRequest {
   return { lines };
 }
 
+function reqWithShipping(
+  lines: PriceCartRequest['lines'],
+  shipping: PriceCartRequest['shipping'],
+): PriceCartRequest {
+  return { lines, shipping };
+}
+
 describe('mockPricing.priceCart', () => {
   it('sums the server-looked-up price times quantity for a non-trivial cart', async () => {
     const result = await mockPricing.priceCart(req(BASELINE_LINES));
@@ -108,5 +115,38 @@ describe('mockPricing.priceCart', () => {
     await expect(
       mockPricing.priceCart(req([{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: -1 }])),
     ).rejects.toMatchObject({ code: 'validation_failed' });
+  });
+
+  it('folds the quoted shipping fee into shipping and total when a valid selection is given', async () => {
+    // Known district (content/mock/shipping-rates.ts): standard = 3.
+    // Voucher stays SAVE15 (fixed 15) — FREESHIP's discount against 3 is
+    // still smaller (min(5, 3) = 3), so the winner doesn't change.
+    const result = await mockPricing.priceCart(
+      reqWithShipping(BASELINE_LINES, {
+        province: 'Ho Chi Minh City',
+        district: 'District 1',
+        optionId: 'standard',
+      }),
+    );
+    expect(result.shipping).toBe(3);
+    expect(result.discount).toBe(15);
+    expect(result.total).toBe(98 + 3 - 15);
+  });
+
+  it('rejects a shipping optionId that does not match any option in the real quote', async () => {
+    await expect(
+      mockPricing.priceCart(
+        reqWithShipping(BASELINE_LINES, {
+          province: 'Ho Chi Minh City',
+          district: 'District 1',
+          optionId: 'not-a-real-option',
+        }),
+      ),
+    ).rejects.toMatchObject({ code: 'not_found' });
+  });
+
+  it('still prices shipping at 0 when shipping is omitted (Task 7 cart page regression)', async () => {
+    const result = await mockPricing.priceCart(req(BASELINE_LINES));
+    expect(result.shipping).toBe(0);
   });
 });

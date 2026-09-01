@@ -65,4 +65,29 @@ describe('POST /api/cart/price', () => {
     expect(body.ok).toBe(false);
     expect(body.error.code).toBe('not_found');
   });
+
+  it('folds a chosen shipping option into shipping and total end-to-end', async () => {
+    const res = await POST(
+      req({
+        lines: BASELINE_LINES,
+        shipping: { province: 'Ho Chi Minh City', district: 'District 1', optionId: 'standard' },
+      }),
+    );
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.data.shipping).toBe(3);
+    expect(body.data.total).toBe(98 + 3 - body.data.discount);
+  });
+
+  it('404s a tampered shipping optionId, not a silent 0 fee', async () => {
+    const res = await POST(
+      req({
+        lines: BASELINE_LINES,
+        shipping: { province: 'Ho Chi Minh City', district: 'District 1', optionId: 'not-a-real-option' },
+      }),
+    );
+    const body = await res.json();
+    expect(res.status).toBe(404);
+    expect(body.error.code).toBe('not_found');
+  });
 });

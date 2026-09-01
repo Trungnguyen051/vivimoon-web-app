@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { isLocale, type Locale, defaultLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { useCart } from '@/features/cart/use-cart';
-import { checkoutSchema, type CheckoutForm } from '@/lib/checkout/schema';
+import { checkoutSchema, type CheckoutForm, type CheckoutFormInput } from '@/lib/checkout/schema';
 import { OrderSummary } from '@/components/commerce/order-summary';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,14 +25,22 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
   const dict = getDictionary(locale);
   const router = useRouter();
   const { lines, currency } = useCart();
-  const { register, handleSubmit, formState: { errors, isSubmitted } } = useForm<CheckoutForm>({ resolver: zodResolver(checkoutSchema) });
+  // `label` carries a zod .default('home'), so the resolver's output (CheckoutForm)
+  // is not what useForm manages — CheckoutFormInput (pre-default) is.
+  const { register, handleSubmit, formState: { errors, isSubmitted } } = useForm<
+    CheckoutFormInput,
+    unknown,
+    CheckoutForm
+  >({ resolver: zodResolver(checkoutSchema) });
 
   const fields = [
-    { name: 'fullName' as const, label: dict.checkout.fullName, message: dict.checkout.errors.required, autoComplete: 'name', type: 'text' },
+    { name: 'recipient' as const, label: dict.checkout.recipient, message: dict.checkout.errors.required, autoComplete: 'name', type: 'text' },
     { name: 'email' as const, label: dict.checkout.email, message: dict.checkout.errors.invalidEmail, autoComplete: 'email', type: 'email' },
-    { name: 'address' as const, label: dict.checkout.address, message: dict.checkout.errors.required, autoComplete: 'street-address', type: 'text' },
-    { name: 'city' as const, label: dict.checkout.city, message: dict.checkout.errors.required, autoComplete: 'address-level2', type: 'text' },
-    { name: 'phone' as const, label: dict.checkout.phone, message: dict.checkout.errors.required, autoComplete: 'tel', type: 'tel' },
+    { name: 'phone' as const, label: dict.checkout.phone, message: dict.checkout.errors.invalidPhone, autoComplete: 'tel', type: 'tel' },
+    { name: 'line1' as const, label: dict.checkout.line1, message: dict.checkout.errors.required, autoComplete: 'street-address', type: 'text' },
+    { name: 'ward' as const, label: dict.checkout.ward, message: dict.checkout.errors.required, autoComplete: 'address-level3', type: 'text' },
+    { name: 'district' as const, label: dict.checkout.district, message: dict.checkout.errors.required, autoComplete: 'address-level2', type: 'text' },
+    { name: 'province' as const, label: dict.checkout.province, message: dict.checkout.errors.required, autoComplete: 'address-level1', type: 'text' },
   ];
   const erroredFields = fields.filter((f) => errors[f.name]);
 

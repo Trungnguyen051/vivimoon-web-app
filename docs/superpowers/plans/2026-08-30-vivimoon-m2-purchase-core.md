@@ -537,25 +537,41 @@ git commit -m "feat: price the cart server-side with debounced updates"
 
 **Files:**
 - Create: `content/mock/shipping-rates.ts`, `lib/api/resources/shipping/{index.ts,mock.ts,mock.test.ts}`, `app/api/shipping/quote/route.ts`, `lib/api/schemas/checkout.ts`
-- Modify: `lib/checkout/schema.ts`, `app/[locale]/checkout/page.tsx`, `lib/i18n/dictionaries/{en,vi}.ts`
+- Modify: `lib/checkout/schema.ts`, `app/[locale]/checkout/page.tsx`, `lib/i18n/dictionaries/{en,vi}.ts`, `lib/api/schemas/cart.ts`, `lib/api/resources/pricing/{index.ts,mock.ts,mock.test.ts}`, `app/api/cart/price/route.test.ts`
+
+> **Why `pricing` is in this task's Modify list even though it's Task 6's file.** Step 3 below requires `POST /api/cart/price` to account for a chosen shipping option, which means widening `priceCartRequestSchema` and `mockPricing.priceCart`. This was missing from the original file list; it is not optional, Step 3 depends on it.
 
 > **`city` becomes `province` → `district` → `ward`.** The baseline `checkoutSchema` uses `city`, which is not how Vietnamese addresses work (spec §6 note). District-level granularity is also what makes the shipping quote meaningful.
 
-- [ ] **Step 1: Rewrite `lib/checkout/schema.ts`**
+- [x] **Step 1: Rewrite `lib/checkout/schema.ts`**
 
 Fields per spec §6 `Address`: `recipient`, `phone`, `line1`, `ward`, `district`, `province`, plus `label: 'home' | 'office' | 'other'`. Phone validates as a VN mobile number. **`email` stays required for guest checkout** — the guest order-tracking link is emailed (§10).
 
 Saved addresses are **M3**. M2 collects an address on the checkout form; it does not persist one to the account.
 
-- [ ] **Step 2: Shipping quote resource + route**
+- [x] **Step 2: Shipping quote resource + route**
 
 `POST /api/shipping/quote` takes the address plus priced lines, returns available options `{ id, label, fee, etaDays }`. Mock rates keyed by province/district in `content/mock/shipping-rates.ts` with a provisional-data header comment.
 
-- [ ] **Step 3: Fold shipping into the price result**
+- [x] **Step 3: Fold shipping into the price result**
 
-`POST /api/cart/price` already returns a `shipping` field (Task 6). Pass the chosen shipping option id into the price call so `total` is the server's, not the client's addition. **Do not add `shipping` to `subtotal` on the client** — that reintroduces client-side money.
+`POST /api/cart/price` already returns a `shipping` field, hardcoded `0` since Task 6 (no address existed yet). It does now. **Do not add `shipping` to `subtotal` on the client** — that reintroduces client-side money — and do not let the client post a fee.
 
-- [ ] **Step 4: Tests, verify, commit**
+Add an optional field to `priceCartRequestSchema`:
+```ts
+shipping: z.object({
+  province: z.string().min(1),
+  district: z.string().min(1),
+  optionId: z.string().min(1),
+}).optional()
+```
+When present, `mockPricing.priceCart` calls the `shipping` resource's `quote({province, district})` itself, finds the option matching `optionId` among what that quote actually returns, and uses **its** `fee` — never a number the client sent. An `optionId` that doesn't match anything in that district's real quote (stale, tampered, or the shopper changed address after picking an option) is a typed error (`not_found`), the same posture as an unknown `variantId` in Task 6 — not a silent fallback to 0. When `shipping` is omitted (the Task 7 cart page never sends it — there is no address there), behavior is unchanged: `shipping` stays `0`.
+
+This also means a `shipping`-type voucher (dropped by Task 6's zero-discount filter, since shipping was always `0`) can now actually apply once a real shipping fee exists — no change needed to `bestVoucher`, it already recomputes against whatever `shipping` resolves to.
+
+Extend `pricing/mock.test.ts` and `app/api/cart/price/route.test.ts` (Task 6) with cases: a valid `shipping` selection changes `total` by exactly the quoted fee; a tampered `optionId` is rejected; omitting `shipping` still prices at `0` as before (regression check — Task 7's cart page must keep working unmodified).
+
+- [x] **Step 4: Tests, verify, commit**
 
 Resource test: a known district returns its rate; an unknown one returns a sane default rather than throwing. Schema test: `city` is gone; a malformed VN phone is rejected; a missing `ward` is rejected.
 

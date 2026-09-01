@@ -39,10 +39,15 @@ export const vi: Dictionary = {
     discount: 'Giảm giá',
   },
   checkout: {
-    title: 'Thanh toán', fullName: 'Họ tên', email: 'Email', address: 'Địa chỉ',
-    city: 'Thành phố', phone: 'Số điện thoại', placeOrder: 'Đặt hàng', payNote: 'Thanh toán được mô phỏng trong bản demo.',
+    title: 'Thanh toán', recipient: 'Tên người nhận', email: 'Email', line1: 'Địa chỉ',
+    ward: 'Phường/Xã', district: 'Quận/Huyện', province: 'Tỉnh/Thành phố',
+    phone: 'Số điện thoại', placeOrder: 'Đặt hàng', payNote: 'Thanh toán được mô phỏng trong bản demo.',
     success: 'Cảm ơn bạn! Đơn hàng đã được xác nhận.', orderId: 'Mã đơn hàng',
-    errors: { required: 'Bắt buộc', invalidEmail: 'Email không hợp lệ', summary: 'Vui lòng sửa các mục sau trước khi đặt hàng.' },
+    errors: {
+      required: 'Bắt buộc', invalidEmail: 'Email không hợp lệ',
+      invalidPhone: 'Vui lòng nhập số điện thoại Việt Nam hợp lệ',
+      summary: 'Vui lòng sửa các mục sau trước khi đặt hàng.',
+    },
   },
   auth: {
     signInTitle: 'Đăng nhập', signUpTitle: 'Tạo tài khoản', signOut: 'Đăng xuất',

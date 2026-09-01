@@ -1,4 +1,5 @@
 import { catalog } from '@/lib/api/resources/catalog';
+import { shipping } from '@/lib/api/resources/shipping';
 import { vouchers as voucherFixtures } from '@/content/mock';
 import type { Currency } from '@/lib/api/schemas/catalog';
 import type { PriceCartRequest, PricedCart, PricedLine, Voucher } from '@/lib/api/schemas/cart';
@@ -100,20 +101,32 @@ export const mockPricing = {
 
     const subtotal = lines.reduce((sum, l) => sum + l.lineTotal, 0);
 
-    // Always 0 until Task 8 quotes shipping against a real address — no
-    // address exists yet. Present and typed now so the response shape never
-    // changes under Task 7's summary component.
-    const shipping = 0;
+    // Stays 0 when `shipping` is omitted (Task 7's cart page — no address
+    // exists there). When present, the fee is never the client's number:
+    // re-quote the real options for this province/district and use the
+    // fee of whichever one actually matches `optionId`.
+    let shippingFee = 0;
+    if (input.shipping) {
+      const options = await shipping.quote({
+        province: input.shipping.province,
+        district: input.shipping.district,
+      });
+      const match = options.find((o) => o.id === input.shipping!.optionId);
+      if (!match) {
+        throw new PricingError(`Unknown shipping option "${input.shipping.optionId}"`, 'not_found');
+      }
+      shippingFee = match.fee;
+    }
 
-    const { discount, applied } = bestVoucher(subtotal, shipping);
-    const total = Math.max(0, subtotal + shipping - discount);
+    const { discount, applied } = bestVoucher(subtotal, shippingFee);
+    const total = Math.max(0, subtotal + shippingFee - discount);
 
     return {
       lines,
       subtotal,
       discount,
       appliedVouchers: applied,
-      shipping,
+      shipping: shippingFee,
       total,
       currency,
     };
