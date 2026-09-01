@@ -27,8 +27,9 @@ export default function SuccessPage({ params }: { params: Promise<{ locale: stri
       // is an intentional one-time sync of external storage into render state.
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setOrderId(order.orderId);
-      // A purchase event without the server's total would misreport revenue,
-      // so it waits for M2 Task 10's placed order.
+      // `value` comes from the placed order's server-computed total
+      // (app/[locale]/checkout/page.tsx) — a purchase event without it would
+      // misreport revenue, so this only fires once a real order exists.
       if (order.value !== null) {
         track({ name: 'purchase', params: { transaction_id: order.orderId, currency: order.currency, value: order.value, items: cartLinesToGa4Items(order.lines) } });
       }

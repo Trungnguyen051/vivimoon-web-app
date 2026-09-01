@@ -45,6 +45,7 @@ export const en = {
       required: 'Required', invalidEmail: 'Invalid email',
       invalidPhone: 'Enter a valid Vietnamese phone number',
       summary: 'Please fix the following before placing your order.',
+      orderFailed: 'Something went wrong placing your order. Please try again.',
     },
   },
   auth: {

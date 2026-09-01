@@ -7,7 +7,7 @@ import type { CartLine } from './cart.types';
 const DEBOUNCE_MS = 300;
 
 /** Only the fields the server needs to price a line — never a price itself. */
-function toPriceLines(lines: CartLine[]) {
+export function toPriceLines(lines: CartLine[]) {
   return lines.map((l) => ({ lineKey: l.lineKey, variantId: l.variantId, rx: l.rx, quantity: l.quantity }));
 }
 

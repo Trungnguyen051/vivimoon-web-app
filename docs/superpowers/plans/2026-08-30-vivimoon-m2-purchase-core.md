@@ -625,7 +625,7 @@ git commit -m "feat: add payment method selection with QR/redirect intents"
 
 > `OrderStatus` is **provisional** (§11) — `placed | confirmed | packed | shipped | out_for_delivery | delivered | cancelled | returned`, defined in `lib/orders/statuses.ts` with a header comment naming Vivimoon as owner. Order **history** and **tracking** are M3; M2 places an order and shows a confirmation.
 
-- [ ] **Step 1: Failing test**
+- [x] **Step 1: Failing test**
 
 `lib/api/resources/orders/mock.test.ts`:
 - placing an order **re-prices server-side** and stores the server total — a client-posted total is ignored (same property as Task 6, asserted again at the order boundary because this is the one that becomes money)
@@ -635,19 +635,21 @@ git commit -m "feat: add payment method selection with QR/redirect intents"
 - an empty cart is rejected
 - the returned order code is not sequential/guessable — spec §10 designs against order enumeration, so do not undo it here with `order-1`, `order-2`
 
-- [ ] **Step 2: Implement, then the route handler**
+- [x] **Step 2: Implement, then the route handler**
 
 Guest checkout must work (spec §7: cart is client-side precisely so guests can check out). Reuse M1's session-cookie read; do not add a second cookie mechanism.
 
-- [ ] **Step 3: Checkout submits and clears**
+- [x] **Step 3: Checkout submits and clears**
 
 On success: `useCart().clear()`, then navigate to the success page. Fire `purchase` with the server's `transaction_id` and total via `lib/analytics` — never raw `gtag`.
 
-- [ ] **Step 4: Guard the logged-in checkout variant in `proxy.ts`**
+- [ ] **Step 4: Guard the logged-in checkout variant in `proxy.ts`** — DEFERRED
 
 Extend the existing guard (do not create a second matcher). **Guest checkout must remain reachable** — the guard applies to the logged-in variant, not to `/checkout` wholesale. Assert both: a signed-out shopper reaches guest checkout; the account-linked path redirects to sign-in with `next`.
 
-- [ ] **Step 5: Verify and commit**
+> **Deferred 2026-09-01.** No "logged-in checkout variant" — a second route, a query-param convention, an account-linked entry point — exists anywhere in this codebase or in the spec; checkout is a single page reachable the same way regardless of session. There is nothing yet to guard. Confirmed with the user rather than inventing a URL contract for an auth boundary. Revisit once M3 (saved addresses / order history) gives logged-in checkout an actual distinct surface — at that point this step has a real target and can be done for real.
+
+- [x] **Step 5: Verify and commit**
 
 ```bash
 git add lib/api lib/orders app/api/orders app/\[locale\]/checkout proxy.ts

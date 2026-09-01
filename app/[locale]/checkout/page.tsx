@@ -6,8 +6,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { isLocale, type Locale, defaultLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { useCart } from '@/features/cart/use-cart';
+import { toPriceLines } from '@/features/cart/use-priced-cart';
 import { checkoutSchema, type CheckoutForm, type CheckoutFormInput } from '@/lib/checkout/schema';
 import { paymentMethods } from '@/lib/payments/methods';
+import { apiRequest } from '@/lib/api/client';
+import type { Order } from '@/lib/api/schemas/orders';
 import { OrderSummary } from '@/components/commerce/order-summary';
 import { PaymentMethodPicker } from '@/components/commerce/payment-method-picker';
 import { Button } from '@/components/ui/button';
@@ -15,25 +18,20 @@ import { Input } from '@/components/ui/input';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-// Module-scope helper: keeps the impure Date.now() call out of the component body
-// so it isn't evaluated during render.
-function generateOrderId(): string {
-  return `VVM-${Date.now()}`;
-}
-
 export default function CheckoutPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = use(params);
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const dict = getDictionary(locale);
   const router = useRouter();
   const { lines, currency } = useCart();
+  const [submitError, setSubmitError] = useState<string | null>(null);
   // Defaults to the first configured method, same posture as VariantSelector
   // pre-selecting a pack — Task 10 (order placement) reads this on submit.
   // Holds a PaymentMethodType (matches paymentIntentRequestSchema's `method`).
   const [paymentMethod, setPaymentMethod] = useState<string>(paymentMethods[0].type);
   // `label` carries a zod .default('home'), so the resolver's output (CheckoutForm)
   // is not what useForm manages — CheckoutFormInput (pre-default) is.
-  const { register, handleSubmit, formState: { errors, isSubmitted } } = useForm<
+  const { register, handleSubmit, formState: { errors, isSubmitted, isSubmitting } } = useForm<
     CheckoutFormInput,
     unknown,
     CheckoutForm
@@ -53,12 +51,37 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
   // `begin_checkout` carries a server-owned value; it fires in M2 Task 7/10
   // once pricing and order placement land.
 
-  const onSubmit = () => {
-    const orderId = generateOrderId();
-    // Persist a minimal order snapshot for the success page.
-    // Interim snapshot. M2 Task 10 replaces this with the placed order returned
-    // by POST /api/orders, which is where the authoritative total comes from.
-    sessionStorage.setItem('vivimoon-last-order', JSON.stringify({ orderId, currency, value: null, lines }));
+  const onSubmit = async (data: CheckoutForm) => {
+    setSubmitError(null);
+    const result = await apiRequest<Order>('/api/orders', {
+      method: 'POST',
+      body: {
+        lines: toPriceLines(lines),
+        address: {
+          recipient: data.recipient, phone: data.phone, line1: data.line1,
+          ward: data.ward, district: data.district, province: data.province, label: data.label,
+        },
+        email: data.email,
+        paymentMethod,
+      },
+    });
+    if (!result.ok) {
+      setSubmitError(dict.checkout.errors.orderFailed);
+      return;
+    }
+    // Snapshot for the success page's effect, which fires `purchase` (its
+    // `value` is what gates that — never null once a real order exists),
+    // clears the cart, and cleans this entry up. `lines` still has display
+    // fields (sku/name) the order's re-priced lines don't carry.
+    sessionStorage.setItem(
+      'vivimoon-last-order',
+      JSON.stringify({
+        orderId: result.data.code,
+        currency: result.data.totals.currency,
+        value: result.data.totals.total,
+        lines,
+      }),
+    );
     router.push(`/${locale}/checkout/success`);
   };
 
@@ -80,6 +103,12 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
                   ))}
                 </ul>
               </AlertDescription>
+            </Alert>
+          ) : null}
+
+          {submitError ? (
+            <Alert variant="destructive" className="border-destructive/40">
+              <AlertTitle>{submitError}</AlertTitle>
             </Alert>
           ) : null}
 
@@ -107,7 +136,9 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
           <PaymentMethodPicker value={paymentMethod} onChange={setPaymentMethod} dict={dict} />
 
           <p className="text-sm text-muted-foreground">{dict.checkout.payNote}</p>
-          <Button type="submit" className="h-12 w-full text-base">{dict.checkout.placeOrder}</Button>
+          <Button type="submit" disabled={isSubmitting} className="h-12 w-full text-base">
+            {dict.checkout.placeOrder}
+          </Button>
         </div>
       </form>
       <OrderSummary subtotal={null} currency={currency} locale={locale} dict={dict} />

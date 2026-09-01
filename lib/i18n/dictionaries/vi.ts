@@ -47,6 +47,7 @@ export const vi: Dictionary = {
       required: 'Bắt buộc', invalidEmail: 'Email không hợp lệ',
       invalidPhone: 'Vui lòng nhập số điện thoại Việt Nam hợp lệ',
       summary: 'Vui lòng sửa các mục sau trước khi đặt hàng.',
+      orderFailed: 'Đã có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.',
     },
   },
   auth: {
