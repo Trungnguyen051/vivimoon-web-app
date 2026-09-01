@@ -36,6 +36,7 @@ export const vi: Dictionary = {
     title: 'Giỏ hàng', empty: 'Giỏ hàng trống', subtotal: 'Tạm tính',
     checkout: 'Thanh toán', remove: 'Xóa',
     orderSummary: 'Tóm tắt đơn hàng', shipping: 'Vận chuyển', free: 'Miễn phí', total: 'Tổng cộng',
+    discount: 'Giảm giá',
   },
   checkout: {
     title: 'Thanh toán', fullName: 'Họ tên', email: 'Email', address: 'Địa chỉ',

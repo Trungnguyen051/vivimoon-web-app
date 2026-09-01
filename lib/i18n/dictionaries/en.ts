@@ -34,6 +34,7 @@ export const en = {
     title: 'Your Cart', empty: 'Your cart is empty', subtotal: 'Subtotal',
     checkout: 'Checkout', remove: 'Remove',
     orderSummary: 'Order summary', shipping: 'Shipping', free: 'Free', total: 'Total',
+    discount: 'Discount',
   },
   checkout: {
     title: 'Checkout', fullName: 'Full name', email: 'Email', address: 'Address',

@@ -5,6 +5,7 @@ import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { formatPrice } from '@/lib/utils/format';
 import { QuantityStepper } from './quantity-stepper';
+import { RxSummary } from './rx-summary';
 
 export function CartLineItem({
   line, locale, dict, lineTotal = null, onQty, onRemove,
@@ -27,6 +28,9 @@ export function CartLineItem({
             <p className="mt-1 text-sm text-muted-foreground">
               {line.packSize}{line.color ? ` · ${line.color}` : ''}
             </p>
+            {/* Two lines can share a variantId and differ only by prescription
+                (spec §7) — without this they'd read as a duplicate-line bug. */}
+            {line.rx ? <RxSummary rx={line.rx} dict={dict} /> : null}
           </div>
           <button
             onClick={() => onRemove(line.lineKey)}

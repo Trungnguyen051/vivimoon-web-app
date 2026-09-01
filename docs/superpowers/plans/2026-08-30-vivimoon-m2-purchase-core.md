@@ -512,19 +512,19 @@ git commit -m "feat: add server-owned cart pricing with auto-voucher"
 
 > **Debounce quantity changes** and show the **previous** total in a pending state. Do not flicker to zero or to a skeleton — a total that blinks on every `+` click reads as a bug to a shopper.
 
-- [ ] **Step 1: Add a priced-cart hook**
+- [x] **Step 1: Add a priced-cart hook**
 
 A client hook that fires the **first** price once `rehydrate()` has completed, then re-prices on line changes, debounced (~300ms), holding `{ result, isPending }` and retaining the last good `result` while pending. Cancel in-flight requests on a newer mutation so a slow response cannot overwrite a fresh one — an out-of-order response showing the wrong total is the most likely bug in this task.
 
-- [ ] **Step 2: Render Rx on each line**
+- [x] **Step 2: Render Rx on each line**
 
 `<RxSummary />` per line, so two lines of the same variant are visually distinguishable. Without this the §7 split looks like a duplicate-line bug.
 
-- [ ] **Step 3: Verify**
+- [x] **Step 3: Verify**
 
 `npx vitest run` → green. Manual: two Rx lines price correctly; a voucher appears when its `minSpend` is met; rapid `+` clicking settles on the correct total, never a stale one.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add app/\[locale\]/cart components/commerce features/cart

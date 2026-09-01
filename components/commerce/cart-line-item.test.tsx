@@ -5,6 +5,7 @@ import { CartLineItem } from './cart-line-item';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { lineKey } from '@/lib/cart/line-key';
 import type { CartLine } from '@/features/cart/cart.types';
+import type { RxInput } from '@/lib/api/schemas/rx';
 
 const dict = getDictionary('en');
 const line: CartLine = {
@@ -12,6 +13,8 @@ const line: CartLine = {
   productId: 'p1', variantId: 'v1', name: 'Aqua', sku: 'S1',
   packSize: '30 lenses', unitPrice: 25, currency: 'USD', quantity: 2,
 };
+const rx: RxInput = { sameBothEyes: true, right: { sph: -2.5 }, left: { sph: -2.5 } };
+const lineWithRx: CartLine = { ...line, lineKey: lineKey('v1', rx), rx: rx as CartLine['rx'] };
 
 describe('CartLineItem', () => {
   it('renders the server-priced line total', () => {
@@ -35,5 +38,15 @@ describe('CartLineItem', () => {
     expect(onRemove).toHaveBeenCalledWith(line.lineKey);
     await userEvent.click(screen.getByRole('button', { name: dict.common.increaseQty }));
     expect(onQty).toHaveBeenCalledWith(line.lineKey, 3);
+  });
+
+  it('renders an Rx summary when the line has a prescription, so two lines of the same variant are distinguishable', () => {
+    render(<CartLineItem line={lineWithRx} locale="en" dict={dict} onQty={vi.fn()} onRemove={vi.fn()} />);
+    expect(screen.getByText(`${dict.rx.summaryLabel}:`, { exact: false })).toBeInTheDocument();
+  });
+
+  it('renders no Rx summary for a line without a prescription', () => {
+    render(<CartLineItem line={line} locale="en" dict={dict} onQty={vi.fn()} onRemove={vi.fn()} />);
+    expect(screen.queryByText(`${dict.rx.summaryLabel}:`, { exact: false })).not.toBeInTheDocument();
   });
 });

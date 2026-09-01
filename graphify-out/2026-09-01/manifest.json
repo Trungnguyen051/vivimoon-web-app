@@ -810,9 +810,9 @@
     "semantic_hash": ""
   },
   ".superpowers/sdd/progress.md": {
-    "mtime": 1788231033.122515,
-    "seen": 1788231035.473797,
-    "ast_hash": "f2f0b1ce8a9c7ae803c670875498f39a",
+    "mtime": 1788191224.5367415,
+    "seen": 1788191226.937382,
+    "ast_hash": "3ace6859763859f662902857b0b987ce",
     "semantic_hash": ""
   },
   "app/api/collections/[slug]/route.ts": {
@@ -1122,9 +1122,9 @@
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-08-30-vivimoon-m2-purchase-core.md": {
-    "mtime": 1788231033.1176057,
-    "seen": 1788231035.473803,
-    "ast_hash": "a3ff9e2650c2e28d6e54eee5a6edde59",
+    "mtime": 1788191224.5320358,
+    "seen": 1788191226.9373891,
+    "ast_hash": "d727ff208659b0266e0c122baef2e733",
     "semantic_hash": ""
   },
   "features/cart/cart-hydrator.tsx": {
@@ -1260,15 +1260,9 @@
     "semantic_hash": ""
   },
   "features/cart/use-priced-cart.ts": {
-    "mtime": 1788230775.7755773,
-    "seen": 1788231035.4737332,
-    "ast_hash": "e65640d419916fe447283280fc21eb58",
-    "semantic_hash": ""
-  },
-  "app/[locale]/cart/page.test.tsx": {
-    "mtime": 1788230897.1279583,
-    "seen": 1788231035.473643,
-    "ast_hash": "e7a9efe250a89c73b1d26dd99ea0f3ea",
+    "mtime": 1788230588.663449,
+    "seen": 1788230662.693312,
+    "ast_hash": "b753b5b321a3e69cd70596b52f52a734",
     "semantic_hash": ""
   }
 }

@@ -8,12 +8,25 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Separator } from '@/components/ui/separator';
 
 export function OrderSummary({
-  subtotal, currency, locale, dict, ctaHref, ctaLabel,
+  subtotal, discount, shipping, total, currency, locale, dict, ctaHref, ctaLabel,
 }: {
   /** Null until POST /api/cart/price answers. Money is server-owned (spec §7). */
-  subtotal: number | null; currency: Currency; locale: Locale; dict: Dictionary; ctaHref?: string; ctaLabel?: string;
+  subtotal: number | null;
+  /** Positive amount already subtracted server-side. A row renders only when > 0. */
+  discount?: number | null;
+  /** `null`/`undefined` = pending (not yet quoted); `0` = free; `>0` = the server's fee. */
+  shipping?: number | null;
+  /** The server's final total. Falls back to `subtotal` when omitted, so
+   *  existing callers (e.g. checkout, pre-Task-8) keep compiling and
+   *  rendering exactly as before. Never derive this on the client. */
+  total?: number | null;
+  currency: Currency; locale: Locale; dict: Dictionary; ctaHref?: string; ctaLabel?: string;
 }) {
   const price = (n: number | null) => (n === null ? '—' : formatPrice(n, currency, locale));
+  const shippingText =
+    shipping === null || shipping === undefined ? '—' : shipping === 0 ? dict.cart.free : formatPrice(shipping, currency, locale);
+  const totalValue = total === undefined ? subtotal : total;
+
   return (
     <Card className="h-fit md:sticky md:top-24">
       <CardHeader>
@@ -24,14 +37,20 @@ export function OrderSummary({
           <span className="text-muted-foreground">{dict.cart.subtotal}</span>
           <span className="tabular-nums">{price(subtotal)}</span>
         </div>
+        {discount != null && discount > 0 ? (
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">{dict.cart.discount}</span>
+            <span className="tabular-nums">-{formatPrice(discount, currency, locale)}</span>
+          </div>
+        ) : null}
         <div className="flex justify-between">
           <span className="text-muted-foreground">{dict.cart.shipping}</span>
-          <span>{dict.cart.free}</span>
+          <span>{shippingText}</span>
         </div>
         <Separator />
         <div className="flex items-baseline justify-between">
           <span className="font-medium">{dict.cart.total}</span>
-          <span className="text-lg font-semibold tabular-nums">{price(subtotal)}</span>
+          <span className="text-lg font-semibold tabular-nums">{price(totalValue)}</span>
         </div>
       </CardContent>
       {ctaHref && ctaLabel ? (

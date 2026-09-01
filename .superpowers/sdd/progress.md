@@ -429,3 +429,63 @@ subagent's report):** `npx tsc --noEmit` exit 0 · `npm run lint` 0 errors /
 2 pre-existing warnings · `npx vitest run` 255 passed, 6 skipped (up 14 from
 the 241 baseline) · `npm run test:contract` passes · config/env diff empty ·
 money grep still the single annotated GA4 line.
+
+### M2 Task 7 — Cart page renders server prices (2026-08-31)
+
+Implemented by a Sonnet subagent under Opus orchestration. This is the task
+that closes M2's visible gap: the cart and checkout stopped showing `—` for
+prices as of Task 3's deletion of client-side money, and now show real
+server-priced totals.
+
+**Correctness properties verified, not just tested:**
+- `total` is a prop straight from `POST /api/cart/price`, never
+  `subtotal - discount + shipping` on the client. Task 6's voucher math has
+  clamps (`Math.min` on `fixed`/`shipping` types, `Math.floor` on `percent`)
+  that make client re-derivation not just a style violation but wrong at the
+  edges. Money grep still shows exactly the one pre-existing annotated GA4
+  line — nothing new.
+- The pricing hook's effect depends on `[lines, hydrated, isEmpty]` only —
+  never `result`/`isPending` — so setting either from inside the effect
+  cannot create a re-price loop that would otherwise pass a naive "renders a
+  number" test while silently hammering the endpoint in the browser.
+- Stale-response cancellation is proven, not assumed: the test fires request
+  A (immediate first-fire), mutates before A resolves (creating request B via
+  the debounce), resolves B first, then resolves A *after* B, and asserts the
+  displayed result is still B's. Run against a naive sketch first (no
+  `cancelled` guard) to confirm the test actually fails for the right reason
+  before the real implementation made it pass.
+- Empty-cart handling is derived at render time (`isEmpty ? null : result`)
+  rather than via `setState` inside the effect — takes effect the instant the
+  cart empties, with no one-frame lag, and sidesteps `react-hooks/set-state-in-effect`
+  entirely rather than reaching for the codebase's existing eslint-disable
+  precedent (hero-carousel.tsx). Repopulating an emptied cart resets the
+  first-fire flag too, so it prices immediately rather than sitting through
+  the 300ms debounce with a stale result.
+
+**`OrderSummary`'s new props are additive:** `discount?`, `shipping?`, `total?`
+all optional, `total` falling back to `subtotal` when absent. `checkout/page.tsx`
+was not touched and its `git diff --stat` is confirmed empty — it still calls
+`<OrderSummary subtotal={null} .../>` and compiles unchanged.
+
+**Two user-visible side effects worth naming, both intentional:**
+1. Added a `!hydrated` skeleton branch to `app/[locale]/cart/page.tsx` before
+   the empty-cart check. The pre-existing code checked `lines.length === 0`
+   first, so a shopper with a persisted non-empty cart would flash "Your cart
+   is empty" for a frame before rehydration completed. Not in the plan's
+   literal step list, added because Step 1's "render a pending state until
+   rehydrate + first price resolve" implies it.
+2. `checkout/page.tsx`'s shipping row now reads "—" instead of the old
+   hardcoded "Free", because it calls `OrderSummary` without a `shipping` prop
+   and `undefined` now means "pending" under the new convention. The file
+   itself is unmodified; this is the new convention working as specified —
+   Task 8 supplies a real `shipping` value and this line goes back to
+   rendering correctly with no further change to the component.
+
+`RxSummary` renders inside `CartLineItem` (which already receives `dict`),
+guarded on `line.rx` — keeps the "two lines, same variant, different power"
+distinction local to the component that owns line rendering, per spec §7.
+
+**Gates (verified independently by the orchestrator):** `npx tsc --noEmit`
+exit 0 · `npm run lint` 0 errors / 2 pre-existing warnings · `npx vitest run`
+272 passed, 6 skipped (+17 from the 255 baseline) · money grep unchanged at
+one hit · `git diff --stat app/[locale]/checkout/page.tsx` empty.
