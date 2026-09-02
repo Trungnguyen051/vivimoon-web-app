@@ -489,3 +489,84 @@ distinction local to the component that owns line rendering, per spec §7.
 exit 0 · `npm run lint` 0 errors / 2 pre-existing warnings · `npx vitest run`
 272 passed, 6 skipped (+17 from the 255 baseline) · money grep unchanged at
 one hit · `git diff --stat app/[locale]/checkout/page.tsx` empty.
+
+### M2 Task 11 — Guest → member cart merge (2026-09-02)
+
+There is no server-side per-account cart anywhere in this codebase or spec
+to merge *from* — the cart is client-side only (localStorage), unaffected
+by auth. "Guest cart lines always win over a stale server cart" is
+therefore already true by construction. What login actually changes is
+voucher eligibility, so "merge" is implemented as a `memberOnly` voucher
+gate plus making the live pricing subscription re-price under the new
+session.
+
+**What changed:** `voucherSchema` gained `memberOnly` (`lib/api/schemas/cart.ts`)
+and a `MEMBER20` fixture (`content/mock/vouchers.ts`, $20 off $50+,
+signed-in only). `bestVoucher`/`priceCart` take the caller's session
+`userId` and gate `memberOnly` candidates on it (`lib/api/resources/pricing/mock.ts`)
+— same posture as `orders.place`. `app/api/cart/price/route.ts` reads
+`readSessionUserId()` and passes it through (never trusts the body);
+`lib/api/resources/orders/mock.ts`'s own `priceCart` call now forwards
+`userId` too, so a member's *order* gets the same voucher as their cart.
+`usePricedCart` takes an optional `sessionStatus` and re-fires immediately
+(not debounced — a context change, not an edit) when it changes with the
+lines unchanged; `app/[locale]/cart/page.tsx` wires `useSessionStore`'s
+`status` into it. Existing 2-arg callers/tests are unaffected.
+
+**Verified against the real running dev server, not just mocks:** priced a
+two-line cart as a guest via `curl` (SAVE15, discount 15) → signed in as a
+seeded user (`0912345678` / `vivimoon123`) → re-priced the *identical*
+cart under that session and got MEMBER20 (discount 20) instead.
+
+**Gates:** `npx tsc --noEmit` exit 0 · `npm run lint` 0 errors / 2
+pre-existing warnings · `npx vitest run` 323 passed, 6 skipped (+51 from
+the 272 baseline) · constraint greps unchanged.
+
+### M2 Task 12 — Buy Now (2026-09-02)
+
+A `buyNowLine: CartLine | null` slice on the existing cart store
+(`features/cart/cart-store.ts`), set by a new "Buy Now" button on the PDP
+(`components/commerce/add-to-cart.tsx`, same Rx validation as Add to Cart
+via a shared `buildLine()`), then `router.push` straight to `/checkout`.
+`partialize` already only persists `{ lines }`, so `buyNowLine` is
+excluded from storage for free — "short-lived" needs no extra code.
+`app/[locale]/checkout/page.tsx` snapshots it once via a lazy `useState`
+initializer and clears it in a mount effect, so a later visit to checkout
+(real cart, or a reload) never picks up a stale line from an abandoned
+buy-now flow.
+
+**Real bug found and fixed along the way:** `checkout/success/page.tsx`
+unconditionally called `useCart().clear()` after *every* placed order —
+a buy-now order would have wiped the shopper's real cart. Fixed by
+threading an `isBuyNow` flag through the `sessionStorage` order handoff;
+the success page now skips `clear()` when it's set.
+
+**Verified against the real running dev server:** placed a single-line
+guest order (the buy-now shape) through `/api/orders` end-to-end and got
+back a confirmed order with a random, non-sequential code.
+
+**Gates:** `npx tsc --noEmit` exit 0 · `npm run lint` 0 errors / 2
+pre-existing warnings · `npx vitest run` 332 passed, 6 skipped (+60 from
+the 272 baseline) · `npm run build` succeeds · constraint greps unchanged.
+
+### M2 Task 13 — M2 verification (2026-09-02)
+
+All gates green: `tsc --noEmit` exit 0 · `npm run lint` 0 errors / 2
+pre-existing warnings (unrelated to M2) · `npx vitest run` 332 passed, 6
+skipped · `npm run test:contract` 12 passed, 6 skipped · `npm run build`
+succeeds. All four constraint greps clean (money, CartProvider/context,
+cyl/axis, gtag). M2 Definition of Done checked off in the plan file.
+
+**Honesty note on Step 3 (browser e2e):** no interactive browser was
+available this session (Claude in Chrome was declined). Substituted
+API-level end-to-end verification against the real running dev server
+(guest pricing → login → member re-pricing, order placement) plus the
+existing DOM-level `@testing-library` interaction tests (real
+clicks/typing, not mocked handlers) covering two-lines-at-different-powers,
+no cyl/axis, three payment methods, Buy Now, and hydration. Not verified
+this session: pixel-rendered UI in an actual browser window, and the `vi`
+locale specifically (all live checks used `en`). A manual click-through
+in both locales is recommended before merging if that visual confirmation
+matters for this release. Task 10 Step 4 (guard a "logged-in checkout
+variant") remains deliberately deferred — no such route exists to guard;
+see the note under Task 10 in the plan.

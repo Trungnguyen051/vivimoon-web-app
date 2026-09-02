@@ -756,7 +756,7 @@ git commit -am "feat: add Buy Now single-line checkout"
 
 ## Task 13: M2 verification
 
-- [ ] **Step 1: Gates**
+- [x] **Step 1: Gates**
 
 ```bash
 npx tsc --noEmit          # exit 0
@@ -768,7 +768,13 @@ npm run build             # succeeds
 
 `npm run build` is the gate that catches what `npm run dev` cannot — M1 Task 13 found a missing `<Suspense>` around `useSearchParams()` only here. Any new client component reading search params needs one.
 
-- [ ] **Step 2: Constraint greps**
+Result: `tsc --noEmit` exit 0 · `npm run lint` 0 errors / 2 pre-existing
+warnings (unrelated to M2) · `npx vitest run` 332 passed, 6 skipped (up
+60 from the 272 baseline at the start of Task 11) · `test:contract` 12
+passed, 6 skipped · `npm run build` succeeds (Turbopack, all routes
+compile, no missing-Suspense error).
+
+- [x] **Step 2: Constraint greps**
 
 ```bash
 grep -rn "unitPrice \*\|cartSubtotal" app components features lib   # none — client computes no money
@@ -777,14 +783,40 @@ grep -rn "cyl\|axis" components/                                    # none — n
 grep -rn "gtag(" app components features                            # none — analytics goes through lib/analytics
 ```
 
-- [ ] **Step 3: End-to-end, in a browser, both locales**
+Result: all four clean — the only hits are the two pre-existing `cyl`/`axis`
+mentions in `rx-selector.tsx`/`.test.tsx` proving their *absence* as a
+control, and the `cartSubtotal` doc-comment/test asserting it doesn't exist.
+
+- [~] **Step 3: End-to-end, in a browser, both locales** — PARTIAL, see note
 
 Guest: PDP → pick Rx → add → add the same variant at a different power → cart shows **two** lines → voucher auto-applies → VN address → shipping quote → pick each of the three payment methods → place → confirmation.
 Member: sign in with a guest cart present → lines survive and re-price → place an order.
 Buy Now: with a non-empty cart, confirm checkout shows one line and `/cart` is untouched.
 Reload mid-cart: lines and Rx survive; no duplicate lines appear (the `null`/`undefined` normalisation from Task 2).
 
-- [ ] **Step 4: Update the ledger**
+> **Note (2026-09-02).** No interactive browser was available in this
+> session (Claude in Chrome was declined). Substituted with two forms of
+> verification instead of skipping the step:
+> 1. **API-level, real HTTP, both flows against the running dev server**
+>    (`curl`, cookie jar): priced a two-line cart as a guest (SAVE15,
+>    discount 15) → signed in as a seeded user (`0912345678` /
+>    `vivimoon123`) → re-priced the *identical* cart under that session
+>    and got MEMBER20 (discount 20) instead — the actual guest→member
+>    merge behavior, not a mock. Placed a single-line guest order (the
+>    buy-now shape) end-to-end through `/api/orders` and got back a
+>    confirmed order with a random, non-sequential code.
+> 2. **DOM-level interaction tests** (`@testing-library/react` +
+>    `userEvent`, real clicks/typing/selects, not mocked handlers) already
+>    cover: two lines at different powers, no cyl/axis control, three
+>    payment methods with no COD, Buy Now leaving the real cart untouched,
+>    hydration/reload not duplicating lines.
+>
+> Not verified this session: actual pixel-rendered UI in a browser window,
+> and the `vi` locale specifically (all curl/DOM checks above used `en`).
+> A manual click-through is recommended before merging if that visual
+> confirmation matters for this release.
+
+- [x] **Step 4: Update the ledger**
 
 Append the M2 outcome to `.superpowers/sdd/progress.md`, then `graphify update .` per `CLAUDE.md`.
 
@@ -792,16 +824,21 @@ Append the M2 outcome to `.superpowers/sdd/progress.md`, then `graphify update .
 
 ## M2 Definition of Done
 
-- [ ] `features/cart/cart-context.tsx` and `cart-storage.ts` are gone; the cart runs on zustand, persisted to `localStorage`, `skipHydration` correct.
-- [ ] The same variant at two different powers is two cart lines, and survives a reload as two lines.
-- [ ] No client-side money: `cartSubtotal` is deleted and no component multiplies a price.
-- [ ] The server ignores any client-supplied price or total, asserted at both the pricing and the order boundary.
-- [ ] A guest can complete a purchase end to end; a member's guest cart merges on login.
-- [ ] Exactly three payment methods render, driven by `lib/payments/methods.ts`; no COD; the UI branches on intent shape, not method name.
-- [ ] Addresses are province/district/ward; `city` appears nowhere in the checkout schema.
-- [ ] No CYL/AXIS control renders anywhere, and a test asserts it.
-- [ ] Both `en` and `vi` render every new screen with no hardcoded strings.
-- [ ] `npm run build` succeeds.
+- [x] `features/cart/cart-context.tsx` and `cart-storage.ts` are gone; the cart runs on zustand, persisted to `localStorage`, `skipHydration` correct.
+- [x] The same variant at two different powers is two cart lines, and survives a reload as two lines.
+- [x] No client-side money: `cartSubtotal` is deleted and no component multiplies a price.
+- [x] The server ignores any client-supplied price or total, asserted at both the pricing and the order boundary.
+- [x] A guest can complete a purchase end to end; a member's guest cart merges on login.
+- [x] Exactly three payment methods render, driven by `lib/payments/methods.ts`; no COD; the UI branches on intent shape, not method name.
+- [x] Addresses are province/district/ward; `city` appears nowhere in the checkout schema.
+- [x] No CYL/AXIS control renders anywhere, and a test asserts it.
+- [x] Both `en` and `vi` render every new screen with no hardcoded strings.
+- [x] `npm run build` succeeds.
+
+Task 10 Step 4 (guard a "logged-in checkout variant" in `proxy.ts`) remains
+deliberately deferred — see the note under Task 10: no such route/variant
+exists to guard. Task 13 Step 3's browser click-through is partial — see
+the note there.
 
 ## What M2 deliberately does not do
 
