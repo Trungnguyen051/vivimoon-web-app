@@ -1,0 +1,96 @@
+- generic [active] [ref=f6e1]:
+  - paragraph [ref=f6e3]: Free shipping on orders over $50
+  - banner [ref=f6e4]:
+    - generic [ref=f6e5]:
+      - link "Vivimoon" [ref=f6e6] [cursor=pointer]:
+        - /url: /en
+      - navigation [ref=f6e7]:
+        - link "New Arrivals" [ref=f6e8] [cursor=pointer]:
+          - /url: /en/collection/new-arrivals
+        - link "Bestsellers" [ref=f6e9] [cursor=pointer]:
+          - /url: /en/collection/bestsellers
+        - link "Colored Lenses" [ref=f6e10] [cursor=pointer]:
+          - /url: /en/collection/colored-lenses
+        - link "Daily Lenses" [ref=f6e11] [cursor=pointer]:
+          - /url: /en/collection/daily-lenses
+        - link "Sale" [ref=f6e12] [cursor=pointer]:
+          - /url: /en/collection/sale
+      - generic [ref=f6e13]:
+        - textbox "Search..." [ref=f6e18]
+        - link "My account" [ref=f6e19] [cursor=pointer]:
+          - /url: /en/account
+        - link "Your Cart" [ref=f6e23] [cursor=pointer]:
+          - /url: /en/cart
+          - generic [ref=f6e27]: "2"
+        - combobox "Language" [ref=f6e29]:
+          - option "EN" [selected]
+          - option "VI"
+  - main [ref=f6e30]:
+    - generic [ref=f6e256]:
+      - generic [ref=f6e258]:
+        - heading "Checkout" [level=1] [ref=f6e259]
+        - generic [ref=f6e260]:
+          - group [ref=f6e261]:
+            - generic [ref=f6e262]: Recipient name
+            - textbox "Recipient name" [ref=f6e263]
+          - group [ref=f6e264]:
+            - generic [ref=f6e265]: Email
+            - textbox "Email" [ref=f6e266]
+          - group [ref=f6e267]:
+            - generic [ref=f6e268]: Phone
+            - textbox "Phone" [ref=f6e269]
+          - group [ref=f6e270]:
+            - generic [ref=f6e271]: Address
+            - textbox "Address" [ref=f6e272]
+          - group [ref=f6e273]:
+            - generic [ref=f6e274]: Ward
+            - textbox "Ward" [ref=f6e275]
+          - group [ref=f6e276]:
+            - generic [ref=f6e277]: District
+            - textbox "District" [ref=f6e278]
+          - group [ref=f6e279]:
+            - generic [ref=f6e280]: Province
+            - textbox "Province" [ref=f6e281]
+        - generic [ref=f6e282]:
+          - paragraph [ref=f6e283]: Payment method
+          - generic [ref=f6e284]:
+            - button "QR Pay" [pressed] [ref=f6e285]
+            - button "ZaloPay" [ref=f6e286]
+            - button "SePay" [ref=f6e287]
+        - paragraph [ref=f6e288]: Payment is simulated in this demo.
+        - button "Place order" [ref=f6e289]
+      - generic [ref=f6e290]:
+        - generic [ref=f6e291]: Order summary
+        - generic [ref=f6e293]:
+          - generic [ref=f6e294]:
+            - generic [ref=f6e295]: Subtotal
+            - generic [ref=f6e296]: —
+          - generic [ref=f6e297]:
+            - generic [ref=f6e298]: Shipping
+            - generic [ref=f6e299]: —
+          - generic [ref=f6e300]:
+            - generic [ref=f6e301]: Total
+            - generic [ref=f6e302]: —
+  - contentinfo [ref=f6e226]:
+    - generic [ref=f6e227]:
+      - generic [ref=f6e228]:
+        - generic [ref=f6e229]:
+          - paragraph [ref=f6e230]: Vivimoon
+          - paragraph [ref=f6e231]: Vivimoon — high-quality contact lenses.
+        - generic [ref=f6e232]:
+          - navigation "Policies" [ref=f6e233]:
+            - paragraph [ref=f6e234]: Policies
+            - link "Shipping" [ref=f6e235] [cursor=pointer]:
+              - /url: /en
+            - link "Returns" [ref=f6e236] [cursor=pointer]:
+              - /url: /en
+            - link "Privacy" [ref=f6e237] [cursor=pointer]:
+              - /url: /en
+          - generic [ref=f6e238]:
+            - paragraph [ref=f6e239]: Customer Care
+            - link "hello@vivimoon.com" [ref=f6e240] [cursor=pointer]:
+              - /url: mailto:hello@vivimoon.com
+            - generic [ref=f6e241]: "Hotline: 1900 0000"
+      - paragraph [ref=f6e242]: © 2026 Vivimoon
+  - button "Open Next.js Dev Tools" [ref=f6e248] [cursor=pointer]
+  - alert [ref=f6e252]

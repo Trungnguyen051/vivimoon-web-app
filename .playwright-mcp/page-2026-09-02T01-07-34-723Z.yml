@@ -1,0 +1,243 @@
+- generic [ref=f1e1]:
+  - paragraph [ref=f1e3]: Free shipping on orders over $50
+  - banner [ref=f1e4]:
+    - generic [ref=f1e5]:
+      - link "Vivimoon" [ref=f1e6] [cursor=pointer]:
+        - /url: /en
+      - navigation [ref=f1e7]:
+        - link "New Arrivals" [ref=f1e8] [cursor=pointer]:
+          - /url: /en/collection/new-arrivals
+        - link "Bestsellers" [ref=f1e9] [cursor=pointer]:
+          - /url: /en/collection/bestsellers
+        - link "Colored Lenses" [ref=f1e10] [cursor=pointer]:
+          - /url: /en/collection/colored-lenses
+        - link "Daily Lenses" [ref=f1e11] [cursor=pointer]:
+          - /url: /en/collection/daily-lenses
+        - link "Sale" [ref=f1e12] [cursor=pointer]:
+          - /url: /en/collection/sale
+      - generic [ref=f1e13]:
+        - textbox "Search..." [ref=f1e18]
+        - link "My account" [ref=f1e19] [cursor=pointer]:
+          - /url: /en/account
+        - link "Your Cart" [ref=f1e23] [cursor=pointer]:
+          - /url: /en/cart
+          - generic [ref=f1e255]: "1"
+        - combobox "Language" [ref=f1e28]:
+          - option "EN" [selected]
+          - option "VI"
+  - main [ref=f1e29]:
+    - generic [ref=f1e30]:
+      - generic [ref=f1e31]:
+        - navigation "breadcrumb" [ref=f1e32]:
+          - list [ref=f1e33]:
+            - listitem [ref=f1e34]:
+              - link "Vivimoon" [ref=f1e35] [cursor=pointer]:
+                - /url: /en
+            - listitem [aria-hidden] [ref=f1e36]
+            - listitem [ref=f1e39]:
+              - link "Aqua Daily Clear" [disabled] [ref=f1e40]
+        - generic [ref=f1e41]:
+          - generic [ref=f1e42]:
+            - generic [ref=f1e43]:
+              - button "Aqua Daily Clear 1" [ref=f1e44]:
+                - img "Aqua Daily Clear 1" [ref=f1e45]
+              - button "Aqua Daily Clear 2" [ref=f1e46]:
+                - img "Aqua Daily Clear 2" [ref=f1e47]
+            - img "Aqua Daily Clear" [ref=f1e49]
+          - generic [ref=f1e50]:
+            - heading "Aqua Daily Clear" [level=1] [ref=f1e51]
+            - generic [ref=f1e52]:
+              - generic "Rating 4.6 of 5" [ref=f1e53]
+              - generic [ref=f1e64]: 4.6 · 2
+            - paragraph [ref=f1e65]: Ultra-breathable daily disposable lenses with high moisture retention for all-day comfort.
+            - generic [ref=f1e66]:
+              - generic [ref=f1e67]: $25.00
+              - generic [ref=f1e70]:
+                - paragraph [ref=f1e71]: Pack size
+                - generic [ref=f1e72]:
+                  - button "30 lenses" [pressed] [ref=f1e73]
+                  - button "90 lenses" [ref=f1e74]
+              - group "Right eye (OD) / Left eye (OS)" [ref=f1e75]:
+                - generic [ref=f1e77]:
+                  - checkbox "Same for both eyes" [checked] [ref=f1e78]
+                  - generic [ref=f1e79]: Same for both eyes
+                - generic [ref=f1e81]:
+                  - generic [ref=f1e82]: Right eye (OD) Power (SPH)
+                  - combobox "Right eye (OD) Power (SPH)" [ref=f1e83]:
+                    - option "Select power"
+                    - option "-10.00"
+                    - option "-9.50"
+                    - option "-9.00"
+                    - option "-8.50"
+                    - option "-8.00"
+                    - option "-7.50"
+                    - option "-7.00"
+                    - option "-6.50"
+                    - option "-6.00"
+                    - option "-5.75"
+                    - option "-5.50"
+                    - option "-5.25"
+                    - option "-5.00"
+                    - option "-4.75"
+                    - option "-4.50"
+                    - option "-4.25"
+                    - option "-4.00"
+                    - option "-3.75"
+                    - option "-3.50"
+                    - option "-3.25"
+                    - option "-3.00"
+                    - option "-2.75"
+                    - option "-2.50" [selected]
+                    - option "-2.25"
+                    - option "-2.00"
+                    - option "-1.75"
+                    - option "-1.50"
+                    - option "-1.25"
+                    - option "-1.00"
+                    - option "-0.75"
+                    - option "-0.50"
+                    - option "-0.25"
+                    - option "0.00 — Plano (no correction)"
+                    - option "+0.25"
+                    - option "+0.50"
+                    - option "+0.75"
+                    - option "+1.00"
+                    - option "+1.25"
+                    - option "+1.50"
+                    - option "+1.75"
+                    - option "+2.00"
+                    - option "+2.25"
+                    - option "+2.50"
+                    - option "+2.75"
+                    - option "+3.00"
+                    - option "+3.25"
+                    - option "+3.50"
+                    - option "+3.75"
+                    - option "+4.00"
+                    - option "+4.25"
+                    - option "+4.50"
+                    - option "+4.75"
+                    - option "+5.00"
+                    - option "+5.25"
+                    - option "+5.50"
+                    - option "+5.75"
+                    - option "+6.00"
+              - generic [ref=f1e88]:
+                - generic [ref=f1e89]: Quantity
+                - generic [ref=f1e90]:
+                  - button "Decrease quantity" [ref=f1e91]
+                  - generic [ref=f1e93]: "1"
+                  - button "Increase quantity" [ref=f1e94]
+              - generic [ref=f1e96]:
+                - button "Add to cart" [active] [ref=f1e253]
+                - button "Buy now" [ref=f1e254]
+              - generic [ref=f1e97]: Freeship
+      - generic [ref=f1e103]:
+        - heading "Specifications" [level=2] [ref=f1e104]
+        - generic [ref=f1e105]:
+          - generic [ref=f1e106]:
+            - term [ref=f1e107]: Material
+            - definition [ref=f1e108]: Silicone Hydrogel
+          - generic [ref=f1e109]:
+            - term [ref=f1e110]: Water content
+            - definition [ref=f1e111]: 55%
+          - generic [ref=f1e112]:
+            - term [ref=f1e113]: Base curve
+            - definition [ref=f1e114]: 8.6mm
+          - generic [ref=f1e115]:
+            - term [ref=f1e116]: Diameter
+            - definition [ref=f1e117]: 14.2mm
+          - generic [ref=f1e118]:
+            - term [ref=f1e119]: UV protection
+            - definition [ref=f1e120]: ✓
+          - generic [ref=f1e121]:
+            - term [ref=f1e122]: Manufacturer
+            - definition [ref=f1e123]: Vivimoon Labs
+      - generic [ref=f1e124]:
+        - generic [ref=f1e125]:
+          - heading "You might also like" [level=2] [ref=f1e126]
+          - generic [ref=f1e127]:
+            - link "See more" [ref=f1e128] [cursor=pointer]:
+              - /url: /en/collection/bestsellers
+            - generic [ref=f1e131]:
+              - button "Previous" [ref=f1e132]
+              - button "Next" [ref=f1e135]
+        - generic [ref=f1e139]:
+          - generic [ref=f1e141]:
+            - link [aria-hidden] [ref=f1e142] [cursor=pointer]:
+              - /url: /en/product/breeze-daily-clear
+              - generic [ref=f1e143]: new
+            - generic [ref=f1e144]:
+              - link "Breeze Daily Clear" [ref=f1e145] [cursor=pointer]:
+                - /url: /en/product/breeze-daily-clear
+              - generic [ref=f1e146]: $22.00
+          - generic [ref=f1e149]:
+            - link [aria-hidden] [ref=f1e150] [cursor=pointer]:
+              - /url: /en/product/ocean-biweekly-clear
+            - generic [ref=f1e151]:
+              - link "Ocean Biweekly Clear" [ref=f1e152] [cursor=pointer]:
+                - /url: /en/product/ocean-biweekly-clear
+              - generic [ref=f1e153]: $28.00
+          - generic [ref=f1e156]:
+            - link [aria-hidden] [ref=f1e157] [cursor=pointer]:
+              - /url: /en/product/mystic-daily-colored
+              - generic [ref=f1e158]: sale
+            - generic [ref=f1e159]:
+              - generic "Mystic Violet" [ref=f1e161]
+              - link "Mystic Daily Colored" [ref=f1e162] [cursor=pointer]:
+                - /url: /en/product/mystic-daily-colored
+              - generic [ref=f1e163]:
+                - generic [ref=f1e164]: $18.00
+                - generic [ref=f1e165]: $24.00
+                - generic [ref=f1e166]: "-25%"
+          - generic [ref=f1e168]:
+            - link [aria-hidden] [ref=f1e169] [cursor=pointer]:
+              - /url: /en/product/focalpro-daily-multifocal
+            - generic [ref=f1e170]:
+              - link "Focalpro Daily Multifocal" [ref=f1e171] [cursor=pointer]:
+                - /url: /en/product/focalpro-daily-multifocal
+              - generic [ref=f1e172]: $36.00
+      - generic [ref=f1e174]:
+        - generic [ref=f1e175]:
+          - heading "Reviews" [level=2] [ref=f1e176]
+          - generic [ref=f1e177]:
+            - generic "Rating 4.5 of 5" [ref=f1e178]
+            - generic [ref=f1e189]: 4.5 · 2
+        - generic [ref=f1e190]:
+          - article [ref=f1e191]:
+            - generic [ref=f1e192]:
+              - generic "Rating 5 of 5" [ref=f1e193]
+              - generic [ref=f1e204]: 2026-06-01
+            - paragraph [ref=f1e205]: Super comfortable
+            - paragraph [ref=f1e206]: No dryness even after 12 hours.
+            - paragraph [ref=f1e207]: Mai N.
+          - article [ref=f1e208]:
+            - generic [ref=f1e209]:
+              - generic "Rating 4 of 5" [ref=f1e210]
+              - generic [ref=f1e221]: 2026-06-10
+            - paragraph [ref=f1e222]: Good value
+            - paragraph [ref=f1e223]: Great for daily wear, slightly tricky to insert.
+            - paragraph [ref=f1e224]: John D.
+  - contentinfo [ref=f1e225]:
+    - generic [ref=f1e226]:
+      - generic [ref=f1e227]:
+        - generic [ref=f1e228]:
+          - paragraph [ref=f1e229]: Vivimoon
+          - paragraph [ref=f1e230]: Vivimoon — high-quality contact lenses.
+        - generic [ref=f1e231]:
+          - navigation "Policies" [ref=f1e232]:
+            - paragraph [ref=f1e233]: Policies
+            - link "Shipping" [ref=f1e234] [cursor=pointer]:
+              - /url: /en
+            - link "Returns" [ref=f1e235] [cursor=pointer]:
+              - /url: /en
+            - link "Privacy" [ref=f1e236] [cursor=pointer]:
+              - /url: /en
+          - generic [ref=f1e237]:
+            - paragraph [ref=f1e238]: Customer Care
+            - link "hello@vivimoon.com" [ref=f1e239] [cursor=pointer]:
+              - /url: mailto:hello@vivimoon.com
+            - generic [ref=f1e240]: "Hotline: 1900 0000"
+      - paragraph [ref=f1e241]: © 2026 Vivimoon
+  - button "Open Next.js Dev Tools" [ref=f1e247] [cursor=pointer]
+  - alert [ref=f1e251]

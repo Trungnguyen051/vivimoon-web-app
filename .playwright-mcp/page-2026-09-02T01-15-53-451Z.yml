@@ -1,0 +1,86 @@
+- generic [active] [ref=f9e1]:
+  - paragraph [ref=f9e3]: Free shipping on orders over $50
+  - banner [ref=f9e4]:
+    - generic [ref=f9e5]:
+      - link "Vivimoon" [ref=f9e6] [cursor=pointer]:
+        - /url: /en
+      - navigation [ref=f9e7]:
+        - link "New Arrivals" [ref=f9e8] [cursor=pointer]:
+          - /url: /en/collection/new-arrivals
+        - link "Bestsellers" [ref=f9e9] [cursor=pointer]:
+          - /url: /en/collection/bestsellers
+        - link "Colored Lenses" [ref=f9e10] [cursor=pointer]:
+          - /url: /en/collection/colored-lenses
+        - link "Daily Lenses" [ref=f9e11] [cursor=pointer]:
+          - /url: /en/collection/daily-lenses
+        - link "Sale" [ref=f9e12] [cursor=pointer]:
+          - /url: /en/collection/sale
+      - generic [ref=f9e13]:
+        - textbox "Search..." [ref=f9e18]
+        - link "My account" [ref=f9e19] [cursor=pointer]:
+          - /url: /en/account
+        - link "Your Cart" [ref=f9e23] [cursor=pointer]:
+          - /url: /en/cart
+          - generic [ref=f9e27]: "16"
+        - combobox "Language" [ref=f9e29]:
+          - option "EN" [selected]
+          - option "VI"
+  - main [ref=f9e30]:
+    - generic [ref=f9e31]:
+      - heading "Your Cart" [level=1] [ref=f9e32]
+      - generic [ref=f9e33]:
+        - generic [ref=f9e35]:
+          - img "Hazel Monthly Colored" [ref=f9e37]
+          - generic [ref=f9e38]:
+            - generic [ref=f9e39]:
+              - generic [ref=f9e40]:
+                - paragraph [ref=f9e41]: Hazel Monthly Colored
+                - paragraph [ref=f9e42]: 10 lenses · Hazel Brown
+                - paragraph [ref=f9e43]: "Rx: -1.50"
+              - button "Remove" [ref=f9e44]
+            - generic [ref=f9e48]:
+              - generic [ref=f9e49]:
+                - button "Decrease quantity" [ref=f9e50]
+                - generic [ref=f9e52]: "16"
+                - button "Increase quantity" [ref=f9e53]
+              - paragraph [ref=f9e55]: $320.00
+        - generic [ref=f9e56]:
+          - generic [ref=f9e57]: Order summary
+          - generic [ref=f9e59]:
+            - generic [ref=f9e60]:
+              - generic [ref=f9e61]: Subtotal
+              - generic [ref=f9e62]: $320.00
+            - generic [ref=f9e98]:
+              - generic [ref=f9e99]: Discount
+              - generic [ref=f9e100]: "-$32.00"
+            - generic [ref=f9e63]:
+              - generic [ref=f9e64]: Shipping
+              - generic [ref=f9e65]: Free
+            - generic [ref=f9e66]:
+              - generic [ref=f9e67]: Total
+              - generic [ref=f9e68]: $288.00
+          - link "Checkout" [ref=f9e70] [cursor=pointer]:
+            - /url: /en/checkout
+  - contentinfo [ref=f9e71]:
+    - generic [ref=f9e72]:
+      - generic [ref=f9e73]:
+        - generic [ref=f9e74]:
+          - paragraph [ref=f9e75]: Vivimoon
+          - paragraph [ref=f9e76]: Vivimoon — high-quality contact lenses.
+        - generic [ref=f9e77]:
+          - navigation "Policies" [ref=f9e78]:
+            - paragraph [ref=f9e79]: Policies
+            - link "Shipping" [ref=f9e80] [cursor=pointer]:
+              - /url: /en
+            - link "Returns" [ref=f9e81] [cursor=pointer]:
+              - /url: /en
+            - link "Privacy" [ref=f9e82] [cursor=pointer]:
+              - /url: /en
+          - generic [ref=f9e83]:
+            - paragraph [ref=f9e84]: Customer Care
+            - link "hello@vivimoon.com" [ref=f9e85] [cursor=pointer]:
+              - /url: mailto:hello@vivimoon.com
+            - generic [ref=f9e86]: "Hotline: 1900 0000"
+      - paragraph [ref=f9e87]: © 2026 Vivimoon
+  - button "Open Next.js Dev Tools" [ref=f9e93] [cursor=pointer]
+  - alert [ref=f9e97]
