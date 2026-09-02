@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { apiRequest } from '@/lib/api/client';
 import type { PricedCart } from '@/lib/api/schemas/cart';
+import type { SessionStatus } from '@/features/session/session-store';
 import type { CartLine } from './cart.types';
 
 const DEBOUNCE_MS = 300;
@@ -40,12 +41,26 @@ export interface UsePricedCartResult {
  * the instant the cart empties (no one-frame lag waiting for an effect to
  * run), and `priceCartRequestSchema` requires at least one line anyway, so
  * there is nothing to price and nothing stale to show.
+ *
+ * `sessionStatus` (optional) is the guest→member merge (spec §9): the
+ * server, not this hook, decides voucher eligibility from the session
+ * cookie `apiRequest` already sends — but a *live* `sessionStatus` change
+ * (a login without a page navigation) needs an explicit re-fire, because
+ * neither `lines` nor `hydrated` changes when a shopper signs in. That
+ * re-fire is immediate, like the first fire, since it's a context change
+ * rather than an edit worth debouncing. Omitting the argument (existing
+ * callers, tests) makes it always `undefined` and this branch never trips.
  */
-export function usePricedCart(lines: CartLine[], hydrated: boolean): UsePricedCartResult {
+export function usePricedCart(
+  lines: CartLine[],
+  hydrated: boolean,
+  sessionStatus?: SessionStatus,
+): UsePricedCartResult {
   const [result, setResult] = useState<PricedCart | null>(null);
   const [isPending, setIsPending] = useState(false);
   const isFirstFireRef = useRef(true);
   const controllerRef = useRef<AbortController | null>(null);
+  const prevSessionStatusRef = useRef(sessionStatus);
   const isEmpty = lines.length === 0;
 
   useEffect(() => {
@@ -53,11 +68,16 @@ export function usePricedCart(lines: CartLine[], hydrated: boolean): UsePricedCa
       // Nothing to price, and nothing left in flight for lines that no
       // longer exist. Reset the first-fire flag too: repopulating an
       // emptied cart is a fresh load, not an edit, and should price
-      // immediately rather than sit through a 300ms debounce.
+      // immediately rather than sit through a 300ms debounce. A login with
+      // an empty cart lands here too — nothing to wipe, nothing to error.
       controllerRef.current?.abort();
       isFirstFireRef.current = true;
+      prevSessionStatusRef.current = sessionStatus;
       return;
     }
+
+    const sessionChanged = prevSessionStatusRef.current !== sessionStatus;
+    prevSessionStatusRef.current = sessionStatus;
 
     let cancelled = false;
 
@@ -77,7 +97,7 @@ export function usePricedCart(lines: CartLine[], hydrated: boolean): UsePricedCa
       });
     };
 
-    if (isFirstFireRef.current) {
+    if (isFirstFireRef.current || sessionChanged) {
       isFirstFireRef.current = false;
       fire();
       return () => {
@@ -90,7 +110,7 @@ export function usePricedCart(lines: CartLine[], hydrated: boolean): UsePricedCa
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [lines, hydrated, isEmpty]);
+  }, [lines, hydrated, isEmpty, sessionStatus]);
 
   return { result: isEmpty ? null : result, isPending: isEmpty ? false : isPending };
 }

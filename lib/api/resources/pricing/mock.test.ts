@@ -149,4 +149,36 @@ describe('mockPricing.priceCart', () => {
     const result = await mockPricing.priceCart(req(BASELINE_LINES));
     expect(result.shipping).toBe(0);
   });
+
+  describe('guest -> member cart merge (spec §9)', () => {
+    it('excludes a memberOnly voucher for a guest (no userId)', async () => {
+      const result = await mockPricing.priceCart(req(BASELINE_LINES));
+      const codes = result.appliedVouchers.map((v) => v.code);
+      expect(codes).not.toContain('MEMBER20');
+      // Unchanged from the guest baseline: SAVE15 still wins at 98.
+      expect(result.appliedVouchers[0].code).toBe('SAVE15');
+      expect(result.discount).toBe(15);
+    });
+
+    it('applies the memberOnly voucher once signed in, and it outbids the guest winner', async () => {
+      // At subtotal 98: MEMBER20 (fixed 20) beats SAVE15 (fixed 15) and
+      // SUMMER10 (10% = 9) — the same cart, re-priced under a session,
+      // yields a *different* (larger) discount purely from userId flipping.
+      const result = await mockPricing.priceCart(req(BASELINE_LINES), 'user-1');
+      expect(result.appliedVouchers).toHaveLength(1);
+      expect(result.appliedVouchers[0].code).toBe('MEMBER20');
+      expect(result.discount).toBe(20);
+      expect(result.total).toBe(98 - 20);
+    });
+
+    it('does not apply a memberOnly voucher below its minSpend even when signed in', async () => {
+      const result = await mockPricing.priceCart(
+        req([{ lineKey: 'l1', variantId: 'p-hazel-monthly-brown-10', quantity: 1 }]),
+        'user-1',
+      );
+      expect(result.subtotal).toBe(20);
+      const codes = result.appliedVouchers.map((v) => v.code);
+      expect(codes).not.toContain('MEMBER20');
+    });
+  });
 });

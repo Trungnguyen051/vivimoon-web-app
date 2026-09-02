@@ -1,7 +1,14 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { POST } from './route';
 import { envelopeSchema } from '@/lib/api/schemas/common';
 import { pricedCartSchema } from '@/lib/api/schemas/cart';
+
+// No session cookie for any test in this file — every case here is a guest
+// request. The signed-in / memberOnly-voucher path is covered separately in
+// route.session.test.ts, which needs a real jar to sign a session into.
+vi.mock('next/headers', () => ({
+  cookies: async () => ({ get: () => undefined, set: () => {}, delete: () => {} }),
+}));
 
 function req(body: unknown): Request {
   return new Request('http://localhost/api/cart/price', {

@@ -665,16 +665,39 @@ git commit -m "feat: add order placement and confirmation"
 
 > Spec §9: on login, the persisted guest cart is re-priced under the new session so member vouchers apply. **Guest cart lines always win over a stale server cart.**
 
-- [ ] **Step 1: Failing test**
+> **Scoping note.** There is no server-side per-account cart anywhere in this
+> codebase or spec to merge *from* — the cart is client-side only
+> (`features/cart/cart-store.ts`, localStorage), unaffected by auth state.
+> "Guest cart lines always win over a stale server cart" is therefore
+> already true by construction: login never touches `lines`. What login
+> *does* change is voucher eligibility, so "merge" is implemented as making
+> the live pricing subscription re-price under the new session — the
+> `memberOnly` gate this task actually needs to prove is testable.
+
+- [x] **Step 1: Failing test**
 
 - a guest cart with lines, then login ⇒ lines survive, re-priced under the session
 - a member voucher that did not apply as a guest now applies
 - login with an **empty** guest cart does not wipe anything, and does not error
 - merge is idempotent — running it twice does not double quantities
 
-- [ ] **Step 2: Implement, verify, commit**
+- [x] **Step 2: Implement, verify, commit**
 
 Hook into the existing post-login path from M1 Task 10 rather than adding a new one.
+
+Implemented: `voucherSchema` gained `memberOnly` (`lib/api/schemas/cart.ts`);
+`MEMBER20` fixture added (`content/mock/vouchers.ts`); `bestVoucher`/
+`priceCart` take the caller's session `userId` and gate `memberOnly`
+candidates on it (`lib/api/resources/pricing/mock.ts`), same posture as
+`orders.place` — `app/api/cart/price/route.ts` reads
+`readSessionUserId()` and passes it through (never trusts the body),
+and `lib/api/resources/orders/mock.ts`'s own `priceCart` call now forwards
+`userId` too, so a member's order gets the same voucher as their cart.
+`usePricedCart` takes an optional `sessionStatus` and re-fires immediately
+(not debounced — a context change, not an edit) when it changes with the
+lines unchanged; `app/[locale]/cart/page.tsx` wires `useSessionStore`'s
+`status` into it. Existing 2-arg callers/tests are unaffected — the new
+param defaults to `undefined` and never trips the change branch.
 
 ```bash
 git commit -am "feat: merge guest cart into member session on login"

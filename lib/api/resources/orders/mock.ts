@@ -47,10 +47,13 @@ export const mockOrders = {
     // Propagates PricingError as-is (not_found / validation_failed) on an
     // unknown variantId, a zero quantity, or a mixed-currency cart — the
     // route handler maps it the same way pricing's own route does.
-    const priced = await pricing.priceCart({
-      lines: input.lines,
-      shipping: { province: input.address.province, district: input.address.district, optionId: cheapest.id },
-    });
+    const priced = await pricing.priceCart(
+      {
+        lines: input.lines,
+        shipping: { province: input.address.province, district: input.address.district, optionId: cheapest.id },
+      },
+      userId,
+    );
 
     const lines = priced.lines.map((line, i) => ({ ...line, rx: input.lines[i]?.rx }));
 

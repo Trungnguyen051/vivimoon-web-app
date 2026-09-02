@@ -19,10 +19,11 @@ export class PricingError extends Error {
  * yet — see `STALE-ACTIVE60` in content/mock/vouchers.ts), so relying on
  * `status` alone would let a stale voucher apply.
  */
-function voucherApplies(v: Voucher, subtotal: number): boolean {
+function voucherApplies(v: Voucher, subtotal: number, isMember: boolean): boolean {
   if (v.status !== 'active') return false;
   if (Date.parse(v.expiresAt) <= Date.now()) return false;
   if (v.minSpend !== undefined && subtotal < v.minSpend) return false;
+  if (v.memberOnly && !isMember) return false;
   return true;
 }
 
@@ -39,7 +40,10 @@ function voucherDiscount(v: Voucher, subtotal: number, shipping: number): number
 
 /**
  * Auto-selects a single voucher (spec: "auto-voucher behavior identical for
- * guests and members" — no code is submitted by the client in M2).
+ * guests and members" for eligibility rules other than membership itself —
+ * no code is submitted by the client in M2). `isMember` gates only
+ * `memberOnly` vouchers (spec §9 guest→member merge); every other rule is
+ * unchanged between guest and member carts.
  *
  * DECISION: vouchers do NOT stack. Exactly one voucher, or none, is applied
  * — whichever eligible voucher yields the largest discount. A candidate
@@ -47,9 +51,13 @@ function voucherDiscount(v: Voucher, subtotal: number, shipping: number): number
  * still 0, pre-Task 8) is dropped before comparison, so it never "applies"
  * for zero benefit even when it is the only eligible voucher.
  */
-function bestVoucher(subtotal: number, shipping: number): { discount: number; applied: Voucher[] } {
+function bestVoucher(
+  subtotal: number,
+  shipping: number,
+  isMember: boolean,
+): { discount: number; applied: Voucher[] } {
   const candidates = voucherFixtures
-    .filter((v) => voucherApplies(v, subtotal))
+    .filter((v) => voucherApplies(v, subtotal, isMember))
     .map((v) => ({ voucher: v, discount: voucherDiscount(v, subtotal, shipping) }))
     .filter((c) => c.discount > 0);
 
@@ -64,8 +72,12 @@ export const mockPricing = {
    * The server re-prices every line from its own catalogue by `variantId`.
    * `priceLineInputSchema` never admits a client-supplied price, so there is
    * nothing here to "ignore" at runtime — the field simply cannot arrive.
+   *
+   * `userId` comes from the route handler's own verified session cookie,
+   * never the request body (same posture as `orders.place`) — it only
+   * decides `memberOnly` voucher eligibility (spec §9).
    */
-  async priceCart(input: PriceCartRequest): Promise<PricedCart> {
+  async priceCart(input: PriceCartRequest, userId: string | null = null): Promise<PricedCart> {
     if (input.lines.length === 0) {
       throw new PricingError('cart must contain at least one line', 'validation_failed');
     }
@@ -118,7 +130,7 @@ export const mockPricing = {
       shippingFee = match.fee;
     }
 
-    const { discount, applied } = bestVoucher(subtotal, shippingFee);
+    const { discount, applied } = bestVoucher(subtotal, shippingFee, userId !== null);
     const total = Math.max(0, subtotal + shippingFee - discount);
 
     return {

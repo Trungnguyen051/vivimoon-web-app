@@ -4,6 +4,7 @@ import { usePricedCart } from './use-priced-cart';
 import { apiRequest, type ApiResult } from '@/lib/api/client';
 import type { CartLine } from './cart.types';
 import type { PricedCart } from '@/lib/api/schemas/cart';
+import type { SessionStatus } from '@/features/session/session-store';
 
 vi.mock('@/lib/api/client', () => ({ apiRequest: vi.fn() }));
 
@@ -242,5 +243,77 @@ describe('usePricedCart', () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  describe('guest -> member cart merge (spec §9)', () => {
+    it('re-fires immediately, with no debounce, when sessionStatus changes with the same lines', async () => {
+      const line = makeLine();
+      const lines = [line]; // stable reference — only sessionStatus changes below
+      mockedApiRequest.mockResolvedValue({ ok: true, data: pricedCartFor(line, 25) });
+
+      const { rerender } = renderHook(
+        ({ sessionStatus }: { sessionStatus: SessionStatus }) => usePricedCart(lines, true, sessionStatus),
+        { initialProps: { sessionStatus: 'anonymous' as SessionStatus } },
+      );
+      await flushMicrotasks();
+      expect(mockedApiRequest).toHaveBeenCalledTimes(1); // first fire
+
+      act(() => {
+        rerender({ sessionStatus: 'authenticated' });
+      });
+      // Immediate — not sitting through the 300ms debounce like a line edit would.
+      expect(mockedApiRequest).toHaveBeenCalledTimes(2);
+    });
+
+    it('does not re-fire on a rerender where sessionStatus is unchanged', async () => {
+      const line = makeLine();
+      const lines = [line]; // stable reference
+      mockedApiRequest.mockResolvedValue({ ok: true, data: pricedCartFor(line, 25) });
+
+      const { rerender } = renderHook(
+        ({ sessionStatus }: { sessionStatus: SessionStatus }) => usePricedCart(lines, true, sessionStatus),
+        { initialProps: { sessionStatus: 'anonymous' as SessionStatus } },
+      );
+      await flushMicrotasks();
+      expect(mockedApiRequest).toHaveBeenCalledTimes(1);
+
+      act(() => {
+        rerender({ sessionStatus: 'anonymous' });
+      });
+      await flushMicrotasks();
+      expect(mockedApiRequest).toHaveBeenCalledTimes(1);
+    });
+
+    it('login with an empty guest cart does not fire or error', async () => {
+      const { result, rerender } = renderHook(
+        ({ sessionStatus }: { sessionStatus: SessionStatus }) => usePricedCart([], true, sessionStatus),
+        { initialProps: { sessionStatus: 'anonymous' as SessionStatus } },
+      );
+      expect(result.current.result).toBeNull();
+
+      act(() => {
+        rerender({ sessionStatus: 'authenticated' });
+      });
+
+      expect(mockedApiRequest).not.toHaveBeenCalled();
+      expect(result.current.result).toBeNull();
+    });
+
+    it('omitting sessionStatus (existing callers) never triggers the session-change branch', async () => {
+      const line = makeLine();
+      const lines = [line]; // stable reference — this rerender changes nothing
+      mockedApiRequest.mockResolvedValue({ ok: true, data: pricedCartFor(line, 25) });
+
+      const { rerender } = renderHook(() => usePricedCart(lines, true), { initialProps: {} });
+      await flushMicrotasks();
+      expect(mockedApiRequest).toHaveBeenCalledTimes(1);
+
+      // Same lines, same (absent) sessionStatus — a plain rerender must not re-fire.
+      act(() => {
+        rerender({});
+      });
+      await flushMicrotasks();
+      expect(mockedApiRequest).toHaveBeenCalledTimes(1);
+    });
   });
 });

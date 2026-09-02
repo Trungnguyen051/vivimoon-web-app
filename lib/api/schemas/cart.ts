@@ -57,6 +57,8 @@ export const voucherSchema = z
     minSpend: z.number().int().nonnegative().optional(),
     expiresAt: z.string(),
     status: voucherStatusSchema,
+    /** Eligible only for a signed-in shopper (spec §9 guest→member merge). Omitted/false means open to guests too. */
+    memberOnly: z.boolean().optional(),
   })
   .superRefine((v, ctx) => {
     if (v.type === 'percent' && v.value > 100) {

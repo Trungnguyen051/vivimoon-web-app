@@ -10,8 +10,10 @@ import type { Voucher } from '@/lib/api/schemas/cart';
  * `USED5OFF` (status), `EXPIRED50` (status, belt-and-braces with a past
  * date), `STALE-ACTIVE60` (an `active` voucher backend hasn't swept past its
  * `expiresAt` yet — proves the date check fires independently of `status`),
- * `BIGSPEND` (minSpend), and `FREESHIP` (a `shipping` voucher, which never
- * has a positive discount while `shipping` is `0`, pre-Task 8).
+ * `BIGSPEND` (minSpend), `FREESHIP` (a `shipping` voucher, which never has a
+ * positive discount while `shipping` is `0`, pre-Task 8), and `MEMBER20`
+ * (`memberOnly` — proves the guest→member merge re-prices under the new
+ * session rather than replaying a cached guest quote).
  */
 export const vouchers: Voucher[] = [
   {
@@ -80,5 +82,16 @@ export const vouchers: Voucher[] = [
     value: 5,
     expiresAt: '2099-01-01T00:00:00.000Z',
     status: 'active',
+  },
+  {
+    code: 'MEMBER20',
+    title: '$20 off for members',
+    description: '$20 off orders over $50 — signed-in shoppers only',
+    type: 'fixed',
+    value: 20,
+    minSpend: 50,
+    expiresAt: '2099-01-01T00:00:00.000Z',
+    status: 'active',
+    memberOnly: true,
   },
 ];

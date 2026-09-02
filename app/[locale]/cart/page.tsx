@@ -6,6 +6,7 @@ import { isLocale, type Locale, defaultLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { useCart } from '@/features/cart/use-cart';
 import { usePricedCart } from '@/features/cart/use-priced-cart';
+import { useSessionStore } from '@/features/session/session-store';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Empty, EmptyContent, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
@@ -19,7 +20,13 @@ export default function CartPage({ params }: { params: Promise<{ locale: string 
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const dict = getDictionary(locale);
   const { lines, hydrated, currency, updateQty, remove } = useCart();
-  const { result } = usePricedCart(lines, hydrated);
+  const sessionStatus = useSessionStore((s) => s.status);
+  // Guest→member cart merge (spec §9): lines already survive login (the
+  // cart lives in localStorage, untouched by auth), so re-pricing on a
+  // session-status change is what "merge" reduces to here — it lets a
+  // `memberOnly` voucher apply the moment a shopper signs in without a
+  // page reload.
+  const { result } = usePricedCart(lines, hydrated, sessionStatus);
   const { track } = useAnalytics();
 
   // `view_cart` fires exactly once per cart view, the moment the first server
