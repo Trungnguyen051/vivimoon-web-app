@@ -712,17 +712,41 @@ git commit -am "feat: merge guest cart into member session on login"
 
 > Spec §10: same Rx selection as add-to-cart, then straight to checkout with a **single-line cart, leaving the existing cart untouched.**
 
-- [ ] **Step 1: Decide and document the mechanism**
+- [x] **Step 1: Decide and document the mechanism**
 
 The existing cart must survive. Pass the single line through a short-lived buy-now slice in the store (not persisted) or a URL-addressed draft — **not** by clearing and restoring the real cart, which loses the shopper's cart if they abandon checkout or close the tab mid-flow.
 
-- [ ] **Step 2: Test**
+Chosen: a `buyNowLine: CartLine | null` slice on the existing cart store
+(`features/cart/cart-store.ts`), set by a new "Buy Now" button in
+`components/commerce/add-to-cart.tsx` (same Rx validation, extracted into a
+shared `buildLine()`), then `router.push` straight to `/checkout`.
+`partialize` already only persists `{ lines }`, so `buyNowLine` is
+excluded for free — it never survives a reload, satisfying "short-lived"
+with no extra code. `app/[locale]/checkout/page.tsx` snapshots it once via
+a lazy `useState` initializer and clears it in a mount effect, so a later
+visit to checkout (real cart, or a reload) can never pick up a stale
+line from an abandoned buy-now flow. The success page's unconditional
+`clear()` was the actual bug this task exposed — any placed order wiped
+the real cart, buy-now or not — fixed by threading an `isBuyNow` flag
+through the `sessionStorage` handoff so it skips `clear()` for a
+buy-now order.
+
+- [x] **Step 2: Test**
 
 - Buy Now with a non-empty cart ⇒ checkout shows **one** line; returning to `/cart` shows the original cart **unchanged**
 - abandoning buy-now checkout leaves the real cart intact
 - completing a buy-now order does not clear the real cart
 
-- [ ] **Step 3: Verify and commit**
+Covered in `features/cart/cart-store.test.ts` (buyNowLine set/clear,
+not persisted), `components/commerce/add-to-cart.test.tsx` (Rx gating on
+the new button, real cart untouched on Buy Now), and two new page-level
+suites: `app/[locale]/checkout/checkout-buy-now.test.tsx` (submits only
+the buy-now line; falls back to the real cart when no buyNowLine is set;
+abandoning leaves the real cart intact) and
+`app/[locale]/checkout/success/success-buy-now.test.tsx` (a normal order
+still clears the cart; a buy-now order does not).
+
+- [x] **Step 3: Verify and commit**
 
 ```bash
 git commit -am "feat: add Buy Now single-line checkout"

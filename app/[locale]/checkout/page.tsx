@@ -1,11 +1,13 @@
 'use client';
-import { use, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { isLocale, type Locale, defaultLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { useCart } from '@/features/cart/use-cart';
+import { useBuyNow } from '@/features/cart/use-buy-now';
+import { useCartStore } from '@/features/cart/cart-store';
 import { toPriceLines } from '@/features/cart/use-priced-cart';
 import { checkoutSchema, type CheckoutForm, type CheckoutFormInput } from '@/lib/checkout/schema';
 import { paymentMethods } from '@/lib/payments/methods';
@@ -23,7 +25,21 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const dict = getDictionary(locale);
   const router = useRouter();
-  const { lines, currency } = useCart();
+  const { lines: cartLines } = useCart();
+  const { clearBuyNowLine } = useBuyNow();
+  // Buy Now (spec §10): snapshot whatever buyNowLine was set on mount, then
+  // clear it immediately — so a *later* visit to this page (real checkout,
+  // or a reload) never picks up a stale line from an abandoned buy-now flow.
+  // Lazy initializer runs once; it must not mutate the store, so the clear
+  // happens in an effect instead.
+  const [buyNowLine] = useState(() => useCartStore.getState().buyNowLine);
+  useEffect(() => {
+    clearBuyNowLine();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const isBuyNow = buyNowLine !== null;
+  const lines = isBuyNow ? [buyNowLine] : cartLines;
+  const currency = lines[0]?.currency ?? 'USD';
   const [submitError, setSubmitError] = useState<string | null>(null);
   // Defaults to the first configured method, same posture as VariantSelector
   // pre-selecting a pack — Task 10 (order placement) reads this on submit.
@@ -73,6 +89,9 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
     // `value` is what gates that — never null once a real order exists),
     // clears the cart, and cleans this entry up. `lines` still has display
     // fields (sku/name) the order's re-priced lines don't carry.
+    //
+    // `isBuyNow` tells the success page NOT to clear the real cart — a
+    // buy-now order was never drawn from it (spec §10).
     sessionStorage.setItem(
       'vivimoon-last-order',
       JSON.stringify({
@@ -80,6 +99,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
         currency: result.data.totals.currency,
         value: result.data.totals.total,
         lines,
+        isBuyNow,
       }),
     );
     router.push(`/${locale}/checkout/success`);

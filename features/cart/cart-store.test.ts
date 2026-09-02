@@ -134,6 +134,34 @@ describe('useCartStore — hydration gating', () => {
   });
 });
 
+describe('useCartStore — buyNowLine (Task 12)', () => {
+  it('sets and clears buyNowLine independently of lines', async () => {
+    const store = await freshStore();
+    store.getState().add(makeLine(rxA));
+    store.getState().setBuyNowLine(makeLine(rxB));
+
+    expect(store.getState().lines).toHaveLength(1);
+    expect(store.getState().buyNowLine).not.toBeNull();
+
+    store.getState().clearBuyNowLine();
+    expect(store.getState().buyNowLine).toBeNull();
+    expect(store.getState().lines).toHaveLength(1); // untouched by the clear
+  });
+
+  it('is not persisted — a fresh module load never restores a prior buyNowLine', async () => {
+    const store = await freshStore();
+    store.getState().setBuyNowLine(makeLine(rxA));
+    await store.persist.rehydrate();
+
+    const stored = JSON.parse(localStorage.getItem(KEY)!);
+    expect('buyNowLine' in stored.state).toBe(false);
+
+    const store2 = await freshStore();
+    await store2.persist.rehydrate();
+    expect(store2.getState().buyNowLine).toBeNull();
+  });
+});
+
 describe('useCartStore — resilience', () => {
   it('falls back to an empty cart on an unparseable stored value', async () => {
     localStorage.setItem(KEY, 'not json {{{');

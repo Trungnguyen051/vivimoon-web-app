@@ -1,6 +1,6 @@
 export const en = {
   nav: { new: 'New', men: 'Men', women: 'Women', sport: 'Sport', accessories: 'Accessories', sale: 'Sale' },
-  common: { shopNow: 'Shop Now', seeMore: 'See more', addToCart: 'Add to cart', search: 'Search...', decreaseQty: 'Decrease quantity', increaseQty: 'Increase quantity', menu: 'Menu' },
+  common: { shopNow: 'Shop Now', seeMore: 'See more', addToCart: 'Add to cart', buyNow: 'Buy now', search: 'Search...', decreaseQty: 'Decrease quantity', increaseQty: 'Increase quantity', menu: 'Menu' },
   announcement: { freeShipping: 'Free shipping on orders over $50' },
   collection: {
     newArrivals: 'New Arrivals', bestsellers: 'Bestsellers', sale: 'Sale',

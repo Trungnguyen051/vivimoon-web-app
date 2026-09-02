@@ -21,7 +21,11 @@ export default function SuccessPage({ params }: { params: Promise<{ locale: stri
   useEffect(() => {
     const raw = sessionStorage.getItem('vivimoon-last-order');
     if (raw) {
-      const order = JSON.parse(raw) as { orderId: string; currency: string; value: number | null; lines: { sku: string; name: string; unitPrice: number; quantity: number }[] };
+      const order = JSON.parse(raw) as {
+        orderId: string; currency: string; value: number | null;
+        lines: { sku: string; name: string; unitPrice: number; quantity: number }[];
+        isBuyNow?: boolean;
+      };
       // Reading sessionStorage must happen post-hydration (SSR has no sessionStorage and
       // an eager read would mismatch the server-rendered empty state), so the setState here
       // is an intentional one-time sync of external storage into render state.
@@ -34,7 +38,9 @@ export default function SuccessPage({ params }: { params: Promise<{ locale: stri
         track({ name: 'purchase', params: { transaction_id: order.orderId, currency: order.currency, value: order.value, items: cartLinesToGa4Items(order.lines) } });
       }
       sessionStorage.removeItem('vivimoon-last-order');
-      clear();
+      // A buy-now order never drew from the real cart (spec §10) — clearing
+      // it here would wipe items the shopper never checked out with.
+      if (!order.isBuyNow) clear();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

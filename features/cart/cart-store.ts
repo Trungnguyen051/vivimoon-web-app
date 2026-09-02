@@ -25,6 +25,15 @@ export interface CartStore extends CartState {
   updateQty: (lineKey: string, quantity: number) => void;
   remove: (lineKey: string) => void;
   clear: () => void;
+  /**
+   * Buy Now (spec §10): a single line held outside `lines`, so checkout can
+   * read it without ever touching the real cart. Deliberately excluded from
+   * `partialize` below — it must not survive a reload, and never merges with
+   * `lines` through `add`/`cartReducer`.
+   */
+  buyNowLine: CartLine | null;
+  setBuyNowLine: (line: CartLine) => void;
+  clearBuyNowLine: () => void;
 }
 
 /** Folds any lines already in memory into the persisted cart. */
@@ -44,6 +53,9 @@ export const useCartStore = create<CartStore>()(
       updateQty: (lineKey, quantity) => set((s) => cartReducer(s, { type: 'UPDATE_QTY', lineKey, quantity })),
       remove: (lineKey) => set((s) => cartReducer(s, { type: 'REMOVE', lineKey })),
       clear: () => set((s) => cartReducer(s, { type: 'CLEAR' })),
+      buyNowLine: null,
+      setBuyNowLine: (line) => set({ buyNowLine: line }),
+      clearBuyNowLine: () => set({ buyNowLine: null }),
     }),
     {
       name: 'vivimoon-cart',

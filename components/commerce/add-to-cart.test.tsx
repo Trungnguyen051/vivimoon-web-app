@@ -1,10 +1,15 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AddToCart } from './add-to-cart';
 import { useCartStore } from '@/features/cart/cart-store';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import type { Product } from '@/lib/types';
+
+const push = vi.fn();
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push, refresh: vi.fn() }),
+}));
 
 const dict = getDictionary('en');
 
@@ -30,9 +35,10 @@ async function fillRightSphAndMirror(sph: string) {
 
 beforeEach(() => {
   localStorage.clear();
+  push.mockClear();
   // The store is a module singleton (spec §8); reset it between tests so a
   // line added in one test can't bleed into the next.
-  useCartStore.setState({ lines: [], hydrated: false });
+  useCartStore.setState({ lines: [], hydrated: false, buyNowLine: null });
 });
 
 describe('AddToCart — Rx gating (Task 5, Step 4)', () => {
@@ -93,5 +99,34 @@ describe('AddToCart — Rx gating (Task 5, Step 4)', () => {
     expect(lines[0].lineKey).not.toBe(lines[1].lineKey);
     expect(lines[0].rx).toBeDefined();
     expect(lines[1].rx).toBeDefined();
+  });
+});
+
+describe('AddToCart — Buy Now (Task 12)', () => {
+  it('disables Buy Now with the same Rx gating as Add to Cart', async () => {
+    const product = makeProduct({ requiresRx: true, type: 'clear' });
+    render(<AddToCart product={product} locale="en" dict={dict} />);
+    expect(screen.getByRole('button', { name: dict.common.buyNow })).toBeDisabled();
+
+    await fillRightSphAndMirror('-2.5');
+    expect(screen.getByRole('button', { name: dict.common.buyNow })).toBeEnabled();
+  });
+
+  it('sets buyNowLine and navigates to checkout without touching the real cart', async () => {
+    const product = makeProduct({ requiresRx: false });
+    useCartStore.getState().add({
+      lineKey: 'existing', productId: 'p0', variantId: 'v0', name: 'Existing',
+      sku: 'SKU0', packSize: '30', unitPrice: 10, currency: 'USD', quantity: 1,
+    });
+
+    render(<AddToCart product={product} locale="en" dict={dict} />);
+    await userEvent.click(screen.getByRole('button', { name: dict.common.buyNow }));
+
+    const state = useCartStore.getState();
+    expect(state.lines).toHaveLength(1); // the pre-existing line, untouched
+    expect(state.lines[0].lineKey).toBe('existing');
+    expect(state.buyNowLine).not.toBeNull();
+    expect(state.buyNowLine?.variantId).toBe('v1');
+    expect(push).toHaveBeenCalledWith('/en/checkout');
   });
 });
