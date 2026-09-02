@@ -21,6 +21,7 @@ export const products: Product[] = [
       uvProtection: true,
       manufacturer: 'Vivimoon Labs',
     },
+    requiresRx: true,
     variants: [
       {
         id: 'p-aqua-daily-30',
@@ -63,6 +64,7 @@ export const products: Product[] = [
       uvProtection: false,
       manufacturer: 'Vivimoon Labs',
     },
+    requiresRx: true,
     variants: [
       {
         id: 'p-breeze-daily-30',
@@ -96,6 +98,7 @@ export const products: Product[] = [
       uvProtection: true,
       manufacturer: 'Vivimoon Labs',
     },
+    requiresRx: true,
     variants: [
       {
         id: 'p-ocean-biweekly-6',
@@ -129,6 +132,7 @@ export const products: Product[] = [
       uvProtection: true,
       manufacturer: 'Vivimoon Labs',
     },
+    requiresRx: true,
     variants: [
       {
         id: 'p-hazel-monthly-brown-10',
@@ -194,6 +198,7 @@ export const products: Product[] = [
       uvProtection: false,
       manufacturer: 'Vivimoon Labs',
     },
+    requiresRx: true,
     variants: [
       {
         id: 'p-mystic-daily-violet-10',
@@ -241,6 +246,7 @@ export const products: Product[] = [
       uvProtection: true,
       manufacturer: 'Vivimoon Labs',
     },
+    requiresRx: true,
     variants: [
       {
         id: 'p-torica-monthly-6',
@@ -277,6 +283,7 @@ export const products: Product[] = [
       uvProtection: true,
       manufacturer: 'Vivimoon Labs',
     },
+    requiresRx: true,
     variants: [
       {
         id: 'p-torica-biweekly-6',
@@ -313,6 +320,7 @@ export const products: Product[] = [
       uvProtection: true,
       manufacturer: 'Vivimoon Labs',
     },
+    requiresRx: true,
     variants: [
       {
         id: 'p-focalpro-monthly-6',
@@ -346,6 +354,7 @@ export const products: Product[] = [
       uvProtection: false,
       manufacturer: 'Vivimoon Labs',
     },
+    requiresRx: true,
     variants: [
       {
         id: 'p-focalpro-daily-30',

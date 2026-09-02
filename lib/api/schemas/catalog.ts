@@ -40,6 +40,9 @@ export const productSchema = z.object({
   images: z.array(z.string()).min(1),
   badges: z.array(productBadgeSchema),
   specs: productSpecsSchema,
+  // Whether the PDP prompts for a prescription. Cosmetic lenses sold plano-only
+  // do not. Defaults to true: correction is the norm, so a fixture opts OUT.
+  requiresRx: z.boolean().default(true),
   variants: z.array(variantSchema).min(1),
   rating: z.number().min(0).max(5),
   reviewCount: z.number().int().nonnegative(),

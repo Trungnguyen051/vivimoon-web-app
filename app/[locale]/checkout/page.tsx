@@ -1,53 +1,107 @@
 'use client';
-import { use, useEffect } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { isLocale, type Locale, defaultLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { useCart } from '@/features/cart/use-cart';
-import { checkoutSchema, type CheckoutForm } from '@/lib/checkout/schema';
+import { useBuyNow } from '@/features/cart/use-buy-now';
+import { useCartStore } from '@/features/cart/cart-store';
+import { toPriceLines } from '@/features/cart/use-priced-cart';
+import { checkoutSchema, type CheckoutForm, type CheckoutFormInput } from '@/lib/checkout/schema';
+import { paymentMethods } from '@/lib/payments/methods';
+import { apiRequest } from '@/lib/api/client';
+import type { Order } from '@/lib/api/schemas/orders';
 import { OrderSummary } from '@/components/commerce/order-summary';
+import { PaymentMethodPicker } from '@/components/commerce/payment-method-picker';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { useAnalytics } from '@/lib/analytics/use-analytics';
-import { cartLinesToGa4Items } from '@/lib/analytics/events';
-
-// Module-scope helper: keeps the impure Date.now() call out of the component body
-// so it isn't evaluated during render.
-function generateOrderId(): string {
-  return `VVM-${Date.now()}`;
-}
 
 export default function CheckoutPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = use(params);
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const dict = getDictionary(locale);
   const router = useRouter();
-  const { lines, subtotal, currency } = useCart();
-  const { track } = useAnalytics();
-  const { register, handleSubmit, formState: { errors, isSubmitted } } = useForm<CheckoutForm>({ resolver: zodResolver(checkoutSchema) });
+  const { lines: cartLines } = useCart();
+  const { clearBuyNowLine } = useBuyNow();
+  // Buy Now (spec §10): snapshot whatever buyNowLine was set on mount, then
+  // clear it immediately — so a *later* visit to this page (real checkout,
+  // or a reload) never picks up a stale line from an abandoned buy-now flow.
+  // Lazy initializer runs once; it must not mutate the store, so the clear
+  // happens in an effect instead.
+  const [buyNowLine] = useState(() => useCartStore.getState().buyNowLine);
+  useEffect(() => {
+    clearBuyNowLine();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const isBuyNow = buyNowLine !== null;
+  const lines = isBuyNow ? [buyNowLine] : cartLines;
+  const currency = lines[0]?.currency ?? 'USD';
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  // Defaults to the first configured method, same posture as VariantSelector
+  // pre-selecting a pack — Task 10 (order placement) reads this on submit.
+  // Holds a PaymentMethodType (matches paymentIntentRequestSchema's `method`).
+  const [paymentMethod, setPaymentMethod] = useState<string>(paymentMethods[0].type);
+  // `label` carries a zod .default('home'), so the resolver's output (CheckoutForm)
+  // is not what useForm manages — CheckoutFormInput (pre-default) is.
+  const { register, handleSubmit, formState: { errors, isSubmitted, isSubmitting } } = useForm<
+    CheckoutFormInput,
+    unknown,
+    CheckoutForm
+  >({ resolver: zodResolver(checkoutSchema) });
 
   const fields = [
-    { name: 'fullName' as const, label: dict.checkout.fullName, message: dict.checkout.errors.required, autoComplete: 'name', type: 'text' },
+    { name: 'recipient' as const, label: dict.checkout.recipient, message: dict.checkout.errors.required, autoComplete: 'name', type: 'text' },
     { name: 'email' as const, label: dict.checkout.email, message: dict.checkout.errors.invalidEmail, autoComplete: 'email', type: 'email' },
-    { name: 'address' as const, label: dict.checkout.address, message: dict.checkout.errors.required, autoComplete: 'street-address', type: 'text' },
-    { name: 'city' as const, label: dict.checkout.city, message: dict.checkout.errors.required, autoComplete: 'address-level2', type: 'text' },
-    { name: 'phone' as const, label: dict.checkout.phone, message: dict.checkout.errors.required, autoComplete: 'tel', type: 'tel' },
+    { name: 'phone' as const, label: dict.checkout.phone, message: dict.checkout.errors.invalidPhone, autoComplete: 'tel', type: 'tel' },
+    { name: 'line1' as const, label: dict.checkout.line1, message: dict.checkout.errors.required, autoComplete: 'street-address', type: 'text' },
+    { name: 'ward' as const, label: dict.checkout.ward, message: dict.checkout.errors.required, autoComplete: 'address-level3', type: 'text' },
+    { name: 'district' as const, label: dict.checkout.district, message: dict.checkout.errors.required, autoComplete: 'address-level2', type: 'text' },
+    { name: 'province' as const, label: dict.checkout.province, message: dict.checkout.errors.required, autoComplete: 'address-level1', type: 'text' },
   ];
   const erroredFields = fields.filter((f) => errors[f.name]);
 
-  useEffect(() => {
-    track({ name: 'begin_checkout', params: { currency, value: subtotal, items: cartLinesToGa4Items(lines) } });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // `begin_checkout` carries a server-owned value; it fires in M2 Task 7/10
+  // once pricing and order placement land.
 
-  const onSubmit = () => {
-    const orderId = generateOrderId();
-    // Persist a minimal order snapshot for the success page.
-    sessionStorage.setItem('vivimoon-last-order', JSON.stringify({ orderId, currency, value: subtotal, lines }));
+  const onSubmit = async (data: CheckoutForm) => {
+    setSubmitError(null);
+    const result = await apiRequest<Order>('/api/orders', {
+      method: 'POST',
+      body: {
+        lines: toPriceLines(lines),
+        address: {
+          recipient: data.recipient, phone: data.phone, line1: data.line1,
+          ward: data.ward, district: data.district, province: data.province, label: data.label,
+        },
+        email: data.email,
+        paymentMethod,
+      },
+    });
+    if (!result.ok) {
+      setSubmitError(dict.checkout.errors.orderFailed);
+      return;
+    }
+    // Snapshot for the success page's effect, which fires `purchase` (its
+    // `value` is what gates that — never null once a real order exists),
+    // clears the cart, and cleans this entry up. `lines` still has display
+    // fields (sku/name) the order's re-priced lines don't carry.
+    //
+    // `isBuyNow` tells the success page NOT to clear the real cart — a
+    // buy-now order was never drawn from it (spec §10).
+    sessionStorage.setItem(
+      'vivimoon-last-order',
+      JSON.stringify({
+        orderId: result.data.code,
+        currency: result.data.totals.currency,
+        value: result.data.totals.total,
+        lines,
+        isBuyNow,
+      }),
+    );
     router.push(`/${locale}/checkout/success`);
   };
 
@@ -72,6 +126,12 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
             </Alert>
           ) : null}
 
+          {submitError ? (
+            <Alert variant="destructive" className="border-destructive/40">
+              <AlertTitle>{submitError}</AlertTitle>
+            </Alert>
+          ) : null}
+
           <FieldGroup>
             {fields.map((f) => {
               const hasError = Boolean(errors[f.name]);
@@ -93,11 +153,15 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
             })}
           </FieldGroup>
 
+          <PaymentMethodPicker value={paymentMethod} onChange={setPaymentMethod} dict={dict} />
+
           <p className="text-sm text-muted-foreground">{dict.checkout.payNote}</p>
-          <Button type="submit" className="h-12 w-full text-base">{dict.checkout.placeOrder}</Button>
+          <Button type="submit" disabled={isSubmitting} className="h-12 w-full text-base">
+            {dict.checkout.placeOrder}
+          </Button>
         </div>
       </form>
-      <OrderSummary subtotal={subtotal} currency={currency} locale={locale} dict={dict} />
+      <OrderSummary subtotal={null} currency={currency} locale={locale} dict={dict} />
     </div>
   );
 }

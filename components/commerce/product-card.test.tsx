@@ -7,6 +7,7 @@ const product: Product = {
   id: 'p1', slug: 'aqua', name: 'Aqua Daily', brandId: 'v', brandName: 'Vivimoon',
   type: 'clear', replacement: 'daily', description: '', images: ['/a.jpg', '/b.jpg'], badges: ['sale'],
   specs: { material: '', waterContent: '', baseCurve: '', diameter: '', uvProtection: false, manufacturer: '' },
+  requiresRx: true,
   variants: [{ id: 'v1', sku: 'S1', packSize: '30', price: 20, compareAtPrice: 25, currency: 'USD', stock: 5 }],
   rating: 4, reviewCount: 3,
 };

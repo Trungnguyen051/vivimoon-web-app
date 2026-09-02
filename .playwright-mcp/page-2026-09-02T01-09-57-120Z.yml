@@ -1,0 +1,222 @@
+- generic [active] [ref=f3e1]:
+  - paragraph [ref=f3e3]: Free shipping on orders over $50
+  - banner [ref=f3e4]:
+    - generic [ref=f3e5]:
+      - link "Vivimoon" [ref=f3e6] [cursor=pointer]:
+        - /url: /en
+      - navigation [ref=f3e7]:
+        - link "New Arrivals" [ref=f3e8] [cursor=pointer]:
+          - /url: /en/collection/new-arrivals
+        - link "Bestsellers" [ref=f3e9] [cursor=pointer]:
+          - /url: /en/collection/bestsellers
+        - link "Colored Lenses" [ref=f3e10] [cursor=pointer]:
+          - /url: /en/collection/colored-lenses
+        - link "Daily Lenses" [ref=f3e11] [cursor=pointer]:
+          - /url: /en/collection/daily-lenses
+        - link "Sale" [ref=f3e12] [cursor=pointer]:
+          - /url: /en/collection/sale
+      - generic [ref=f3e13]:
+        - textbox "Search..." [ref=f3e18]
+        - link "My account" [ref=f3e19] [cursor=pointer]:
+          - /url: /en/account
+        - link "Your Cart" [ref=f3e23] [cursor=pointer]:
+          - /url: /en/cart
+        - combobox "Language" [ref=f3e28]:
+          - option "EN" [selected]
+          - option "VI"
+  - main [ref=f3e29]:
+    - generic [ref=f3e30]:
+      - generic [ref=f3e31]:
+        - navigation "breadcrumb" [ref=f3e32]:
+          - list [ref=f3e33]:
+            - listitem [ref=f3e34]:
+              - link "Vivimoon" [ref=f3e35] [cursor=pointer]:
+                - /url: /en
+            - listitem [aria-hidden] [ref=f3e36]
+            - listitem [ref=f3e39]:
+              - link "Hazel Monthly Colored" [disabled] [ref=f3e40]
+        - generic [ref=f3e41]:
+          - generic [ref=f3e42]:
+            - generic [ref=f3e43]:
+              - button "Hazel Monthly Colored 1" [ref=f3e44]:
+                - img "Hazel Monthly Colored 1" [ref=f3e45]
+              - button "Hazel Monthly Colored 2" [ref=f3e46]:
+                - img "Hazel Monthly Colored 2" [ref=f3e47]
+            - img "Hazel Monthly Colored" [ref=f3e49]
+          - generic [ref=f3e50]:
+            - heading "Hazel Monthly Colored" [level=1] [ref=f3e51]
+            - generic [ref=f3e52]:
+              - generic "Rating 4.7 of 5" [ref=f3e53]
+              - generic [ref=f3e64]: 4.7 · 0
+            - paragraph [ref=f3e65]: Monthly colored lenses with a natural gradient pattern for a subtle, everyday enhancement.
+            - generic [ref=f3e66]:
+              - generic [ref=f3e67]: $20.00
+              - generic [ref=f3e69]:
+                - generic [ref=f3e70]:
+                  - paragraph [ref=f3e71]: Color
+                  - generic [ref=f3e72]:
+                    - button "Hazel Brown" [pressed] [ref=f3e73]
+                    - button "Storm Gray" [ref=f3e74]
+                - generic [ref=f3e75]:
+                  - paragraph [ref=f3e76]: Pack size
+                  - generic [ref=f3e77]:
+                    - button "10 lenses" [pressed] [ref=f3e78]
+                    - button "30 lenses" [ref=f3e79]
+              - group "Right eye (OD) / Left eye (OS)" [ref=f3e80]:
+                - generic [ref=f3e82]:
+                  - checkbox "Same for both eyes" [checked] [ref=f3e83]
+                  - generic [ref=f3e84]: Same for both eyes
+                - generic [ref=f3e86]:
+                  - generic [ref=f3e87]: Right eye (OD) Power (SPH)
+                  - combobox "Right eye (OD) Power (SPH)" [ref=f3e88]:
+                    - option "Select power"
+                    - option "-10.00"
+                    - option "-9.50"
+                    - option "-9.00"
+                    - option "-8.50"
+                    - option "-8.00"
+                    - option "-7.50"
+                    - option "-7.00"
+                    - option "-6.50"
+                    - option "-6.00"
+                    - option "-5.75"
+                    - option "-5.50"
+                    - option "-5.25"
+                    - option "-5.00"
+                    - option "-4.75"
+                    - option "-4.50"
+                    - option "-4.25"
+                    - option "-4.00"
+                    - option "-3.75"
+                    - option "-3.50"
+                    - option "-3.25"
+                    - option "-3.00"
+                    - option "-2.75"
+                    - option "-2.50"
+                    - option "-2.25"
+                    - option "-2.00"
+                    - option "-1.75"
+                    - option "-1.50" [selected]
+                    - option "-1.25"
+                    - option "-1.00"
+                    - option "-0.75"
+                    - option "-0.50"
+                    - option "-0.25"
+                    - option "0.00 — Plano (no correction)"
+                    - option "+0.25"
+                    - option "+0.50"
+                    - option "+0.75"
+                    - option "+1.00"
+                    - option "+1.25"
+                    - option "+1.50"
+                    - option "+1.75"
+                    - option "+2.00"
+                    - option "+2.25"
+                    - option "+2.50"
+                    - option "+2.75"
+                    - option "+3.00"
+                    - option "+3.25"
+                    - option "+3.50"
+                    - option "+3.75"
+                    - option "+4.00"
+                    - option "+4.25"
+                    - option "+4.50"
+                    - option "+4.75"
+                    - option "+5.00"
+                    - option "+5.25"
+                    - option "+5.50"
+                    - option "+5.75"
+                    - option "+6.00"
+              - generic [ref=f3e93]:
+                - generic [ref=f3e94]: Quantity
+                - generic [ref=f3e95]:
+                  - button "Decrease quantity" [ref=f3e96]
+                  - generic [ref=f3e98]: "1"
+                  - button "Increase quantity" [ref=f3e99]
+              - generic [ref=f3e101]:
+                - button "Add to cart" [ref=f3e206]
+                - button "Buy now" [ref=f3e207]
+              - generic [ref=f3e102]: Freeship
+      - generic [ref=f3e108]:
+        - heading "Specifications" [level=2] [ref=f3e109]
+        - generic [ref=f3e110]:
+          - generic [ref=f3e111]:
+            - term [ref=f3e112]: Material
+            - definition [ref=f3e113]: Hydrogel
+          - generic [ref=f3e114]:
+            - term [ref=f3e115]: Water content
+            - definition [ref=f3e116]: 48%
+          - generic [ref=f3e117]:
+            - term [ref=f3e118]: Base curve
+            - definition [ref=f3e119]: 8.6mm
+          - generic [ref=f3e120]:
+            - term [ref=f3e121]: Diameter
+            - definition [ref=f3e122]: 14.5mm
+          - generic [ref=f3e123]:
+            - term [ref=f3e124]: UV protection
+            - definition [ref=f3e125]: ✓
+          - generic [ref=f3e126]:
+            - term [ref=f3e127]: Manufacturer
+            - definition [ref=f3e128]: Vivimoon Labs
+      - generic [ref=f3e129]:
+        - generic [ref=f3e130]:
+          - heading "You might also like" [level=2] [ref=f3e131]
+          - generic [ref=f3e132]:
+            - link "See more" [ref=f3e133] [cursor=pointer]:
+              - /url: /en/collection/bestsellers
+            - generic [ref=f3e136]:
+              - button "Previous" [ref=f3e137]
+              - button "Next" [ref=f3e140]
+        - generic [ref=f3e144]:
+          - generic [ref=f3e146]:
+            - link [aria-hidden] [ref=f3e147] [cursor=pointer]:
+              - /url: /en/product/mystic-daily-colored
+              - generic [ref=f3e148]: sale
+            - generic [ref=f3e149]:
+              - generic "Mystic Violet" [ref=f3e151]
+              - link "Mystic Daily Colored" [ref=f3e152] [cursor=pointer]:
+                - /url: /en/product/mystic-daily-colored
+              - generic [ref=f3e153]:
+                - generic [ref=f3e154]: $18.00
+                - generic [ref=f3e155]: $24.00
+                - generic [ref=f3e156]: "-25%"
+          - generic [ref=f3e158]:
+            - link [aria-hidden] [ref=f3e159] [cursor=pointer]:
+              - /url: /en/product/torica-monthly-toric
+            - generic [ref=f3e160]:
+              - link "Torica Monthly Toric" [ref=f3e161] [cursor=pointer]:
+                - /url: /en/product/torica-monthly-toric
+              - generic [ref=f3e162]: $38.00
+          - generic [ref=f3e165]:
+            - link [aria-hidden] [ref=f3e166] [cursor=pointer]:
+              - /url: /en/product/focalpro-monthly-multifocal
+            - generic [ref=f3e167]:
+              - link "Focalpro Monthly Multifocal" [ref=f3e168] [cursor=pointer]:
+                - /url: /en/product/focalpro-monthly-multifocal
+              - generic [ref=f3e169]: $42.00
+      - generic [ref=f3e171]:
+        - heading "Reviews" [level=2] [ref=f3e173]
+        - generic [ref=f3e174]: No reviews yet.
+  - contentinfo [ref=f3e178]:
+    - generic [ref=f3e179]:
+      - generic [ref=f3e180]:
+        - generic [ref=f3e181]:
+          - paragraph [ref=f3e182]: Vivimoon
+          - paragraph [ref=f3e183]: Vivimoon — high-quality contact lenses.
+        - generic [ref=f3e184]:
+          - navigation "Policies" [ref=f3e185]:
+            - paragraph [ref=f3e186]: Policies
+            - link "Shipping" [ref=f3e187] [cursor=pointer]:
+              - /url: /en
+            - link "Returns" [ref=f3e188] [cursor=pointer]:
+              - /url: /en
+            - link "Privacy" [ref=f3e189] [cursor=pointer]:
+              - /url: /en
+          - generic [ref=f3e190]:
+            - paragraph [ref=f3e191]: Customer Care
+            - link "hello@vivimoon.com" [ref=f3e192] [cursor=pointer]:
+              - /url: mailto:hello@vivimoon.com
+            - generic [ref=f3e193]: "Hotline: 1900 0000"
+      - paragraph [ref=f3e194]: © 2026 Vivimoon
+  - button "Open Next.js Dev Tools" [ref=f3e200] [cursor=pointer]
+  - alert [ref=f3e204]

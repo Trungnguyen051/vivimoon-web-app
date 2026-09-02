@@ -2,7 +2,7 @@ import type { Dictionary } from './en';
 
 export const vi: Dictionary = {
   nav: { new: 'Mới', men: 'Nam', women: 'Nữ', sport: 'Thể thao', accessories: 'Phụ kiện', sale: 'Giảm giá' },
-  common: { shopNow: 'Mua ngay', seeMore: 'Xem thêm', addToCart: 'Thêm vào giỏ', search: 'Tìm kiếm...', decreaseQty: 'Giảm số lượng', increaseQty: 'Tăng số lượng', menu: 'Menu' },
+  common: { shopNow: 'Mua ngay', seeMore: 'Xem thêm', addToCart: 'Thêm vào giỏ', buyNow: 'Mua ngay', search: 'Tìm kiếm...', decreaseQty: 'Giảm số lượng', increaseQty: 'Tăng số lượng', menu: 'Menu' },
   announcement: { freeShipping: 'Miễn phí vận chuyển cho đơn từ 1.000.000đ' },
   collection: {
     newArrivals: 'Hàng mới về', bestsellers: 'Bán chạy', sale: 'Giảm giá',
@@ -22,16 +22,33 @@ export const vi: Dictionary = {
     packSize: 'Quy cách', color: 'Màu', quantity: 'Số lượng', freeship: 'Miễn phí ship',
     noReviews: 'Chưa có đánh giá.',
   },
+  rx: {
+    rightEye: 'Mắt phải (OD)', leftEye: 'Mắt trái (OS)',
+    sameBothEyes: 'Giống nhau cho cả hai mắt',
+    sph: 'Độ cận/viễn (SPH)', selectPower: 'Chọn độ',
+    add: 'ADD', selectAdd: 'Chọn ADD',
+    addBands: { LOW: 'Thấp', MID: 'Trung bình', HIGH: 'Cao' },
+    plano: 'Không độ (Plano)',
+    required: 'Vui lòng chọn độ cho cả hai mắt để tiếp tục.',
+    summaryLabel: 'Độ',
+  },
   cart: {
     title: 'Giỏ hàng', empty: 'Giỏ hàng trống', subtotal: 'Tạm tính',
     checkout: 'Thanh toán', remove: 'Xóa',
     orderSummary: 'Tóm tắt đơn hàng', shipping: 'Vận chuyển', free: 'Miễn phí', total: 'Tổng cộng',
+    discount: 'Giảm giá',
   },
   checkout: {
-    title: 'Thanh toán', fullName: 'Họ tên', email: 'Email', address: 'Địa chỉ',
-    city: 'Thành phố', phone: 'Số điện thoại', placeOrder: 'Đặt hàng', payNote: 'Thanh toán được mô phỏng trong bản demo.',
+    title: 'Thanh toán', recipient: 'Tên người nhận', email: 'Email', line1: 'Địa chỉ',
+    ward: 'Phường/Xã', district: 'Quận/Huyện', province: 'Tỉnh/Thành phố',
+    phone: 'Số điện thoại', paymentMethod: 'Phương thức thanh toán', placeOrder: 'Đặt hàng', payNote: 'Thanh toán được mô phỏng trong bản demo.',
     success: 'Cảm ơn bạn! Đơn hàng đã được xác nhận.', orderId: 'Mã đơn hàng',
-    errors: { required: 'Bắt buộc', invalidEmail: 'Email không hợp lệ', summary: 'Vui lòng sửa các mục sau trước khi đặt hàng.' },
+    errors: {
+      required: 'Bắt buộc', invalidEmail: 'Email không hợp lệ',
+      invalidPhone: 'Vui lòng nhập số điện thoại Việt Nam hợp lệ',
+      summary: 'Vui lòng sửa các mục sau trước khi đặt hàng.',
+      orderFailed: 'Đã có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.',
+    },
   },
   auth: {
     signInTitle: 'Đăng nhập', signUpTitle: 'Tạo tài khoản', signOut: 'Đăng xuất',

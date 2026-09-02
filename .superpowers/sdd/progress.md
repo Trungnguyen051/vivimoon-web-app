@@ -259,3 +259,314 @@ Task 13: complete (commit 6d443ea, implemented + verified — no subagent dispat
 user's call on the pre-existing hero-carousel.tsx lint error (out of scope
 for this branch's own commits). See M1 Definition of Done below for the
 full checklist.
+
+M1 sign-off blocker resolved (2026-08-30, uncommitted in working tree):
+components/commerce/hero-carousel.tsx react-hooks/set-state-in-effect error fixed
+by a general-purpose subagent. The synchronous `onSelect()` in the effect body was
+replaced with embla's own 'init'/'reInit' subscriptions alongside the existing
+'select'. Verified first-hand by the controller, not taken from the report:
+`npm run lint` 0 errors (2 pre-existing unrelated warnings remain), tsc exit 0,
+suite 158 passed/6 skipped. Behaviour is unchanged at mount either way — no
+startIndex is passed, so embla's selectedScrollSnap() is 0 at init and already
+matches useState(0); the 'reInit' subscription is a small gain (dots now stay
+correct across an options-driven reInit, which the old code did not handle).
+
+Spec §15 open questions both closed by the user (2026-08-30):
+- Payment methods: QR Pay / ZaloPay / SePay only. COD deferred, not in M2.
+- Rx ranges: ship §6 industry defaults as-is against mock data; toric included.
+M2 (Purchase core) is unblocked and is the next milestone.
+
+--- M2 PLANNED (2026-08-30) ---
+Plan: docs/superpowers/plans/2026-08-30-vivimoon-m2-purchase-core.md (13 tasks).
+Scope per spec §13 minus toric, which the user deferred. Task order is
+foundation-first: Rx ranges/schemas (1) -> lineKey (2) -> reducer re-keying (3)
+-> zustand store (4), because everything downstream keys on lineKey.
+Two M1 findings carried into M2's Global Constraints so they are not rediscovered:
+proxy.ts (not middleware.ts), and pages must fetch their own /api/* for any state a
+route handler mutates (Route Handlers and Server Components are separate module
+instances). M1's "Server Components import resources directly" constraint is
+explicitly amended, not silently contradicted.
+Not yet started — no implementation commits on M2.
+
+--- M2 IN PROGRESS (branch feat/m2-purchase-core) ---
+Task 1: complete (ab8550c). Rx range table + schemas. Two plan-text deviations,
+  both found by running it: the plan says "spherical" but the real lensTypeSchema
+  enum is clear|colored|toric|multifocal; and adding requiresRx broke tsc on 12
+  fixture literals because fixtures are typed as the OUTPUT type, where .default()
+  makes the field required — the same .default()/z.infer trap as M1 Task 2, in
+  reverse. Declared it explicitly on each fixture, matching reviewSchema's `source`.
+Tasks 2-4: complete (c3d60be), landed as one commit because re-keying the reducer
+  breaks cart-context.tsx, which Task 4 deletes.
+  Plan defect found by test, not by reading: the plan asserted skipHydration
+  prevents localStorage WRITES before rehydrate(). False — persist wraps setState
+  unconditionally, so a pre-hydration mutation overwrites the stored cart before
+  merge can union it; skipHydration skips only the initial READ. Store now exposes
+  a `hydrated` gate (the only real protection) and keeps a custom merge as defence
+  in depth for Task 11's guest-cart merge. Plan text was corrected before coding.
+  UPDATE_QTY <= 0 now removes rather than clamping to 1 — a deliberate behaviour
+  change from the baseline, documented in the commit.
+  Cart/checkout show "—" and the value-bearing analytics events stay unfired until
+  Task 7/10 give the server ownership of those totals.
+Gates at c3d60be: tsc 0, lint 0 errors, 227 passed / 6 skipped, build succeeds.
+Next: Task 5 (RxSelector + Rx-aware add to cart).
+
+### M2 Task 5 — RxSelector and Rx-aware add-to-cart (2026-08-31)
+
+Implemented by a Sonnet subagent under Opus orchestration, per the user's
+instruction to hand implementation to a subagent.
+
+**Deviations from plan text, all deliberate:**
+- The plan's Step 2 test list named a `spherical` product. The enum is
+  `clear | colored | toric | multifocal`; tests use `clear`. Plan corrected.
+- Step 3 said "use `Select`/`Input`". Used a **native `<select>`**, not the
+  Radix `components/ui/select.tsx`. Two reasons: sph has ~101 options, which
+  is the wrong shape for a virtualised popover and worse on mobile; and Radix
+  renders no `<option>`s until the popover opens, which would have made the
+  plan's own "offers 0.00 / not -7.25 / no CYL control" assertions vacuous.
+  Precedent: `components/layout/locale-switcher.tsx`. Radix `Select` is still
+  the right control for the short filter lists in `collection-filters.tsx`.
+- Dropped the planned `requiresRx` prop from `RxSelector`. Whether to render
+  the selector and whether to gate the button are the PDP's decisions; a prop
+  meaning "don't render me" only invites an early `return null`.
+
+**Two design traps found before implementation (advisor pass):**
+1. `RxSelector` cannot be controlled over `RxInput` — `rxEyeSchema.sph` is a
+   required `z.number()`, so `RxInput` has no representation for "no power
+   picked yet", and the natural workaround (`sph: 0`) is *plano*, silently
+   pre-filling a valid prescription on a product that requires correction.
+   Introduced an explicit `RxDraft` (both fields optional) for the selector;
+   the cart line is built from `safeParse().data`, never the draft, so
+   `cartLineSchema.rx` keeps the parsed output shape and `lineKey` stays
+   stable across persisted carts.
+2. `add-to-cart.tsx` computes `variant.price * qty` for the GA4 `add_to_cart`
+   `value`. The Global Constraint's check was `grep "unitPrice \*"`, which
+   that line passes on a technicality. Widened to
+   `grep -rnE "(unitPrice|price) \*"` with exactly one expected hit, annotated
+   inline as a sanctioned analytics snapshot (GA4 requires a value at add
+   time, before any server price exists). Nothing a shopper *sees* is
+   computed client-side.
+
+**Fixed during review:** `formatSph` had been duplicated verbatim in
+`rx-selector.tsx` and `rx-summary.tsx`. Drift there is user-visible — a cart
+line labelled with a power the selector never offered — so it now lives in
+`lib/products/rx-ranges.ts` beside `sphSteps()`, which owns that domain.
+
+**Also fixed by the implementer:** the required-Rx hint was gated on
+`!canAdd`, so it rendered on mount before any interaction; and because the
+button is `disabled` while invalid, no "did they attempt to submit" flag can
+ever fire from `onAdd`. Now gated on interaction with `RxSelector`.
+
+**Gates (verified independently by the orchestrator, not taken from the
+subagent's report):** `npx tsc --noEmit` exit 0 · `npm run lint` 0 errors /
+2 pre-existing warnings · `npx vitest run` 241 passed, 6 skipped ·
+`grep -rnE "(unitPrice|price) \*" app components features` → exactly the one
+annotated GA4 line.
+
+**Plan correction made while Task 5 ran:** Task 6 (and 8, 9, 10) had invented
+four new resource names — `pricing`, `shipping`, `payments`, `orders` — for
+`lib/api/config.ts`. Spec §"Cutover order" puts cart pricing, vouchers,
+orders and payments in **Group D `commerce`**, which already exists in
+`RESOURCES` with the correct dependency rule (`catalog` + `identity` first)
+and already has an `API_MODE_COMMERCE` line in `.env.example`. The
+established pattern is one directory per *module*, several sharing a
+resource: `account/index.ts` and `auth/index.ts` both call
+`resolveMode('identity')`. So `pricing/index.ts` calls
+`resolveMode('commerce')`, and `config.ts` / `.env.example` are untouched by
+Tasks 6, 8, 9 and 10.
+
+### M2 Task 6 — Server-owned pricing and auto-voucher (2026-08-31)
+
+Implemented by a Sonnet subagent under Opus orchestration.
+
+**The security property holds and is tested end to end.** `priceLineInputSchema`
+accepts only `{ lineKey, variantId, rx?, quantity }` — it does not list a price
+field at all, so zod's default key-stripping removes any client-supplied
+`unitPrice` in `parseBody` before pricing runs. There is nothing at runtime to
+"ignore"; the field cannot arrive. Asserted twice: at the resource level with a
+cast-through-`unknown` rigged body, and end to end through the route handler
+with an untyped JSON body claiming `unitPrice: 1`. Both assert against a
+non-trivial baseline (2 x 25 + 1 x 48 = 98) established first, so neither can
+pass vacuously.
+
+**Design decisions the brief left open, and how they went:**
+- Schemas live in `lib/api/schemas/cart.ts` — the spec names `cart.ts` as owner
+  of `POST /api/cart/price`.
+- **No new `ErrorCode`.** `not_found` (unknown variantId) and
+  `validation_failed` (bad quantity, empty cart, mixed currency) both fit.
+- **Vouchers do NOT stack.** Exactly one, or none — whichever eligible
+  candidate yields the largest discount. Stated in a comment and asserted.
+- A candidate whose computed discount is 0 is dropped *before* the "best"
+  comparison, so a `shipping`-type voucher cannot "apply" for zero benefit
+  while `shipping` is still 0 pre-Task 8. Tested explicitly.
+- `voucherApplies` checks `status` AND `expiresAt` independently: a voucher can
+  be flagged `active` with a past date if the backend has not swept it yet.
+  Fixture `STALE-ACTIVE60` exists solely to make that guard falsifiable.
+- Determinism without an injected clock: fixture `expiresAt` dates are 2099 and
+  2020, far from any real "now".
+- `getVariantById` was added to `mockCatalog` rather than kept as a private
+  helper in pricing — catalog owns the catalogue.
+- `pricing/mock.ts` imports the **resolved** `catalog` singleton, not
+  `mockCatalog` directly, so pricing picks up real prices automatically if
+  catalog migrates upstream while commerce is still mocked. Consistent with
+  `config.ts`'s `DEPENDS_ON` model.
+
+**Deviation from spec §4, deliberate:** the request body has no top-level
+`voucherCode?`. Task 6's interface is auto-apply-only and the implementer
+followed it literally. Accepting a client-specified code later is additive,
+not breaking.
+
+**Flagged as present but unreachable, so it does not read as covered:** the
+mixed-currency guard in `mock.ts` (all fixtures are USD) and the
+`lines.length === 0` guard (the route's `.min(1)` rejects that first). Both are
+defence for direct/future resource callers.
+
+**Resource seam:** `pricing/index.ts` calls `resolveMode('commerce')` per the
+correction recorded under Task 5. `git diff --stat lib/api/config.ts
+.env.example` is empty, as required.
+
+**Gates (verified independently by the orchestrator, not taken from the
+subagent's report):** `npx tsc --noEmit` exit 0 · `npm run lint` 0 errors /
+2 pre-existing warnings · `npx vitest run` 255 passed, 6 skipped (up 14 from
+the 241 baseline) · `npm run test:contract` passes · config/env diff empty ·
+money grep still the single annotated GA4 line.
+
+### M2 Task 7 — Cart page renders server prices (2026-08-31)
+
+Implemented by a Sonnet subagent under Opus orchestration. This is the task
+that closes M2's visible gap: the cart and checkout stopped showing `—` for
+prices as of Task 3's deletion of client-side money, and now show real
+server-priced totals.
+
+**Correctness properties verified, not just tested:**
+- `total` is a prop straight from `POST /api/cart/price`, never
+  `subtotal - discount + shipping` on the client. Task 6's voucher math has
+  clamps (`Math.min` on `fixed`/`shipping` types, `Math.floor` on `percent`)
+  that make client re-derivation not just a style violation but wrong at the
+  edges. Money grep still shows exactly the one pre-existing annotated GA4
+  line — nothing new.
+- The pricing hook's effect depends on `[lines, hydrated, isEmpty]` only —
+  never `result`/`isPending` — so setting either from inside the effect
+  cannot create a re-price loop that would otherwise pass a naive "renders a
+  number" test while silently hammering the endpoint in the browser.
+- Stale-response cancellation is proven, not assumed: the test fires request
+  A (immediate first-fire), mutates before A resolves (creating request B via
+  the debounce), resolves B first, then resolves A *after* B, and asserts the
+  displayed result is still B's. Run against a naive sketch first (no
+  `cancelled` guard) to confirm the test actually fails for the right reason
+  before the real implementation made it pass.
+- Empty-cart handling is derived at render time (`isEmpty ? null : result`)
+  rather than via `setState` inside the effect — takes effect the instant the
+  cart empties, with no one-frame lag, and sidesteps `react-hooks/set-state-in-effect`
+  entirely rather than reaching for the codebase's existing eslint-disable
+  precedent (hero-carousel.tsx). Repopulating an emptied cart resets the
+  first-fire flag too, so it prices immediately rather than sitting through
+  the 300ms debounce with a stale result.
+
+**`OrderSummary`'s new props are additive:** `discount?`, `shipping?`, `total?`
+all optional, `total` falling back to `subtotal` when absent. `checkout/page.tsx`
+was not touched and its `git diff --stat` is confirmed empty — it still calls
+`<OrderSummary subtotal={null} .../>` and compiles unchanged.
+
+**Two user-visible side effects worth naming, both intentional:**
+1. Added a `!hydrated` skeleton branch to `app/[locale]/cart/page.tsx` before
+   the empty-cart check. The pre-existing code checked `lines.length === 0`
+   first, so a shopper with a persisted non-empty cart would flash "Your cart
+   is empty" for a frame before rehydration completed. Not in the plan's
+   literal step list, added because Step 1's "render a pending state until
+   rehydrate + first price resolve" implies it.
+2. `checkout/page.tsx`'s shipping row now reads "—" instead of the old
+   hardcoded "Free", because it calls `OrderSummary` without a `shipping` prop
+   and `undefined` now means "pending" under the new convention. The file
+   itself is unmodified; this is the new convention working as specified —
+   Task 8 supplies a real `shipping` value and this line goes back to
+   rendering correctly with no further change to the component.
+
+`RxSummary` renders inside `CartLineItem` (which already receives `dict`),
+guarded on `line.rx` — keeps the "two lines, same variant, different power"
+distinction local to the component that owns line rendering, per spec §7.
+
+**Gates (verified independently by the orchestrator):** `npx tsc --noEmit`
+exit 0 · `npm run lint` 0 errors / 2 pre-existing warnings · `npx vitest run`
+272 passed, 6 skipped (+17 from the 255 baseline) · money grep unchanged at
+one hit · `git diff --stat app/[locale]/checkout/page.tsx` empty.
+
+### M2 Task 11 — Guest → member cart merge (2026-09-02)
+
+There is no server-side per-account cart anywhere in this codebase or spec
+to merge *from* — the cart is client-side only (localStorage), unaffected
+by auth. "Guest cart lines always win over a stale server cart" is
+therefore already true by construction. What login actually changes is
+voucher eligibility, so "merge" is implemented as a `memberOnly` voucher
+gate plus making the live pricing subscription re-price under the new
+session.
+
+**What changed:** `voucherSchema` gained `memberOnly` (`lib/api/schemas/cart.ts`)
+and a `MEMBER20` fixture (`content/mock/vouchers.ts`, $20 off $50+,
+signed-in only). `bestVoucher`/`priceCart` take the caller's session
+`userId` and gate `memberOnly` candidates on it (`lib/api/resources/pricing/mock.ts`)
+— same posture as `orders.place`. `app/api/cart/price/route.ts` reads
+`readSessionUserId()` and passes it through (never trusts the body);
+`lib/api/resources/orders/mock.ts`'s own `priceCart` call now forwards
+`userId` too, so a member's *order* gets the same voucher as their cart.
+`usePricedCart` takes an optional `sessionStatus` and re-fires immediately
+(not debounced — a context change, not an edit) when it changes with the
+lines unchanged; `app/[locale]/cart/page.tsx` wires `useSessionStore`'s
+`status` into it. Existing 2-arg callers/tests are unaffected.
+
+**Verified against the real running dev server, not just mocks:** priced a
+two-line cart as a guest via `curl` (SAVE15, discount 15) → signed in as a
+seeded user (`0912345678` / `vivimoon123`) → re-priced the *identical*
+cart under that session and got MEMBER20 (discount 20) instead.
+
+**Gates:** `npx tsc --noEmit` exit 0 · `npm run lint` 0 errors / 2
+pre-existing warnings · `npx vitest run` 323 passed, 6 skipped (+51 from
+the 272 baseline) · constraint greps unchanged.
+
+### M2 Task 12 — Buy Now (2026-09-02)
+
+A `buyNowLine: CartLine | null` slice on the existing cart store
+(`features/cart/cart-store.ts`), set by a new "Buy Now" button on the PDP
+(`components/commerce/add-to-cart.tsx`, same Rx validation as Add to Cart
+via a shared `buildLine()`), then `router.push` straight to `/checkout`.
+`partialize` already only persists `{ lines }`, so `buyNowLine` is
+excluded from storage for free — "short-lived" needs no extra code.
+`app/[locale]/checkout/page.tsx` snapshots it once via a lazy `useState`
+initializer and clears it in a mount effect, so a later visit to checkout
+(real cart, or a reload) never picks up a stale line from an abandoned
+buy-now flow.
+
+**Real bug found and fixed along the way:** `checkout/success/page.tsx`
+unconditionally called `useCart().clear()` after *every* placed order —
+a buy-now order would have wiped the shopper's real cart. Fixed by
+threading an `isBuyNow` flag through the `sessionStorage` order handoff;
+the success page now skips `clear()` when it's set.
+
+**Verified against the real running dev server:** placed a single-line
+guest order (the buy-now shape) through `/api/orders` end-to-end and got
+back a confirmed order with a random, non-sequential code.
+
+**Gates:** `npx tsc --noEmit` exit 0 · `npm run lint` 0 errors / 2
+pre-existing warnings · `npx vitest run` 332 passed, 6 skipped (+60 from
+the 272 baseline) · `npm run build` succeeds · constraint greps unchanged.
+
+### M2 Task 13 — M2 verification (2026-09-02)
+
+All gates green: `tsc --noEmit` exit 0 · `npm run lint` 0 errors / 2
+pre-existing warnings (unrelated to M2) · `npx vitest run` 332 passed, 6
+skipped · `npm run test:contract` 12 passed, 6 skipped · `npm run build`
+succeeds. All four constraint greps clean (money, CartProvider/context,
+cyl/axis, gtag). M2 Definition of Done checked off in the plan file.
+
+**Honesty note on Step 3 (browser e2e):** no interactive browser was
+available this session (Claude in Chrome was declined). Substituted
+API-level end-to-end verification against the real running dev server
+(guest pricing → login → member re-pricing, order placement) plus the
+existing DOM-level `@testing-library` interaction tests (real
+clicks/typing, not mocked handlers) covering two-lines-at-different-powers,
+no cyl/axis, three payment methods, Buy Now, and hydration. Not verified
+this session: pixel-rendered UI in an actual browser window, and the `vi`
+locale specifically (all live checks used `en`). A manual click-through
+in both locales is recommended before merging if that visual confirmation
+matters for this release. Task 10 Step 4 (guard a "logged-in checkout
+variant") remains deliberately deferred — no such route exists to guard;
+see the note under Task 10 in the plan.

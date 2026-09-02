@@ -3,20 +3,50 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CartLineItem } from './cart-line-item';
 import { getDictionary } from '@/lib/i18n/dictionaries';
+import { lineKey } from '@/lib/cart/line-key';
 import type { CartLine } from '@/features/cart/cart.types';
+import type { RxInput } from '@/lib/api/schemas/rx';
 
 const dict = getDictionary('en');
 const line: CartLine = {
+  lineKey: lineKey('v1'),
   productId: 'p1', variantId: 'v1', name: 'Aqua', sku: 'S1',
   packSize: '30 lenses', unitPrice: 25, currency: 'USD', quantity: 2,
 };
+const rx: RxInput = { sameBothEyes: true, right: { sph: -2.5 }, left: { sph: -2.5 } };
+const lineWithRx: CartLine = { ...line, lineKey: lineKey('v1', rx), rx: rx as CartLine['rx'] };
 
 describe('CartLineItem', () => {
-  it('shows line total and fires remove', async () => {
-    const onRemove = vi.fn();
-    render(<CartLineItem line={line} locale="en" dict={dict} onQty={vi.fn()} onRemove={onRemove} />);
+  it('renders the server-priced line total', () => {
+    render(<CartLineItem line={line} locale="en" dict={dict} lineTotal={50} onQty={vi.fn()} onRemove={vi.fn()} />);
     expect(screen.getByText('$50.00')).toBeInTheDocument();
+  });
+
+  it('shows a pending placeholder before the server has priced the line', () => {
+    // The client never multiplies unitPrice by quantity — money is server-owned.
+    render(<CartLineItem line={line} locale="en" dict={dict} onQty={vi.fn()} onRemove={vi.fn()} />);
+    expect(screen.getByText('—')).toBeInTheDocument();
+    expect(screen.queryByText('$50.00')).not.toBeInTheDocument();
+  });
+
+  it('addresses the line by lineKey, not variantId', async () => {
+    // Two lines can share a variantId and differ only by prescription.
+    const onRemove = vi.fn();
+    const onQty = vi.fn();
+    render(<CartLineItem line={line} locale="en" dict={dict} onQty={onQty} onRemove={onRemove} />);
     await userEvent.click(screen.getByRole('button', { name: dict.cart.remove }));
-    expect(onRemove).toHaveBeenCalledWith('v1');
+    expect(onRemove).toHaveBeenCalledWith(line.lineKey);
+    await userEvent.click(screen.getByRole('button', { name: dict.common.increaseQty }));
+    expect(onQty).toHaveBeenCalledWith(line.lineKey, 3);
+  });
+
+  it('renders an Rx summary when the line has a prescription, so two lines of the same variant are distinguishable', () => {
+    render(<CartLineItem line={lineWithRx} locale="en" dict={dict} onQty={vi.fn()} onRemove={vi.fn()} />);
+    expect(screen.getByText(`${dict.rx.summaryLabel}:`, { exact: false })).toBeInTheDocument();
+  });
+
+  it('renders no Rx summary for a line without a prescription', () => {
+    render(<CartLineItem line={line} locale="en" dict={dict} onQty={vi.fn()} onRemove={vi.fn()} />);
+    expect(screen.queryByText(`${dict.rx.summaryLabel}:`, { exact: false })).not.toBeInTheDocument();
   });
 });
