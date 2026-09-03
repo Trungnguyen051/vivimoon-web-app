@@ -5,6 +5,12 @@ import { apiOk, apiFail } from '@/lib/api/response';
 import { parseBody } from '@/lib/api/route-helpers';
 import { readSessionUserId } from '@/lib/auth/cookie';
 
+export async function GET() {
+  const userId = await readSessionUserId();
+  if (!userId) return apiFail('unauthorized', 'Sign in to view your orders');
+  return apiOk(await orders.list(userId));
+}
+
 export async function POST(request: Request) {
   const parsed = await parseBody(request, placeOrderRequestSchema);
   if (!parsed.ok) return parsed.response;

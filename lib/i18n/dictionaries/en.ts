@@ -79,11 +79,20 @@ export const en = {
     newPassword: 'New password',
     passwordHint: 'Leave blank to keep your current password.',
     save: 'Save changes', saved: 'Your changes have been saved.',
+    viewOrders: 'Order history',
     errors: {
       email: 'Enter a valid email address',
       name: 'Enter your name',
       password: 'Use at least 8 characters',
       summary: 'Please fix the following before saving.',
+    },
+  },
+  orders: {
+    title: 'Order history', empty: 'You have no orders yet.',
+    code: 'Order', date: 'Date', status: 'Status', total: 'Total',
+    statuses: {
+      placed: 'Placed', confirmed: 'Confirmed', packed: 'Packed', shipped: 'Shipped',
+      out_for_delivery: 'Out for delivery', delivered: 'Delivered', cancelled: 'Cancelled', returned: 'Returned',
     },
   },
   footer: {

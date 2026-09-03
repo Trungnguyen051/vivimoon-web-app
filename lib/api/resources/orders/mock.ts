@@ -1,3 +1,4 @@
+import { orders as seedOrders } from '@/content/mock';
 import { pricing } from '@/lib/api/resources/pricing';
 import { shipping } from '@/lib/api/resources/shipping';
 import type { Order, PlaceOrderRequest } from '@/lib/api/schemas/orders';
@@ -8,6 +9,21 @@ export class OrderError extends Error {
     super(message);
     this.name = 'OrderError';
   }
+}
+
+// In-memory state, keyed by order id. Resets on every server restart, which
+// is correct for a mock. `place()` writes into it; `list()` (and #11's
+// `get()`/tracking methods) read from it — same mutable-mock-state
+// precedent as lib/api/resources/auth/mock.ts.
+// structuredClone, not a shallow `{ ...o }` — seed orders share nested
+// objects (content/mock/orders.ts reuses the same address literal across
+// several orders), so a shallow copy would let a future in-place mutation
+// (#11's status updates) corrupt the shared fixture and survive a reset.
+let store = new Map<string, Order>(seedOrders.map((o) => [o.id, structuredClone(o)]));
+
+/** Test helper — restores the fixture state between cases. */
+export function resetMockOrdersState(): void {
+  store = new Map(seedOrders.map((o) => [o.id, structuredClone(o)]));
 }
 
 function randomSuffix(): string {
@@ -57,7 +73,7 @@ export const mockOrders = {
 
     const lines = priced.lines.map((line, i) => ({ ...line, rx: input.lines[i]?.rx }));
 
-    return {
+    const order: Order = {
       id: randomId('order'),
       code: randomOrderCode(),
       status: 'placed',
@@ -75,6 +91,15 @@ export const mockOrders = {
       payment: { method: input.paymentMethod, status: 'pending' },
       ...(userId ? { userId } : { guestEmail: input.email }),
     };
+    store.set(order.id, order);
+    return order;
+  },
+
+  /** A logged-in shopper's order history, most recently placed first. */
+  async list(userId: string): Promise<Order[]> {
+    return [...store.values()]
+      .filter((o) => o.userId === userId)
+      .sort((a, b) => b.placedAt.localeCompare(a.placedAt));
   },
 };
 

@@ -81,11 +81,20 @@ export const vi: Dictionary = {
     newPassword: 'Mật khẩu mới',
     passwordHint: 'Để trống nếu bạn muốn giữ mật khẩu hiện tại.',
     save: 'Lưu thay đổi', saved: 'Đã lưu thay đổi của bạn.',
+    viewOrders: 'Lịch sử đơn hàng',
     errors: {
       email: 'Nhập địa chỉ email hợp lệ',
       name: 'Nhập họ và tên',
       password: 'Dùng ít nhất 8 ký tự',
       summary: 'Vui lòng sửa các mục sau để lưu.',
+    },
+  },
+  orders: {
+    title: 'Lịch sử đơn hàng', empty: 'Bạn chưa có đơn hàng nào.',
+    code: 'Đơn hàng', date: 'Ngày đặt', status: 'Trạng thái', total: 'Tổng cộng',
+    statuses: {
+      placed: 'Đã đặt', confirmed: 'Đã xác nhận', packed: 'Đã đóng gói', shipped: 'Đang vận chuyển',
+      out_for_delivery: 'Đang giao hàng', delivered: 'Đã giao', cancelled: 'Đã hủy', returned: 'Đã hoàn trả',
     },
   },
   footer: {

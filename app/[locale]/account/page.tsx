@@ -1,4 +1,5 @@
 import { cookies, headers } from 'next/headers';
+import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { isLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
@@ -45,6 +46,9 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
       <h1 className="text-3xl font-semibold tracking-tight">{dict.account.title}</h1>
+      <Link href={`/${locale}/account/orders`} className="text-sm text-muted-foreground underline underline-offset-4">
+        {dict.account.viewOrders}
+      </Link>
       <h2 className="text-lg font-medium">{dict.account.infoTitle}</h2>
       <AccountForm user={user} dict={dict.account} />
     </div>

@@ -7,10 +7,11 @@
  */
 import { describe, it, expect } from 'vitest';
 import { z } from 'zod';
-import { products, collections, reviews, users, vouchers } from '@/content/mock';
+import { products, collections, reviews, users, vouchers, orders } from '@/content/mock';
 import { productSchema, collectionSchema, reviewSchema } from '@/lib/api/schemas/catalog';
 import { userSchema } from '@/lib/api/schemas/auth';
 import { voucherSchema } from '@/lib/api/schemas/cart';
+import { orderSchema, orderStatusSchema } from '@/lib/api/schemas/orders';
 
 function expectAllValid<T extends z.ZodTypeAny>(schema: T, rows: unknown[], label: string) {
   const failures: string[] = [];
@@ -29,6 +30,7 @@ describe('fixture conformance', () => {
     expect(collections.length).toBeGreaterThan(0);
     expect(reviews.length).toBeGreaterThan(0);
     expect(vouchers.length).toBeGreaterThan(0);
+    expect(orders.length).toBeGreaterThan(0);
   });
 
   it('every product satisfies productSchema', () => {
@@ -83,5 +85,27 @@ describe('fixture conformance', () => {
   it('voucher codes are unique', () => {
     const codes = vouchers.map((v) => v.code);
     expect(codes.length).toBe(new Set(codes).size);
+  });
+
+  it('every order satisfies orderSchema', () => {
+    expectAllValid(orderSchema, orders, 'order');
+  });
+
+  it('order codes are unique', () => {
+    const codes = orders.map((o) => o.code);
+    expect(codes.length).toBe(new Set(codes).size);
+  });
+
+  it('order ids resolve to a real user', () => {
+    const ids = new Set(users.map((u) => u.id));
+    const dangling = orders.filter((o) => o.userId && !ids.has(o.userId)).map((o) => o.id);
+    expect(dangling).toEqual([]);
+  });
+
+  it('seed orders span every OrderStatus', () => {
+    const statuses = new Set(orders.map((o) => o.status));
+    for (const status of orderStatusSchema.options) {
+      expect(statuses.has(status), `missing seeded order with status "${status}"`).toBe(true);
+    }
   });
 });

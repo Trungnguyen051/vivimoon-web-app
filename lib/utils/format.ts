@@ -1,10 +1,13 @@
+export function toIntlLocale(locale: 'en' | 'vi'): string {
+  return locale === 'vi' ? 'vi-VN' : 'en-US';
+}
+
 export function formatPrice(
   amount: number,
   currency: 'VND' | 'USD',
   locale: 'en' | 'vi',
 ): string {
-  const intlLocale = locale === 'vi' ? 'vi-VN' : 'en-US';
-  return new Intl.NumberFormat(intlLocale, {
+  return new Intl.NumberFormat(toIntlLocale(locale), {
     style: 'currency',
     currency,
     minimumFractionDigits: currency === 'VND' ? 0 : 2,

@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { mockOrders, OrderError } from './mock';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { mockOrders, resetMockOrdersState, OrderError } from './mock';
 import type { PlaceOrderRequest } from '@/lib/api/schemas/orders';
 
 // Same two known variants as lib/api/resources/pricing/mock.test.ts:
@@ -31,6 +31,8 @@ function req(overrides: Partial<PlaceOrderRequest> = {}): PlaceOrderRequest {
 }
 
 describe('mockOrders.place', () => {
+  beforeEach(() => { resetMockOrdersState(); });
+
   it('re-prices server-side and stores the server total, ignoring a posted total', async () => {
     // An untyped body with a claimed total — placeOrderRequestSchema has no
     // such field, but the mock itself must not trust one even if handed it.
@@ -96,5 +98,30 @@ describe('mockOrders.place', () => {
     await expect(
       mockOrders.place(req({ lines: [{ lineKey: 'l1', variantId: 'ghost', quantity: 1 }] }), null),
     ).rejects.toMatchObject({ code: 'not_found' });
+  });
+});
+
+describe('mockOrders.list', () => {
+  beforeEach(() => { resetMockOrdersState(); });
+
+  it('returns only the seeded orders belonging to the given user', async () => {
+    const list = await mockOrders.list('u-001');
+    expect(list.length).toBeGreaterThan(0);
+    expect(list.every((o) => o.userId === 'u-001')).toBe(true);
+  });
+
+  it('is empty for a user with no orders', async () => {
+    expect(await mockOrders.list('u-no-orders')).toEqual([]);
+  });
+
+  it('surfaces an order placed during the session immediately, most recent first', async () => {
+    const placed = await mockOrders.place(req(), 'u-001');
+    const list = await mockOrders.list('u-001');
+    expect(list[0].id).toBe(placed.id);
+  });
+
+  it('never returns another user\'s orders', async () => {
+    const list = await mockOrders.list('u-002');
+    expect(list.every((o) => o.userId === 'u-002')).toBe(true);
   });
 });

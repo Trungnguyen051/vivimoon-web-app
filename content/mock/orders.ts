@@ -1,0 +1,120 @@
+import type { Order } from '@/lib/api/schemas/orders';
+
+const HOME_ADDRESS = {
+  recipient: 'Nguyễn Thị Mai',
+  phone: '0912345678',
+  line1: '12 Le Loi',
+  ward: 'Ben Nghe',
+  district: 'District 1',
+  province: 'Ho Chi Minh City',
+  label: 'home' as const,
+};
+
+const OFFICE_ADDRESS = {
+  recipient: 'Trần Khánh Linh',
+  phone: '0987654321',
+  line1: '88 Nguyen Hue',
+  ward: 'Ben Thanh',
+  district: 'District 1',
+  province: 'Ho Chi Minh City',
+  label: 'office' as const,
+};
+
+/**
+ * Seeded example orders (spec §13 / issue #5) — one per `OrderStatus`,
+ * split across the two mock users so History and Tracking (#11) have real
+ * data to build against without placing any orders by hand.
+ */
+export const orders: Order[] = [
+  {
+    id: 'order-seed-1',
+    code: 'VVM-SEED0001',
+    status: 'placed',
+    placedAt: '2026-08-20T03:15:00.000Z',
+    lines: [{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1, unitPrice: 25, lineTotal: 25, currency: 'USD' }],
+    totals: { subtotal: 25, discount: 0, appliedVouchers: [], shipping: 3, total: 28, currency: 'USD' },
+    address: HOME_ADDRESS,
+    payment: { method: 'qr', status: 'pending' },
+    userId: 'u-001',
+  },
+  {
+    id: 'order-seed-2',
+    code: 'VVM-SEED0002',
+    status: 'confirmed',
+    placedAt: '2026-08-15T07:40:00.000Z',
+    lines: [{ lineKey: 'l1', variantId: 'p-breeze-daily-30', quantity: 2, unitPrice: 22, lineTotal: 44, currency: 'USD' }],
+    totals: { subtotal: 44, discount: 0, appliedVouchers: [], shipping: 3, total: 47, currency: 'USD' },
+    address: HOME_ADDRESS,
+    payment: { method: 'zalopay', status: 'pending' },
+    userId: 'u-001',
+  },
+  {
+    id: 'order-seed-3',
+    code: 'VVM-SEED0003',
+    status: 'shipped',
+    placedAt: '2026-08-05T12:00:00.000Z',
+    lines: [
+      { lineKey: 'l1', variantId: 'p-hazel-monthly-brown-30', quantity: 1, unitPrice: 48, lineTotal: 48, currency: 'USD' },
+      { lineKey: 'l2', variantId: 'p-ocean-biweekly-6', quantity: 1, unitPrice: 28, lineTotal: 28, currency: 'USD' },
+    ],
+    totals: { subtotal: 76, discount: 0, appliedVouchers: [], shipping: 3, total: 79, currency: 'USD' },
+    address: HOME_ADDRESS,
+    payment: { method: 'sepay', status: 'pending' },
+    userId: 'u-001',
+  },
+  {
+    id: 'order-seed-4',
+    code: 'VVM-SEED0004',
+    status: 'delivered',
+    placedAt: '2026-07-22T09:30:00.000Z',
+    lines: [{ lineKey: 'l1', variantId: 'p-mystic-daily-violet-30', quantity: 1, unitPrice: 45, lineTotal: 45, currency: 'USD' }],
+    totals: { subtotal: 45, discount: 0, appliedVouchers: [], shipping: 3, total: 48, currency: 'USD' },
+    address: HOME_ADDRESS,
+    payment: { method: 'qr', status: 'pending' },
+    userId: 'u-001',
+  },
+  {
+    id: 'order-seed-5',
+    code: 'VVM-SEED0005',
+    status: 'cancelled',
+    placedAt: '2026-07-10T14:05:00.000Z',
+    lines: [{ lineKey: 'l1', variantId: 'p-torica-monthly-6', quantity: 1, unitPrice: 38, lineTotal: 38, currency: 'USD' }],
+    totals: { subtotal: 38, discount: 0, appliedVouchers: [], shipping: 3, total: 41, currency: 'USD' },
+    address: HOME_ADDRESS,
+    payment: { method: 'qr', status: 'pending' },
+    userId: 'u-001',
+  },
+  {
+    id: 'order-seed-6',
+    code: 'VVM-SEED0006',
+    status: 'packed',
+    placedAt: '2026-08-18T05:20:00.000Z',
+    lines: [{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, unitPrice: 25, lineTotal: 50, currency: 'USD' }],
+    totals: { subtotal: 50, discount: 0, appliedVouchers: [], shipping: 3, total: 53, currency: 'USD' },
+    address: OFFICE_ADDRESS,
+    payment: { method: 'zalopay', status: 'pending' },
+    userId: 'u-002',
+  },
+  {
+    id: 'order-seed-7',
+    code: 'VVM-SEED0007',
+    status: 'out_for_delivery',
+    placedAt: '2026-08-12T11:45:00.000Z',
+    lines: [{ lineKey: 'l1', variantId: 'p-hazel-monthly-gray-30', quantity: 1, unitPrice: 48, lineTotal: 48, currency: 'USD' }],
+    totals: { subtotal: 48, discount: 0, appliedVouchers: [], shipping: 3, total: 51, currency: 'USD' },
+    address: OFFICE_ADDRESS,
+    payment: { method: 'sepay', status: 'pending' },
+    userId: 'u-002',
+  },
+  {
+    id: 'order-seed-8',
+    code: 'VVM-SEED0008',
+    status: 'returned',
+    placedAt: '2026-06-28T08:10:00.000Z',
+    lines: [{ lineKey: 'l1', variantId: 'p-breeze-daily-30', quantity: 1, unitPrice: 22, lineTotal: 22, currency: 'USD' }],
+    totals: { subtotal: 22, discount: 0, appliedVouchers: [], shipping: 3, total: 25, currency: 'USD' },
+    address: OFFICE_ADDRESS,
+    payment: { method: 'qr', status: 'pending' },
+    userId: 'u-002',
+  },
+];
