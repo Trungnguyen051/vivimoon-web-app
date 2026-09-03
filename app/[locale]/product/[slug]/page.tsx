@@ -5,6 +5,7 @@ import { getDictionary } from '@/lib/i18n/dictionaries';
 import { catalog } from '@/lib/api/resources/catalog';
 import { ProductGallery } from '@/components/commerce/product-gallery';
 import { AddToCart } from '@/components/commerce/add-to-cart';
+import { FavoriteButton } from '@/components/commerce/favorite-button';
 import { SpecTable } from '@/components/commerce/spec-table';
 import { ReviewsList } from '@/components/commerce/reviews-list';
 import { CollectionCarousel } from '@/components/commerce/collection-carousel';
@@ -54,6 +55,7 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
             </div>
             <p className="max-w-prose leading-relaxed text-muted-foreground">{product.description}</p>
             <AddToCart product={product} locale={l} dict={dict} />
+            <FavoriteButton productId={product.id} locale={l} dict={dict.favorites} />
           </div>
         </div>
       </div>

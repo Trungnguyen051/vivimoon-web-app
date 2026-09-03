@@ -48,6 +48,12 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
               <span className="text-sm text-muted-foreground">
                 {dict.footer.hotline}: 1900 0000
               </span>
+              <Link
+                href={`/${locale}/orders/track`}
+                className="text-sm text-foreground/80 transition-colors hover:text-foreground"
+              >
+                {dict.tracking.title}
+              </Link>
             </div>
           </div>
         </div>

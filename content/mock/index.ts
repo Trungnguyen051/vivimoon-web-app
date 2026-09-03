@@ -5,3 +5,6 @@ export { users, type MockUser } from './users';
 export { vouchers } from './vouchers';
 export { shippingRates, defaultShippingOptions } from './shipping-rates';
 export { orders } from './orders';
+export { addresses } from './addresses';
+export { favorites } from './favorites';
+export { loyaltyHistory } from './loyalty';

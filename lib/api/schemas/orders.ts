@@ -40,3 +40,23 @@ export const orderSchema = z.object({
 export type PlaceOrderRequest = z.infer<typeof placeOrderRequestSchema>;
 export type OrderLine = z.infer<typeof orderLineSchema>;
 export type Order = z.infer<typeof orderSchema>;
+
+/** POST /api/orders/track body (M3.2, issue #11) — a guest's order code + the email it was placed with. */
+export const trackingRequestSchema = z.object({
+  code: z.string().min(1),
+  email: z.string().email(),
+});
+
+/**
+ * Identical shape whether or not the order/email combination matched, so the
+ * response itself can never be used to probe which order codes are real.
+ * `devLink` is mock-mode-only (stripped by the route handler once anything
+ * is upstream, same posture as `OtpChallenge.devCode`).
+ */
+export const trackingAckSchema = z.object({
+  message: z.string(),
+  devLink: z.string().optional(),
+});
+
+export type TrackingRequest = z.infer<typeof trackingRequestSchema>;
+export type TrackingAck = z.infer<typeof trackingAckSchema>;

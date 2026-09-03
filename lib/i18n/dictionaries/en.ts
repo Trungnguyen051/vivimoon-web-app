@@ -95,6 +95,36 @@ export const en = {
       out_for_delivery: 'Out for delivery', delivered: 'Delivered', cancelled: 'Cancelled', returned: 'Returned',
     },
   },
+  favorites: {
+    title: 'Favorites', empty: 'You have no favorites yet.',
+    add: 'Add to favorites', remove: 'Remove from favorites',
+  },
+  vouchers: {
+    title: 'My vouchers', empty: 'You have no vouchers available right now.',
+    off: 'off', freeShipping: 'Free shipping', minSpend: 'Min. spend', expires: 'Expires',
+  },
+  loyalty: {
+    title: 'Loyalty', balance: 'Points balance', historyTitle: 'History',
+    empty: 'No loyalty activity yet.',
+  },
+  orderDetail: {
+    status: 'Status', lineItems: 'Items', address: 'Shipping address', payment: 'Payment',
+    backToOrders: 'Back to order history',
+  },
+  tracking: {
+    title: 'Track your order', code: 'Order code', email: 'Email', submit: 'Get tracking link',
+    devLinkNote: 'Development mode — your tracking link is',
+  },
+  addresses: {
+    title: 'Saved addresses', empty: 'You have no saved addresses yet.',
+    addNew: 'Add a new address', edit: 'Edit', delete: 'Delete',
+    setDefault: 'Set as default', default: 'Default',
+    recipient: 'Recipient name', phone: 'Phone', line1: 'Address',
+    ward: 'Ward', district: 'District', province: 'Province', label: 'Label',
+    labels: { home: 'Home', office: 'Office', other: 'Other' },
+    save: 'Save address', cancel: 'Cancel',
+    errors: { required: 'Required' },
+  },
   footer: {
     policies: 'Policies', about: 'About Vivimoon', customerCare: 'Customer Care',
     tagline: 'Vivimoon — high-quality contact lenses.',

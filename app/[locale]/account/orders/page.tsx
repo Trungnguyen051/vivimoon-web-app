@@ -1,4 +1,3 @@
-import { cookies, headers } from 'next/headers';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { PackageOpen } from 'lucide-react';
@@ -8,6 +7,7 @@ import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empt
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { readSessionUserId } from '@/lib/auth/cookie';
+import { fetchViaSelf } from '@/lib/api/server-fetch';
 import { formatPrice, toIntlLocale } from '@/lib/utils/format';
 import type { ApiResult } from '@/lib/api/client';
 import type { Order } from '@/lib/api/schemas/orders';
@@ -20,15 +20,7 @@ import type { Order } from '@/lib/api/schemas/orders';
  * mutated into the mock's in-memory store.
  */
 async function fetchOrders(locale: string): Promise<Order[]> {
-  const hdrs = await headers();
-  const host = hdrs.get('host');
-  const protocol = hdrs.get('x-forwarded-proto') ?? 'http';
-  const cookieHeader = (await cookies()).getAll().map((c) => `${c.name}=${c.value}`).join('; ');
-
-  const response = await fetch(`${protocol}://${host}/api/orders`, {
-    headers: { cookie: cookieHeader },
-    cache: 'no-store',
-  });
+  const response = await fetchViaSelf('/api/orders');
   const result = (await response.json()) as ApiResult<Order[]>;
   if (!result.ok) redirect(`/${locale}/sign-in?next=${encodeURIComponent(`/${locale}/account/orders`)}`);
   return result.data;
@@ -80,18 +72,20 @@ export default async function OrderHistoryPage({ params }: { params: Promise<{ l
         <ul className="flex flex-col gap-3">
           {orders.map((order) => (
             <li key={order.id}>
-              <Card>
-                <CardContent className="flex items-center justify-between gap-4 py-4">
-                  <div className="flex flex-col gap-1">
-                    <span className="font-medium">{order.code}</span>
-                    <span className="text-sm text-muted-foreground">{formatDate(order.placedAt, locale)}</span>
-                  </div>
-                  <div className="flex flex-col items-end gap-1">
-                    <Badge variant={STATUS_VARIANT[order.status]}>{dict.orders.statuses[order.status]}</Badge>
-                    <span className="font-medium">{formatPrice(order.totals.total, order.totals.currency, locale)}</span>
-                  </div>
-                </CardContent>
-              </Card>
+              <Link href={`/${locale}/account/orders/${order.id}`} className="block">
+                <Card className="transition-colors hover:bg-muted/50">
+                  <CardContent className="flex items-center justify-between gap-4 py-4">
+                    <div className="flex flex-col gap-1">
+                      <span className="font-medium">{order.code}</span>
+                      <span className="text-sm text-muted-foreground">{formatDate(order.placedAt, locale)}</span>
+                    </div>
+                    <div className="flex flex-col items-end gap-1">
+                      <Badge variant={STATUS_VARIANT[order.status]}>{dict.orders.statuses[order.status]}</Badge>
+                      <span className="font-medium">{formatPrice(order.totals.total, order.totals.currency, locale)}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             </li>
           ))}
         </ul>

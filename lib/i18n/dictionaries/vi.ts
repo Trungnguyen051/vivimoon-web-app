@@ -97,6 +97,36 @@ export const vi: Dictionary = {
       out_for_delivery: 'Đang giao hàng', delivered: 'Đã giao', cancelled: 'Đã hủy', returned: 'Đã hoàn trả',
     },
   },
+  favorites: {
+    title: 'Yêu thích', empty: 'Bạn chưa có sản phẩm yêu thích nào.',
+    add: 'Thêm vào yêu thích', remove: 'Bỏ yêu thích',
+  },
+  vouchers: {
+    title: 'Voucher của tôi', empty: 'Hiện chưa có voucher nào khả dụng.',
+    off: 'giảm', freeShipping: 'Miễn phí vận chuyển', minSpend: 'Đơn tối thiểu', expires: 'Hết hạn',
+  },
+  loyalty: {
+    title: 'Điểm thưởng', balance: 'Số điểm hiện có', historyTitle: 'Lịch sử',
+    empty: 'Chưa có hoạt động tích điểm.',
+  },
+  orderDetail: {
+    status: 'Trạng thái', lineItems: 'Sản phẩm', address: 'Địa chỉ giao hàng', payment: 'Thanh toán',
+    backToOrders: 'Quay lại lịch sử đơn hàng',
+  },
+  tracking: {
+    title: 'Tra cứu đơn hàng', code: 'Mã đơn hàng', email: 'Email', submit: 'Lấy liên kết theo dõi',
+    devLinkNote: 'Chế độ phát triển — liên kết theo dõi của bạn là',
+  },
+  addresses: {
+    title: 'Địa chỉ đã lưu', empty: 'Bạn chưa lưu địa chỉ nào.',
+    addNew: 'Thêm địa chỉ mới', edit: 'Sửa', delete: 'Xóa',
+    setDefault: 'Đặt làm mặc định', default: 'Mặc định',
+    recipient: 'Tên người nhận', phone: 'Số điện thoại', line1: 'Địa chỉ',
+    ward: 'Phường/Xã', district: 'Quận/Huyện', province: 'Tỉnh/Thành phố', label: 'Loại địa chỉ',
+    labels: { home: 'Nhà riêng', office: 'Văn phòng', other: 'Khác' },
+    save: 'Lưu địa chỉ', cancel: 'Hủy',
+    errors: { required: 'Bắt buộc' },
+  },
   footer: {
     policies: 'Chính sách', about: 'Về Vivimoon', customerCare: 'Chăm sóc khách hàng',
     tagline: 'Vivimoon — kính áp tròng chất lượng cao.',

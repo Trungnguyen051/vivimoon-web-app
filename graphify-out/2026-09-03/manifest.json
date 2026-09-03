@@ -396,15 +396,15 @@
     "semantic_hash": "e337dcc7b7b3cc468e1af0f5c17aca4f"
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1788312410.339698,
-    "seen": 1788411507.09184,
-    "ast_hash": "9a305a14ff6540a01b048ecb37b24be8",
+    "mtime": 1788413933.0335307,
+    "seen": 1788414379.622135,
+    "ast_hash": "f8442527f2d1a5410723e8e3d6041c9a",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/vi.ts": {
-    "mtime": 1788312410.3400786,
-    "seen": 1788411507.091841,
-    "ast_hash": "4d10a6417b80b58796193f731987120b",
+    "mtime": 1788413942.2809582,
+    "seen": 1788414379.622136,
+    "ast_hash": "daeea9717ec5396ee82b610135b8bee9",
     "semantic_hash": ""
   },
   "lib/types/collection.ts": {
@@ -444,10 +444,10 @@
     "semantic_hash": "357353fe60d8ec8dde8e4030fff6ed5b"
   },
   "lib/utils/format.ts": {
-    "mtime": 1786867011.9662247,
-    "seen": 1787625522.045943,
-    "ast_hash": "ae157670cda977774e2ecc41b77c14ba",
-    "semantic_hash": "ae157670cda977774e2ecc41b77c14ba"
+    "mtime": 1788414338.4296808,
+    "seen": 1788414379.6221461,
+    "ast_hash": "1336b1d384de98e87895c29a0717adc9",
+    "semantic_hash": ""
   },
   "next.config.ts": {
     "mtime": 1786869554.3976572,
@@ -732,10 +732,10 @@
     "semantic_hash": "45f1a86f8d376620e75ef5d8c83f36a6"
   },
   "content/mock/index.ts": {
-    "mtime": 1788312410.296613,
-    "seen": 1788411507.091775,
-    "ast_hash": "4d3802f73455273517b2bdc51c9ec0a8",
-    "semantic_hash": "4d3802f73455273517b2bdc51c9ec0a8"
+    "mtime": 1788413828.1759589,
+    "seen": 1788414379.622064,
+    "ast_hash": "13a36a36889a05d7293522280ca41f88",
+    "semantic_hash": ""
   },
   "content/mock/products.ts": {
     "mtime": 1788312410.296968,
@@ -804,10 +804,10 @@
     "semantic_hash": "690fad436ae1cc0b42f178b87b2c90c5"
   },
   "tests/contract/fixtures.test.ts": {
-    "mtime": 1788312410.3414383,
-    "seen": 1788411507.0918558,
-    "ast_hash": "666adfb553fa354c20604da32c6a7a1b",
-    "semantic_hash": "666adfb553fa354c20604da32c6a7a1b"
+    "mtime": 1788413912.2994819,
+    "seen": 1788414379.6221519,
+    "ast_hash": "3e4b1c46eb00c251f14279fa4d452dfd",
+    "semantic_hash": ""
   },
   "app/api/collections/[slug]/route.ts": {
     "mtime": 1787933300.2308285,
@@ -1074,10 +1074,10 @@
     "semantic_hash": "bd29d20e1b0479ee7d54bc741dc8293c"
   },
   "app/[locale]/account/page.tsx": {
-    "mtime": 1787961442.4038553,
-    "seen": 1788249058.2423549,
-    "ast_hash": "2c14ffb93a0ef7c7f90dcf7bbb7a68c0",
-    "semantic_hash": "2c14ffb93a0ef7c7f90dcf7bbb7a68c0"
+    "mtime": 1788413974.3219767,
+    "seen": 1788414379.6219761,
+    "ast_hash": "30b634a593b99ec4470731e36cd68fa0",
+    "semantic_hash": ""
   },
   "app/api/account/account-routes.test.ts": {
     "mtime": 1787960697.4781027,
@@ -1368,16 +1368,16 @@
     "semantic_hash": "b6f1ea41bad86009aefe036a6aa2c51d"
   },
   "app/api/orders/route.test.ts": {
-    "mtime": 1788312410.287936,
-    "seen": 1788411507.091718,
-    "ast_hash": "ec96689e4dbf5237dfc8d822be4d2ae4",
-    "semantic_hash": "ec96689e4dbf5237dfc8d822be4d2ae4"
+    "mtime": 1788413886.555016,
+    "seen": 1788414379.622004,
+    "ast_hash": "42878dc248525c3a359dc7857d4a2206",
+    "semantic_hash": ""
   },
   "app/api/orders/route.ts": {
-    "mtime": 1788312410.2889388,
-    "seen": 1788411507.091719,
-    "ast_hash": "4ad1773956d1a40ce77a9a67c3a5b1fc",
-    "semantic_hash": "4ad1773956d1a40ce77a9a67c3a5b1fc"
+    "mtime": 1788413876.2973285,
+    "seen": 1788414379.622005,
+    "ast_hash": "864e1dbd49b9f8f4c5a4d1514bc70587",
+    "semantic_hash": ""
   },
   "lib/api/resources/orders/index.ts": {
     "mtime": 1788312410.3259027,
@@ -1386,15 +1386,15 @@
     "semantic_hash": "16c5582e0b35887efb44d509174509fe"
   },
   "lib/api/resources/orders/mock.test.ts": {
-    "mtime": 1788312410.3262043,
-    "seen": 1788411507.091808,
-    "ast_hash": "88fc86a6832f4513930013d2b0816c2c",
-    "semantic_hash": "88fc86a6832f4513930013d2b0816c2c"
+    "mtime": 1788413868.2270691,
+    "seen": 1788414379.6220999,
+    "ast_hash": "37fd6b1bc11983c96f47b71bb4d4cd00",
+    "semantic_hash": ""
   },
   "lib/api/resources/orders/mock.ts": {
-    "mtime": 1788312410.32684,
-    "seen": 1788411507.091809,
-    "ast_hash": "c10c2203fb4ca88d98dde469fc40c7b0",
+    "mtime": 1788414333.356324,
+    "seen": 1788414379.622101,
+    "ast_hash": "8fa82fa8624050840888e77a983875e3",
     "semantic_hash": ""
   },
   "lib/api/schemas/orders.ts": {
@@ -1455,6 +1455,24 @@
     "mtime": 1788312410.282726,
     "seen": 1788411507.091868,
     "ast_hash": "43d544165b3088f77298920af7bce2bd",
+    "semantic_hash": ""
+  },
+  "app/[locale]/account/orders/page.tsx": {
+    "mtime": 1788414344.0304286,
+    "seen": 1788414379.621974,
+    "ast_hash": "e021a31a2a8d20669ad41e71c829eb1b",
+    "semantic_hash": ""
+  },
+  "content/mock/orders.ts": {
+    "mtime": 1788413825.2545807,
+    "seen": 1788414379.622064,
+    "ast_hash": "245b94dae44d58c1ddf3a6b0bf43c8c4",
+    "semantic_hash": ""
+  },
+  "CONTEXT.md": {
+    "mtime": 1788413059.1053853,
+    "seen": 1788414379.622159,
+    "ast_hash": "056f733fa2d12fff37b092c7f7001285",
     "semantic_hash": ""
   }
 }

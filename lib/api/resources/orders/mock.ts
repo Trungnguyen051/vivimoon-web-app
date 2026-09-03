@@ -1,3 +1,4 @@
+import { randomBytes } from 'node:crypto';
 import { orders as seedOrders } from '@/content/mock';
 import { pricing } from '@/lib/api/resources/pricing';
 import { shipping } from '@/lib/api/resources/shipping';
@@ -21,9 +22,15 @@ export class OrderError extends Error {
 // (#11's status updates) corrupt the shared fixture and survive a reset.
 let store = new Map<string, Order>(seedOrders.map((o) => [o.id, structuredClone(o)]));
 
+interface TrackingTokenRecord { orderId: string; expiresAt: number }
+// A tracking link should outlive a typical delivery window.
+const TRACKING_TOKEN_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+const trackingTokens = new Map<string, TrackingTokenRecord>();
+
 /** Test helper — restores the fixture state between cases. */
 export function resetMockOrdersState(): void {
   store = new Map(seedOrders.map((o) => [o.id, structuredClone(o)]));
+  trackingTokens.clear();
 }
 
 function randomSuffix(): string {
@@ -37,6 +44,16 @@ function randomId(prefix: string): string {
 
 function randomOrderCode(): string {
   return `VVM-${randomSuffix().toUpperCase()}`;
+}
+
+/**
+ * Unlike `randomId`/`randomOrderCode` (opaque identifiers, fine from
+ * `Math.random()`), a tracking token is itself the credential that grants
+ * access to an order's PII — it needs a CSPRNG, not a cheap-and-guessable
+ * source.
+ */
+function randomTrackingToken(): string {
+  return `trk-${randomBytes(32).toString('base64url')}`;
 }
 
 export const mockOrders = {
@@ -100,6 +117,42 @@ export const mockOrders = {
     return [...store.values()]
       .filter((o) => o.userId === userId)
       .sort((a, b) => b.placedAt.localeCompare(a.placedAt));
+  },
+
+  /** Looked up by id alone — the route handler is what enforces ownership (issue #11). */
+  async get(id: string): Promise<Order | null> {
+    return store.get(id) ?? null;
+  },
+
+  /**
+   * A guest order carries no user account to hold a "my orders" link, so
+   * tracking is requested by code + the email it was placed with (issue
+   * #11). Only ever matches a guest order (`guestEmail`, not `userId`) — a
+   * member's order stores no email at all, and reaches this same tracking
+   * view through their session-gated history instead.
+   *
+   * Returns `{}` for no match. The route handler wraps this in an identical
+   * envelope either way, so the response itself never reveals which order
+   * codes exist.
+   */
+  async requestTracking(code: string, email: string): Promise<{ devLink?: string }> {
+    const normalizedCode = code.trim().toUpperCase();
+    const normalizedEmail = email.trim().toLowerCase();
+    const order = [...store.values()].find(
+      (o) => !o.userId && o.guestEmail?.toLowerCase() === normalizedEmail && o.code.toUpperCase() === normalizedCode,
+    );
+    if (!order) return {};
+
+    const token = randomTrackingToken();
+    trackingTokens.set(token, { orderId: order.id, expiresAt: Date.now() + TRACKING_TOKEN_TTL_MS });
+    return { devLink: `/orders/track/${token}` };
+  },
+
+  /** Resolves a tracking token to the order it was issued for — public, no session required. */
+  async resolveTrackingToken(token: string): Promise<Order | null> {
+    const record = trackingTokens.get(token);
+    if (!record || record.expiresAt < Date.now()) return null;
+    return store.get(record.orderId) ?? null;
   },
 };
 

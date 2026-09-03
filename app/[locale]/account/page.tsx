@@ -1,9 +1,9 @@
-import { cookies, headers } from 'next/headers';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { isLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { readSessionUserId } from '@/lib/auth/cookie';
+import { fetchViaSelf } from '@/lib/api/server-fetch';
 import type { ApiResult } from '@/lib/api/client';
 import type { User } from '@/lib/api/schemas/auth';
 import { AccountForm } from './account-form';
@@ -17,15 +17,7 @@ import { AccountForm } from './account-form';
  * value that was actually saved.
  */
 async function fetchAccount(locale: string): Promise<User> {
-  const hdrs = await headers();
-  const host = hdrs.get('host');
-  const protocol = hdrs.get('x-forwarded-proto') ?? 'http';
-  const cookieHeader = (await cookies()).getAll().map((c) => `${c.name}=${c.value}`).join('; ');
-
-  const response = await fetch(`${protocol}://${host}/api/account`, {
-    headers: { cookie: cookieHeader },
-    cache: 'no-store',
-  });
+  const response = await fetchViaSelf('/api/account');
   const result = (await response.json()) as ApiResult<User>;
   if (!result.ok) redirect(`/${locale}/sign-in?next=${encodeURIComponent(`/${locale}/account`)}`);
   return result.data;
@@ -46,9 +38,23 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
       <h1 className="text-3xl font-semibold tracking-tight">{dict.account.title}</h1>
-      <Link href={`/${locale}/account/orders`} className="text-sm text-muted-foreground underline underline-offset-4">
-        {dict.account.viewOrders}
-      </Link>
+      <div className="flex flex-wrap gap-4">
+        <Link href={`/${locale}/account/orders`} className="text-sm text-muted-foreground underline underline-offset-4">
+          {dict.account.viewOrders}
+        </Link>
+        <Link href={`/${locale}/account/addresses`} className="text-sm text-muted-foreground underline underline-offset-4">
+          {dict.addresses.title}
+        </Link>
+        <Link href={`/${locale}/account/favorites`} className="text-sm text-muted-foreground underline underline-offset-4">
+          {dict.favorites.title}
+        </Link>
+        <Link href={`/${locale}/account/vouchers`} className="text-sm text-muted-foreground underline underline-offset-4">
+          {dict.vouchers.title}
+        </Link>
+        <Link href={`/${locale}/account/loyalty`} className="text-sm text-muted-foreground underline underline-offset-4">
+          {dict.loyalty.title}
+        </Link>
+      </div>
       <h2 className="text-lg font-medium">{dict.account.infoTitle}</h2>
       <AccountForm user={user} dict={dict.account} />
     </div>
