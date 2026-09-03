@@ -19,6 +19,7 @@ export const en = {
     diameter: 'Diameter', uvProtection: 'UV protection', manufacturer: 'Manufacturer',
     packSize: 'Pack size', color: 'Color', quantity: 'Quantity', freeship: 'Freeship',
     noReviews: 'No reviews yet.',
+    reviewSource: { shopee: 'Shopee', tiktok: 'TikTok', vivimoon: 'Vivimoon' },
   },
   rx: {
     rightEye: 'Right eye (OD)', leftEye: 'Left eye (OS)',

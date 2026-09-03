@@ -21,6 +21,7 @@ export const vi: Dictionary = {
     diameter: 'Đường kính', uvProtection: 'Chống tia UV', manufacturer: 'Nhà sản xuất',
     packSize: 'Quy cách', color: 'Màu', quantity: 'Số lượng', freeship: 'Miễn phí ship',
     noReviews: 'Chưa có đánh giá.',
+    reviewSource: { shopee: 'Shopee', tiktok: 'TikTok', vivimoon: 'Vivimoon' },
   },
   rx: {
     rightEye: 'Mắt phải (OD)', leftEye: 'Mắt trái (OS)',

@@ -2,6 +2,7 @@ import { MessageSquare } from 'lucide-react';
 import type { Review } from '@/lib/types';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { RatingStars } from './rating-stars';
+import { ReviewSourceBadge } from './review-source-badge';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 
 export function ReviewsList({ reviews, dict }: { reviews: Review[]; dict: Dictionary }) {
@@ -41,7 +42,10 @@ export function ReviewsList({ reviews, dict }: { reviews: Review[]; dict: Dictio
               </div>
               <p className="mt-3 font-medium">{r.title}</p>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{r.body}</p>
-              <p className="mt-4 text-xs font-medium text-foreground">{r.author}</p>
+              <div className="mt-4 flex items-center justify-between gap-2">
+                <p className="text-xs font-medium text-foreground">{r.author}</p>
+                <ReviewSourceBadge source={r.source} sourceUrl={r.sourceUrl} dict={dict} />
+              </div>
             </article>
           ))}
         </div>
