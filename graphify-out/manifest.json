@@ -36,9 +36,9 @@
     "semantic_hash": ""
   },
   "app/[locale]/product/[slug]/page.tsx": {
-    "mtime": 1788450106.1914933,
-    "seen": 1788493407.492001,
-    "ast_hash": "14a48c8019087e126dcbbf150c141e54",
+    "mtime": 1788495195.9766977,
+    "seen": 1788495361.0584488,
+    "ast_hash": "ee099ee3a6f3eaa90e03f33f83c9cfb7",
     "semantic_hash": ""
   },
   "app/layout.tsx": {
@@ -396,15 +396,15 @@
     "semantic_hash": "e337dcc7b7b3cc468e1af0f5c17aca4f"
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1788492847.8764634,
-    "seen": 1788493407.4921868,
-    "ast_hash": "8b04a865352b71c369715504855559c6",
+    "mtime": 1788495125.5658505,
+    "seen": 1788495361.058648,
+    "ast_hash": "65f216d755facf09926323eba91219c2",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/vi.ts": {
-    "mtime": 1788492855.9980166,
-    "seen": 1788493407.492188,
-    "ast_hash": "b38f6789e76e297a9447b83f96fd833e",
+    "mtime": 1788495134.3102965,
+    "seen": 1788495361.058649,
+    "ast_hash": "864f97cf83a6a071901b5b09a04189a7",
     "semantic_hash": ""
   },
   "lib/types/collection.ts": {
@@ -420,9 +420,9 @@
     "semantic_hash": "c8acc97354113560370cb0572c35bc3a"
   },
   "lib/types/product.ts": {
-    "mtime": 1788449702.3191566,
-    "seen": 1788493407.492196,
-    "ast_hash": "13ebf6fbf2837863a7c4439d38ea8993",
+    "mtime": 1788494947.9662287,
+    "seen": 1788495361.058657,
+    "ast_hash": "98ed0b14b556c5b1ae94dd7068bc5748",
     "semantic_hash": ""
   },
   "lib/types/review.ts": {
@@ -504,9 +504,9 @@
     "semantic_hash": "01e8142356e15c3404e0d84c48187cd0"
   },
   "CLAUDE.md": {
-    "mtime": 1788410342.5279598,
-    "seen": 1788411507.0918632,
-    "ast_hash": "b239355ad4eb241a815182c1eb6c4665",
+    "mtime": 1788494533.4241927,
+    "seen": 1788495361.058676,
+    "ast_hash": "cfd29cd1c922833c31bf2141fcdb27b5",
     "semantic_hash": ""
   },
   "README.md": {
@@ -732,9 +732,9 @@
     "semantic_hash": "45f1a86f8d376620e75ef5d8c83f36a6"
   },
   "content/mock/index.ts": {
-    "mtime": 1788439283.0730293,
-    "seen": 1788439911.2124832,
-    "ast_hash": "be61eebd22cf263e618cd0d5bb38425c",
+    "mtime": 1788494952.993701,
+    "seen": 1788495361.058563,
+    "ast_hash": "3a894bf197454266c21bbcb9da87c205",
     "semantic_hash": ""
   },
   "content/mock/products.ts": {
@@ -768,16 +768,16 @@
     "semantic_hash": "9462a75c83a52c0ee3677b52aaed2368"
   },
   "lib/api/resources/catalog/mock.test.ts": {
-    "mtime": 1787933300.24421,
-    "seen": 1788249058.24246,
-    "ast_hash": "03fddddf1ddf9f614eba95185a7f162d",
-    "semantic_hash": "03fddddf1ddf9f614eba95185a7f162d"
+    "mtime": 1788494969.5542867,
+    "seen": 1788495361.058602,
+    "ast_hash": "6b16ada2ad6ae84dee8c3f897c40f4d4",
+    "semantic_hash": ""
   },
   "lib/api/resources/catalog/mock.ts": {
-    "mtime": 1788312410.325578,
-    "seen": 1788411507.091806,
-    "ast_hash": "0200a98f6348fc693d4feab870306ee9",
-    "semantic_hash": "0200a98f6348fc693d4feab870306ee9"
+    "mtime": 1788494988.6074705,
+    "seen": 1788495361.058602,
+    "ast_hash": "b4376c4620ad1d9bea13aa01e47691c7",
+    "semantic_hash": ""
   },
   "lib/api/response.ts": {
     "mtime": 1787933300.2446496,
@@ -786,15 +786,15 @@
     "semantic_hash": "b63fbae9ae606275d40437a14070c5b9"
   },
   "lib/api/schemas/catalog.test.ts": {
-    "mtime": 1787933300.2454176,
-    "seen": 1788249058.242472,
-    "ast_hash": "4764205a0947b010b366e18c135451f7",
-    "semantic_hash": "4764205a0947b010b366e18c135451f7"
+    "mtime": 1788494901.3534148,
+    "seen": 1788495361.0586271,
+    "ast_hash": "7de80738ebcd7a0a3ff8e865ce12d11f",
+    "semantic_hash": ""
   },
   "lib/api/schemas/catalog.ts": {
-    "mtime": 1788449696.129519,
-    "seen": 1788493407.492167,
-    "ast_hash": "e65068986a5a8110728b44ab8949cebc",
+    "mtime": 1788494920.8574917,
+    "seen": 1788495361.058628,
+    "ast_hash": "0f23c219cf16858de028b744d8197720",
     "semantic_hash": ""
   },
   "lib/api/schemas/common.ts": {
@@ -804,9 +804,9 @@
     "semantic_hash": "690fad436ae1cc0b42f178b87b2c90c5"
   },
   "tests/contract/fixtures.test.ts": {
-    "mtime": 1788413912.2994819,
-    "seen": 1788414379.6221519,
-    "ast_hash": "3e4b1c46eb00c251f14279fa4d452dfd",
+    "mtime": 1788495048.7946703,
+    "seen": 1788495361.058666,
+    "ast_hash": "311ffba77d74a082909141720638e17a",
     "semantic_hash": ""
   },
   "app/api/collections/[slug]/route.ts": {
@@ -1833,6 +1833,60 @@
     "mtime": 1788448569.8382027,
     "seen": 1788493407.4922209,
     "ast_hash": "0f8be6981af9002248921f25593fadcc",
+    "semantic_hash": ""
+  },
+  "app/api/products/[slug]/gallery/route.test.ts": {
+    "mtime": 1788495012.7018812,
+    "seen": 1788495361.058484,
+    "ast_hash": "ae26de5f487a8323f7266af85bc03b93",
+    "semantic_hash": ""
+  },
+  "app/api/products/[slug]/gallery/route.ts": {
+    "mtime": 1788495026.9225466,
+    "seen": 1788495361.058485,
+    "ast_hash": "92d3cb6077e9aa2609f5c5feb679f9cb",
+    "semantic_hash": ""
+  },
+  "components/commerce/lens-viewer.test.tsx": {
+    "mtime": 1788495090.2610707,
+    "seen": 1788495361.058512,
+    "ast_hash": "fcaa6f278fb433318663f74004a2120f",
+    "semantic_hash": ""
+  },
+  "components/commerce/lens-viewer.tsx": {
+    "mtime": 1788495174.672407,
+    "seen": 1788495361.058513,
+    "ast_hash": "81886702ff25b6d6cd56515aa3aafd7f",
+    "semantic_hash": ""
+  },
+  "content/mock/galleries.ts": {
+    "mtime": 1788494938.6263626,
+    "seen": 1788495361.058562,
+    "ast_hash": "50d2852cd9f4888159bb828a436fa23b",
+    "semantic_hash": ""
+  },
+  ".claude/skills/grill-with-docs/SKILL.md": {
+    "mtime": 1788494472.2161984,
+    "seen": 1788495361.058671,
+    "ast_hash": "dc71f6a6b5eae497a9fafac1b5d831e1",
+    "semantic_hash": ""
+  },
+  ".claude/skills/implement/SKILL.md": {
+    "mtime": 1788494518.113408,
+    "seen": 1788495361.0586722,
+    "ast_hash": "cfa169dc6ea8a56589b2be4e442a1107",
+    "semantic_hash": ""
+  },
+  ".claude/skills/to-spec/SKILL.md": {
+    "mtime": 1788494486.0216472,
+    "seen": 1788495361.058673,
+    "ast_hash": "bf85980b7fc7cd92360918de7a99d301",
+    "semantic_hash": ""
+  },
+  ".claude/skills/to-tickets/SKILL.md": {
+    "mtime": 1788494509.3356125,
+    "seen": 1788495361.0586739,
+    "ast_hash": "0fd2a876236129d15f68cdf56f8aa5e0",
     "semantic_hash": ""
   }
 }
