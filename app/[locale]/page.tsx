@@ -37,8 +37,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           { label: dict.collection.bestsellers, href: `/${l}/collection/bestsellers`, image: '/images/cat-best.jpg' },
         ]}
       />
-      <CollectionCarousel title={dict.collection.bestsellers} products={bestProducts} locale={l} seeMoreHref={`/${l}/collection/bestsellers`} seeMoreLabel={dict.common.seeMore} />
-      <CollectionCarousel title={dict.collection.colored} products={coloredProducts} locale={l} seeMoreHref={`/${l}/collection/colored-lenses`} seeMoreLabel={dict.common.seeMore} />
+      <CollectionCarousel title={dict.collection.bestsellers} products={bestProducts} locale={l} dict={dict} seeMoreHref={`/${l}/collection/bestsellers`} seeMoreLabel={dict.common.seeMore} />
+      <CollectionCarousel title={dict.collection.colored} products={coloredProducts} locale={l} dict={dict} seeMoreHref={`/${l}/collection/colored-lenses`} seeMoreLabel={dict.common.seeMore} />
     </div>
   );
 }

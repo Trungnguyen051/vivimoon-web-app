@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { ProductCard } from './product-card';
 import type { Product } from '@/lib/types';
+import { en } from '@/lib/i18n/dictionaries/en';
 
 const product: Product = {
   id: 'p1', slug: 'aqua', name: 'Aqua Daily', brandId: 'v', brandName: 'Vivimoon',
@@ -14,7 +15,7 @@ const product: Product = {
 
 describe('ProductCard', () => {
   it('renders name, sale badge, discounted price, and a link to the PDP', () => {
-    render(<ProductCard product={product} locale="en" />);
+    render(<ProductCard product={product} locale="en" dict={en} />);
     expect(screen.getByText('Aqua Daily')).toBeInTheDocument();
     expect(screen.getByText('$20.00')).toBeInTheDocument();
     expect(screen.getByText('$25.00')).toBeInTheDocument();

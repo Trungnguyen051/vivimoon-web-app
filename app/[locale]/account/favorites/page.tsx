@@ -46,7 +46,7 @@ export default async function FavoritesPage({ params }: { params: Promise<{ loca
           </EmptyHeader>
         </Empty>
       ) : (
-        <ProductGrid products={products} locale={locale} listId="favorites" />
+        <ProductGrid products={products} locale={locale} dict={dict} listId="favorites" />
       )}
 
       <Link href={`/${locale}/account`} className="text-sm text-muted-foreground underline underline-offset-4">

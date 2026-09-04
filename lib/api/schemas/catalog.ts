@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { EYE_ENLARGEMENT_BANDS } from '@/lib/products/eye-enlargement';
 
 export const lensTypeSchema = z.enum(['clear', 'colored', 'toric', 'multifocal']);
 export const replacementScheduleSchema = z.enum(['daily', 'biweekly', 'monthly']);
@@ -70,6 +71,35 @@ export const reviewSchema = z.object({
   sourceUrl: z.string().url().optional(),
 });
 
+// Comparison (spec §4 endpoint, §10 feature note). Request is capped at 4
+// products — the same cap `useCompareStore` enforces client-side; enforced
+// again here since the store cap is not a guarantee about the request body.
+export const compareRequestSchema = z.object({
+  productIds: z.array(z.string()).min(1).max(4),
+});
+
+// `eyeEnlargement` is computed by `eyeEnlargementBand()` at request time —
+// see lib/products/eye-enlargement.ts. It is never stored on `ProductSpecs`.
+export const comparisonRowSchema = z.object({
+  id: z.string(),
+  slug: z.string(),
+  name: z.string(),
+  image: z.string(),
+  color: z.string().optional(),
+  colorLabel: z.string().optional(),
+  diameter: z.string(),
+  eyeEnlargement: z.enum(EYE_ENLARGEMENT_BANDS),
+  // "Lifespan" (spec §10) is the existing replacement schedule under a
+  // shopper-facing label — not a new field.
+  lifespan: replacementScheduleSchema,
+  price: z.number().int().nonnegative(),
+  currency: currencySchema,
+});
+
+export const comparisonMatrixSchema = z.object({
+  products: z.array(comparisonRowSchema),
+});
+
 const blankToUndefined = <T extends z.ZodTypeAny>(inner: T) =>
   z.preprocess((v) => (v === '' || v === null ? undefined : v), inner.optional());
 
@@ -113,3 +143,6 @@ export type Product = z.infer<typeof productSchema>;
 export type Collection = z.infer<typeof collectionSchema>;
 export type Review = z.infer<typeof reviewSchema>;
 export type ProductQuery = z.infer<typeof productQuerySchema>;
+export type CompareRequest = z.infer<typeof compareRequestSchema>;
+export type ComparisonRow = z.infer<typeof comparisonRowSchema>;
+export type ComparisonMatrix = z.infer<typeof comparisonMatrixSchema>;

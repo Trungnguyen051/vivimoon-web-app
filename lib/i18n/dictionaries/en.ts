@@ -100,6 +100,14 @@ export const en = {
     title: 'Favorites', empty: 'You have no favorites yet.',
     add: 'Add to favorites', remove: 'Remove from favorites',
   },
+  compare: {
+    add: 'Add to compare', remove: 'Remove from compare', full: 'Compare list is full (max 4)',
+    tray: 'Compare', clearAll: 'Clear all',
+    title: 'Compare products', empty: 'No products selected',
+    eyeEnlargement: 'Eye enlargement', lifespan: 'Lifespan', price: 'Price',
+    bands: { natural: 'Natural', subtle: 'Subtle', noticeable: 'Noticeable', dramatic: 'Dramatic' },
+    error: 'Could not load the comparison. Please try again.',
+  },
   vouchers: {
     title: 'My vouchers', empty: 'You have no vouchers available right now.',
     off: 'off', freeShipping: 'Free shipping', minSpend: 'Min. spend', expires: 'Expires',

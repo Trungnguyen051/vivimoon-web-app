@@ -2,11 +2,16 @@
 import { useEffect } from 'react';
 import type { Product } from '@/lib/types';
 import type { Locale } from '@/lib/i18n/config';
+import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { ProductCard } from './product-card';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
 import { toGa4Items } from '@/lib/analytics/events';
 
-export function ProductGrid({ products, locale, listId }: { products: Product[]; locale: Locale; listId: string }) {
+export function ProductGrid({
+  products, locale, dict, listId,
+}: {
+  products: Product[]; locale: Locale; dict: Dictionary; listId: string;
+}) {
   const { track } = useAnalytics();
   useEffect(() => {
     track({ name: 'view_item_list', params: { item_list_id: listId, items: toGa4Items(products.map((p) => ({ product: p }))) } });
@@ -19,6 +24,7 @@ export function ProductGrid({ products, locale, listId }: { products: Product[];
           key={p.id}
           product={p}
           locale={locale}
+          dict={dict}
           onSelect={() => track({ name: 'select_item', params: { item_list_id: listId, items: toGa4Items([{ product: p }]) } })}
         />
       ))}

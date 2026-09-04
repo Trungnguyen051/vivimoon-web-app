@@ -10,4 +10,6 @@ export type {
   ProductSpecs,
   Variant,
   Product,
+  ComparisonRow,
+  ComparisonMatrix,
 } from '@/lib/api/schemas/catalog';

@@ -63,7 +63,7 @@ export default async function CollectionPage({
           </EmptyHeader>
         </Empty>
       ) : (
-        <ProductGrid products={products} locale={l} listId={collection.slug} />
+        <ProductGrid products={products} locale={l} dict={dict} listId={collection.slug} />
       )}
     </div>
   );

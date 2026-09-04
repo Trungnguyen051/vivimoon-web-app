@@ -6,6 +6,7 @@ import { catalog } from '@/lib/api/resources/catalog';
 import { ProductGallery } from '@/components/commerce/product-gallery';
 import { AddToCart } from '@/components/commerce/add-to-cart';
 import { FavoriteButton } from '@/components/commerce/favorite-button';
+import { CompareToggle } from '@/components/commerce/compare-toggle';
 import { SpecTable } from '@/components/commerce/spec-table';
 import { ReviewsList } from '@/components/commerce/reviews-list';
 import { CollectionCarousel } from '@/components/commerce/collection-carousel';
@@ -55,7 +56,10 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
             </div>
             <p className="max-w-prose leading-relaxed text-muted-foreground">{product.description}</p>
             <AddToCart product={product} locale={l} dict={dict} />
-            <FavoriteButton productId={product.id} locale={l} dict={dict.favorites} />
+            <div className="flex flex-wrap gap-2">
+              <FavoriteButton productId={product.id} locale={l} dict={dict.favorites} />
+              <CompareToggle productId={product.id} dict={dict} variant="button" />
+            </div>
           </div>
         </div>
       </div>
@@ -65,7 +69,7 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
         <SpecTable specs={product.specs} dict={dict} />
       </section>
 
-      <CollectionCarousel title={dict.pdp.related} products={related} locale={l} seeMoreHref={`/${l}/collection/bestsellers`} seeMoreLabel={dict.common.seeMore} />
+      <CollectionCarousel title={dict.pdp.related} products={related} locale={l} dict={dict} seeMoreHref={`/${l}/collection/bestsellers`} seeMoreLabel={dict.common.seeMore} />
 
       <ReviewsList reviews={reviews} dict={dict} />
     </div>

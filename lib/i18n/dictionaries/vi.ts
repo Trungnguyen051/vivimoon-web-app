@@ -102,6 +102,14 @@ export const vi: Dictionary = {
     title: 'Yêu thích', empty: 'Bạn chưa có sản phẩm yêu thích nào.',
     add: 'Thêm vào yêu thích', remove: 'Bỏ yêu thích',
   },
+  compare: {
+    add: 'Thêm vào so sánh', remove: 'Bỏ khỏi so sánh', full: 'Danh sách so sánh đã đầy (tối đa 4)',
+    tray: 'So sánh', clearAll: 'Xóa tất cả',
+    title: 'So sánh sản phẩm', empty: 'Chưa chọn sản phẩm nào',
+    eyeEnlargement: 'Hiệu ứng giãn tròng', lifespan: 'Thời hạn sử dụng', price: 'Giá',
+    bands: { natural: 'Tự nhiên', subtle: 'Nhẹ', noticeable: 'Rõ', dramatic: 'Mạnh' },
+    error: 'Không thể tải bảng so sánh. Vui lòng thử lại.',
+  },
   vouchers: {
     title: 'Voucher của tôi', empty: 'Hiện chưa có voucher nào khả dụng.',
     off: 'giảm', freeShipping: 'Miễn phí vận chuyển', minSpend: 'Đơn tối thiểu', expires: 'Hết hạn',

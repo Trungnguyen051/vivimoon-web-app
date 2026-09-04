@@ -4,12 +4,13 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import type { Product } from '@/lib/types';
 import type { Locale } from '@/lib/i18n/config';
+import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { ProductCard } from './product-card';
 
 export function CollectionCarousel({
-  title, products, locale, seeMoreHref, seeMoreLabel,
+  title, products, locale, dict, seeMoreHref, seeMoreLabel,
 }: {
-  title: string; products: Product[]; locale: Locale; seeMoreHref: string; seeMoreLabel: string;
+  title: string; products: Product[]; locale: Locale; dict: Dictionary; seeMoreHref: string; seeMoreLabel: string;
 }) {
   const [ref, embla] = useEmblaCarousel({ align: 'start', dragFree: true });
   return (
@@ -46,7 +47,7 @@ export function CollectionCarousel({
         <div className="flex gap-5">
           {products.map((p) => (
             <div key={p.id} className="min-w-0 flex-[0_0_60%] sm:flex-[0_0_38%] lg:flex-[0_0_23%]">
-              <ProductCard product={p} locale={locale} />
+              <ProductCard product={p} locale={locale} dict={dict} />
             </div>
           ))}
         </div>

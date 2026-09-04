@@ -5,6 +5,7 @@ import { AnnouncementBar } from '@/components/layout/announcement-bar';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { SessionSync } from '@/features/session/session-sync';
+import { ComparisonTray } from '@/components/commerce/comparison-tray';
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -25,6 +26,7 @@ export default async function LocaleLayout({
       <Header locale={locale as Locale} dict={dict} />
       <main className="mx-auto w-full max-w-7xl px-4 py-10 md:py-14">{children}</main>
       <Footer locale={locale as Locale} dict={dict} />
+      <ComparisonTray locale={locale as Locale} dict={dict} />
     </>
   );
 }
