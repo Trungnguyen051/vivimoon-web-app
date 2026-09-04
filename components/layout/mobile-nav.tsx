@@ -45,6 +45,14 @@ export function MobileNav({ locale, dict }: { locale: Locale; dict: Dictionary }
               </Link>
             </SheetClose>
           ))}
+          <SheetClose asChild>
+            <Link
+              href={`/${locale}/quiz`}
+              className="flex min-h-11 items-center rounded-md px-2 text-base font-medium hover:bg-muted"
+            >
+              {dict.nav.quiz}
+            </Link>
+          </SheetClose>
         </nav>
 
         <div className="mt-auto border-t p-4">

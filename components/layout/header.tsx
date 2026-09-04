@@ -21,6 +21,12 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
           Vivimoon
         </Link>
         <MegaNav locale={locale} dict={dict} />
+        <Link
+          href={`/${locale}/quiz`}
+          className="hidden text-sm text-muted-foreground transition-colors hover:text-foreground md:block"
+        >
+          {dict.nav.quiz}
+        </Link>
         <div className="ml-auto flex items-center gap-1 md:gap-2">
           <div className="hidden items-center gap-2 rounded-full border px-3.5 py-2 text-muted-foreground transition-colors focus-within:border-ring md:flex">
             <Search className="size-4" />

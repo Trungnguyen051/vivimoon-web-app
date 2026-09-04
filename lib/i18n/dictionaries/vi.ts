@@ -1,7 +1,7 @@
 import type { Dictionary } from './en';
 
 export const vi: Dictionary = {
-  nav: { new: 'Mới', men: 'Nam', women: 'Nữ', sport: 'Thể thao', accessories: 'Phụ kiện', sale: 'Giảm giá' },
+  nav: { new: 'Mới', men: 'Nam', women: 'Nữ', sport: 'Thể thao', accessories: 'Phụ kiện', sale: 'Giảm giá', quiz: 'Trắc nghiệm' },
   common: { shopNow: 'Mua ngay', seeMore: 'Xem thêm', addToCart: 'Thêm vào giỏ', buyNow: 'Mua ngay', search: 'Tìm kiếm...', decreaseQty: 'Giảm số lượng', increaseQty: 'Tăng số lượng', menu: 'Menu' },
   announcement: { freeShipping: 'Miễn phí vận chuyển cho đơn từ 1.000.000đ' },
   collection: {
@@ -113,6 +113,12 @@ export const vi: Dictionary = {
   viewer: {
     eye: 'Mắt', face: 'Khuôn mặt', withMakeup: 'Có trang điểm', withoutMakeup: 'Không trang điểm',
     byEyeColor: 'Theo màu mắt',
+  },
+  quiz: {
+    title: 'Trắc nghiệm chọn lens', next: 'Tiếp theo', back: 'Quay lại', submit: 'Xem kết quả',
+    resultsTitle: 'Gợi ý cho bạn', retake: 'Làm lại bài trắc nghiệm',
+    unanswered: 'Chọn một câu trả lời để tiếp tục.',
+    error: 'Đã có lỗi khi chấm điểm câu trả lời của bạn. Vui lòng thử lại.',
   },
   vouchers: {
     title: 'Voucher của tôi', empty: 'Hiện chưa có voucher nào khả dụng.',

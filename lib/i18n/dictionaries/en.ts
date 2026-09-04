@@ -1,5 +1,5 @@
 export const en = {
-  nav: { new: 'New', men: 'Men', women: 'Women', sport: 'Sport', accessories: 'Accessories', sale: 'Sale' },
+  nav: { new: 'New', men: 'Men', women: 'Women', sport: 'Sport', accessories: 'Accessories', sale: 'Sale', quiz: 'Quiz' },
   common: { shopNow: 'Shop Now', seeMore: 'See more', addToCart: 'Add to cart', buyNow: 'Buy now', search: 'Search...', decreaseQty: 'Decrease quantity', increaseQty: 'Increase quantity', menu: 'Menu' },
   announcement: { freeShipping: 'Free shipping on orders over $50' },
   collection: {
@@ -111,6 +111,12 @@ export const en = {
   viewer: {
     eye: 'Eye', face: 'Face', withMakeup: 'With makeup', withoutMakeup: 'Without makeup',
     byEyeColor: 'By eye color',
+  },
+  quiz: {
+    title: 'Lens-Matching Quiz', next: 'Next', back: 'Back', submit: 'See my results',
+    resultsTitle: 'Recommended for you', retake: 'Retake the quiz',
+    unanswered: 'Select an answer to continue.',
+    error: 'Something went wrong scoring your answers. Please try again.',
   },
   vouchers: {
     title: 'My vouchers', empty: 'You have no vouchers available right now.',
