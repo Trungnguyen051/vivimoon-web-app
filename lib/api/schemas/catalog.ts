@@ -100,6 +100,22 @@ export const comparisonMatrixSchema = z.object({
   products: z.array(comparisonRowSchema),
 });
 
+// Lens Viewer (spec §10, §11). Image = a URL string, same shape as
+// `Product.images`. `byEyeColor` is keyed by the model's natural eye color
+// in the demo photo (e.g. "brown"), not the lens's own color variant.
+export const lensGalleryContextsSchema = z.object({
+  eye: z.array(z.string()),
+  face: z.array(z.string()),
+  withMakeup: z.array(z.string()),
+  withoutMakeup: z.array(z.string()),
+  byEyeColor: z.record(z.string(), z.array(z.string())),
+});
+
+export const lensGallerySchema = z.object({
+  productId: z.string(),
+  contexts: lensGalleryContextsSchema,
+});
+
 const blankToUndefined = <T extends z.ZodTypeAny>(inner: T) =>
   z.preprocess((v) => (v === '' || v === null ? undefined : v), inner.optional());
 
@@ -146,3 +162,5 @@ export type ProductQuery = z.infer<typeof productQuerySchema>;
 export type CompareRequest = z.infer<typeof compareRequestSchema>;
 export type ComparisonRow = z.infer<typeof comparisonRowSchema>;
 export type ComparisonMatrix = z.infer<typeof comparisonMatrixSchema>;
+export type LensGalleryContexts = z.infer<typeof lensGalleryContextsSchema>;
+export type LensGallery = z.infer<typeof lensGallerySchema>;

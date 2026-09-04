@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { productSchema, reviewSchema, productQuerySchema, parseProductQueryLoose } from './catalog';
+import { productSchema, reviewSchema, productQuerySchema, parseProductQueryLoose, lensGallerySchema } from './catalog';
 
 const validProduct = {
   id: 'p1', slug: 'aqua', name: 'Aqua', brandId: 'b1', brandName: 'Brand',
@@ -67,6 +67,36 @@ describe('productQuerySchema', () => {
 
   it('rejects an unknown sort', () => {
     expect(() => productQuerySchema.parse({ sort: 'cheapest' })).toThrow();
+  });
+});
+
+describe('lensGallerySchema', () => {
+  const validGallery = {
+    productId: 'p1',
+    contexts: {
+      eye: ['/a.jpg', '/b.jpg'],
+      face: ['/a.jpg'],
+      withMakeup: ['/b.jpg'],
+      withoutMakeup: ['/a.jpg'],
+      byEyeColor: { brown: ['/a.jpg'], blue: ['/b.jpg'] },
+    },
+  };
+
+  it('accepts a gallery with all five context keys populated', () => {
+    expect(lensGallerySchema.parse(validGallery).contexts.eye).toEqual(['/a.jpg', '/b.jpg']);
+  });
+
+  it('accepts an arbitrary string-keyed byEyeColor record', () => {
+    const g = lensGallerySchema.parse({
+      ...validGallery,
+      contexts: { ...validGallery.contexts, byEyeColor: { hazel: ['/a.jpg'], green: ['/b.jpg'] } },
+    });
+    expect(Object.keys(g.contexts.byEyeColor)).toEqual(['hazel', 'green']);
+  });
+
+  it('rejects a gallery missing a context key', () => {
+    const { face: _face, ...rest } = validGallery.contexts;
+    expect(() => lensGallerySchema.parse({ ...validGallery, contexts: rest })).toThrow();
   });
 });
 

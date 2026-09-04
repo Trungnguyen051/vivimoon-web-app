@@ -7,8 +7,8 @@
  */
 import { describe, it, expect } from 'vitest';
 import { z } from 'zod';
-import { products, collections, reviews, users, vouchers, orders } from '@/content/mock';
-import { productSchema, collectionSchema, reviewSchema } from '@/lib/api/schemas/catalog';
+import { products, collections, reviews, users, vouchers, orders, galleries } from '@/content/mock';
+import { productSchema, collectionSchema, reviewSchema, lensGallerySchema } from '@/lib/api/schemas/catalog';
 import { userSchema } from '@/lib/api/schemas/auth';
 import { voucherSchema } from '@/lib/api/schemas/cart';
 import { orderSchema, orderStatusSchema } from '@/lib/api/schemas/orders';
@@ -56,6 +56,16 @@ describe('fixture conformance', () => {
   it('review productIds all resolve to a real product', () => {
     const ids = new Set(products.map((p) => p.id));
     const dangling = reviews.filter((r) => !ids.has(r.productId)).map((r) => r.id);
+    expect(dangling).toEqual([]);
+  });
+
+  it('every gallery satisfies lensGallerySchema', () => {
+    expectAllValid(lensGallerySchema, galleries, 'gallery');
+  });
+
+  it('gallery productIds all resolve to a real product', () => {
+    const ids = new Set(products.map((p) => p.id));
+    const dangling = galleries.filter((g) => !ids.has(g.productId)).map((g) => g.productId);
     expect(dangling).toEqual([]);
   });
 

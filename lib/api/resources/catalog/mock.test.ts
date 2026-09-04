@@ -85,4 +85,13 @@ describe('mockCatalog', () => {
   it('lists collections', async () => {
     expect((await mockCatalog.listCollections()).length).toBeGreaterThan(0);
   });
+
+  it('finds a gallery for a product that has one', async () => {
+    const g = await mockCatalog.getGallery('p-aqua-daily');
+    expect(g?.productId).toBe('p-aqua-daily');
+  });
+
+  it('returns null for a product with no gallery entry', async () => {
+    expect(await mockCatalog.getGallery('p-torica-monthly')).toBeNull();
+  });
 });

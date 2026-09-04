@@ -1,5 +1,5 @@
-import { products, collections, reviews } from '@/content/mock';
-import type { Collection, Product, ProductQuery, Review, Variant } from '@/lib/api/schemas/catalog';
+import { products, collections, reviews, galleries } from '@/content/mock';
+import type { Collection, LensGallery, Product, ProductQuery, Review, Variant } from '@/lib/api/schemas/catalog';
 
 /** Lowest variant price, used for sorting. */
 export function minPrice(product: Product): number {
@@ -56,6 +56,11 @@ export const mockCatalog = {
 
   async getReviews(productId: string): Promise<Review[]> {
     return reviews.filter((r) => r.productId === productId);
+  },
+
+  /** `null` when the product has no gallery entry — the fallback signal the PDP branches on to render the plain `ProductGallery` instead. */
+  async getGallery(productId: string): Promise<LensGallery | null> {
+    return galleries.find((g) => g.productId === productId) ?? null;
   },
 
   /**

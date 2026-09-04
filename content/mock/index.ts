@@ -1,4 +1,5 @@
 export { products } from './products';
+export { galleries } from './galleries';
 export { collections } from './collections';
 export { reviews } from './reviews';
 export { users, type MockUser } from './users';

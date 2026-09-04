@@ -12,4 +12,5 @@ export type {
   Product,
   ComparisonRow,
   ComparisonMatrix,
+  LensGallery,
 } from '@/lib/api/schemas/catalog';
