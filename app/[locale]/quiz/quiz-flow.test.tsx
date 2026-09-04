@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QuizFlow } from './quiz-flow';
 import { apiRequest } from '@/lib/api/client';
@@ -87,6 +87,26 @@ describe('QuizFlow', () => {
     });
     expect(await screen.findByText('Product rec-1')).toBeInTheDocument();
     expect(screen.getByText('Product rec-2')).toBeInTheDocument();
+  });
+
+  it('a rapid double-click on submit fires only one request, not two', async () => {
+    mockedApiRequest.mockResolvedValue({ ok: true, data: { recommendations: [product('rec-1')] } });
+    const user = userEvent.setup();
+    render(<QuizFlow definition={definition} locale="en" dict={en} />);
+
+    await user.click(screen.getByRole('radio', { name: 'Option A' }));
+    await user.click(screen.getByRole('button', { name: en.quiz.next }));
+    await user.click(screen.getByRole('radio', { name: 'Option C' }));
+
+    const submitButton = screen.getByRole('button', { name: en.quiz.submit });
+    // Two clicks in the same synchronous tick (fireEvent, not userEvent, so
+    // nothing awaits between them) — the ref guard, not just `isPending`
+    // state, is what has to catch the second one before any re-render.
+    fireEvent.click(submitButton);
+    fireEvent.click(submitButton);
+
+    await screen.findByText('Product rec-1');
+    expect(mockedApiRequest).toHaveBeenCalledTimes(1);
   });
 
   it('retaking the quiz after results returns to the first question with a clean slate', async () => {

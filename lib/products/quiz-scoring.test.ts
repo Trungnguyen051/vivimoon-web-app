@@ -49,9 +49,7 @@ describe('scoreQuiz', () => {
     const ranked = scoreQuiz(answers, questions, fixtureProducts);
     const coloredIds = new Set([colored1.id, colored2.id]);
     const firstClearIndex = ranked.findIndex((p) => !coloredIds.has(p.id));
-    const lastColoredIndex = ranked.map((p) => p.id).lastIndexOf([...coloredIds][0]) >= 0
-      ? Math.max(...ranked.map((p, i) => (coloredIds.has(p.id) ? i : -1)))
-      : -1;
+    const lastColoredIndex = Math.max(...ranked.map((p, i) => (coloredIds.has(p.id) ? i : -1)));
     expect(lastColoredIndex).toBeLessThan(firstClearIndex);
   });
 

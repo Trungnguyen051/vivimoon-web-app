@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import type { QuizDefinition, QuizSubmitResponse } from '@/lib/api/schemas/discovery';
@@ -29,6 +29,10 @@ export function QuizFlow({
   const [results, setResults] = useState<Product[] | null>(null);
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // `isPending` state alone doesn't block a second click that fires before
+  // the first's re-render commits (e.g. a fast double-tap) — this ref is
+  // updated synchronously so the second call sees it immediately.
+  const isSubmittingRef = useRef(false);
 
   const question = definition.questions[step];
   const isLast = step === definition.questions.length - 1;
@@ -48,12 +52,15 @@ export function QuizFlow({
       setStep((s) => s + 1);
       return;
     }
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
     setIsPending(true);
     setError(null);
     const res = await apiRequest<QuizSubmitResponse>('/api/quiz/submit', {
       method: 'POST',
       body: { answers: definition.questions.map((q) => ({ questionId: q.id, optionId: answers[q.id] })) },
     });
+    isSubmittingRef.current = false;
     setIsPending(false);
     if (res.ok) setResults(res.data.recommendations);
     else setError(res.error.message || dict.quiz.error);

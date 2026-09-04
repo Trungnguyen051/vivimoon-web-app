@@ -46,4 +46,17 @@ describe('POST /api/quiz/submit', () => {
     expect(res.status).toBe(400);
     expect(body.error.code).toBe('validation_failed');
   });
+
+  it('rejects two answers for the same question with 400 validation_failed', async () => {
+    const q = quiz.questions[0];
+    const res = await POST(submitReq({
+      answers: [
+        { questionId: q.id, optionId: q.options[0].id },
+        { questionId: q.id, optionId: q.options[1].id },
+      ],
+    }));
+    const body = await res.json();
+    expect(res.status).toBe(400);
+    expect(body.error.code).toBe('validation_failed');
+  });
 });

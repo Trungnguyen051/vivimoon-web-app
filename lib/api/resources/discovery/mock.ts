@@ -55,12 +55,20 @@ export const mockDiscovery = {
   },
 
   /**
-   * Validates every answer against the real question/option ids before
-   * scoring — unlike `compare`'s silent-drop of a stale id, a bad quiz
-   * answer is a client bug and should error (spec Task 7 Step 4).
+   * Validates every answer against the real question/option ids, and that no
+   * question is answered twice, before scoring — unlike `compare`'s
+   * silent-drop of a stale id, a bad quiz answer is a client bug and should
+   * error (spec Task 7 Step 4). A duplicate questionId would otherwise let
+   * `accumulateWeights` (quiz-scoring.ts) count that option's tag weights
+   * twice, silently skewing the ranking.
    */
   async submitQuiz(answers: QuizAnswer[]): Promise<Product[]> {
+    const seenQuestionIds = new Set<string>();
     for (const answer of answers) {
+      if (seenQuestionIds.has(answer.questionId)) {
+        throw new DiscoveryError(`Duplicate answer for question "${answer.questionId}"`);
+      }
+      seenQuestionIds.add(answer.questionId);
       const question = quiz.questions.find((q) => q.id === answer.questionId);
       const option = question?.options.find((o) => o.id === answer.optionId);
       if (!option) {

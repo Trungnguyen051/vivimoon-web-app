@@ -64,4 +64,14 @@ describe('mockDiscovery.submitQuiz', () => {
       mockDiscovery.submitQuiz([{ questionId: q.id, optionId: 'not-an-option' }]),
     ).rejects.toBeInstanceOf(DiscoveryError);
   });
+
+  it('rejects two answers for the same question rather than double-counting its weight', async () => {
+    const q = quiz.questions[0];
+    await expect(
+      mockDiscovery.submitQuiz([
+        { questionId: q.id, optionId: q.options[0].id },
+        { questionId: q.id, optionId: q.options[1].id },
+      ]),
+    ).rejects.toBeInstanceOf(DiscoveryError);
+  });
 });
