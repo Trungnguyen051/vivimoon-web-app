@@ -108,9 +108,10 @@
   "106": "implement/SKILL.md",
   "107": "account-routes.test.ts",
   "108": "[id]/route.test.ts",
-  "109": "cart-line-item.tsx",
+  "109": "Task 12: Carousels & CategoryGrid",
   "110": "1. Overview",
   "111": "AddressForm",
   "112": "3. Architecture — the proxy seam",
-  "113": "lucide-react"
+  "113": "lucide-react",
+  "114": "Task 18: Cart page + line item + order summary"
 }

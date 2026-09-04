@@ -1,16 +1,16 @@
 # Graph Report - vivimoon-web-app  (2026-09-04)
 
 ## Corpus Check
-- 297 files · ~121,071 words
+- 297 files · ~121,348 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1441 nodes · 3423 edges · 114 communities (81 shown, 33 thin omitted)
+- 1441 nodes · 3423 edges · 115 communities (83 shown, 32 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 30 edges (avg confidence: 0.77)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `07641cd6`
+- Built from commit: `5e30d18f`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -116,11 +116,12 @@
 - prettier
 - account-routes.test.ts
 - [id]/route.test.ts
-- cart-line-item.tsx
+- Task 12: Carousels & CategoryGrid
 - 1. Overview
 - AddressForm
 - 3. Architecture — the proxy seam
 - lucide-react
+- Task 18: Cart page + line item + order summary
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 113 edges
@@ -154,7 +155,7 @@
 - **Four swappable architecture seams (data, theming, i18n, analytics) isolating volatility** — docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productrepository, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_theming_seam, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_i18n_seam, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_analytics_seam [EXTRACTED 1.00]
 - **Coolmate apparel patterns re-modeled for Vivimoon contact-lens domain** — docs_research_coolmate_website_analysis_product_card, docs_research_coolmate_website_analysis_pdp, docs_research_coolmate_website_analysis_color_variant_url_pattern, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productcard, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant [INFERRED 0.85]
 
-## Communities (114 total, 33 thin omitted)
+## Communities (115 total, 32 thin omitted)
 
 ### Community 0 - "getDictionary"
 Cohesion: 0.13
@@ -229,8 +230,8 @@ Cohesion: 0.08
 Nodes (21): geistMono, geistSans, metadata, CompareToggle(), ComparisonDialog(), matrix, ComparisonTray(), mockedApiRequest (+13 more)
 
 ### Community 18 - "i18n seam (locale-prefixed routes, getDictionary)"
-Cohesion: 0.11
-Nodes (19): Multi-language/locale switcher (topbar), Utility topbar (Coolmate), Task 7: i18n seam (config, dictionaries, middleware), Task 8: Analytics seam (GA4), Analytics seam (GA4 via typed track() wrapper), GA4 ecommerce events (view_item_list, select_item, view_item, add_to_cart, remove_from_cart, view_cart, begin_checkout, purchase), getDictionary(locale) function, @next/third-parties GoogleAnalytics component (+11 more)
+Cohesion: 0.13
+Nodes (16): Task 7: i18n seam (config, dictionaries, middleware), Task 8: Analytics seam (GA4), Analytics seam (GA4 via typed track() wrapper), GA4 ecommerce events (view_item_list, select_item, view_item, add_to_cart, remove_from_cart, view_cart, begin_checkout, purchase), getDictionary(locale) function, @next/third-parties GoogleAnalytics component, Rationale for lightweight custom i18n over next-intl, i18n seam (locale-prefixed routes, getDictionary) (+8 more)
 
 ### Community 19 - "cn"
 Cohesion: 0.17
@@ -253,12 +254,12 @@ Cohesion: 0.09
 Nodes (17): ADDRESS, BASELINE_LINES, jar, pricedLineSchema, priceLineInputSchema, Address, addressSchema, shippingOptionSchema (+9 more)
 
 ### Community 24 - "Two-tier component architecture (ui/ vs commerce/)"
-Cohesion: 0.15
-Nodes (14): Task 12: Carousels & CategoryGrid, Task 13: Layout chrome (AnnouncementBar, Header, MegaNav, LocaleSwitcher, Footer), Task 14: Home page, Task 15: Collection listing page + filters, CartLineItem component, CategoryGrid component, CollectionCarousel component, Two-tier component architecture (ui/ vs commerce/) (+6 more)
+Cohesion: 0.25
+Nodes (8): CartLineItem component, CategoryGrid component, CollectionCarousel component, Two-tier component architecture (ui/ vs commerce/), ProductGallery component, RatingStars component, ReviewsList component (read-only), SpecTable component
 
 ### Community 25 - "Product Detail Page (PDP) structure"
-Cohesion: 0.15
-Nodes (13): Color variants as distinct URLs (?color=slug) for SEO/deep-linking, CoolClub loyalty program + CoolCash currency, Fabric-technology brand system (cross-cutting taxonomy: CoolDry, CoolSoft, CoolRib, CoolFlex, ZeroMark), Fit-feedback histogram (Tight/True-to-size/Loose) in reviews, Product Detail Page (PDP) structure, Task 16: PDP components (Gallery, VariantSelector, SpecTable, ReviewsList), Task 17: PDP page + Add-to-cart, Task 18: Cart page + line item + order summary (+5 more)
+Cohesion: 0.22
+Nodes (9): Color variants as distinct URLs (?color=slug) for SEO/deep-linking, CoolClub loyalty program + CoolCash currency, Fabric-technology brand system (cross-cutting taxonomy: CoolDry, CoolSoft, CoolRib, CoolFlex, ZeroMark), Fit-feedback histogram (Tight/True-to-size/Loose) in reviews, Product Detail Page (PDP) structure, Task 15: Collection listing page + filters, Task 16: PDP components (Gallery, VariantSelector, SpecTable, ReviewsList), Task 17: PDP page + Add-to-cart (+1 more)
 
 ### Community 26 - "mobile-nav.tsx"
 Cohesion: 0.26
@@ -269,8 +270,8 @@ Cohesion: 0.13
 Nodes (17): ApiMode, DEPENDS_ON, rawMode(), readMode(), resolveMode(), ResourceName, RESOURCES, saved (+9 more)
 
 ### Community 28 - "dictionaries.ts"
-Cohesion: 0.18
-Nodes (10): definition, mockedApiRequest, ReviewSourceBadge(), ReviewsList(), reviews, Review, dictionaries, Dictionary (+2 more)
+Cohesion: 0.14
+Nodes (12): definition, mockedApiRequest, CartLineItem(), QuantityStepper(), ReviewSourceBadge(), ReviewsList(), reviews, Review (+4 more)
 
 ### Community 29 - "comparison-dialog.tsx"
 Cohesion: 0.21
@@ -440,6 +441,10 @@ Nodes (5): OrderStatusTimeline(), PROGRESSION, TERMINAL_DISTINCT, ORDER_STATUSES
 Cohesion: 0.33
 Nodes (6): 5. Migration Strategy, Adapting drift, Conformance suite, Cutover order, Per-resource cutover, Runtime validation
 
+### Community 109 - "Task 12: Carousels & CategoryGrid"
+Cohesion: 0.29
+Nodes (7): Multi-language/locale switcher (topbar), Utility topbar (Coolmate), Task 12: Carousels & CategoryGrid, Task 13: Layout chrome (AnnouncementBar, Header, MegaNav, LocaleSwitcher, Footer), Task 14: Home page, HeroCarousel component, LocaleSwitcher component
+
 ### Community 110 - "1. Overview"
 Cohesion: 0.50
 Nodes (4): 1. Overview, Baseline non-goals now in scope, Goals, Non-goals
@@ -447,6 +452,10 @@ Nodes (4): 1. Overview, Baseline non-goals now in scope, Goals, Non-goals
 ### Community 112 - "3. Architecture — the proxy seam"
 Cohesion: 0.67
 Nodes (3): 3. Architecture — the proxy seam, Configuration, Resource layout
+
+### Community 114 - "Task 18: Cart page + line item + order summary"
+Cohesion: 0.33
+Nodes (6): Task 18: Cart page + line item + order summary, Task 19: Checkout + success (stubbed payment), Task 20: Final verification (responsive, a11y, build, tests), OrderSummary component, Pages table (Home, Collection, PDP, Cart, Checkout, Checkout success), Testing strategy (Vitest unit + RTL component tests)
 
 ## Ambiguous Edges - Review These
 - `Cat Product Imagery (implied by filename)` → `Cat Colored (blank placeholder image)`  [AMBIGUOUS]
@@ -473,7 +482,7 @@ Nodes (3): 3. Architecture — the proxy seam, Configuration, Resource layout
 ## Knowledge Gaps
 - **430 isolated node(s):** `Stage`, `push`, `push`, `user`, `NON_DEFAULT` (+425 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **33 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **32 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
