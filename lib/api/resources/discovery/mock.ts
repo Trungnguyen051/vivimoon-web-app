@@ -1,6 +1,19 @@
 import { catalog } from '@/lib/api/resources/catalog';
 import { eyeEnlargementBand } from '@/lib/products/eye-enlargement';
+import { scoreQuiz } from '@/lib/products/quiz-scoring';
+import { quiz } from '@/content/quiz';
 import type { ComparisonMatrix, ComparisonRow, Product } from '@/lib/api/schemas/catalog';
+import type { QuizAnswer, QuizDefinition } from '@/lib/api/schemas/discovery';
+
+/** Thrown by `submitQuiz` for an answer referencing an unknown question/option
+ *  id — a client bug, unlike a stale compare id, which is expected and
+ *  degrades silently instead. Route handlers map this to `validation_failed`. */
+export class DiscoveryError extends Error {
+  constructor(message: string, readonly code: 'validation_failed' = 'validation_failed') {
+    super(message);
+    this.name = 'DiscoveryError';
+  }
+}
 
 function cheapestVariant(product: Product) {
   return product.variants.reduce((min, v) => (v.price < min.price ? v : min), product.variants[0]);
@@ -35,6 +48,27 @@ export const mockDiscovery = {
   async compare(productIds: string[]): Promise<ComparisonMatrix> {
     const products = await catalog.getProductsByIds(productIds);
     return { products: products.map(toComparisonRow) };
+  },
+
+  async getQuizDefinition(): Promise<QuizDefinition> {
+    return quiz;
+  },
+
+  /**
+   * Validates every answer against the real question/option ids before
+   * scoring — unlike `compare`'s silent-drop of a stale id, a bad quiz
+   * answer is a client bug and should error (spec Task 7 Step 4).
+   */
+  async submitQuiz(answers: QuizAnswer[]): Promise<Product[]> {
+    for (const answer of answers) {
+      const question = quiz.questions.find((q) => q.id === answer.questionId);
+      const option = question?.options.find((o) => o.id === answer.optionId);
+      if (!option) {
+        throw new DiscoveryError(`Unknown question/option "${answer.questionId}/${answer.optionId}"`);
+      }
+    }
+    const products = await catalog.listProducts();
+    return scoreQuiz(answers, quiz.questions, products);
   },
 };
 

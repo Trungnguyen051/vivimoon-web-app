@@ -8,7 +8,9 @@
 import { describe, it, expect } from 'vitest';
 import { z } from 'zod';
 import { products, collections, reviews, users, vouchers, orders, galleries } from '@/content/mock';
+import { quiz } from '@/content/quiz';
 import { productSchema, collectionSchema, reviewSchema, lensGallerySchema } from '@/lib/api/schemas/catalog';
+import { quizDefinitionSchema } from '@/lib/api/schemas/discovery';
 import { userSchema } from '@/lib/api/schemas/auth';
 import { voucherSchema } from '@/lib/api/schemas/cart';
 import { orderSchema, orderStatusSchema } from '@/lib/api/schemas/orders';
@@ -116,6 +118,20 @@ describe('fixture conformance', () => {
     const statuses = new Set(orders.map((o) => o.status));
     for (const status of orderStatusSchema.options) {
       expect(statuses.has(status), `missing seeded order with status "${status}"`).toBe(true);
+    }
+  });
+
+  it('content/quiz.ts satisfies quizDefinitionSchema', () => {
+    const result = quizDefinitionSchema.safeParse(quiz);
+    expect(result.success, result.success ? '' : result.error.issues.map((x) => `${x.path.join('.')} ${x.message}`).join('; ')).toBe(true);
+  });
+
+  it('quiz question and option ids are unique', () => {
+    const questionIds = quiz.questions.map((q) => q.id);
+    expect(questionIds.length).toBe(new Set(questionIds).size);
+    for (const q of quiz.questions) {
+      const optionIds = q.options.map((o) => o.id);
+      expect(optionIds.length, `${q.id} has duplicate option ids`).toBe(new Set(optionIds).size);
     }
   });
 });

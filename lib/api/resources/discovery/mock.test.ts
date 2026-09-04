@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { mockDiscovery } from './mock';
+import { mockDiscovery, DiscoveryError } from './mock';
 import { products } from '@/content/mock';
+import { quiz } from '@/content/quiz';
 import { eyeEnlargementBand } from '@/lib/products/eye-enlargement';
 
 describe('mockDiscovery.compare', () => {
@@ -32,5 +33,35 @@ describe('mockDiscovery.compare', () => {
     expect(matrix.products[0].lifespan).toBe(product.replacement);
     expect(matrix.products[0].price).toBe(cheapest.price);
     expect(matrix.products[0].currency).toBe(cheapest.currency);
+  });
+});
+
+describe('mockDiscovery.getQuizDefinition', () => {
+  it('returns content/quiz.ts as-is', async () => {
+    const definition = await mockDiscovery.getQuizDefinition();
+    expect(definition).toEqual(quiz);
+  });
+});
+
+describe('mockDiscovery.submitQuiz', () => {
+  it('scores real question/option answers against the real catalog', async () => {
+    const q = quiz.questions[0];
+    const recommendations = await mockDiscovery.submitQuiz([
+      { questionId: q.id, optionId: q.options[0].id },
+    ]);
+    expect(recommendations.length).toBeGreaterThan(0);
+  });
+
+  it('rejects an answer referencing an unknown question id', async () => {
+    await expect(
+      mockDiscovery.submitQuiz([{ questionId: 'not-a-question', optionId: 'not-an-option' }]),
+    ).rejects.toBeInstanceOf(DiscoveryError);
+  });
+
+  it('rejects an answer referencing an unknown option id on a real question', async () => {
+    const q = quiz.questions[0];
+    await expect(
+      mockDiscovery.submitQuiz([{ questionId: q.id, optionId: 'not-an-option' }]),
+    ).rejects.toBeInstanceOf(DiscoveryError);
   });
 });
