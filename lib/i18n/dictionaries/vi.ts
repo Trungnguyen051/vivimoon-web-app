@@ -110,6 +110,10 @@ export const vi: Dictionary = {
     bands: { natural: 'Tự nhiên', subtle: 'Nhẹ', noticeable: 'Rõ', dramatic: 'Mạnh' },
     error: 'Không thể tải bảng so sánh. Vui lòng thử lại.',
   },
+  viewer: {
+    eye: 'Mắt', face: 'Khuôn mặt', withMakeup: 'Có trang điểm', withoutMakeup: 'Không trang điểm',
+    byEyeColor: 'Theo màu mắt',
+  },
   vouchers: {
     title: 'Voucher của tôi', empty: 'Hiện chưa có voucher nào khả dụng.',
     off: 'giảm', freeShipping: 'Miễn phí vận chuyển', minSpend: 'Đơn tối thiểu', expires: 'Hết hạn',

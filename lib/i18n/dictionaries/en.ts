@@ -108,6 +108,10 @@ export const en = {
     bands: { natural: 'Natural', subtle: 'Subtle', noticeable: 'Noticeable', dramatic: 'Dramatic' },
     error: 'Could not load the comparison. Please try again.',
   },
+  viewer: {
+    eye: 'Eye', face: 'Face', withMakeup: 'With makeup', withoutMakeup: 'Without makeup',
+    byEyeColor: 'By eye color',
+  },
   vouchers: {
     title: 'My vouchers', empty: 'You have no vouchers available right now.',
     off: 'off', freeShipping: 'Free shipping', minSpend: 'Min. spend', expires: 'Expires',

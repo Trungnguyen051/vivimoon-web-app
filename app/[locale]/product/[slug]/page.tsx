@@ -4,6 +4,7 @@ import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { catalog } from '@/lib/api/resources/catalog';
 import { ProductGallery } from '@/components/commerce/product-gallery';
+import { LensViewer } from '@/components/commerce/lens-viewer';
 import { AddToCart } from '@/components/commerce/add-to-cart';
 import { FavoriteButton } from '@/components/commerce/favorite-button';
 import { CompareToggle } from '@/components/commerce/compare-toggle';
@@ -26,6 +27,7 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
 
   const related = await catalog.getRelatedProducts(product, 8);
   const reviews = await catalog.getReviews(product.id);
+  const gallery = await catalog.getGallery(product.id);
 
   return (
     <div className="space-y-16 md:space-y-24">
@@ -45,7 +47,11 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
         </Breadcrumb>
 
         <div className="grid gap-10 md:grid-cols-2 lg:gap-16">
-          <ProductGallery images={product.images} alt={product.name} />
+          {gallery ? (
+            <LensViewer gallery={gallery} alt={product.name} dict={dict.viewer} />
+          ) : (
+            <ProductGallery images={product.images} alt={product.name} />
+          )}
           <div className="flex flex-col gap-5">
             <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{product.name}</h1>
             <div className="flex items-center gap-2">
