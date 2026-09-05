@@ -138,7 +138,8 @@ export const vi: Dictionary = {
     backToOrders: 'Quay lại lịch sử đơn hàng',
   },
   tracking: {
-    title: 'Tra cứu đơn hàng', code: 'Mã đơn hàng', email: 'Email', submit: 'Lấy liên kết theo dõi',
+    title: 'Tra cứu đơn hàng', code: 'Mã đơn hàng',
+    identifier: 'Số điện thoại hoặc email', submit: 'Lấy liên kết theo dõi',
     devLinkNote: 'Chế độ phát triển — liên kết theo dõi của bạn là',
   },
   addresses: {

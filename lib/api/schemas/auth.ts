@@ -15,6 +15,16 @@ export function isPhone(identifier: string): boolean {
   return VN_PHONE.test(identifier);
 }
 
+/**
+ * Canonical form for phone comparisons — `+84912345678` and `0912345678` are
+ * the same number, but a strict string match would treat them as different.
+ * A no-op for anything that isn't `+84`-prefixed (emails included), so it's
+ * safe to apply to either side of an identifier match unconditionally.
+ */
+export function normalizePhone(identifier: string): string {
+  return identifier.startsWith('+84') ? `0${identifier.slice(3)}` : identifier;
+}
+
 export const userSchema = z.object({
   id: z.string(),
   phone: z.string(),

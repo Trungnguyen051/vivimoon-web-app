@@ -136,7 +136,7 @@ export const en = {
     backToOrders: 'Back to order history',
   },
   tracking: {
-    title: 'Track your order', code: 'Order code', email: 'Email', submit: 'Get tracking link',
+    title: 'Track your order', code: 'Order code', identifier: 'Phone or email', submit: 'Get tracking link',
     devLinkNote: 'Development mode — your tracking link is',
   },
   addresses: {

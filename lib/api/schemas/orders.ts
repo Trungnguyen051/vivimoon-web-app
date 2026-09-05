@@ -4,6 +4,7 @@ import { priceLineInputSchema, pricedLineSchema, pricedCartSchema } from './cart
 import { rxSchema } from './rx';
 import { addressSchema } from './checkout';
 import { paymentMethodTypeSchema, paymentStatusSchema } from './payments';
+import { identifierSchema } from './auth';
 
 export const orderStatusSchema = z.enum(ORDER_STATUSES);
 
@@ -41,10 +42,14 @@ export type PlaceOrderRequest = z.infer<typeof placeOrderRequestSchema>;
 export type OrderLine = z.infer<typeof orderLineSchema>;
 export type Order = z.infer<typeof orderSchema>;
 
-/** POST /api/orders/track body (M3.2, issue #11) — a guest's order code + the email it was placed with. */
+/**
+ * POST /api/orders/track body (M3.2, issue #11; widened to phone-or-email
+ * M5.2, issue #19) — a guest's order code + the phone or email it was
+ * placed with, reusing the same identifier validator sign-in uses.
+ */
 export const trackingRequestSchema = z.object({
   code: z.string().min(1),
-  email: z.string().email(),
+  identifier: identifierSchema,
 });
 
 /**

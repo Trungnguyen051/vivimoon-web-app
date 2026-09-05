@@ -11,14 +11,16 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export function TrackingRequestForm({ dict }: { dict: Dictionary['tracking'] }) {
   const [code, setCode] = useState('');
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [busy, setBusy] = useState(false);
   const [ack, setAck] = useState<TrackingAck | null>(null);
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
     setBusy(true);
-    const result = await apiRequest<TrackingAck>('/api/orders/track', { method: 'POST', body: { code, email } });
+    const result = await apiRequest<TrackingAck>('/api/orders/track', {
+      method: 'POST', body: { code, identifier },
+    });
     setBusy(false);
     // Same envelope either way (issue #11) — nothing here branches on
     // whether the order actually existed.
@@ -33,10 +35,10 @@ export function TrackingRequestForm({ dict }: { dict: Dictionary['tracking'] }) 
           <Input id="tracking-code" value={code} onChange={(e) => setCode(e.target.value)} required className="h-11" />
         </Field>
         <Field>
-          <FieldLabel htmlFor="tracking-email">{dict.email}</FieldLabel>
+          <FieldLabel htmlFor="tracking-identifier">{dict.identifier}</FieldLabel>
           <Input
-            id="tracking-email" type="email" value={email}
-            onChange={(e) => setEmail(e.target.value)} required className="h-11"
+            id="tracking-identifier" type="text" autoComplete="username" value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)} required className="h-11"
           />
         </Field>
         <Button type="submit" disabled={busy} className="h-12 text-base">{dict.submit}</Button>

@@ -3,6 +3,7 @@ import { orders as seedOrders } from '@/content/mock';
 import { pricing } from '@/lib/api/resources/pricing';
 import { shipping } from '@/lib/api/resources/shipping';
 import type { Order, PlaceOrderRequest } from '@/lib/api/schemas/orders';
+import { normalizePhone } from '@/lib/api/schemas/auth';
 
 /** Thrown by the mock so the route handler can map it to an envelope. */
 export class OrderError extends Error {
@@ -135,11 +136,24 @@ export const mockOrders = {
    * envelope either way, so the response itself never reveals which order
    * codes exist.
    */
-  async requestTracking(code: string, email: string): Promise<{ devLink?: string }> {
+  /**
+   * `identifier` matches either the order's guest email or the phone on its
+   * delivery address (spec: "SĐT/ Email người mua") — checked the same way
+   * `findByIdentifier` checks both fields in lib/api/resources/auth/mock.ts,
+   * rather than branching on which shape the identifier looks like.
+   * `normalizePhone` collapses the `+84`/`0`-prefixed forms of the same
+   * number, since `address.phone` isn't restricted to one of them.
+   */
+  async requestTracking(code: string, identifier: string): Promise<{ devLink?: string }> {
     const normalizedCode = code.trim().toUpperCase();
-    const normalizedEmail = email.trim().toLowerCase();
+    const trimmed = identifier.trim();
+    const normalizedEmail = trimmed.toLowerCase();
+    const normalizedPhone = normalizePhone(trimmed);
     const order = [...store.values()].find(
-      (o) => !o.userId && o.guestEmail?.toLowerCase() === normalizedEmail && o.code.toUpperCase() === normalizedCode,
+      (o) =>
+        !o.userId &&
+        o.code.toUpperCase() === normalizedCode &&
+        (o.guestEmail?.toLowerCase() === normalizedEmail || normalizePhone(o.address.phone) === normalizedPhone),
     );
     if (!order) return {};
 

@@ -4,13 +4,16 @@ import { isAnyUpstream } from '@/lib/api/config';
 import { apiOk } from '@/lib/api/response';
 import { parseBody } from '@/lib/api/route-helpers';
 
-const ACK_MESSAGE = 'If that order exists, a tracking link has been sent to the email on file.';
+// "the email on file" (not "your email") since the identifier used to
+// request tracking may be a phone number — the link itself is always
+// emailed to the order's own guestEmail regardless of what was typed here.
+const ACK_MESSAGE = 'If that order exists, a tracking link has been sent to the email on file for it.';
 
 export async function POST(request: Request) {
   const parsed = await parseBody(request, trackingRequestSchema);
   if (!parsed.ok) return parsed.response;
 
-  const { devLink } = await orders.requestTracking(parsed.data.code, parsed.data.email);
+  const { devLink } = await orders.requestTracking(parsed.data.code, parsed.data.identifier);
 
   // devLink is a local convenience — strip it the moment anything is live, or
   // in any production build, same posture as auth's devCode.
