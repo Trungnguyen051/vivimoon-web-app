@@ -1452,9 +1452,9 @@
     "semantic_hash": ""
   },
   "docs/legacy/superpowers-sdd-progress.md": {
-    "mtime": 1788581701.3976398,
-    "seen": 1788581710.036204,
-    "ast_hash": "cc3b9f114444129776453a59cfd5b7fb",
+    "mtime": 1788312410.282726,
+    "seen": 1788411507.091868,
+    "ast_hash": "43d544165b3088f77298920af7bce2bd",
     "semantic_hash": ""
   },
   "app/[locale]/account/orders/page.tsx": {
@@ -1830,9 +1830,9 @@
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-09-03-vivimoon-m4-discovery.md": {
-    "mtime": 1788581675.4625485,
-    "seen": 1788581710.036214,
-    "ast_hash": "51ee3406c0a2dcafa5c90ad2d8a6aa8e",
+    "mtime": 1788448569.8382027,
+    "seen": 1788493407.4922209,
+    "ast_hash": "0f8be6981af9002248921f25593fadcc",
     "semantic_hash": ""
   },
   "app/api/products/[slug]/gallery/route.test.ts": {

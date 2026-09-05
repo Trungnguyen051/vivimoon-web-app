@@ -570,3 +570,41 @@ in both locales is recommended before merging if that visual confirmation
 matters for this release. Task 10 Step 4 (guard a "logged-in checkout
 variant") remains deliberately deferred — no such route exists to guard;
 see the note under Task 10 in the plan.
+
+### M4 Task 9 — M4 verification (2026-09-05)
+
+All four Discovery features (M4.1 Mirrored Reviews Source Badge, M4.2
+Comparison, M4.3 Multi-Context Lens Viewer, M4.4 Lens-Matching Quiz) had
+already shipped and merged (issues #13–#16) with their own gates green;
+this closes out Task 9, the milestone-level verification step, which had
+been left unchecked.
+
+**Gates:** `npx tsc --noEmit` exit 0 · `npm run lint` 0 errors / 5
+pre-existing warnings (unrelated to M4) · `npx vitest run` 466 passed, 6
+skipped · `npm run test:contract` 20 passed, 6 skipped · `npm run build`
+succeeds. Constraint greps clean: `eyeEnlargement` absent from
+`productSpecsSchema`, no `fetch(` under `components/`, no `gtag(` under
+`app`/`components`/`features`.
+
+**Verified against the real running dev server with a Playwright browser,
+both locales:** Reviews — a Shopee-sourced review on `aqua-daily-clear`
+shows its badge linking to `sourceUrl`; a Vivimoon-native review on the
+same product shows a plain "Vivimoon" label with no link. Comparison — the
+Tray (pre-populated with 3 products from a prior session) survived
+navigation across `/quiz`, product, and collection pages; "Compare (3)"
+opens a `Dialog` in place (URL unchanged) showing Color/Diameter/Eye
+enlargement/Lifespan/Price columns. Lens Viewer — `aqua-daily-clear` (has
+a gallery entry) renders the 5-tab viewer (Eye/Face/With makeup/Without
+makeup/By eye color); `focalpro-daily-multifocal` (no entry) falls back to
+the plain thumbnail gallery with no error state. Quiz — `/en/quiz` and
+`/vi/quiz` both step through all 6 questions with correctly localized
+chrome (nav, progress, buttons, validation message), submit once,
+render results through the standard `ProductGrid` (badges, sale pricing,
+compare toggles intact), and Retake returns to question 1/6 clean. Console
+was clean throughout except one pre-existing Next.js LCP-image performance
+hint, unrelated to M4. Question/option copy in `content/quiz.ts` is
+intentionally single-language provisional content (Vivimoon-owned, per
+scope), not a UI-chrome string — distinct from the "no hardcoded strings"
+DoD item, which is about app-owned labels and is satisfied.
+
+M4 Definition of Done and Task 9 checked off in the plan file.

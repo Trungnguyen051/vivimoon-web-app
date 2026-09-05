@@ -437,7 +437,7 @@ git commit -m "feat: quiz step-wizard page and results"
 
 ## Task 9: M4 verification
 
-- [ ] **Step 1: Gates**
+- [x] **Step 1: Gates**
 
 ```bash
 npx tsc --noEmit
@@ -447,7 +447,7 @@ npm run test:contract
 npm run build
 ```
 
-- [ ] **Step 2: Constraint greps**
+- [x] **Step 2: Constraint greps**
 
 ```bash
 grep -rn "productSpecsSchema" lib/api/schemas/catalog.ts   # confirm eyeEnlargement was NOT added to it — Scope note
@@ -455,11 +455,11 @@ grep -rln "fetch(" components/                              # none — component
 grep -rn "gtag(" app components features                    # none, unchanged from M1/M2
 ```
 
-- [ ] **Step 3: End-to-end, in a browser, both locales**
+- [x] **Step 3: End-to-end, in a browser, both locales**
 
 PLP: add 2 products to compare from cards, add a 3rd from a PDP → tray persists across a page navigation → open the matrix Dialog → remove one → matrix updates. PDP: a demo product with a gallery entry shows the tabbed viewer with all 5 contexts; a product without one shows the plain gallery, unchanged. Reviews: a Shopee-sourced review shows its badge and links out; a Vivimoon-native one shows no link. Quiz: `/quiz` → step through all 6 questions → results render using the standard product grid → retake works.
 
-- [ ] **Step 4: Update the ledger**
+- [x] **Step 4: Update the ledger**
 
 Append the M4 outcome to `docs/legacy/superpowers-sdd-progress.md`, then `graphify update .` per `CLAUDE.md`.
 
@@ -467,16 +467,16 @@ Append the M4 outcome to `docs/legacy/superpowers-sdd-progress.md`, then `graphi
 
 ## M4 Definition of Done
 
-- [ ] Every mirrored review shows a source badge; Shopee/TikTok badges link to `sourceUrl`, Vivimoon-native reviews don't.
-- [ ] `useCompareStore` holds up to 4 product ids, persisted, capped (no silent eviction past 4).
-- [ ] The persistent Comparison Tray survives page navigation and is mounted once, globally.
-- [ ] The comparison matrix opens in a `Dialog`, not a route; `/compare` does not exist as a page.
-- [ ] `eyeEnlargement` appears only on `ComparisonMatrix` rows, never stored on `ProductSpecs`.
-- [ ] 2–3 demo products render the tabbed Lens Viewer; every other product falls back to the standard `ProductGallery` with no error state.
-- [ ] `/quiz` runs a 6-question step wizard end to end and renders recommendations through the existing product grid.
-- [ ] `content/quiz.ts` and `content/mock/galleries.ts` each carry a PROVISIONAL header naming Vivimoon as the owner of the real content.
-- [ ] Both `en` and `vi` render every new screen with no hardcoded strings.
-- [ ] `npm run build` succeeds.
+- [x] Every mirrored review shows a source badge; Shopee/TikTok badges link to `sourceUrl`, Vivimoon-native reviews don't.
+- [x] `useCompareStore` holds up to 4 product ids, persisted, capped (no silent eviction past 4).
+- [x] The persistent Comparison Tray survives page navigation and is mounted once, globally.
+- [x] The comparison matrix opens in a `Dialog`, not a route; `/compare` does not exist as a page.
+- [x] `eyeEnlargement` appears only on `ComparisonMatrix` rows, never stored on `ProductSpecs`.
+- [x] 2–3 demo products render the tabbed Lens Viewer; every other product falls back to the standard `ProductGallery` with no error state.
+- [x] `/quiz` runs a 6-question step wizard end to end and renders recommendations through the existing product grid.
+- [x] `content/quiz.ts` and `content/mock/galleries.ts` each carry a PROVISIONAL header naming Vivimoon as the owner of the real content.
+- [x] Both `en` and `vi` render every new screen with no hardcoded strings.
+- [x] `npm run build` succeeds.
 
 ## What M4 deliberately does not do
 
