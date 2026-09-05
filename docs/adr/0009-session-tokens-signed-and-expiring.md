@@ -1,0 +1,3 @@
+# Session tokens are HMAC-signed with an embedded issued-at, not bare and unexpiring
+
+A code-review finding on M1: the original session scheme derived a token as a bare function of user id, so a leaked token (or a leaked signing secret) stayed valid forever — logout only clears the browser's own cookie, it can't invalidate a copy that's already been exfiltrated. `signSession()` now embeds the issue time in the signed payload (`<userId>.<issuedAtMs>.<hmac>`), and `verifySession()` rejects anything older than 30 days server-side, independent of the cookie's own (client-side-only) `maxAge`. Any input that's tampered, truncated, non-hex, absent, or expired returns `null` rather than throwing, so a hostile or stale cookie signs the visitor out instead of crashing the render.

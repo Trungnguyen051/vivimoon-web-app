@@ -1470,9 +1470,9 @@
     "semantic_hash": ""
   },
   "CONTEXT.md": {
-    "mtime": 1788448147.370251,
-    "seen": 1788493407.492212,
-    "ast_hash": "bbeedd94ed584d5584a5545ea75f7e32",
+    "mtime": 1788582289.7949228,
+    "seen": 1788582360.942535,
+    "ast_hash": "ed76306f21d8aa82e870d6394b1dec6b",
     "semantic_hash": ""
   },
   "app/[locale]/account/addresses/addresses-manager.tsx": {
@@ -1953,6 +1953,60 @@
     "mtime": 1788533860.3236394,
     "seen": 1788534240.339762,
     "ast_hash": "a4deeff8c6600aef190bb2712681bc1d",
+    "semantic_hash": ""
+  },
+  "docs/adr/0001-proxy-seam-replaces-repository-interface.md": {
+    "mtime": 1788582298.1181881,
+    "seen": 1788582360.94254,
+    "ast_hash": "634e1973608373a3c3f464ecf79df113",
+    "semantic_hash": ""
+  },
+  "docs/adr/0002-server-components-self-fetch-mutable-state.md": {
+    "mtime": 1788582312.519886,
+    "seen": 1788582360.9425411,
+    "ast_hash": "84fd15d78fb7921b6febb1d93a888657",
+    "semantic_hash": ""
+  },
+  "docs/adr/0003-client-never-computes-money.md": {
+    "mtime": 1788582317.7158432,
+    "seen": 1788582360.942543,
+    "ast_hash": "466b4da69e0023040da0b33b2b36c0fb",
+    "semantic_hash": ""
+  },
+  "docs/adr/0004-rx-schema-ships-cyl-axis-before-toric-ui.md": {
+    "mtime": 1788582325.1880558,
+    "seen": 1788582360.942545,
+    "ast_hash": "ebe66705bf5a55f20496d13253219c85",
+    "semantic_hash": ""
+  },
+  "docs/adr/0005-eye-enlargement-computed-not-stored.md": {
+    "mtime": 1788582329.6986353,
+    "seen": 1788582360.942546,
+    "ast_hash": "3faea61f19118a0aded677fb8149ea71",
+    "semantic_hash": ""
+  },
+  "docs/adr/0006-guest-order-tracking-via-emailed-link.md": {
+    "mtime": 1788582334.3871453,
+    "seen": 1788582360.9425468,
+    "ast_hash": "0eaa734a60cc5383b47d92d4337c972c",
+    "semantic_hash": ""
+  },
+  "docs/adr/0007-payment-ui-branches-on-intent-shape.md": {
+    "mtime": 1788582339.1078115,
+    "seen": 1788582360.942548,
+    "ast_hash": "a0f689f6f226427512e2f59ddcbd64c6",
+    "semantic_hash": ""
+  },
+  "docs/adr/0008-cart-hydration-gate-flag.md": {
+    "mtime": 1788582344.1712887,
+    "seen": 1788582360.94255,
+    "ast_hash": "fc3b3691b860a3bfc51f633530e65dab",
+    "semantic_hash": ""
+  },
+  "docs/adr/0009-session-tokens-signed-and-expiring.md": {
+    "mtime": 1788582349.4332185,
+    "seen": 1788582360.9425511,
+    "ast_hash": "ba95edf205028b4cf199e247f9bbc944",
     "semantic_hash": ""
   }
 }

@@ -1,0 +1,3 @@
+# Eye Enlargement is computed at the point of use, never stored on `ProductSpecs`
+
+The client-scope spec contradicts itself: one section says `ProductSpecs` is unchanged for M4, another implies Eye Enlargement is a new field on it. Resolved by making the band a pure function of a product's `diameter` (`eyeEnlargementBand()`), called only where it's needed — the Comparison Matrix builder — so `productSpecsSchema` genuinely stays untouched and the value can never drift from its own derivation. The banding thresholds are adjustable in one file (`lib/products/eye-enlargement.ts`) as a data edit, not a schema or selector change.

@@ -1,0 +1,3 @@
+# Guest order tracking uses an emailed link, not inline code+email lookup
+
+A guest checking an order status could otherwise probe `code`+`email` pairs directly against an endpoint that returns order details — including a delivery address — creating an enumeration oracle. Instead, `POST /api/orders/track` always returns the identical acknowledgement ("If that order exists, a tracking link has been sent...") whether or not the order exists, and a real match gets a signed, expiring link emailed to them (in mock mode, surfaced as `devLink`, stripped whenever any upstream is live or in production). A future "simplify this to a direct lookup" change would silently reopen the enumeration hole this was built to close.

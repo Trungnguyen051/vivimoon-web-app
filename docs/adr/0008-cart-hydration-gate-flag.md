@@ -1,0 +1,3 @@
+# Cart store exposes an explicit `hydrated` flag alongside `skipHydration`
+
+Building guest→member cart merge surfaced that zustand `persist`'s `skipHydration: true` only blocks the *initial read* of `localStorage` — it does not block writes. A pre-hydration mutation would still write through to `localStorage` unconditionally, silently corrupting the stored cart before the merge could run. Fixed with a runtime-only `hydrated` boolean (flipped by `onRehydrateStorage`, never persisted itself) that the UI gates mutations on, with the merge function itself as defense-in-depth. `hydrated` is the real protection here — it can look like redundant bookkeeping next to `skipHydration` and be tempting to remove, but doing so reopens the pre-hydration write window.

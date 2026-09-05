@@ -1,0 +1,3 @@
+# `cyl`/`axis` ship in the Rx schema before toric has any UI
+
+Toric lens support is deferred past M2, but `rxEyeSchema` already carries optional `cyl`/`axis` fields, validated if present even though no selector collects them yet. The cheaper-looking option — add these fields only when toric ships — was rejected because `lineKey()` hashes the full Rx object to derive a Cart Line's identity; adding fields to that hash later would re-key every shopper's already-persisted cart, requiring a migration. Shipping the fields now, with `null`/`undefined`/absent all normalized identically in the hash, means enabling toric later is a selector-only change with no cart migration.
