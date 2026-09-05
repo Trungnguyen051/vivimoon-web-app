@@ -1,26 +1,28 @@
 'use client';
-import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { paymentMethods, type PaymentMethodOption } from '@/lib/payments/methods';
 import { cn } from '@/lib/utils/cn';
 
 /**
  * Renders whatever `methods` holds — never a hardcoded list. Defaults to
- * `lib/payments/methods.ts` so the checkout page needs no wiring change
- * when that config grows; `methods` exists so tests can inject a stub list
- * without touching this component (spec §11).
+ * `lib/payments/methods.ts` so a caller needs no wiring change when that
+ * config grows; `methods` exists so tests can inject a stub list without
+ * touching this component (spec §11). Takes a plain `label` rather than a
+ * `Dictionary` slice — checkout and Account Settings each have their own
+ * copy for it (M5.3, issue #20), so the picker itself stays agnostic to
+ * which dictionary section a caller draws that string from.
  */
 export function PaymentMethodPicker({
-  value, onChange, dict, methods = paymentMethods,
+  value, onChange, label, methods = paymentMethods,
 }: {
   value: string | undefined;
   onChange: (type: string) => void;
-  dict: Dictionary;
+  label: string;
   methods?: PaymentMethodOption[];
 }) {
   return (
     <div>
       <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-        {dict.checkout.paymentMethod}
+        {label}
       </p>
       <div className="flex flex-wrap gap-2">
         {methods.map((m) => (

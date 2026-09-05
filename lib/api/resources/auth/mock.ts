@@ -138,7 +138,7 @@ export const mockAuth = {
   },
 
   /** Used by the account resource, which shares this store. */
-  async updateUser(id: string, patch: Partial<Pick<MockUser, 'name' | 'email' | 'dob' | 'password'>>): Promise<User> {
+  async updateUser(id: string, patch: Partial<Pick<MockUser, 'name' | 'email' | 'dob' | 'password' | 'preferredPaymentMethod'>>): Promise<User> {
     const user = store.find((u) => u.id === id);
     if (!user) throw new AuthError('Account not found', 'not_found');
     Object.assign(user, patch);

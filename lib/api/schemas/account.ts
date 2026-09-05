@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { addressSchema } from './checkout';
+import { paymentMethodTypeSchema } from './payments';
 
 /**
  * Phone is deliberately absent: the client checklist specifies it as the one
@@ -12,6 +13,7 @@ export const accountPatchSchema = z
     email: z.string().email('Enter a valid email address').optional(),
     dob: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Use the format YYYY-MM-DD').optional(),
     password: z.string().min(8, 'Use at least 8 characters').optional(),
+    preferredPaymentMethod: paymentMethodTypeSchema.optional(),
   })
   .refine((v) => Object.values(v).some((x) => x !== undefined), {
     message: 'Nothing to update',

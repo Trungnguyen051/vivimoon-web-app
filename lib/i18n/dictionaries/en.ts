@@ -84,6 +84,7 @@ export const en = {
     email: 'Email', name: 'Full name', dob: 'Date of birth',
     newPassword: 'New password',
     passwordHint: 'Leave blank to keep your current password.',
+    preferredPaymentMethod: 'Preferred payment method',
     save: 'Save changes', saved: 'Your changes have been saved.',
     viewOrders: 'Order history',
     errors: {

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { paymentMethodTypeSchema } from './payments';
 
 /** Vietnamese mobile: local 0-prefixed 9 digits, or +84 international form. */
 const VN_PHONE = /^(0\d{9}|\+84\d{9})$/;
@@ -33,6 +34,9 @@ export const userSchema = z.object({
   dob: z.string().optional(),
   avatarUrl: z.string().optional(),
   createdAt: z.string(),
+  // Set automatically from whichever method a logged-in shopper's most
+  // recent order paid with (M5.3, issue #20); checkout preselects it.
+  preferredPaymentMethod: paymentMethodTypeSchema.optional(),
 });
 
 /**

@@ -1,5 +1,6 @@
 import { orders, OrderError } from '@/lib/api/resources/orders';
 import { loyalty } from '@/lib/api/resources/loyalty';
+import { account } from '@/lib/api/resources/account';
 import { PricingError } from '@/lib/api/resources/pricing';
 import { placeOrderRequestSchema, type Order } from '@/lib/api/schemas/orders';
 import { apiOk, apiFail } from '@/lib/api/response';
@@ -33,17 +34,17 @@ export async function POST(request: Request) {
 
   // Awarded here, not inside orders.place() — a guest has no loyalty
   // account to award to, and M2's placement tests must stay unaffected by a
-  // side effect they were never written to expect (issue #10). Isolated in
-  // its own try/catch, outside the block above: the order already committed
-  // to the store by this point, so a loyalty failure must not turn an
-  // already-successful placement into a 500 the shopper might retry into a
-  // duplicate order.
+  // side effect they were never written to expect (issue #10). Run
+  // concurrently with the preferred-payment-method update below (issue #20)
+  // — neither depends on the other's result — via allSettled rather than
+  // Promise.all, since a rejection from either must not stop the other or
+  // turn an already-successful placement into a 500 the shopper might retry
+  // into a duplicate order.
   if (userId) {
-    try {
-      await loyalty.award(userId, order);
-    } catch {
-      // Best-effort — the order stands regardless.
-    }
+    await Promise.allSettled([
+      loyalty.award(userId, order),
+      account.update(userId, { preferredPaymentMethod: order.payment.method }),
+    ]);
   }
 
   return apiOk(order);

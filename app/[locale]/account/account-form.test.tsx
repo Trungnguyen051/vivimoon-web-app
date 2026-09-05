@@ -61,4 +61,32 @@ describe('AccountForm', () => {
     expect(await screen.findByText('Enter a valid email address')).toBeInTheDocument();
     expect(screen.queryByText(dict.saved)).not.toBeInTheDocument();
   });
+
+  it('shows no preferred payment method preselected when the account has none set', () => {
+    vi.stubGlobal('fetch', vi.fn());
+    render(<AccountForm user={user} dict={dict} />);
+    for (const label of ['QR Pay', 'ZaloPay', 'SePay']) {
+      expect(screen.getByRole('button', { name: label })).toHaveAttribute('aria-pressed', 'false');
+    }
+  });
+
+  it("preselects the account's saved preferred payment method", () => {
+    vi.stubGlobal('fetch', vi.fn());
+    render(<AccountForm user={{ ...user, preferredPaymentMethod: 'sepay' }} dict={dict} />);
+    expect(screen.getByRole('button', { name: 'SePay' })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('sends a chosen preferred payment method alongside other changes', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(json({ ok: true, data: { ...user, preferredPaymentMethod: 'zalopay' } }));
+    vi.stubGlobal('fetch', fetchMock);
+    render(<AccountForm user={user} dict={dict} />);
+
+    await userEvent.click(screen.getByRole('button', { name: 'ZaloPay' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
+      name: 'Mai', email: 'mai@example.vn', preferredPaymentMethod: 'zalopay',
+    });
+  });
 });

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { PaymentMethodPicker } from '@/components/commerce/payment-method-picker';
 
 export function AccountForm({ user, dict }: { user: User; dict: Dictionary['account'] }) {
   const setUser = useSessionStore((s) => s.setUser);
@@ -15,6 +16,7 @@ export function AccountForm({ user, dict }: { user: User; dict: Dictionary['acco
   const [email, setEmail] = useState(user.email ?? '');
   const [dob, setDob] = useState(user.dob ?? '');
   const [password, setPassword] = useState('');
+  const [preferredPaymentMethod, setPreferredPaymentMethod] = useState<string | undefined>(user.preferredPaymentMethod);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
@@ -37,6 +39,7 @@ export function AccountForm({ user, dict }: { user: User; dict: Dictionary['acco
     if (email) patch.email = email;
     if (dob) patch.dob = dob;
     if (password) patch.password = password;
+    if (preferredPaymentMethod) patch.preferredPaymentMethod = preferredPaymentMethod;
 
     setBusy(true);
     const result = await apiRequest<User>('/api/account', { method: 'PATCH', body: patch });
@@ -103,6 +106,14 @@ export function AccountForm({ user, dict }: { user: User; dict: Dictionary['acco
           />
           <p className="text-sm text-muted-foreground">{dict.passwordHint}</p>
           {errors.password ? <FieldError id="password-error">{errors.password}</FieldError> : null}
+        </Field>
+
+        <Field>
+          <PaymentMethodPicker
+            value={preferredPaymentMethod}
+            onChange={setPreferredPaymentMethod}
+            label={dict.preferredPaymentMethod}
+          />
         </Field>
       </FieldGroup>
 

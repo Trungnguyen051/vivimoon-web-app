@@ -86,6 +86,7 @@ export const vi: Dictionary = {
     email: 'Email', name: 'Họ và tên', dob: 'Ngày sinh',
     newPassword: 'Mật khẩu mới',
     passwordHint: 'Để trống nếu bạn muốn giữ mật khẩu hiện tại.',
+    preferredPaymentMethod: 'Phương thức thanh toán ưu tiên',
     save: 'Lưu thay đổi', saved: 'Đã lưu thay đổi của bạn.',
     viewOrders: 'Lịch sử đơn hàng',
     errors: {

@@ -1,5 +1,5 @@
 'use client';
-import { use, useEffect, useState } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,10 +9,12 @@ import { useCart } from '@/features/cart/use-cart';
 import { useBuyNow } from '@/features/cart/use-buy-now';
 import { useCartStore } from '@/features/cart/cart-store';
 import { toPriceLines } from '@/features/cart/use-priced-cart';
+import { useSessionStore } from '@/features/session/session-store';
 import { checkoutSchema, type CheckoutForm, type CheckoutFormInput } from '@/lib/checkout/schema';
 import { paymentMethods } from '@/lib/payments/methods';
 import { apiRequest } from '@/lib/api/client';
 import type { Order } from '@/lib/api/schemas/orders';
+import type { User } from '@/lib/api/schemas/auth';
 import { OrderSummary } from '@/components/commerce/order-summary';
 import { PaymentMethodPicker } from '@/components/commerce/payment-method-picker';
 import { Button } from '@/components/ui/button';
@@ -45,6 +47,32 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
   // pre-selecting a pack — Task 10 (order placement) reads this on submit.
   // Holds a PaymentMethodType (matches paymentIntentRequestSchema's `method`).
   const [paymentMethod, setPaymentMethod] = useState<string>(paymentMethods[0].type);
+  // A logged-in shopper's own choice always wins over their account's
+  // preference (M5.3, issue #20) — this ref, set only by the picker's
+  // onChange, guards the effect below from clobbering a selection they
+  // already made before the account fetch resolves.
+  const paymentMethodTouched = useRef(false);
+  const sessionStatus = useSessionStore((s) => s.status);
+  const [preferenceFetchDone, setPreferenceFetchDone] = useState(false);
+  // True only for the brief window between a shopper's session resolving as
+  // authenticated and their saved preference coming back — placing an order
+  // in that window would silently submit the fallback method instead of the
+  // one they actually meant (issue #20 code review). Held on this, not on
+  // `sessionStatus === 'unknown'`, which is the pre-existing, app-wide
+  // session-hydration window every gated page already accepts.
+  const preferenceLoading = sessionStatus === 'authenticated' && !preferenceFetchDone;
+  useEffect(() => {
+    if (sessionStatus !== 'authenticated') return;
+    let cancelled = false;
+    apiRequest<User>('/api/account').then((result) => {
+      if (cancelled) return;
+      if (!paymentMethodTouched.current && result.ok && result.data.preferredPaymentMethod) {
+        setPaymentMethod(result.data.preferredPaymentMethod);
+      }
+      setPreferenceFetchDone(true);
+    });
+    return () => { cancelled = true; };
+  }, [sessionStatus]);
   // `label` carries a zod .default('home'), so the resolver's output (CheckoutForm)
   // is not what useForm manages — CheckoutFormInput (pre-default) is.
   const { register, handleSubmit, formState: { errors, isSubmitted, isSubmitting } } = useForm<
@@ -153,10 +181,14 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
             })}
           </FieldGroup>
 
-          <PaymentMethodPicker value={paymentMethod} onChange={setPaymentMethod} dict={dict} />
+          <PaymentMethodPicker
+            value={paymentMethod}
+            onChange={(type) => { paymentMethodTouched.current = true; setPaymentMethod(type); }}
+            label={dict.checkout.paymentMethod}
+          />
 
           <p className="text-sm text-muted-foreground">{dict.checkout.payNote}</p>
-          <Button type="submit" disabled={isSubmitting} className="h-12 w-full text-base">
+          <Button type="submit" disabled={isSubmitting || preferenceLoading} className="h-12 w-full text-base">
             {dict.checkout.placeOrder}
           </Button>
         </div>
