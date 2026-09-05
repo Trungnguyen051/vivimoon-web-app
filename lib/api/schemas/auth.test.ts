@@ -30,9 +30,37 @@ describe('registerSchema', () => {
   });
 
   it('imposes no password complexity rule, only a minimum length', () => {
-    expect(registerSchema.parse({ identifier: 'a@b.vn', name: 'Mai', password: 'abcdefgh' }).password)
-      .toBe('abcdefgh');
-    expect(() => registerSchema.parse({ identifier: 'a@b.vn', name: 'Mai', password: 'short' })).toThrow();
+    expect(
+      registerSchema.parse({
+        identifier: 'a@b.vn', name: 'Mai', password: 'abcdefgh', confirmPassword: 'abcdefgh',
+      }).password,
+    ).toBe('abcdefgh');
+    expect(() =>
+      registerSchema.parse({
+        identifier: 'a@b.vn', name: 'Mai', password: 'short', confirmPassword: 'short',
+      }),
+    ).toThrow();
+  });
+
+  it('accepts a password plus a matching confirmPassword', () => {
+    const r = registerSchema.parse({
+      identifier: 'a@b.vn', name: 'Mai', password: 'abcdefgh', confirmPassword: 'abcdefgh',
+    });
+    expect(r.password).toBe('abcdefgh');
+  });
+
+  it('rejects a password without a confirmPassword', () => {
+    expect(() =>
+      registerSchema.parse({ identifier: 'a@b.vn', name: 'Mai', password: 'abcdefgh' }),
+    ).toThrow();
+  });
+
+  it('rejects a confirmPassword that does not match', () => {
+    expect(() =>
+      registerSchema.parse({
+        identifier: 'a@b.vn', name: 'Mai', password: 'abcdefgh', confirmPassword: 'somethingelse',
+      }),
+    ).toThrow();
   });
 });
 

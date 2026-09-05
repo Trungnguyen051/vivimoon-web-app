@@ -52,6 +52,7 @@ export const en = {
   auth: {
     signInTitle: 'Sign in', signUpTitle: 'Create your account', signOut: 'Sign out',
     identifier: 'Phone or email', password: 'Password', name: 'Full name',
+    confirmPassword: 'Confirm password',
     continueWithGoogle: 'Continue with Google', or: 'or',
     forgotPassword: 'Forgot your password?',
     noAccount: 'New to Vivimoon?', createOne: 'Create an account',
@@ -64,10 +65,14 @@ export const en = {
     otpCode: 'Verification code', verify: 'Verify',
     newPassword: 'New password', updatePassword: 'Update password',
     devCodeNotice: 'Development mode — your code is',
+    accountCreated: 'Your account has been created.',
+    verifyPrompt: 'Want to verify your phone or email now?',
+    verifyNow: 'Verify now', skipForNow: 'Skip for now',
     errors: {
       identifier: 'Enter a valid phone number or email address',
       password: 'Use at least 8 characters',
       passwordRequired: 'Enter your password',
+      confirmPassword: 'Passwords do not match',
       name: 'Enter your name',
       code: 'Enter the 6-digit code',
       summary: 'Please fix the following before continuing.',

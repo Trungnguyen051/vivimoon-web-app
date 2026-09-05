@@ -54,6 +54,7 @@ export const vi: Dictionary = {
   auth: {
     signInTitle: 'Đăng nhập', signUpTitle: 'Tạo tài khoản', signOut: 'Đăng xuất',
     identifier: 'Số điện thoại hoặc email', password: 'Mật khẩu', name: 'Họ và tên',
+    confirmPassword: 'Xác nhận mật khẩu',
     continueWithGoogle: 'Tiếp tục với Google', or: 'hoặc',
     forgotPassword: 'Quên mật khẩu?',
     noAccount: 'Bạn chưa có tài khoản?', createOne: 'Tạo tài khoản',
@@ -66,10 +67,14 @@ export const vi: Dictionary = {
     otpCode: 'Mã xác minh', verify: 'Xác minh',
     newPassword: 'Mật khẩu mới', updatePassword: 'Cập nhật mật khẩu',
     devCodeNotice: 'Chế độ phát triển — mã của bạn là',
+    accountCreated: 'Tài khoản của bạn đã được tạo.',
+    verifyPrompt: 'Bạn có muốn xác thực số điện thoại hoặc email ngay bây giờ không?',
+    verifyNow: 'Xác thực ngay', skipForNow: 'Bỏ qua',
     errors: {
       identifier: 'Nhập số điện thoại hoặc email hợp lệ',
       password: 'Dùng ít nhất 8 ký tự',
       passwordRequired: 'Nhập mật khẩu',
+      confirmPassword: 'Mật khẩu xác nhận không khớp',
       name: 'Nhập họ và tên',
       code: 'Nhập mã gồm 6 chữ số',
       summary: 'Vui lòng sửa các mục sau để tiếp tục.',

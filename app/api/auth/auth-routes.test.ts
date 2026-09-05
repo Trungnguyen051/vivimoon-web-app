@@ -89,18 +89,25 @@ describe('auth routes', () => {
 
   it('409s a duplicate registration', async () => {
     const res = await register(
-      post({ identifier: '0912345678', name: 'Dup', password: 'abcdefgh' }),
+      post({ identifier: '0912345678', name: 'Dup', password: 'abcdefgh', confirmPassword: 'abcdefgh' }),
     );
     expect(res.status).toBe(409);
   });
 
   it('registers a new account and starts a session', async () => {
     const res = await register(
-      post({ identifier: '0900000001', name: 'Mới', password: 'abcdefgh' }),
+      post({ identifier: '0900000001', name: 'Mới', password: 'abcdefgh', confirmPassword: 'abcdefgh' }),
     );
     expect(res.status).toBe(200);
     expect((await res.json()).data.user.name).toBe('Mới');
     expect(jar.get(SESSION_COOKIE)).toBeTruthy();
+  });
+
+  it('400s a registration with a mismatched confirmPassword', async () => {
+    const res = await register(
+      post({ identifier: '0900000002', name: 'Mismatch', password: 'abcdefgh', confirmPassword: 'somethingelse' }),
+    );
+    expect(res.status).toBe(400);
   });
 
   it('signs in with Google and starts a session', async () => {
