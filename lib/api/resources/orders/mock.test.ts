@@ -99,6 +99,12 @@ describe('mockOrders.place', () => {
       mockOrders.place(req({ lines: [{ lineKey: 'l1', variantId: 'ghost', quantity: 1 }] }), null),
     ).rejects.toMatchObject({ code: 'not_found' });
   });
+
+  it('charges the cheapest quoted shipping option for the address, with no picker to choose one (M5.4, issue #21)', async () => {
+    // District 1 (content/mock/shipping-rates.ts): standard = 3, express = 8.
+    const order = await mockOrders.place(req(), null);
+    expect(order.totals.shipping).toBe(3);
+  });
 });
 
 describe('mockOrders.list', () => {

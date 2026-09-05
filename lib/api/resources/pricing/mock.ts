@@ -115,15 +115,20 @@ export const mockPricing = {
 
     // Stays 0 when `shipping` is omitted (Task 7's cart page — no address
     // exists there). When present, the fee is never the client's number:
-    // re-quote the real options for this province/district and use the
-    // fee of whichever one actually matches `optionId`.
+    // re-quote the real options for this province/district and use the fee
+    // of whichever one actually matches `optionId` — or, when `optionId`
+    // itself is omitted (checkout's price preview and order placement,
+    // M5.4 issue #21 — there is no delivery-method picker), the cheapest
+    // quoted option, same selection order placement already made itself.
     let shippingFee = 0;
     if (input.shipping) {
       const options = await shipping.quote({
         province: input.shipping.province,
         district: input.shipping.district,
       });
-      const match = options.find((o) => o.id === input.shipping!.optionId);
+      const match = input.shipping.optionId
+        ? options.find((o) => o.id === input.shipping!.optionId)
+        : options.reduce((a, b) => (b.fee < a.fee ? b : a));
       if (!match) {
         throw new PricingError(`Unknown shipping option "${input.shipping.optionId}"`, 'not_found');
       }

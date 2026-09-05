@@ -1,14 +1,14 @@
 'use client';
-import { use, useEffect, useRef, useState } from 'react';
+import { use, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { isLocale, type Locale, defaultLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { useCart } from '@/features/cart/use-cart';
 import { useBuyNow } from '@/features/cart/use-buy-now';
 import { useCartStore } from '@/features/cart/cart-store';
-import { toPriceLines } from '@/features/cart/use-priced-cart';
+import { toPriceLines, usePricedCart } from '@/features/cart/use-priced-cart';
 import { useSessionStore } from '@/features/session/session-store';
 import { checkoutSchema, type CheckoutForm, type CheckoutFormInput } from '@/lib/checkout/schema';
 import { paymentMethods } from '@/lib/payments/methods';
@@ -27,7 +27,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
   const locale: Locale = isLocale(raw) ? raw : defaultLocale;
   const dict = getDictionary(locale);
   const router = useRouter();
-  const { lines: cartLines } = useCart();
+  const { lines: cartLines, hydrated } = useCart();
   const { clearBuyNowLine } = useBuyNow();
   // Buy Now (spec §10): snapshot whatever buyNowLine was set on mount, then
   // clear it immediately — so a *later* visit to this page (real checkout,
@@ -40,7 +40,12 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const isBuyNow = buyNowLine !== null;
-  const lines = isBuyNow ? [buyNowLine] : cartLines;
+  // Memoized: an inline `[buyNowLine]` literal would be a new array every
+  // render, and `lines` is a dependency of usePricedCart's price-fetch
+  // effect below — an unrelated re-render (e.g. the preference fetch
+  // resolving) would otherwise abort and needlessly re-debounce the
+  // in-flight price request.
+  const lines = useMemo(() => (isBuyNow ? [buyNowLine] : cartLines), [isBuyNow, buyNowLine, cartLines]);
   const currency = lines[0]?.currency ?? 'USD';
   const [submitError, setSubmitError] = useState<string | null>(null);
   // Defaults to the first configured method, same posture as VariantSelector
@@ -75,11 +80,23 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
   }, [sessionStatus]);
   // `label` carries a zod .default('home'), so the resolver's output (CheckoutForm)
   // is not what useForm manages — CheckoutFormInput (pre-default) is.
-  const { register, handleSubmit, formState: { errors, isSubmitted, isSubmitting } } = useForm<
+  const { register, control, handleSubmit, formState: { errors, isSubmitted, isSubmitting } } = useForm<
     CheckoutFormInput,
     unknown,
     CheckoutForm
   >({ resolver: zodResolver(checkoutSchema) });
+
+  // Live price preview (M5.4, issue #21) — reuses the cart's own pricing
+  // hook and posture (debounced, first-price-included), gated on the
+  // address being complete enough to quote rather than on cart hydration
+  // alone, since `usePricedCart` treats `shipping: null` as "nothing to
+  // price yet" the same way it already treats an empty cart.
+  const watchedProvince = useWatch({ control, name: 'province' });
+  const watchedDistrict = useWatch({ control, name: 'district' });
+  const shippingAddress = watchedProvince && watchedDistrict
+    ? { province: watchedProvince, district: watchedDistrict }
+    : null;
+  const { result: priced } = usePricedCart(lines, hydrated || isBuyNow, sessionStatus, shippingAddress);
 
   const fields = [
     { name: 'recipient' as const, label: dict.checkout.recipient, message: dict.checkout.errors.required, autoComplete: 'name', type: 'text' },
@@ -193,7 +210,13 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
           </Button>
         </div>
       </form>
-      <OrderSummary subtotal={null} currency={currency} locale={locale} dict={dict} />
+      <OrderSummary
+        subtotal={priced?.subtotal ?? null}
+        discount={priced?.discount ?? null}
+        shipping={priced?.shipping ?? null}
+        total={priced?.total ?? null}
+        currency={currency} locale={locale} dict={dict}
+      />
     </div>
   );
 }

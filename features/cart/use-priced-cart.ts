@@ -50,11 +50,24 @@ export interface UsePricedCartResult {
  * re-fire is immediate, like the first fire, since it's a context change
  * rather than an edit worth debouncing. Omitting the argument (existing
  * callers, tests) makes it always `undefined` and this branch never trips.
+ *
+ * `shipping` (optional, M5.4 issue #21) is checkout's price preview: `null`
+ * means "shipping-aware, but the address isn't complete enough to quote
+ * yet" and is treated exactly like `isEmpty` — nothing fires, `result`
+ * stays `null` (never a wrong or zero total). A `{ province, district }`
+ * value is included in the price request, same as order placement's own
+ * `shipping` selection, so the previewed total is the one placement will
+ * actually charge. The very first time an address becomes complete is a
+ * first fire (immediate), same as the very first price on hydration;
+ * every address edit after that debounces like a line edit. Omitting the
+ * argument entirely (the cart page) never engages any of this — no address
+ * exists there (Task 7).
  */
 export function usePricedCart(
   lines: CartLine[],
   hydrated: boolean,
   sessionStatus?: SessionStatus,
+  shipping?: { province: string; district: string } | null,
 ): UsePricedCartResult {
   const [result, setResult] = useState<PricedCart | null>(null);
   const [isPending, setIsPending] = useState(false);
@@ -62,14 +75,17 @@ export function usePricedCart(
   const controllerRef = useRef<AbortController | null>(null);
   const prevSessionStatusRef = useRef(sessionStatus);
   const isEmpty = lines.length === 0;
+  const shippingPending = shipping === null;
+  const shippingKey = shipping ? `${shipping.province}|${shipping.district}` : '';
 
   useEffect(() => {
-    if (!hydrated || isEmpty) {
-      // Nothing to price, and nothing left in flight for lines that no
-      // longer exist. Reset the first-fire flag too: repopulating an
-      // emptied cart is a fresh load, not an edit, and should price
-      // immediately rather than sit through a 300ms debounce. A login with
-      // an empty cart lands here too — nothing to wipe, nothing to error.
+    if (!hydrated || isEmpty || shippingPending) {
+      // Nothing to price, and nothing left in flight for lines/an address
+      // that's no longer there. Reset the first-fire flag too: a repopulated
+      // cart, or an address that just became complete, is a fresh load, not
+      // an edit, and should price immediately rather than sit through a
+      // 300ms debounce. A login with an empty cart lands here too — nothing
+      // to wipe, nothing to error.
       controllerRef.current?.abort();
       isFirstFireRef.current = true;
       prevSessionStatusRef.current = sessionStatus;
@@ -88,7 +104,7 @@ export function usePricedCart(
       setIsPending(true);
       apiRequest<PricedCart>('/api/cart/price', {
         method: 'POST',
-        body: { lines: toPriceLines(lines) },
+        body: { lines: toPriceLines(lines), ...(shipping ? { shipping } : {}) },
         signal: controller.signal,
       }).then((res) => {
         if (cancelled) return; // superseded by a newer request — drop this response
@@ -110,7 +126,9 @@ export function usePricedCart(
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [lines, hydrated, isEmpty, sessionStatus]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- shippingKey stands in for `shipping` (an object literal, unstable across renders)
+  }, [lines, hydrated, isEmpty, sessionStatus, shippingPending, shippingKey]);
 
-  return { result: isEmpty ? null : result, isPending: isEmpty ? false : isPending };
+  const pending = isEmpty || shippingPending;
+  return { result: pending ? null : result, isPending: pending ? false : isPending };
 }

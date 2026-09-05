@@ -85,15 +85,19 @@ export const priceLineInputSchema = z.object({
 });
 
 /**
- * A chosen shipping option to price in, resolved against the `shipping`
+ * An address to quote shipping for, resolved against the `shipping`
  * resource's own quote for `province`/`district` (Task 8) — `optionId`
  * alone is never trusted; the server looks up `province`/`district` again
- * and takes that quote's `fee`, never a number the client sent.
+ * and takes that quote's `fee`, never a number the client sent. `optionId`
+ * itself is optional: omitting it (checkout's price preview, and order
+ * placement, M5.4 issue #21) auto-selects the cheapest quoted option,
+ * since M2 never shipped a delivery-method picker for the shopper to
+ * choose one with.
  */
 export const shippingSelectionSchema = z.object({
   province: z.string().min(1),
   district: z.string().min(1),
-  optionId: z.string().min(1),
+  optionId: z.string().min(1).optional(),
 });
 
 export const priceCartRequestSchema = z.object({

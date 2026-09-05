@@ -150,6 +150,35 @@ describe('mockPricing.priceCart', () => {
     expect(result.shipping).toBe(0);
   });
 
+  describe('auto-selecting the cheapest shipping option when optionId is omitted (M5.4, issue #21)', () => {
+    it('charges the cheapest of the quoted options for the address, with no optionId given', async () => {
+      // Ho Chi Minh City|District 1: standard = 3, express = 8 — cheapest wins.
+      const result = await mockPricing.priceCart(
+        reqWithShipping(BASELINE_LINES, { province: 'Ho Chi Minh City', district: 'District 1' }),
+      );
+      expect(result.shipping).toBe(3);
+      expect(result.total).toBe(98 + 3 - 15);
+    });
+
+    it('matches exactly what an explicit optionId for the cheapest option would charge', async () => {
+      const auto = await mockPricing.priceCart(
+        reqWithShipping(BASELINE_LINES, { province: 'Hanoi', district: 'Ba Dinh' }),
+      );
+      const explicit = await mockPricing.priceCart(
+        reqWithShipping(BASELINE_LINES, { province: 'Hanoi', district: 'Ba Dinh', optionId: 'standard' }),
+      );
+      expect(auto.shipping).toBe(explicit.shipping);
+      expect(auto.total).toBe(explicit.total);
+    });
+
+    it('still resolves a single-option fallback address (unknown province/district) with no optionId', async () => {
+      const result = await mockPricing.priceCart(
+        reqWithShipping(BASELINE_LINES, { province: 'Nowhere', district: 'Nowhere' }),
+      );
+      expect(result.shipping).toBe(5); // defaultShippingOptions' one entry
+    });
+  });
+
   describe('guest -> member cart merge (spec §9)', () => {
     it('excludes a memberOnly voucher for a guest (no userId)', async () => {
       const result = await mockPricing.priceCart(req(BASELINE_LINES));

@@ -1,7 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { orders as seedOrders } from '@/content/mock';
 import { pricing } from '@/lib/api/resources/pricing';
-import { shipping } from '@/lib/api/resources/shipping';
 import type { Order, PlaceOrderRequest } from '@/lib/api/schemas/orders';
 import { normalizePhone } from '@/lib/api/schemas/auth';
 
@@ -62,21 +61,16 @@ export const mockOrders = {
    * Re-prices server-side (same posture as Task 6's pricing route, asserted
    * again here because this is the call that turns into money) and shipping
    * is quoted against the submitted address rather than any client fee. No
-   * shipping-option picker exists in M2, so this auto-selects the cheapest
-   * quoted option for the district — the same "pick automatically, never
-   * make the shopper choose from a checkout-blocking control" posture as
-   * pricing's auto-voucher.
+   * `optionId` is passed — `pricing.priceCart` auto-selects the cheapest
+   * quoted option itself (M5.4 issue #21), the same "pick automatically,
+   * never make the shopper choose from a checkout-blocking control" posture
+   * as pricing's auto-voucher, and the same selection checkout's price
+   * preview shows before this call ever runs.
    */
   async place(input: PlaceOrderRequest, userId: string | null): Promise<Order> {
     if (input.lines.length === 0) {
       throw new OrderError('cart must contain at least one line', 'validation_failed');
     }
-
-    const options = await shipping.quote({
-      province: input.address.province,
-      district: input.address.district,
-    });
-    const cheapest = options.reduce((a, b) => (b.fee < a.fee ? b : a));
 
     // Propagates PricingError as-is (not_found / validation_failed) on an
     // unknown variantId, a zero quantity, or a mixed-currency cart — the
@@ -84,7 +78,7 @@ export const mockOrders = {
     const priced = await pricing.priceCart(
       {
         lines: input.lines,
-        shipping: { province: input.address.province, district: input.address.district, optionId: cheapest.id },
+        shipping: { province: input.address.province, district: input.address.district },
       },
       userId,
     );

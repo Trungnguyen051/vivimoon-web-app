@@ -78,9 +78,10 @@ describe('CheckoutPage — Buy Now (Task 12)', () => {
     await fillRequiredFields();
     await userEvent.click(screen.getByRole('button', { name: 'Place order' }));
 
-    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
-    const [path, init] = fetchMock.mock.calls[0];
-    expect(path).toBe('/api/orders');
+    await waitFor(() => expect(fetchMock.mock.calls.some((c) => c[0] === '/api/orders')).toBe(true));
+    // The price preview also fires (M5.4, issue #21) once the address is
+    // complete — find the actual order-placement call among the calls.
+    const [, init] = fetchMock.mock.calls.find((c) => c[0] === '/api/orders')!;
     const body = JSON.parse(init.body as string);
     expect(body.lines).toHaveLength(1);
     expect(body.lines[0].lineKey).toBe('buy-now-line');
@@ -111,8 +112,9 @@ describe('CheckoutPage — Buy Now (Task 12)', () => {
     await fillRequiredFields();
     await userEvent.click(screen.getByRole('button', { name: 'Place order' }));
 
-    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
-    const body = JSON.parse(fetchMock.mock.calls[0][1].body as string);
+    await waitFor(() => expect(fetchMock.mock.calls.some((c) => c[0] === '/api/orders')).toBe(true));
+    const [, init] = fetchMock.mock.calls.find((c) => c[0] === '/api/orders')!;
+    const body = JSON.parse(init.body as string);
     expect(body.lines).toHaveLength(1);
     expect(body.lines[0].lineKey).toBe('existing');
   });

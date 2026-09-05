@@ -316,4 +316,102 @@ describe('usePricedCart', () => {
       expect(mockedApiRequest).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe('checkout price preview — shipping-aware address quoting (M5.4, issue #21)', () => {
+    it('never fires while shipping is null (address not complete enough to quote yet)', () => {
+      const lines = [makeLine()];
+      const { result } = renderHook(() => usePricedCart(lines, true, undefined, null));
+      expect(mockedApiRequest).not.toHaveBeenCalled();
+      expect(result.current.result).toBeNull();
+    });
+
+    it('omitting shipping entirely (the cart page) never engages this gating', async () => {
+      const line = makeLine();
+      mockedApiRequest.mockResolvedValue({ ok: true, data: pricedCartFor(line, 25) });
+      renderHook(() => usePricedCart([line], true));
+      await flushMicrotasks();
+      expect(mockedApiRequest).toHaveBeenCalledTimes(1);
+    });
+
+    it('fires immediately, with no debounce, the first time the address becomes complete', async () => {
+      const line = makeLine();
+      const lines = [line]; // stable reference — only `shipping` changes below
+      const priced = pricedCartFor(line, 25);
+      mockedApiRequest.mockResolvedValue({ ok: true, data: priced });
+
+      const { result, rerender } = renderHook(
+        ({ shipping }: { shipping: { province: string; district: string } | null }) =>
+          usePricedCart(lines, true, undefined, shipping),
+        { initialProps: { shipping: null as { province: string; district: string } | null } },
+      );
+      expect(mockedApiRequest).not.toHaveBeenCalled();
+
+      act(() => {
+        rerender({ shipping: { province: 'Ho Chi Minh City', district: 'District 1' } });
+      });
+      await flushMicrotasks();
+
+      expect(mockedApiRequest).toHaveBeenCalledTimes(1);
+      expect(result.current.result).toEqual(priced);
+      const [, init] = mockedApiRequest.mock.calls[0];
+      expect((init?.body as { shipping?: unknown }).shipping).toEqual({
+        province: 'Ho Chi Minh City', district: 'District 1',
+      });
+    });
+
+    it('debounces a subsequent address-field change by ~300ms', async () => {
+      vi.useFakeTimers();
+      try {
+        const line = makeLine();
+        const lines = [line]; // stable reference — only `shipping` changes below
+        mockedApiRequest.mockResolvedValue({ ok: true, data: pricedCartFor(line, 25) });
+
+        const { rerender } = renderHook(
+          ({ shipping }: { shipping: { province: string; district: string } }) =>
+            usePricedCart(lines, true, undefined, shipping),
+          { initialProps: { shipping: { province: 'Ho Chi Minh City', district: 'District 1' } } },
+        );
+        await act(async () => { await Promise.resolve(); });
+        expect(mockedApiRequest).toHaveBeenCalledTimes(1); // immediate first fire
+
+        act(() => {
+          rerender({ shipping: { province: 'Ho Chi Minh City', district: 'District 2' } });
+        });
+        expect(mockedApiRequest).toHaveBeenCalledTimes(1); // not yet — debounced
+
+        await act(async () => { await vi.advanceTimersByTimeAsync(299); });
+        expect(mockedApiRequest).toHaveBeenCalledTimes(1);
+
+        await act(async () => { await vi.advanceTimersByTimeAsync(2); });
+        expect(mockedApiRequest).toHaveBeenCalledTimes(2);
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
+    it('clears to null (pending), not the previous total, when the address becomes incomplete again', async () => {
+      const line = makeLine();
+      const lines = [line]; // stable reference — only `shipping` changes below
+      const priced = pricedCartFor(line, 25);
+      mockedApiRequest.mockResolvedValue({ ok: true, data: priced });
+
+      const { result, rerender } = renderHook(
+        ({ shipping }: { shipping: { province: string; district: string } | null }) =>
+          usePricedCart(lines, true, undefined, shipping),
+        {
+          initialProps: {
+            shipping: { province: 'Ho Chi Minh City', district: 'District 1' } as { province: string; district: string } | null,
+          },
+        },
+      );
+      await flushMicrotasks();
+      expect(result.current.result).toEqual(priced);
+
+      act(() => {
+        rerender({ shipping: null }); // shopper cleared the district field
+      });
+
+      expect(result.current.result).toBeNull();
+    });
+  });
 });
