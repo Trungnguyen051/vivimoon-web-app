@@ -108,9 +108,9 @@
     "semantic_hash": "8c00befafd9461c4a7805886e0b3d483"
   },
   "components/commerce/product-card.test.tsx": {
-    "mtime": 1788450009.7800312,
-    "seen": 1788493407.492065,
-    "ast_hash": "fa3db31642710913b518096f99f9e91c",
+    "mtime": 1788676864.0690036,
+    "seen": 1788676937.307359,
+    "ast_hash": "3b55a99a1a9a5e60f8f3bf14aa431a94",
     "semantic_hash": ""
   },
   "components/commerce/product-card.tsx": {
@@ -150,16 +150,16 @@
     "semantic_hash": ""
   },
   "components/commerce/spec-table.tsx": {
-    "mtime": 1786876576.4096432,
-    "seen": 1787625522.045904,
-    "ast_hash": "2580bf2fb997149d74a0e982356af68f",
-    "semantic_hash": "2580bf2fb997149d74a0e982356af68f"
+    "mtime": 1788676849.8421328,
+    "seen": 1788676937.307382,
+    "ast_hash": "1a35796b559f5d47beb07d87dbdc348e",
+    "semantic_hash": ""
   },
   "components/commerce/variant-selector.test.tsx": {
-    "mtime": 1788312410.2962651,
-    "seen": 1788411507.09175,
-    "ast_hash": "43d418bc424f83a188de098b9ea54977",
-    "semantic_hash": "43d418bc424f83a188de098b9ea54977"
+    "mtime": 1788676864.0649998,
+    "seen": 1788676937.3073869,
+    "ast_hash": "404d4372274f581c4b333ba9abd8e76f",
+    "semantic_hash": ""
   },
   "components/commerce/variant-selector.tsx": {
     "mtime": 1786876576.4099,
@@ -342,10 +342,10 @@
     "semantic_hash": "e0fa51fe60d12640ae22e4a14fe0a0d1"
   },
   "lib/analytics/analytics.test.ts": {
-    "mtime": 1788312410.3252711,
-    "seen": 1788411507.0917919,
-    "ast_hash": "fbb3bf8011039e6cfdae1859ae21db59",
-    "semantic_hash": "fbb3bf8011039e6cfdae1859ae21db59"
+    "mtime": 1788676864.0908163,
+    "seen": 1788676937.307484,
+    "ast_hash": "ae685107ddfa5b2d45a0d5413a2b99fa",
+    "semantic_hash": ""
   },
   "lib/analytics/analytics.ts": {
     "mtime": 1786867862.880172,
@@ -396,15 +396,15 @@
     "semantic_hash": "e337dcc7b7b3cc468e1af0f5c17aca4f"
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1788618742.5529318,
-    "seen": 1788618913.2623801,
-    "ast_hash": "ce8616d225e119ceacc04310d53fb045",
+    "mtime": 1788676852.0527837,
+    "seen": 1788676937.307594,
+    "ast_hash": "4afb92167f66b143d761d07dd274946d",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/vi.ts": {
-    "mtime": 1788618747.2951434,
-    "seen": 1788618913.2623832,
-    "ast_hash": "7d12fc3ceffce8d3864559e5c8dbe278",
+    "mtime": 1788676851.43551,
+    "seen": 1788676937.307595,
+    "ast_hash": "9d52572d3ebfe3d1be94875d47f9291b",
     "semantic_hash": ""
   },
   "lib/types/collection.ts": {
@@ -738,10 +738,10 @@
     "semantic_hash": ""
   },
   "content/mock/products.ts": {
-    "mtime": 1788312410.296968,
-    "seen": 1788411507.091775,
-    "ast_hash": "2cf75c53599b6be74825645b782504b2",
-    "semantic_hash": "2cf75c53599b6be74825645b782504b2"
+    "mtime": 1788676857.8325784,
+    "seen": 1788676937.307442,
+    "ast_hash": "953df9dae18249ace34436f462ba89b4",
+    "semantic_hash": ""
   },
   "content/mock/reviews.ts": {
     "mtime": 1788449511.4345028,
@@ -786,15 +786,15 @@
     "semantic_hash": "b63fbae9ae606275d40437a14070c5b9"
   },
   "lib/api/schemas/catalog.test.ts": {
-    "mtime": 1788494901.3534148,
-    "seen": 1788495361.0586271,
-    "ast_hash": "7de80738ebcd7a0a3ff8e865ce12d11f",
+    "mtime": 1788676864.0832322,
+    "seen": 1788676937.307553,
+    "ast_hash": "aab433807b5a1814fa18d3669be0bb14",
     "semantic_hash": ""
   },
   "lib/api/schemas/catalog.ts": {
-    "mtime": 1788494920.8574917,
-    "seen": 1788495361.058628,
-    "ast_hash": "0f23c219cf16858de028b744d8197720",
+    "mtime": 1788676848.7737665,
+    "seen": 1788676937.307554,
+    "ast_hash": "2e648319e83c62f0c517d7ff8177a38c",
     "semantic_hash": ""
   },
   "lib/api/schemas/common.ts": {
@@ -1200,9 +1200,9 @@
     "semantic_hash": "ee47797f1a02c7afc1c68c9837d220b5"
   },
   "components/commerce/add-to-cart.test.tsx": {
-    "mtime": 1788312410.2916782,
-    "seen": 1788411507.091728,
-    "ast_hash": "adf003b65ef5a4c9ce508e135d5dc2d4",
+    "mtime": 1788676864.074099,
+    "seen": 1788676937.307319,
+    "ast_hash": "9cecd54e72f3a84cba61f4fb9645a035",
     "semantic_hash": ""
   },
   "app/api/cart/price/route.test.ts": {
@@ -1896,9 +1896,9 @@
     "semantic_hash": ""
   },
   "app/[locale]/quiz/quiz-flow.test.tsx": {
-    "mtime": 1788534946.1667814,
-    "seen": 1788535014.2272482,
-    "ast_hash": "26ba979a2d9d1810dc3dac583e2349d9",
+    "mtime": 1788676864.0604079,
+    "seen": 1788676937.3072278,
+    "ast_hash": "4215d1c2687a4b45ffec0deab69a6bfc",
     "semantic_hash": ""
   },
   "app/[locale]/quiz/quiz-flow.tsx": {
@@ -1944,9 +1944,9 @@
     "semantic_hash": ""
   },
   "lib/products/quiz-scoring.test.ts": {
-    "mtime": 1788534953.1451735,
-    "seen": 1788535014.227455,
-    "ast_hash": "6222ed9d7ffdf01fe9d50d883ed98a9b",
+    "mtime": 1788676864.078583,
+    "seen": 1788676937.307604,
+    "ast_hash": "54039ed06b3439b1ff17257c1ca12b91",
     "semantic_hash": ""
   },
   "lib/products/quiz-scoring.ts": {
@@ -2043,6 +2043,42 @@
     "mtime": 1788654564.1931207,
     "seen": 1788654654.560266,
     "ast_hash": "f0831375cfe68f162866816d3543cde4",
+    "semantic_hash": ""
+  },
+  ".firecrawl/vivimoon-map.json": {
+    "mtime": 1788676346.2824497,
+    "seen": 1788676937.3071518,
+    "ast_hash": "b05bbee221ab2f4d1e82279d4b5b8330",
+    "semantic_hash": ""
+  },
+  ".firecrawl/category-1ngay.md": {
+    "mtime": 1788676388.7932372,
+    "seen": 1788676937.3076491,
+    "ast_hash": "020080dd4fae9fed0cb058e4a891f74c",
+    "semantic_hash": ""
+  },
+  ".firecrawl/pdp-jupiter-gray.md": {
+    "mtime": 1788676386.9771051,
+    "seen": 1788676937.307651,
+    "ast_hash": "008209c3a253d0caadc06c558f2608fd",
+    "semantic_hash": ""
+  },
+  ".firecrawl/pdp-nuoc-ngam-b5.md": {
+    "mtime": 1788676385.6239722,
+    "seen": 1788676937.307652,
+    "ast_hash": "2f120f975034b21485b53bc094cabaef",
+    "semantic_hash": ""
+  },
+  ".firecrawl/pdp-vivimedi-oxy-3months.md": {
+    "mtime": 1788676383.0348866,
+    "seen": 1788676937.307654,
+    "ast_hash": "14b83e082155f3a68f5d71151ce71412",
+    "semantic_hash": ""
+  },
+  ".firecrawl/pdp-vivimedi-oxy-plus-1day.md": {
+    "mtime": 1788676382.9645562,
+    "seen": 1788676937.3076549,
+    "ast_hash": "756702a127e70c1bc16d6cd680daf873",
     "semantic_hash": ""
   }
 }
