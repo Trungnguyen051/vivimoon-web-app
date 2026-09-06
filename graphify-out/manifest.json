@@ -6,9 +6,9 @@
     "semantic_hash": ""
   },
   "app/[locale]/checkout/page.tsx": {
-    "mtime": 1788651378.6794453,
-    "seen": 1788651460.967631,
-    "ast_hash": "f8941006df56fc41ea362be1b5afc3fd",
+    "mtime": 1788654557.738546,
+    "seen": 1788654654.5602748,
+    "ast_hash": "5a5bbae445e52da8b7c35b6dc23163ea",
     "semantic_hash": ""
   },
   "app/[locale]/checkout/success/page.tsx": {
@@ -2037,6 +2037,12 @@
     "mtime": 1788620172.367347,
     "seen": 1788620248.1163468,
     "ast_hash": "6cce788ab0f450c5cc226094d78db34d",
+    "semantic_hash": ""
+  },
+  "app/[locale]/checkout/checkout-address-prefill.test.tsx": {
+    "mtime": 1788654564.1931207,
+    "seen": 1788654654.560266,
+    "ast_hash": "f0831375cfe68f162866816d3543cde4",
     "semantic_hash": ""
   }
 }
