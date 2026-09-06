@@ -7,7 +7,7 @@ const validProduct = {
   badges: ['new'],
   specs: {
     material: 'Hydrogel', waterContent: '38%', baseCurve: '8.6mm',
-    diameter: '14.2mm', uvProtection: true, manufacturer: 'M',
+    diameter: '14.2mm', uvProtection: true, origin: 'M',
   },
   variants: [{
     id: 'v1', sku: 'S1', packSize: '10 lenses', price: 250000,

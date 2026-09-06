@@ -8,7 +8,7 @@ export function SpecTable({ specs, dict }: { specs: ProductSpecs; dict: Dictiona
     [dict.pdp.baseCurve, specs.baseCurve],
     [dict.pdp.diameter, specs.diameter],
     [dict.pdp.uvProtection, specs.uvProtection ? '✓' : '—'],
-    [dict.pdp.manufacturer, specs.manufacturer],
+    [dict.pdp.origin, specs.origin],
   ];
   return (
     <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border bg-border md:grid-cols-3">

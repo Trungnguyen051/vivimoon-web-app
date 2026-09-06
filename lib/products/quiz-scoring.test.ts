@@ -16,7 +16,7 @@ function product(overrides: Partial<Product> & Pick<Product, 'id'>): Product {
     badges: [],
     specs: {
       material: 'Hydrogel', waterContent: '50%', baseCurve: '8.6mm',
-      diameter: '14.2mm', uvProtection: true, manufacturer: 'M',
+      diameter: '14.2mm', uvProtection: true, origin: 'M',
     },
     requiresRx: true,
     variants: [{ id: `${overrides.id}-v1`, sku: 'S', packSize: '30', price: 10, currency: 'USD', stock: 1 }],

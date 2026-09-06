@@ -13,7 +13,7 @@ export const productSpecsSchema = z.object({
   baseCurve: z.string(),
   diameter: z.string(),
   uvProtection: z.boolean(),
-  manufacturer: z.string(),
+  origin: z.string(),
 });
 
 export const variantSchema = z.object({

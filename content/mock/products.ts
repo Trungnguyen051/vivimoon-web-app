@@ -19,7 +19,7 @@ export const products: Product[] = [
       baseCurve: '8.6mm',
       diameter: '14.2mm',
       uvProtection: true,
-      manufacturer: 'Vivimoon Labs',
+      origin: 'South Korea',
     },
     requiresRx: true,
     variants: [
@@ -62,7 +62,7 @@ export const products: Product[] = [
       baseCurve: '8.7mm',
       diameter: '14.0mm',
       uvProtection: false,
-      manufacturer: 'Vivimoon Labs',
+      origin: 'South Korea',
     },
     requiresRx: true,
     variants: [
@@ -96,7 +96,7 @@ export const products: Product[] = [
       baseCurve: '8.6mm',
       diameter: '14.2mm',
       uvProtection: true,
-      manufacturer: 'Vivimoon Labs',
+      origin: 'South Korea',
     },
     requiresRx: true,
     variants: [
@@ -130,7 +130,7 @@ export const products: Product[] = [
       baseCurve: '8.6mm',
       diameter: '14.5mm',
       uvProtection: true,
-      manufacturer: 'Vivimoon Labs',
+      origin: 'South Korea',
     },
     requiresRx: true,
     variants: [
@@ -196,7 +196,7 @@ export const products: Product[] = [
       baseCurve: '8.6mm',
       diameter: '14.2mm',
       uvProtection: false,
-      manufacturer: 'Vivimoon Labs',
+      origin: 'South Korea',
     },
     requiresRx: true,
     variants: [
@@ -244,7 +244,7 @@ export const products: Product[] = [
       baseCurve: '8.7mm',
       diameter: '14.5mm',
       uvProtection: true,
-      manufacturer: 'Vivimoon Labs',
+      origin: 'South Korea',
     },
     requiresRx: true,
     variants: [
@@ -281,7 +281,7 @@ export const products: Product[] = [
       baseCurve: '8.6mm',
       diameter: '14.3mm',
       uvProtection: true,
-      manufacturer: 'Vivimoon Labs',
+      origin: 'South Korea',
     },
     requiresRx: true,
     variants: [
@@ -318,7 +318,7 @@ export const products: Product[] = [
       baseCurve: '8.7mm',
       diameter: '14.4mm',
       uvProtection: true,
-      manufacturer: 'Vivimoon Labs',
+      origin: 'South Korea',
     },
     requiresRx: true,
     variants: [
@@ -352,7 +352,7 @@ export const products: Product[] = [
       baseCurve: '8.6mm',
       diameter: '14.2mm',
       uvProtection: false,
-      manufacturer: 'Vivimoon Labs',
+      origin: 'South Korea',
     },
     requiresRx: true,
     variants: [
