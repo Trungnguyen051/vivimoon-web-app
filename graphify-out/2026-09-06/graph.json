@@ -280,7 +280,7 @@
       "file_type": "code",
       "norm_label": "collection",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L159"
+      "source_location": "L158"
     },
     {
       "id": "lib_api_schemas_catalog_comparerequest",
@@ -293,7 +293,7 @@
       "file_type": "code",
       "norm_label": "comparerequest",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L162"
+      "source_location": "L161"
     },
     {
       "id": "lib_api_schemas_catalog_lensgallerycontexts",
@@ -306,7 +306,7 @@
       "file_type": "code",
       "norm_label": "lensgallerycontexts",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L165"
+      "source_location": "L164"
     },
     {
       "id": "content_mock_users_mockuser",
@@ -800,7 +800,7 @@
       "file_type": "code",
       "norm_label": "product",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L158"
+      "source_location": "L157"
     },
     {
       "id": "lib_api_schemas_catalog_variant",
@@ -813,7 +813,7 @@
       "file_type": "code",
       "norm_label": "variant",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L157"
+      "source_location": "L156"
     },
     {
       "id": "features_compare_use_comparison_usecomparisonmatrixresult",
@@ -839,7 +839,7 @@
       "file_type": "code",
       "norm_label": "comparisonmatrix",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L164"
+      "source_location": "L163"
     },
     {
       "id": "lib_api_resources_auth_mock_autherror",
@@ -1034,7 +1034,7 @@
       "file_type": "code",
       "norm_label": "lenstype",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L151"
+      "source_location": "L150"
     },
     {
       "id": "lib_api_schemas_rx_lenstype",
@@ -1515,7 +1515,7 @@
       "file_type": "code",
       "norm_label": "comparisonrow",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L163"
+      "source_location": "L162"
     },
     {
       "id": "lib_api_schemas_catalog_lensgallery",
@@ -1528,7 +1528,7 @@
       "file_type": "code",
       "norm_label": "lensgallery",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L166"
+      "source_location": "L165"
     },
     {
       "id": "lib_api_schemas_catalog_productbadge",
@@ -1541,7 +1541,7 @@
       "file_type": "code",
       "norm_label": "productbadge",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L153"
+      "source_location": "L152"
     },
     {
       "id": "lib_api_schemas_catalog_productspecs",
@@ -1554,7 +1554,7 @@
       "file_type": "code",
       "norm_label": "productspecs",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L156"
+      "source_location": "L155"
     },
     {
       "id": "lib_api_schemas_catalog_replacementschedule",
@@ -1567,7 +1567,7 @@
       "file_type": "code",
       "norm_label": "replacementschedule",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L152"
+      "source_location": "L151"
     },
     {
       "id": "lib_api_resources_catalog_mock_catalog",
@@ -1593,7 +1593,7 @@
       "file_type": "code",
       "norm_label": "productquery",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L161"
+      "source_location": "L160"
     },
     {
       "id": "lib_api_schemas_catalog_review",
@@ -1606,7 +1606,7 @@
       "file_type": "code",
       "norm_label": "review",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L160"
+      "source_location": "L159"
     },
     {
       "id": "lib_api_schemas_catalog_reviewsource",
@@ -1619,7 +1619,7 @@
       "file_type": "code",
       "norm_label": "reviewsource",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L155"
+      "source_location": "L154"
     },
     {
       "id": "lib_api_schemas_catalog_currency",
@@ -1632,7 +1632,7 @@
       "file_type": "code",
       "norm_label": "currency",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L154"
+      "source_location": "L153"
     },
     {
       "id": "app_api_account_addresses_route_get",
@@ -2952,7 +2952,7 @@
       "file_type": "code",
       "norm_label": "blanktoundefined()",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L119"
+      "source_location": "L118"
     },
     {
       "id": "content_mock_collections_bybadge",
@@ -3828,7 +3828,7 @@
       "file_type": "code",
       "norm_label": "parseproductqueryloose()",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L143"
+      "source_location": "L142"
     },
     {
       "id": "lib_api_resources_pricing_mock_bestvoucher",
@@ -8896,14 +8896,14 @@
       "source_location": "L1"
     },
     {
-      "id": "docs_adr_0010_product_line_excludes_correction_complexity_product_line_carries_no_correction_complexity_signal_toric_multifocal_readiness_stays_isolated_in_the_rx_schema",
-      "label": "Product Line carries no correction-complexity signal; toric/multifocal readiness stays isolated in the Rx schema",
+      "id": "docs_adr_0010_product_line_excludes_correction_complexity_product_line_will_carry_no_correction_complexity_signal_toric_multifocal_readiness_stays_isolated_in_the_rx_schema",
+      "label": "Product Line will carry no correction-complexity signal; toric/multifocal readiness stays isolated in the Rx schema",
       "_origin": "ast",
       "community": 127,
       "community_name": "0010-product-line-excludes-correction-complexity.md",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "product line carries no correction-complexity signal; toric/multifocal readiness stays isolated in the rx schema",
+      "norm_label": "product line will carry no correction-complexity signal; toric/multifocal readiness stays isolated in the rx schema",
       "source_file": "docs/adr/0010-product-line-excludes-correction-complexity.md",
       "source_location": "L1"
     },
@@ -8920,14 +8920,14 @@
       "source_location": "L1"
     },
     {
-      "id": "docs_adr_0011_eye_enlargement_derives_from_graphic_diameter_eye_enlargement_band_derives_from_graphicdiameter_not_diameter",
-      "label": "Eye enlargement band derives from `graphicDiameter`, not `diameter`",
+      "id": "docs_adr_0011_eye_enlargement_derives_from_graphic_diameter_eye_enlargement_band_will_derive_from_graphicdiameter_not_diameter",
+      "label": "Eye enlargement band will derive from `graphicDiameter`, not `diameter`",
       "_origin": "ast",
       "community": 128,
       "community_name": "0011-eye-enlargement-derives-from-graphic-diameter.md",
       "file_type": "document",
       "node_kind": "heading",
-      "norm_label": "eye enlargement band derives from `graphicdiameter`, not `diameter`",
+      "norm_label": "eye enlargement band will derive from `graphicdiameter`, not `diameter`",
       "source_file": "docs/adr/0011-eye-enlargement-derives-from-graphic-diameter.md",
       "source_location": "L1"
     },
@@ -9248,7 +9248,7 @@
       "file_type": "code",
       "norm_label": "collectionschema",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L52"
+      "source_location": "L51"
     },
     {
       "id": "lib_api_schemas_catalog_comparerequestschema",
@@ -9259,7 +9259,7 @@
       "file_type": "code",
       "norm_label": "comparerequestschema",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L77"
+      "source_location": "L76"
     },
     {
       "id": "lib_api_schemas_catalog_comparisonrowschema",
@@ -9270,7 +9270,7 @@
       "file_type": "code",
       "norm_label": "comparisonrowschema",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L83"
+      "source_location": "L82"
     },
     {
       "id": "lib_api_schemas_catalog_lensgallerycontextsschema",
@@ -9281,7 +9281,7 @@
       "file_type": "code",
       "norm_label": "lensgallerycontextsschema",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L106"
+      "source_location": "L105"
     },
     {
       "id": "lib_api_schemas_catalog_lensgalleryschema",
@@ -9292,7 +9292,7 @@
       "file_type": "code",
       "norm_label": "lensgalleryschema",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L114"
+      "source_location": "L113"
     },
     {
       "id": "lib_api_schemas_catalog_lenstypeschema",
@@ -9325,7 +9325,7 @@
       "file_type": "code",
       "norm_label": "productqueryschema",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L123"
+      "source_location": "L122"
     },
     {
       "id": "lib_api_schemas_catalog_productschema",
@@ -9336,7 +9336,7 @@
       "file_type": "code",
       "norm_label": "productschema",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L32"
+      "source_location": "L31"
     },
     {
       "id": "lib_api_schemas_catalog_productspecsschema",
@@ -9369,7 +9369,7 @@
       "file_type": "code",
       "norm_label": "reviewschema",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L60"
+      "source_location": "L59"
     },
     {
       "id": "lib_api_schemas_catalog_reviewsourceschema",
@@ -9413,7 +9413,7 @@
       "file_type": "code",
       "norm_label": "variantschema",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L19"
+      "source_location": "L18"
     },
     {
       "id": "lib_types_collection",
@@ -10744,7 +10744,7 @@
       "file_type": "code",
       "norm_label": "comparisonmatrixschema",
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L99"
+      "source_location": "L98"
     },
     {
       "id": "lib_api_schemas_common",
@@ -15743,6 +15743,96 @@
       "source_location": "L1"
     },
     {
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_ordersummary",
+      "label": "OrderSummary component",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 131,
+      "community_name": "Task 18: Cart page + line item + order summary",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "ordersummary component",
+      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task18_cart_page",
+      "label": "Task 18: Cart page + line item + order summary",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 131,
+      "community_name": "Task 18: Cart page + line item + order summary",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "task 18: cart page + line item + order summary",
+      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task19_checkout_success",
+      "label": "Task 19: Checkout + success (stubbed payment)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 131,
+      "community_name": "Task 18: Cart page + line item + order summary",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "task 19: checkout + success (stubbed payment)",
+      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task20_final_verification",
+      "label": "Task 20: Final verification (responsive, a11y, build, tests)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 131,
+      "community_name": "Task 18: Cart page + line item + order summary",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "task 20: final verification (responsive, a11y, build, tests)",
+      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_pages",
+      "label": "Pages table (Home, Collection, PDP, Cart, Checkout, Checkout success)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 131,
+      "community_name": "Task 18: Cart page + line item + order summary",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "pages table (home, collection, pdp, cart, checkout, checkout success)",
+      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_testing_strategy",
+      "label": "Testing strategy (Vitest unit + RTL component tests)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 131,
+      "community_name": "Task 18: Cart page + line item + order summary",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "testing strategy (vitest unit + rtl component tests)",
+      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
       "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_collection",
       "label": "Collection domain type",
       "_origin": "semantic",
@@ -15828,36 +15918,6 @@
       "contributor": null,
       "file_type": "code",
       "norm_label": "productspecs domain type",
-      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant",
-      "label": "Variant domain type",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 16,
-      "community_name": "Product domain type",
-      "contributor": null,
-      "file_type": "code",
-      "norm_label": "variant domain type",
-      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variantselector",
-      "label": "VariantSelector component",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 16,
-      "community_name": "Product domain type",
-      "contributor": null,
-      "file_type": "code",
-      "norm_label": "variantselector component",
       "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
       "source_location": null,
       "source_url": null
@@ -16023,21 +16083,6 @@
       "contributor": null,
       "file_type": "rationale",
       "norm_label": "data layer swap seam: single named concrete impl in lib/data/index.ts",
-      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant_axes_rationale",
-      "label": "Variant axes baseline: color x packSize, power deferred to future Rx axis",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 16,
-      "community_name": "Product domain type",
-      "contributor": null,
-      "file_type": "rationale",
-      "norm_label": "variant axes baseline: color x packsize, power deferred to future rx axis",
       "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
       "source_location": null,
       "source_url": null
@@ -16778,8 +16823,8 @@
       "source_url": null
     },
     {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_ordersummary",
-      "label": "OrderSummary component",
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant",
+      "label": "Variant domain type",
       "_origin": "semantic",
       "author": null,
       "captured_at": null,
@@ -16787,7 +16832,22 @@
       "community_name": "Product Detail Page (PDP) structure",
       "contributor": null,
       "file_type": "code",
-      "norm_label": "ordersummary component",
+      "norm_label": "variant domain type",
+      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variantselector",
+      "label": "VariantSelector component",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 25,
+      "community_name": "Product Detail Page (PDP) structure",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "variantselector component",
       "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
       "source_location": null,
       "source_url": null
@@ -16883,81 +16943,6 @@
       "source_url": null
     },
     {
-      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task18_cart_page",
-      "label": "Task 18: Cart page + line item + order summary",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 25,
-      "community_name": "Product Detail Page (PDP) structure",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "task 18: cart page + line item + order summary",
-      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task19_checkout_success",
-      "label": "Task 19: Checkout + success (stubbed payment)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 25,
-      "community_name": "Product Detail Page (PDP) structure",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "task 19: checkout + success (stubbed payment)",
-      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task20_final_verification",
-      "label": "Task 20: Final verification (responsive, a11y, build, tests)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 25,
-      "community_name": "Product Detail Page (PDP) structure",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "task 20: final verification (responsive, a11y, build, tests)",
-      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_pages",
-      "label": "Pages table (Home, Collection, PDP, Cart, Checkout, Checkout success)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 25,
-      "community_name": "Product Detail Page (PDP) structure",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "pages table (home, collection, pdp, cart, checkout, checkout success)",
-      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_testing_strategy",
-      "label": "Testing strategy (Vitest unit + RTL component tests)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 25,
-      "community_name": "Product Detail Page (PDP) structure",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "testing strategy (vitest unit + rtl component tests)",
-      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
       "id": "docs_research_coolmate_website_analysis_color_variant_url_pattern",
       "label": "Color variants as distinct URLs (?color=slug) for SEO/deep-linking",
       "_origin": "semantic",
@@ -16969,6 +16954,21 @@
       "file_type": "rationale",
       "norm_label": "color variants as distinct urls (?color=slug) for seo/deep-linking",
       "source_file": "docs/research/coolmate-website-analysis.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant_axes_rationale",
+      "label": "Variant axes baseline: color x packSize, power deferred to future Rx axis",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 25,
+      "community_name": "Product Detail Page (PDP) structure",
+      "contributor": null,
+      "file_type": "rationale",
+      "norm_label": "variant axes baseline: color x packsize, power deferred to future rx axis",
+      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
       "source_location": null,
       "source_url": null
     },
@@ -50565,7 +50565,7 @@
     },
     {
       "source": "docs_adr_0010_product_line_excludes_correction_complexity",
-      "target": "docs_adr_0010_product_line_excludes_correction_complexity_product_line_carries_no_correction_complexity_signal_toric_multifocal_readiness_stays_isolated_in_the_rx_schema",
+      "target": "docs_adr_0010_product_line_excludes_correction_complexity_product_line_will_carry_no_correction_complexity_signal_toric_multifocal_readiness_stays_isolated_in_the_rx_schema",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -50576,7 +50576,7 @@
     },
     {
       "source": "docs_adr_0011_eye_enlargement_derives_from_graphic_diameter",
-      "target": "docs_adr_0011_eye_enlargement_derives_from_graphic_diameter_eye_enlargement_band_derives_from_graphicdiameter_not_diameter",
+      "target": "docs_adr_0011_eye_enlargement_derives_from_graphic_diameter_eye_enlargement_band_will_derive_from_graphicdiameter_not_diameter",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -54157,7 +54157,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L106",
+      "source_location": "L105",
       "weight": 1.0
     },
     {
@@ -54168,7 +54168,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L114",
+      "source_location": "L113",
       "weight": 1.0
     },
     {
@@ -54179,7 +54179,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L119",
+      "source_location": "L118",
       "weight": 1.0
     },
     {
@@ -54190,7 +54190,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L123",
+      "source_location": "L122",
       "weight": 1.0
     },
     {
@@ -54201,7 +54201,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L143",
+      "source_location": "L142",
       "weight": 1.0
     },
     {
@@ -54212,7 +54212,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L151",
+      "source_location": "L150",
       "weight": 1.0
     },
     {
@@ -54223,7 +54223,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L152",
+      "source_location": "L151",
       "weight": 1.0
     },
     {
@@ -54234,7 +54234,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L153",
+      "source_location": "L152",
       "weight": 1.0
     },
     {
@@ -54245,7 +54245,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L154",
+      "source_location": "L153",
       "weight": 1.0
     },
     {
@@ -54256,7 +54256,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L155",
+      "source_location": "L154",
       "weight": 1.0
     },
     {
@@ -54267,7 +54267,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L156",
+      "source_location": "L155",
       "weight": 1.0
     },
     {
@@ -54278,7 +54278,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L157",
+      "source_location": "L156",
       "weight": 1.0
     },
     {
@@ -54289,7 +54289,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L158",
+      "source_location": "L157",
       "weight": 1.0
     },
     {
@@ -54300,7 +54300,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L159",
+      "source_location": "L158",
       "weight": 1.0
     },
     {
@@ -54311,7 +54311,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L160",
+      "source_location": "L159",
       "weight": 1.0
     },
     {
@@ -54322,7 +54322,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L161",
+      "source_location": "L160",
       "weight": 1.0
     },
     {
@@ -54333,7 +54333,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L162",
+      "source_location": "L161",
       "weight": 1.0
     },
     {
@@ -54344,7 +54344,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L163",
+      "source_location": "L162",
       "weight": 1.0
     },
     {
@@ -54355,7 +54355,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L164",
+      "source_location": "L163",
       "weight": 1.0
     },
     {
@@ -54366,7 +54366,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L165",
+      "source_location": "L164",
       "weight": 1.0
     },
     {
@@ -54377,7 +54377,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L166",
+      "source_location": "L165",
       "weight": 1.0
     },
     {
@@ -54388,7 +54388,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L19",
+      "source_location": "L18",
       "weight": 1.0
     },
     {
@@ -54399,7 +54399,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L32",
+      "source_location": "L31",
       "weight": 1.0
     },
     {
@@ -54432,7 +54432,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L52",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "lib_api_schemas_catalog",
+      "target": "lib_api_schemas_catalog_reviewschema",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "lib/api/schemas/catalog.ts",
+      "source_location": "L59",
       "weight": 1.0
     },
     {
@@ -54444,17 +54455,6 @@
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
       "source_location": "L6",
-      "weight": 1.0
-    },
-    {
-      "source": "lib_api_schemas_catalog",
-      "target": "lib_api_schemas_catalog_reviewschema",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -54476,7 +54476,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L77",
+      "source_location": "L76",
       "weight": 1.0
     },
     {
@@ -54498,7 +54498,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L83",
+      "source_location": "L82",
       "weight": 1.0
     },
     {
@@ -54509,7 +54509,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/api/schemas/catalog.ts",
-      "source_location": "L99",
+      "source_location": "L98",
       "weight": 1.0
     },
     {
@@ -59173,5 +59173,5 @@
       "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md"
     }
   ],
-  "built_at_commit": "4afc95b053f8c8a8569f95c7d49f7b26d1f18b67"
+  "built_at_commit": "57b92abe8bcd9585b268b108adaf76de23c2c4e9"
 }

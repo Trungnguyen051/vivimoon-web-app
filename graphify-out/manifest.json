@@ -738,9 +738,9 @@
     "semantic_hash": ""
   },
   "content/mock/products.ts": {
-    "mtime": 1788679737.616109,
-    "seen": 1788694061.8194208,
-    "ast_hash": "5e71fa1515bac7c5fcb1df89711de1ee",
+    "mtime": 1788695952.8209517,
+    "seen": 1788696016.213155,
+    "ast_hash": "7857444123c41df70f58433cc186bb86",
     "semantic_hash": ""
   },
   "content/mock/reviews.ts": {
@@ -786,15 +786,15 @@
     "semantic_hash": "b63fbae9ae606275d40437a14070c5b9"
   },
   "lib/api/schemas/catalog.test.ts": {
-    "mtime": 1788679686.7354138,
-    "seen": 1788694061.819684,
-    "ast_hash": "a223178896223541018ec4c84abd1ad6",
+    "mtime": 1788694233.023767,
+    "seen": 1788696016.2132192,
+    "ast_hash": "09af47b8e91accc3d47255f7a762d7ef",
     "semantic_hash": ""
   },
   "lib/api/schemas/catalog.ts": {
-    "mtime": 1788679699.3566422,
-    "seen": 1788694061.819687,
-    "ast_hash": "87165bbe9cc5d089499140e3cea4a1c1",
+    "mtime": 1788695971.7415001,
+    "seen": 1788696016.2132201,
+    "ast_hash": "9f13f5937ad105da50d13dbca35ec022",
     "semantic_hash": ""
   },
   "lib/api/schemas/common.ts": {
@@ -1470,9 +1470,9 @@
     "semantic_hash": ""
   },
   "CONTEXT.md": {
-    "mtime": 1788693946.6303296,
-    "seen": 1788694061.819917,
-    "ast_hash": "1cfdfb6363f4221b23851652e7735f73",
+    "mtime": 1788695398.4309218,
+    "seen": 1788696016.213278,
+    "ast_hash": "39570d302fccbe4a9eafa9567940c077",
     "semantic_hash": ""
   },
   "app/[locale]/account/addresses/addresses-manager.tsx": {
@@ -1800,15 +1800,15 @@
     "semantic_hash": ""
   },
   "lib/api/resources/discovery/mock.test.ts": {
-    "mtime": 1788534910.8072252,
-    "seen": 1788535014.227404,
-    "ast_hash": "6b73545df7f944e8241c74013550777c",
+    "mtime": 1788694189.5891843,
+    "seen": 1788696016.213196,
+    "ast_hash": "7101326571eea52f2c5c293b2d959c36",
     "semantic_hash": ""
   },
   "lib/api/resources/discovery/mock.ts": {
-    "mtime": 1788534905.7912922,
-    "seen": 1788535014.227405,
-    "ast_hash": "004f6f25164eb02fc0b42560638262a4",
+    "mtime": 1788694208.1735039,
+    "seen": 1788696016.213197,
+    "ast_hash": "91cd95da0736a4641e42f86fdecfd389",
     "semantic_hash": ""
   },
   "lib/api/server-fetch.ts": {
@@ -1818,15 +1818,15 @@
     "semantic_hash": ""
   },
   "lib/products/eye-enlargement.test.ts": {
-    "mtime": 1788449655.590633,
-    "seen": 1788493407.49219,
-    "ast_hash": "90c66612bcfd8db7d437f08dc659e790",
+    "mtime": 1788694130.6379719,
+    "seen": 1788696016.213248,
+    "ast_hash": "c054d9dfe3b491372a519200fd660dd1",
     "semantic_hash": ""
   },
   "lib/products/eye-enlargement.ts": {
-    "mtime": 1788449668.3249705,
-    "seen": 1788493407.492191,
-    "ast_hash": "94168d6602a063ed672f24d5d65cc17f",
+    "mtime": 1788694152.4366744,
+    "seen": 1788696016.213249,
+    "ast_hash": "0d8b52f2a17823fc76ee6d48dc3044d5",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-09-03-vivimoon-m4-discovery.md": {
@@ -2052,9 +2052,9 @@
     "semantic_hash": ""
   },
   "docs/adr/0011-eye-enlargement-derives-from-graphic-diameter.md": {
-    "mtime": 1788693967.179211,
-    "seen": 1788694061.8199658,
-    "ast_hash": "531567385d97b95f58fe20bb749ed993",
+    "mtime": 1788694444.6723664,
+    "seen": 1788696016.21329,
+    "ast_hash": "54b946fa1de5a8dd54de5a51e1304cb2",
     "semantic_hash": ""
   },
   "docs/research/vivimoon-website-analysis.md": {
