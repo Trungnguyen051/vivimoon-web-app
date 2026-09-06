@@ -1,0 +1,3 @@
+# Eye enlargement band derives from `graphicDiameter`, not `diameter`
+
+ADR-0005 made `eyeEnlargementBand()` a pure function of a product's `diameter`, on the assumption that total lens diameter was the only enlargement-relevant measurement we had. A live-site audit found the real site publishes a second, distinct measurement — G.DIA, the colored/graphic-zone diameter — which is what actually drives the visual enlargement effect (e.g. one sampled product: 14.2mm total diameter but 13.3mm graphic diameter). `productSpecsSchema` gains a `graphicDiameter` field and `eyeEnlargementBand()` now derives from it instead. ADR-0005's actual principle — the band is computed at the point of use and never stored — is unchanged; only the input field it was computed from was wrong.

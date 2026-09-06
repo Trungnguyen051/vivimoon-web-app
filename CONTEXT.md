@@ -17,8 +17,12 @@ A shopper's saved Vietnamese shipping address (province/district/ward). Exactly 
 _Avoid_: Shipping address, delivery address (same concept — Address)
 
 **Rx**:
-A shopper's per-eye contact-lens prescription, captured at add-to-cart as line metadata rather than a purchasable product variant. `sph` is always present; `cyl`/`axis` apply only to toric lenses and `add` (banded low/mid/high, not a numeric power) only to multifocal lenses.
+A shopper's per-eye contact-lens prescription, captured at add-to-cart as line metadata rather than a purchasable product variant. `sph` is always present; `cyl`/`axis` apply only to toric lenses and `add` (banded low/mid/high, not a numeric power) only to multifocal lenses. Toric and multifocal are currently unreachable through any real Product — no Product Line signals either — kept ready for whenever Vivimoon carries a real toric or multifocal line (see ADR-0004, ADR-0010).
 _Avoid_: Prescription, power
+
+**Product Line**:
+Vivimoon's own lens technology/marketing category for a Product — trong suốt (clear), có màu (colored), or vân nhũ (glitter-textured colored) — matching the real storefront's own 3-way split. Orthogonal to Rx: a Product Line never implies anything about prescription complexity (see ADR-0010).
+_Avoid_: Lens type (the old field name), category
 
 **Cart Line**:
 A single entry in the cart, identified by its variant plus its Rx — not by variant alone. The same lens variant at two different prescriptions is two distinct Cart Lines, each surviving a reload separately.
@@ -40,7 +44,7 @@ The side-by-side comparison view (color, diameter, eye-enlargement band, lifespa
 _Avoid_: Compare page (it's a modal, not a route)
 
 **Eye Enlargement**:
-A banded visual-effect rating (natural / subtle / noticeable / dramatic) derived from a lens's diameter, shown only as a Comparison Matrix column — never a stored product attribute.
+A banded visual-effect rating (natural / subtle / noticeable / dramatic) derived from a lens's graphic diameter — the colored/graphic-zone diameter, distinct from its total diameter — shown only as a Comparison Matrix column — never a stored product attribute.
 _Avoid_: Enlargement factor, magnification
 
 **Lens Viewer**:
