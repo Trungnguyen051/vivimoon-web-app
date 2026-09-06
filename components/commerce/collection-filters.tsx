@@ -7,7 +7,7 @@ import {
 import { Button } from '@/components/ui/button';
 
 const TYPES = ['clear', 'colored', 'toric', 'multifocal'];
-const REPLACEMENTS = ['daily', 'biweekly', 'monthly'];
+const REPLACEMENTS = ['daily', 'monthly', 'threeMonth', 'sixMonth'];
 const SORTS = ['newest', 'price-asc', 'price-desc', 'bestselling'];
 const ALL = 'all';
 

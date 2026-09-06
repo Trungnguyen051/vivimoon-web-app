@@ -12,7 +12,7 @@ export const vi: Dictionary = {
   filters: {
     type: 'Loại lens', replacement: 'Thời gian dùng', color: 'Màu', sort: 'Sắp xếp', clear: 'Xóa bộ lọc',
     types: { clear: 'Trong suốt', colored: 'Có màu', toric: 'Loạn thị', multifocal: 'Đa tròng' },
-    replacements: { daily: 'Hằng ngày', biweekly: 'Hai tuần', monthly: 'Hằng tháng' },
+    replacements: { daily: 'Hằng ngày', monthly: 'Hằng tháng', threeMonth: '3 tháng', sixMonth: '6 tháng' },
     sorts: { newest: 'Mới nhất', 'price-asc': 'Giá: thấp đến cao', 'price-desc': 'Giá: cao đến thấp', bestselling: 'Bán chạy' },
   },
   pdp: {

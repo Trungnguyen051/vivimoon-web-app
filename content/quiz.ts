@@ -15,7 +15,7 @@ export const quiz: QuizDefinition = {
       prompt: 'How active is your day-to-day?',
       options: [
         { id: 'lifestyle-onthego', label: 'Always on the go — fresh lenses every day', tags: { 'replacement:daily': 2 } },
-        { id: 'lifestyle-routine', label: 'Steady routine — biweekly works fine', tags: { 'replacement:biweekly': 2 } },
+        { id: 'lifestyle-routine', label: 'Steady routine — every 3 months works fine', tags: { 'replacement:threeMonth': 2 } },
         { id: 'lifestyle-lowkey', label: 'Low maintenance — monthly is easiest', tags: { 'replacement:monthly': 2 } },
       ],
     },

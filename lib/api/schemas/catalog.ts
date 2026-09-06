@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { EYE_ENLARGEMENT_BANDS } from '@/lib/products/eye-enlargement';
 
 export const lensTypeSchema = z.enum(['clear', 'colored', 'toric', 'multifocal']);
-export const replacementScheduleSchema = z.enum(['daily', 'biweekly', 'monthly']);
+export const replacementScheduleSchema = z.enum(['daily', 'monthly', 'threeMonth', 'sixMonth']);
 export const productBadgeSchema = z.enum(['new', 'bestseller', 'sale']);
 export const currencySchema = z.enum(['VND', 'USD']);
 export const reviewSourceSchema = z.enum(['shopee', 'tiktok', 'vivimoon']);

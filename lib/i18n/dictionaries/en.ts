@@ -10,7 +10,7 @@ export const en = {
   filters: {
     type: 'Lens type', replacement: 'Replacement', color: 'Color', sort: 'Sort', clear: 'Clear filters',
     types: { clear: 'Clear', colored: 'Colored', toric: 'Toric', multifocal: 'Multifocal' },
-    replacements: { daily: 'Daily', biweekly: 'Bi-weekly', monthly: 'Monthly' },
+    replacements: { daily: 'Daily', monthly: 'Monthly', threeMonth: '3-Month', sixMonth: '6-Month' },
     sorts: { newest: 'Newest', 'price-asc': 'Price: low to high', 'price-desc': 'Price: high to low', bestselling: 'Best selling' },
   },
   pdp: {

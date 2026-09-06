@@ -80,15 +80,15 @@ export const products: Product[] = [
   },
   {
     id: 'p-ocean-biweekly',
-    slug: 'ocean-biweekly-clear',
-    name: 'Ocean Biweekly Clear',
+    slug: 'ocean-3month-clear',
+    name: 'Ocean 3-Month Clear',
     brandId: 'vivimoon',
     brandName: 'Vivimoon',
     type: 'clear',
-    replacement: 'biweekly',
+    replacement: 'threeMonth',
     description:
-      'Reusable biweekly lenses offering consistent clarity and reliable hydration between replacements.',
-    images: ['/images/products/ocean-biweekly-1.jpg', '/images/products/ocean-biweekly-2.jpg'],
+      'Reusable 3-month lenses offering consistent clarity and reliable hydration between replacements.',
+    images: ['/images/products/ocean-3month-1.jpg', '/images/products/ocean-3month-2.jpg'],
     badges: [],
     specs: {
       material: 'Silicone Hydrogel',
@@ -262,17 +262,17 @@ export const products: Product[] = [
   },
   {
     id: 'p-torica-biweekly',
-    slug: 'torica-biweekly-toric',
-    name: 'Torica Biweekly Toric',
+    slug: 'torica-6month-toric',
+    name: 'Torica 6-Month Toric',
     brandId: 'vivimoon',
     brandName: 'Vivimoon',
     type: 'toric',
-    replacement: 'biweekly',
+    replacement: 'sixMonth',
     description:
-      'Biweekly toric lenses offering precise astigmatism correction and consistent all-day comfort.',
+      '6-month toric lenses offering precise astigmatism correction and consistent all-day comfort.',
     images: [
-      '/images/products/torica-biweekly-1.jpg',
-      '/images/products/torica-biweekly-2.jpg',
+      '/images/products/torica-6month-1.jpg',
+      '/images/products/torica-6month-2.jpg',
     ],
     badges: [],
     specs: {

@@ -38,6 +38,13 @@ describe('productSchema', () => {
     const bad = { ...validProduct, variants: [{ ...validProduct.variants[0], price: 1.5 }] };
     expect(() => productSchema.parse(bad)).toThrow();
   });
+
+  it('accepts the real duration tiers and rejects the retired biweekly tier', () => {
+    for (const replacement of ['daily', 'monthly', 'threeMonth', 'sixMonth'] as const) {
+      expect(productSchema.parse({ ...validProduct, replacement }).replacement).toBe(replacement);
+    }
+    expect(() => productSchema.parse({ ...validProduct, replacement: 'biweekly' })).toThrow();
+  });
 });
 
 describe('reviewSchema', () => {
