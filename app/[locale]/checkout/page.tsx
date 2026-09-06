@@ -14,7 +14,8 @@ import { checkoutSchema, type CheckoutForm, type CheckoutFormInput } from '@/lib
 import { paymentMethods } from '@/lib/payments/methods';
 import { apiRequest } from '@/lib/api/client';
 import type { Order } from '@/lib/api/schemas/orders';
-import type { User } from '@/lib/api/schemas/auth';
+import { isPhone, type User } from '@/lib/api/schemas/auth';
+import type { SavedAddress } from '@/lib/api/schemas/account';
 import { OrderSummary } from '@/components/commerce/order-summary';
 import { PaymentMethodPicker } from '@/components/commerce/payment-method-picker';
 import { Button } from '@/components/ui/button';
@@ -80,11 +81,43 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
   }, [sessionStatus]);
   // `label` carries a zod .default('home'), so the resolver's output (CheckoutForm)
   // is not what useForm manages — CheckoutFormInput (pre-default) is.
-  const { register, control, handleSubmit, formState: { errors, isSubmitted, isSubmitting } } = useForm<
+  const { register, control, getValues, setValue, handleSubmit, formState: { errors, isSubmitted, isSubmitting } } = useForm<
     CheckoutFormInput,
     unknown,
     CheckoutForm
   >({ resolver: zodResolver(checkoutSchema) });
+
+  // Logged-in checkout personalization (M5.5, issue #22) — prefills the
+  // form from the account's default saved Address, same session-gated
+  // fetch-on-mount posture as the preferred-payment effect above. Only
+  // fields still blank are filled: a shopper who starts typing before this
+  // resolves keeps what they typed rather than having it clobbered, and a
+  // signed-out shopper or one with no saved Address never fetches/changes
+  // anything — the form stays exactly today's blank, editable one. This
+  // never writes back to the saved Address (story 15) — it's a read-only
+  // prefill of otherwise-uncontrolled `register`ed inputs.
+  useEffect(() => {
+    if (sessionStatus !== 'authenticated') return;
+    let cancelled = false;
+    apiRequest<SavedAddress[]>('/api/account/addresses').then((result) => {
+      if (cancelled || !result.ok) return;
+      const defaultAddress = result.data.find((a) => a.isDefault);
+      if (!defaultAddress) return;
+      const current = getValues();
+      (['recipient', 'phone', 'line1', 'ward', 'district', 'province'] as const).forEach((key) => {
+        if (current[key]) return;
+        // The address book's own save form only requires a non-empty phone
+        // (addresses-manager.tsx), not the Vietnamese format checkout's
+        // schema enforces via `isPhone` — an address saved before/without
+        // that check could carry a phone this form would otherwise reject
+        // on a field the shopper never touched. Leave it blank rather than
+        // prefill a value that fails validation out from under them.
+        if (key === 'phone' && !isPhone(defaultAddress.phone)) return;
+        setValue(key, defaultAddress[key]);
+      });
+    });
+    return () => { cancelled = true; };
+  }, [sessionStatus, getValues, setValue]);
 
   // Live price preview (M5.4, issue #21) — reuses the cart's own pricing
   // hook and posture (debounced, first-price-included), gated on the
