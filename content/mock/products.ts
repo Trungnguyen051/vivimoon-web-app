@@ -86,7 +86,7 @@ export const products: Product[] = [
     replacement: 'threeMonth',
     description:
       'Reusable 3-month lenses offering consistent clarity and reliable hydration between replacements.',
-    images: ['/images/products/ocean-3month-1.jpg', '/images/products/ocean-3month-2.jpg'],
+    images: ['/images/products/ocean-biweekly-1.jpg', '/images/products/ocean-biweekly-2.jpg'],
     badges: [],
     specs: {
       material: 'Silicone Hydrogel',
@@ -126,6 +126,7 @@ export const products: Product[] = [
       waterContent: '48%',
       baseCurve: '8.6mm',
       diameter: '14.5mm',
+      graphicDiameter: '13.6mm',
       origin: 'South Korea',
     },
     requiresRx: true,
@@ -191,6 +192,7 @@ export const products: Product[] = [
       waterContent: '50%',
       baseCurve: '8.6mm',
       diameter: '14.2mm',
+      graphicDiameter: '13.3mm',
       origin: 'South Korea',
     },
     requiresRx: true,
@@ -265,8 +267,8 @@ export const products: Product[] = [
     description:
       '6-month toric lenses offering precise astigmatism correction and consistent all-day comfort.',
     images: [
-      '/images/products/torica-6month-1.jpg',
-      '/images/products/torica-6month-2.jpg',
+      '/images/products/torica-biweekly-1.jpg',
+      '/images/products/torica-biweekly-2.jpg',
     ],
     badges: [],
     specs: {

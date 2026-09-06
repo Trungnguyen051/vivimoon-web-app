@@ -2,27 +2,31 @@ import { describe, it, expect } from 'vitest';
 import { eyeEnlargementBand } from './eye-enlargement';
 
 describe('eyeEnlargementBand', () => {
-  it('bands natural below 14.0mm', () => {
-    expect(eyeEnlargementBand('13.9mm')).toBe('natural');
-    expect(eyeEnlargementBand('13.0mm')).toBe('natural');
+  it('bands natural when there is no graphic diameter (e.g. a clear lens)', () => {
+    expect(eyeEnlargementBand(undefined)).toBe('natural');
   });
 
-  it('bands subtle from 14.0mm to 14.2mm', () => {
-    expect(eyeEnlargementBand('14.0mm')).toBe('subtle');
-    expect(eyeEnlargementBand('14.2mm')).toBe('subtle');
+  it('bands natural below 13.0mm', () => {
+    expect(eyeEnlargementBand('12.9mm')).toBe('natural');
+    expect(eyeEnlargementBand('12.0mm')).toBe('natural');
   });
 
-  it('bands noticeable from 14.3mm to 14.5mm', () => {
-    expect(eyeEnlargementBand('14.3mm')).toBe('noticeable');
-    expect(eyeEnlargementBand('14.5mm')).toBe('noticeable');
+  it('bands subtle from 13.0mm to 13.3mm', () => {
+    expect(eyeEnlargementBand('13.0mm')).toBe('subtle');
+    expect(eyeEnlargementBand('13.3mm')).toBe('subtle');
   });
 
-  it('bands dramatic above 14.5mm', () => {
-    expect(eyeEnlargementBand('14.6mm')).toBe('dramatic');
-    expect(eyeEnlargementBand('15.0mm')).toBe('dramatic');
+  it('bands noticeable from 13.4mm to 13.7mm', () => {
+    expect(eyeEnlargementBand('13.4mm')).toBe('noticeable');
+    expect(eyeEnlargementBand('13.7mm')).toBe('noticeable');
   });
 
-  it('throws on an unparseable diameter rather than silently mis-banding', () => {
+  it('bands dramatic above 13.7mm', () => {
+    expect(eyeEnlargementBand('13.8mm')).toBe('dramatic');
+    expect(eyeEnlargementBand('14.0mm')).toBe('dramatic');
+  });
+
+  it('throws on an unparseable graphic diameter rather than silently mis-banding', () => {
     expect(() => eyeEnlargementBand('n/a')).toThrow();
   });
 });

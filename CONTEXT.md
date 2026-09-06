@@ -44,7 +44,7 @@ The side-by-side comparison view (color, diameter, eye-enlargement band, lifespa
 _Avoid_: Compare page (it's a modal, not a route)
 
 **Eye Enlargement**:
-A banded visual-effect rating (natural / subtle / noticeable / dramatic), shown only as a Comparison Matrix column — never a stored product attribute. Currently derived from a lens's total diameter; ADR-0011 calls for deriving it from graphic diameter (the colored/graphic-zone diameter, distinct from total diameter) instead, once that field exists on `ProductSpecs`.
+A banded visual-effect rating (natural / subtle / noticeable / dramatic) derived from a lens's graphic diameter — the colored/graphic-zone diameter, distinct from its total diameter — shown only as a Comparison Matrix column — never a stored product attribute (see ADR-0011).
 _Avoid_: Enlargement factor, magnification
 
 **Lens Viewer**:

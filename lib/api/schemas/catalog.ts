@@ -12,6 +12,10 @@ export const productSpecsSchema = z.object({
   waterContent: z.string(),
   baseCurve: z.string(),
   diameter: z.string(),
+  // The colored/graphic-zone diameter, distinct from total `diameter` — what
+  // actually drives the visual enlargement effect (ADR-0011). Absent for any
+  // lens with no colored zone (clear, toric, multifocal).
+  graphicDiameter: z.string().optional(),
   origin: z.string(),
 });
 

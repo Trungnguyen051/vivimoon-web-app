@@ -29,7 +29,7 @@ function toComparisonRow(product: Product): ComparisonRow {
     color: variant.color,
     colorLabel: variant.colorLabel,
     diameter: product.specs.diameter,
-    eyeEnlargement: eyeEnlargementBand(product.specs.diameter),
+    eyeEnlargement: eyeEnlargementBand(product.specs.graphicDiameter),
     // "Lifespan" (spec §10) is the existing replacement schedule, relabeled.
     lifespan: product.replacement,
     price: variant.price,

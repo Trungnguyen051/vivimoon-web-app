@@ -13,10 +13,10 @@ describe('mockDiscovery.compare', () => {
     });
   });
 
-  it("bands eyeEnlargement per each product's own diameter", async () => {
+  it("bands eyeEnlargement per each product's own graphic diameter, not total diameter", async () => {
     const product = products[0];
     const matrix = await mockDiscovery.compare([product.id]);
-    expect(matrix.products[0].eyeEnlargement).toBe(eyeEnlargementBand(product.specs.diameter));
+    expect(matrix.products[0].eyeEnlargement).toBe(eyeEnlargementBand(product.specs.graphicDiameter));
   });
 
   it('silently drops an id that is not in the catalog', async () => {

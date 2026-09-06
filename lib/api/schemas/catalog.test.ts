@@ -51,6 +51,12 @@ describe('productSchema', () => {
     const parsed = productSchema.parse(withStaleField);
     expect(parsed.specs).not.toHaveProperty('uvProtection');
   });
+
+  it('accepts specs with or without a graphicDiameter', () => {
+    const withGraphicDiameter = { ...validProduct, specs: { ...validProduct.specs, graphicDiameter: '13.3mm' } };
+    expect(productSchema.parse(withGraphicDiameter).specs.graphicDiameter).toBe('13.3mm');
+    expect(productSchema.parse(validProduct).specs.graphicDiameter).toBeUndefined();
+  });
 });
 
 describe('reviewSchema', () => {
