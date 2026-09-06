@@ -12,7 +12,6 @@ export const productSpecsSchema = z.object({
   waterContent: z.string(),
   baseCurve: z.string(),
   diameter: z.string(),
-  uvProtection: z.boolean(),
   origin: z.string(),
 });
 

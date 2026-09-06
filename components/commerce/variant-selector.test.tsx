@@ -9,7 +9,7 @@ const dict = getDictionary('en');
 const product: Product = {
   id: 'p1', slug: 'hazel', name: 'Hazel', brandId: 'v', brandName: 'Vivimoon',
   type: 'colored', replacement: 'monthly', description: '', images: ['/a.jpg'], badges: [],
-  specs: { material: '', waterContent: '', baseCurve: '', diameter: '', uvProtection: false, origin: '' },
+  specs: { material: '', waterContent: '', baseCurve: '', diameter: '', origin: '' },
   requiresRx: true,
   variants: [
     { id: 'v1', sku: 'H-BR-10', color: '#8a5a2b', colorLabel: 'Brown', packSize: '10 lenses', price: 22, currency: 'USD', stock: 5 },

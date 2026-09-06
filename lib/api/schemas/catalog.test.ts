@@ -7,7 +7,7 @@ const validProduct = {
   badges: ['new'],
   specs: {
     material: 'Hydrogel', waterContent: '38%', baseCurve: '8.6mm',
-    diameter: '14.2mm', uvProtection: true, origin: 'M',
+    diameter: '14.2mm', origin: 'M',
   },
   variants: [{
     id: 'v1', sku: 'S1', packSize: '10 lenses', price: 250000,
@@ -44,6 +44,12 @@ describe('productSchema', () => {
       expect(productSchema.parse({ ...validProduct, replacement }).replacement).toBe(replacement);
     }
     expect(() => productSchema.parse({ ...validProduct, replacement: 'biweekly' })).toThrow();
+  });
+
+  it('specs no longer carry a uvProtection field, even if one is passed in', () => {
+    const withStaleField = { ...validProduct, specs: { ...validProduct.specs, uvProtection: true } };
+    const parsed = productSchema.parse(withStaleField);
+    expect(parsed.specs).not.toHaveProperty('uvProtection');
   });
 });
 

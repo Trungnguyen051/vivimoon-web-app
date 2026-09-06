@@ -17,12 +17,12 @@ A shopper's saved Vietnamese shipping address (province/district/ward). Exactly 
 _Avoid_: Shipping address, delivery address (same concept — Address)
 
 **Rx**:
-A shopper's per-eye contact-lens prescription, captured at add-to-cart as line metadata rather than a purchasable product variant. `sph` is always present; `cyl`/`axis` apply only to toric lenses and `add` (banded low/mid/high, not a numeric power) only to multifocal lenses. Toric and multifocal are currently unreachable through any real Product — no Product Line signals either — kept ready for whenever Vivimoon carries a real toric or multifocal line (see ADR-0004, ADR-0010).
+A shopper's per-eye contact-lens prescription, captured at add-to-cart as line metadata rather than a purchasable product variant. `sph` is always present; `cyl`/`axis` apply only to toric lenses (deferred past M2 — no selector collects them yet, see ADR-0004) and `add` (banded low/mid/high, not a numeric power) only to multifocal lenses, which is fully live today. ADR-0010 plans to decouple Rx entirely from the product taxonomy once toric/multifocal are removed from it (tracked in #28); until then, both remain selectable via a Product's `type`.
 _Avoid_: Prescription, power
 
-**Product Line**:
-Vivimoon's own lens technology/marketing category for a Product — trong suốt (clear), có màu (colored), or vân nhũ (glitter-textured colored) — matching the real storefront's own 3-way split. Orthogonal to Rx: a Product Line never implies anything about prescription complexity (see ADR-0010).
-_Avoid_: Lens type (the old field name), category
+**Product Line** (planned — see ADR-0010, tracked in #28, not yet implemented):
+Vivimoon's own lens technology/marketing category for a Product — trong suốt (clear), có màu (colored), or vân nhũ (glitter-textured colored) — matching the real storefront's own 3-way split. Will replace today's `type` field (`clear/colored/toric/multifocal`) once #28 ships. Orthogonal to Rx: a Product Line will never imply anything about prescription complexity.
+_Avoid_: Lens type (today's field name, until #28 ships), category
 
 **Cart Line**:
 A single entry in the cart, identified by its variant plus its Rx — not by variant alone. The same lens variant at two different prescriptions is two distinct Cart Lines, each surviving a reload separately.

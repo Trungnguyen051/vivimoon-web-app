@@ -7,7 +7,6 @@ export function SpecTable({ specs, dict }: { specs: ProductSpecs; dict: Dictiona
     [dict.pdp.waterContent, specs.waterContent],
     [dict.pdp.baseCurve, specs.baseCurve],
     [dict.pdp.diameter, specs.diameter],
-    [dict.pdp.uvProtection, specs.uvProtection ? '✓' : '—'],
     [dict.pdp.origin, specs.origin],
   ];
   return (

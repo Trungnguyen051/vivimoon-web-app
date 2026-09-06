@@ -17,7 +17,7 @@ function makeProduct(overrides: Partial<Product> = {}): Product {
   return {
     id: 'p1', slug: 'hazel', name: 'Hazel', brandId: 'v', brandName: 'Vivimoon',
     type: 'clear', replacement: 'monthly', description: '', images: ['/a.jpg'], badges: [],
-    specs: { material: '', waterContent: '', baseCurve: '', diameter: '', uvProtection: false, origin: '' },
+    specs: { material: '', waterContent: '', baseCurve: '', diameter: '', origin: '' },
     requiresRx: true,
     variants: [
       { id: 'v1', sku: 'H-BR-10', packSize: '10 lenses', price: 22, currency: 'USD', stock: 5 },
