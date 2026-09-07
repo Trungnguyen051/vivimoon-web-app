@@ -61,7 +61,12 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
               </span>
             </div>
             <p className="max-w-prose leading-relaxed text-muted-foreground">{product.description}</p>
-            <AddToCart product={product} locale={l} dict={dict} />
+            {/* Keyed by product.id so a client-side nav between two PDPs (e.g. a
+                related-product link) remounts AddToCart instead of reusing its
+                instance — its local state (variant, qty, rx draft) is
+                per-product and has no other way to reset without a full page
+                reload. */}
+            <AddToCart key={product.id} product={product} locale={l} dict={dict} />
             <div className="flex flex-wrap gap-2">
               <FavoriteButton productId={product.id} locale={l} dict={dict.favorites} />
               <CompareToggle productId={product.id} dict={dict} variant="button" />

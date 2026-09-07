@@ -18,8 +18,8 @@ export const vi: Dictionary = {
   pdp: {
     specs: 'Thông số', related: 'Gợi ý cho bạn', reviews: 'Đánh giá',
     material: 'Chất liệu', waterContent: 'Độ ẩm', baseCurve: 'Độ cong',
-    diameter: 'Đường kính', origin: 'Xuất xứ',
-    packSize: 'Quy cách', color: 'Màu', quantity: 'Số lượng', freeship: 'Miễn phí ship',
+    diameter: 'Đường kính', graphicDiameter: 'Đường kính vùng màu', origin: 'Xuất xứ',
+    color: 'Màu', quantity: 'Số lượng', freeship: 'Miễn phí ship',
     noReviews: 'Chưa có đánh giá.',
     reviewSource: { shopee: 'Shopee', tiktok: 'TikTok', vivimoon: 'Vivimoon' },
   },

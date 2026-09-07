@@ -29,7 +29,7 @@ function json(body: unknown, status = 200) {
 function makeLine(overrides: Partial<CartLine> = {}): CartLine {
   return {
     lineKey: 'existing', productId: 'p0', variantId: 'p-aqua-daily-30', name: 'Existing',
-    sku: 'SKU0', packSize: '30', unitPrice: 25, currency: 'USD', quantity: 1,
+    sku: 'SKU0', unitPrice: 25, currency: 'USD', quantity: 1,
     ...overrides,
   };
 }

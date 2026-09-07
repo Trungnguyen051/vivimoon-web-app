@@ -16,7 +16,7 @@ vi.mock('@/lib/analytics/use-analytics', () => ({ useAnalytics: () => ({ track }
 function makeLine(overrides: Partial<CartLine> = {}): CartLine {
   return {
     lineKey: 'k1', productId: 'p1', variantId: 'v1', name: 'Aqua', sku: 'SKU1',
-    packSize: '30', unitPrice: 25, currency: 'USD', quantity: 1,
+    unitPrice: 25, currency: 'USD', quantity: 1,
     ...overrides,
   };
 }

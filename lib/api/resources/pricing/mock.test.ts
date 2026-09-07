@@ -79,14 +79,14 @@ describe('mockPricing.priceCart', () => {
   });
 
   it('applies no voucher when the cart is below every eligible minSpend', async () => {
-    // A single line at 20 clears no minSpend (SUMMER10/SAVE15 need 50,
+    // A single line at 22 clears no minSpend (SUMMER10/SAVE15 need 50,
     // BIGSPEND needs 200). FREESHIP has no minSpend and is active/unexpired,
     // but its discount against shipping=0 is 0 — a zero-discount candidate
     // is excluded from selection, so it does not "apply" for nothing either.
     const result = await mockPricing.priceCart(
-      req([{ lineKey: 'l1', variantId: 'p-hazel-monthly-brown-10', quantity: 1 }]),
+      req([{ lineKey: 'l1', variantId: 'p-breeze-daily-30', quantity: 1 }]),
     );
-    expect(result.subtotal).toBe(20);
+    expect(result.subtotal).toBe(22);
     expect(result.discount).toBe(0);
     expect(result.appliedVouchers).toEqual([]);
   });
@@ -202,10 +202,10 @@ describe('mockPricing.priceCart', () => {
 
     it('does not apply a memberOnly voucher below its minSpend even when signed in', async () => {
       const result = await mockPricing.priceCart(
-        req([{ lineKey: 'l1', variantId: 'p-hazel-monthly-brown-10', quantity: 1 }]),
+        req([{ lineKey: 'l1', variantId: 'p-breeze-daily-30', quantity: 1 }]),
         'user-1',
       );
-      expect(result.subtotal).toBe(20);
+      expect(result.subtotal).toBe(22);
       const codes = result.appliedVouchers.map((v) => v.code);
       expect(codes).not.toContain('MEMBER20');
     });

@@ -1,16 +1,18 @@
 import { describe, it, expect } from 'vitest';
-import { productSchema, reviewSchema, productQuerySchema, parseProductQueryLoose, lensGallerySchema } from './catalog';
+import { productSchema, variantSchema, reviewSchema, productQuerySchema, parseProductQueryLoose, lensGallerySchema } from './catalog';
 
+// type: 'clear' as the baseline so most tests don't have to think about the
+// colored-requires-graphicDiameter invariant; tests that care set type explicitly.
 const validProduct = {
   id: 'p1', slug: 'aqua', name: 'Aqua', brandId: 'b1', brandName: 'Brand',
-  type: 'colored', replacement: 'daily', description: 'd', images: ['/a.jpg'],
+  type: 'clear', replacement: 'daily', description: 'd', images: ['/a.jpg'],
   badges: ['new'],
   specs: {
     material: 'Hydrogel', waterContent: '38%', baseCurve: '8.6mm',
     diameter: '14.2mm', origin: 'M',
   },
   variants: [{
-    id: 'v1', sku: 'S1', packSize: '10 lenses', price: 250000,
+    id: 'v1', sku: 'S1', price: 250000,
     currency: 'VND', stock: 5,
   }],
   rating: 4.5, reviewCount: 10,
@@ -52,10 +54,88 @@ describe('productSchema', () => {
     expect(parsed.specs).not.toHaveProperty('uvProtection');
   });
 
-  it('accepts specs with or without a graphicDiameter', () => {
+  it('accepts specs with or without a graphicDiameter for a colorless type', () => {
     const withGraphicDiameter = { ...validProduct, specs: { ...validProduct.specs, graphicDiameter: '13.3mm' } };
     expect(productSchema.parse(withGraphicDiameter).specs.graphicDiameter).toBe('13.3mm');
     expect(productSchema.parse(validProduct).specs.graphicDiameter).toBeUndefined();
+  });
+
+  it('rejects a colored product with no graphicDiameter', () => {
+    const bad = { ...validProduct, type: 'colored' };
+    expect(() => productSchema.parse(bad)).toThrow();
+  });
+
+  it('accepts a colored product that has a graphicDiameter', () => {
+    const good = {
+      ...validProduct, type: 'colored',
+      specs: { ...validProduct.specs, graphicDiameter: '13.3mm' },
+    };
+    expect(productSchema.parse(good).type).toBe('colored');
+  });
+
+  it('variants no longer carry a packSize field, even if one is passed in', () => {
+    const withStaleField = {
+      ...validProduct,
+      variants: [{ ...validProduct.variants[0], packSize: '30 lenses' }],
+    };
+    const parsed = productSchema.parse(withStaleField);
+    expect(parsed.variants[0]).not.toHaveProperty('packSize');
+  });
+
+  it('rejects two variants that repeat the same color, since color is now the only selector', () => {
+    const bad = {
+      ...validProduct,
+      variants: [
+        { ...validProduct.variants[0], id: 'v1', color: 'brown' },
+        { ...validProduct.variants[0], id: 'v2', color: 'brown' },
+      ],
+    };
+    expect(() => productSchema.parse(bad)).toThrow();
+  });
+
+  it('accepts multiple variants with distinct colors', () => {
+    const good = {
+      ...validProduct,
+      variants: [
+        { ...validProduct.variants[0], id: 'v1', color: 'brown', colorLabel: 'Brown' },
+        { ...validProduct.variants[0], id: 'v2', color: 'gray', colorLabel: 'Gray' },
+      ],
+    };
+    expect(productSchema.parse(good).variants).toHaveLength(2);
+  });
+
+  it('rejects a colorless variant sharing a product with any other variant, since nothing can select between them', () => {
+    const bad = {
+      ...validProduct,
+      variants: [
+        { ...validProduct.variants[0], id: 'v1' },
+        { ...validProduct.variants[0], id: 'v2' },
+      ],
+    };
+    expect(() => productSchema.parse(bad)).toThrow();
+  });
+
+  it('accepts a single colorless variant', () => {
+    expect(productSchema.parse(validProduct).variants).toHaveLength(1);
+  });
+});
+
+describe('variantSchema', () => {
+  it('rejects a variant with color but no colorLabel', () => {
+    const bad = { id: 'v1', sku: 'S1', color: 'brown', price: 10, currency: 'USD', stock: 1 };
+    expect(() => variantSchema.parse(bad)).toThrow();
+  });
+
+  it('rejects a variant with colorLabel but no color', () => {
+    const bad = { id: 'v1', sku: 'S1', colorLabel: 'Hazel Brown', price: 10, currency: 'USD', stock: 1 };
+    expect(() => variantSchema.parse(bad)).toThrow();
+  });
+
+  it('accepts a variant with both color and colorLabel, or neither', () => {
+    const withColor = { id: 'v1', sku: 'S1', color: 'brown', colorLabel: 'Hazel Brown', price: 10, currency: 'USD', stock: 1 };
+    const withoutColor = { id: 'v2', sku: 'S2', price: 10, currency: 'USD', stock: 1 };
+    expect(variantSchema.parse(withColor).color).toBe('brown');
+    expect(variantSchema.parse(withoutColor).color).toBeUndefined();
   });
 });
 

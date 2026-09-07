@@ -48,7 +48,7 @@ export function AddToCart({ product, locale, dict }: { product: Product; locale:
     return {
       lineKey: lineKey(variant.id, rx),
       productId: product.id, variantId: variant.id, name: product.name, sku: variant.sku,
-      color: variant.colorLabel, packSize: variant.packSize, unitPrice: variant.price,
+      color: variant.colorLabel, unitPrice: variant.price,
       currency: variant.currency, quantity: qty, image: product.images[0], rx,
     };
   };

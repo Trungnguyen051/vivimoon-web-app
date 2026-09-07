@@ -16,8 +16,8 @@ export const en = {
   pdp: {
     specs: 'Specifications', related: 'You might also like', reviews: 'Reviews',
     material: 'Material', waterContent: 'Water content', baseCurve: 'Base curve',
-    diameter: 'Diameter', origin: 'Origin',
-    packSize: 'Pack size', color: 'Color', quantity: 'Quantity', freeship: 'Freeship',
+    diameter: 'Diameter', graphicDiameter: 'Graphic diameter', origin: 'Origin',
+    color: 'Color', quantity: 'Quantity', freeship: 'Freeship',
     noReviews: 'No reviews yet.',
     reviewSource: { shopee: 'Shopee', tiktok: 'TikTok', vivimoon: 'Vivimoon' },
   },

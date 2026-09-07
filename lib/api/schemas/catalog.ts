@@ -24,13 +24,17 @@ export const variantSchema = z.object({
   sku: z.string(),
   color: z.string().optional(),
   colorLabel: z.string().optional(),
-  packSize: z.string(),
   // Whole-currency units: VND has no minor unit, USD is stored as whole dollars.
   price: z.number().int().nonnegative(),
   compareAtPrice: z.number().int().nonnegative().optional(),
   currency: currencySchema,
   stock: z.number().int().nonnegative(),
-});
+}).refine(
+  // CartLine.color is built from colorLabel (add-to-cart.tsx), not color —
+  // if only color were set, the cart line would silently lose its color.
+  (v) => (v.color === undefined) === (v.colorLabel === undefined),
+  { message: 'color and colorLabel must both be present or both be absent', path: ['colorLabel'] },
+);
 
 export const productSchema = z.object({
   id: z.string(),
@@ -50,6 +54,42 @@ export const productSchema = z.object({
   variants: z.array(variantSchema).min(1),
   rating: z.number().min(0).max(5),
   reviewCount: z.number().int().nonnegative(),
+}).superRefine((p, ctx) => {
+  // Now that packSize is gone, color is the only thing VariantSelector uses to
+  // pick a variant — enforcing these here (construction/validation boundary)
+  // means every consumer (compare, spec table, cart) can trust the invariant
+  // instead of each re-deriving or silently mishandling bad data.
+  const colors = p.variants.map((v) => v.color).filter((c): c is string => c !== undefined);
+  if (new Set(colors).size !== colors.length) {
+    ctx.addIssue({
+      code: 'custom',
+      // A repeated color would make the second variant unreachable in the UI
+      // — there is no other selector left to disambiguate it.
+      message: 'variants must not repeat the same color',
+      path: ['variants'],
+    });
+  }
+  const hasColorlessVariant = p.variants.some((v) => v.color === undefined);
+  if (hasColorlessVariant && p.variants.length > 1) {
+    ctx.addIssue({
+      code: 'custom',
+      // A colorless variant can't be disambiguated from any other variant by
+      // the UI, so it must be the product's only one.
+      message: 'a colorless variant must be the product’s only variant',
+      path: ['variants'],
+    });
+  }
+  if (p.type === 'colored' && p.specs.graphicDiameter === undefined) {
+    ctx.addIssue({
+      code: 'custom',
+      // eyeEnlargementBand(undefined) bands 'natural', which is correct for a
+      // colorless lens (ADR-0011) but wrong for a colored product that's
+      // simply missing data — enforced here so every consumer can rely on it
+      // rather than each guessing or guarding separately.
+      message: 'a colored product must specify specs.graphicDiameter',
+      path: ['specs', 'graphicDiameter'],
+    });
+  }
 });
 
 export const collectionSchema = z.object({

@@ -19,7 +19,7 @@ function product(overrides: Partial<Product> & Pick<Product, 'id'>): Product {
       diameter: '14.2mm', origin: 'M',
     },
     requiresRx: true,
-    variants: [{ id: `${overrides.id}-v1`, sku: 'S', packSize: '30', price: 10, currency: 'USD', stock: 1 }],
+    variants: [{ id: `${overrides.id}-v1`, sku: 'S', price: 10, currency: 'USD', stock: 1 }],
     rating: 4.5,
     reviewCount: 0,
     ...overrides,

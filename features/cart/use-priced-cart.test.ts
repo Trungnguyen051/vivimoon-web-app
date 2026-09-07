@@ -17,7 +17,6 @@ function makeLine(overrides: Partial<CartLine> = {}): CartLine {
     variantId: 'v1',
     name: 'Aqua',
     sku: 'SKU1',
-    packSize: '30',
     unitPrice: 25,
     currency: 'USD',
     quantity: 1,

@@ -1,5 +1,6 @@
 import { catalog } from '@/lib/api/resources/catalog';
 import { eyeEnlargementBand } from '@/lib/products/eye-enlargement';
+import { cheapestVariant } from '@/lib/products/cheapest-variant';
 import { scoreQuiz } from '@/lib/products/quiz-scoring';
 import { quiz } from '@/content/quiz';
 import type { ComparisonMatrix, ComparisonRow, Product } from '@/lib/api/schemas/catalog';
@@ -13,10 +14,6 @@ export class DiscoveryError extends Error {
     super(message);
     this.name = 'DiscoveryError';
   }
-}
-
-function cheapestVariant(product: Product) {
-  return product.variants.reduce((min, v) => (v.price < min.price ? v : min), product.variants[0]);
 }
 
 function toComparisonRow(product: Product): ComparisonRow {

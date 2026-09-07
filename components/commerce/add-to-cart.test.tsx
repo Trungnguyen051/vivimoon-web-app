@@ -20,7 +20,7 @@ function makeProduct(overrides: Partial<Product> = {}): Product {
     specs: { material: '', waterContent: '', baseCurve: '', diameter: '', origin: '' },
     requiresRx: true,
     variants: [
-      { id: 'v1', sku: 'H-BR-10', packSize: '10 lenses', price: 22, currency: 'USD', stock: 5 },
+      { id: 'v1', sku: 'H-BR-10', price: 22, currency: 'USD', stock: 5 },
     ],
     rating: 4, reviewCount: 0,
     ...overrides,
@@ -116,7 +116,7 @@ describe('AddToCart — Buy Now (Task 12)', () => {
     const product = makeProduct({ requiresRx: false });
     useCartStore.getState().add({
       lineKey: 'existing', productId: 'p0', variantId: 'v0', name: 'Existing',
-      sku: 'SKU0', packSize: '30', unitPrice: 10, currency: 'USD', quantity: 1,
+      sku: 'SKU0', unitPrice: 10, currency: 'USD', quantity: 1,
     });
 
     render(<AddToCart product={product} locale="en" dict={dict} />);

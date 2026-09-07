@@ -6,22 +6,18 @@ import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { PriceTag } from './price-tag';
 import { CompareToggle } from './compare-toggle';
 import { cn } from '@/lib/utils/cn';
-
-function minVariant(product: Product) {
-  return product.variants.reduce((min, v) => (v.price < min.price ? v : min), product.variants[0]);
-}
+import { distinctColorVariants } from '@/lib/products/variant-colors';
+import { cheapestVariant } from '@/lib/products/cheapest-variant';
 
 export function ProductCard({
   product, locale, dict, onSelect,
 }: {
   product: Product; locale: Locale; dict: Dictionary; onSelect?: () => void;
 }) {
-  const v = minVariant(product);
+  const v = cheapestVariant(product);
   const primary = product.images[0];
   const secondary = product.images[1] ?? product.images[0];
-  const colors = Array.from(
-    new Map(product.variants.filter((x) => x.color).map((c) => [c.color, c])).values(),
-  );
+  const colors = distinctColorVariants(product.variants);
 
   return (
     <div className="group flex flex-col gap-3">

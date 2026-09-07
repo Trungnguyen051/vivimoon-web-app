@@ -19,7 +19,6 @@ export const cartLineSchema = z.object({
   name: z.string(),
   sku: z.string(),
   color: z.string().optional(),
-  packSize: z.string(),
   unitPrice: z.number().int().nonnegative(),
   currency: currencySchema,
   quantity: z.number().int().positive(),

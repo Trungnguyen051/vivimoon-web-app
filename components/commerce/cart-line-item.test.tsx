@@ -11,7 +11,7 @@ const dict = getDictionary('en');
 const line: CartLine = {
   lineKey: lineKey('v1'),
   productId: 'p1', variantId: 'v1', name: 'Aqua', sku: 'S1',
-  packSize: '30 lenses', unitPrice: 25, currency: 'USD', quantity: 2,
+  unitPrice: 25, currency: 'USD', quantity: 2,
 };
 const rx: RxInput = { sameBothEyes: true, right: { sph: -2.5 }, left: { sph: -2.5 } };
 const lineWithRx: CartLine = { ...line, lineKey: lineKey('v1', rx), rx: rx as CartLine['rx'] };
@@ -48,5 +48,17 @@ describe('CartLineItem', () => {
   it('renders no Rx summary for a line without a prescription', () => {
     render(<CartLineItem line={line} locale="en" dict={dict} onQty={vi.fn()} onRemove={vi.fn()} />);
     expect(screen.queryByText(`${dict.rx.summaryLabel}:`, { exact: false })).not.toBeInTheDocument();
+  });
+
+  it('falls back to the SKU for a colorless line, so two same-named lines stay distinguishable', () => {
+    render(<CartLineItem line={line} locale="en" dict={dict} onQty={vi.fn()} onRemove={vi.fn()} />);
+    expect(screen.getByText(line.sku)).toBeInTheDocument();
+  });
+
+  it('shows color instead of SKU for a line that has one', () => {
+    const coloredLine: CartLine = { ...line, color: 'Hazel Brown' };
+    render(<CartLineItem line={coloredLine} locale="en" dict={dict} onQty={vi.fn()} onRemove={vi.fn()} />);
+    expect(screen.getByText('Hazel Brown')).toBeInTheDocument();
+    expect(screen.queryByText(line.sku)).not.toBeInTheDocument();
   });
 });

@@ -10,7 +10,7 @@ function makeLine(rx?: RxInput, quantity = 1): CartLine {
   return {
     lineKey: lineKey('v1', rx),
     productId: 'p1', variantId: 'v1', name: 'Aqua', sku: 'SKU1',
-    packSize: '30', unitPrice: 25, currency: 'USD', quantity,
+    unitPrice: 25, currency: 'USD', quantity,
     rx: rx as CartLine['rx'],
   };
 }

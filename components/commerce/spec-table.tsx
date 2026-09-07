@@ -7,6 +7,8 @@ export function SpecTable({ specs, dict }: { specs: ProductSpecs; dict: Dictiona
     [dict.pdp.waterContent, specs.waterContent],
     [dict.pdp.baseCurve, specs.baseCurve],
     [dict.pdp.diameter, specs.diameter],
+    // Only colored lenses carry a graphic-zone diameter (ADR-0011).
+    ...(specs.graphicDiameter ? [[dict.pdp.graphicDiameter, specs.graphicDiameter] as [string, string]] : []),
     [dict.pdp.origin, specs.origin],
   ];
   return (

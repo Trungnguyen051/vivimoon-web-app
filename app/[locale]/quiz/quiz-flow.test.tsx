@@ -37,7 +37,7 @@ function product(id: string): Product {
     type: 'clear', replacement: 'daily', description: 'd', images: ['/a.jpg'], badges: [],
     specs: { material: 'M', waterContent: '50%', baseCurve: '8.6mm', diameter: '14.2mm', origin: 'M' },
     requiresRx: true,
-    variants: [{ id: `${id}-v1`, sku: 'S', packSize: '30', price: 10, currency: 'USD', stock: 1 }],
+    variants: [{ id: `${id}-v1`, sku: 'S', price: 10, currency: 'USD', stock: 1 }],
     rating: 4.5, reviewCount: 0,
   };
 }

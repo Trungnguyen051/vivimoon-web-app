@@ -25,9 +25,7 @@ export function CartLineItem({
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="font-medium leading-snug">{line.name}</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {line.packSize}{line.color ? ` · ${line.color}` : ''}
-            </p>
+            <p className="mt-1 text-sm text-muted-foreground">{line.color ?? line.sku}</p>
             {/* Two lines can share a variantId and differ only by prescription
                 (spec §7) — without this they'd read as a duplicate-line bug. */}
             {line.rx ? <RxSummary rx={line.rx} dict={dict} /> : null}

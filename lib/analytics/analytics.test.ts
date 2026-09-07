@@ -8,7 +8,7 @@ const product = {
   type: 'clear', replacement: 'daily', description: '', images: [], badges: [],
   specs: { material: '', waterContent: '', baseCurve: '', diameter: '', origin: '' },
   requiresRx: true,
-  variants: [{ id: 'v1', sku: 'SKU1', packSize: '30', price: 25, currency: 'USD', stock: 10 }],
+  variants: [{ id: 'v1', sku: 'SKU1', price: 25, currency: 'USD', stock: 10 }],
   rating: 5, reviewCount: 1,
 } as Product;
 

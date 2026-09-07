@@ -9,7 +9,7 @@ const product: Product = {
   type: 'clear', replacement: 'daily', description: '', images: ['/a.jpg', '/b.jpg'], badges: ['sale'],
   specs: { material: '', waterContent: '', baseCurve: '', diameter: '', origin: '' },
   requiresRx: true,
-  variants: [{ id: 'v1', sku: 'S1', packSize: '30', price: 20, compareAtPrice: 25, currency: 'USD', stock: 5 }],
+  variants: [{ id: 'v1', sku: 'S1', price: 20, compareAtPrice: 25, currency: 'USD', stock: 5 }],
   rating: 4, reviewCount: 3,
 };
 
