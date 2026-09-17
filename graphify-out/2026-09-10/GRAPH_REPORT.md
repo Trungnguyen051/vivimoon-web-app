@@ -1,30 +1,30 @@
-# Graph Report - vivimoon-web-app  (2026-09-10)
+# Graph Report - vivimoon-web-app  (2026-09-07)
 
 ## Corpus Check
-- 320 files · ~131,220 words
+- 320 files · ~131,079 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1521 nodes · 3582 edges · 125 communities (86 shown, 39 thin omitted)
+- 1521 nodes · 3574 edges · 123 communities (82 shown, 41 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 30 edges (avg confidence: 0.77)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `38f57761`
+- Built from commit: `7b816a97`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- apiOk
+- apiFail
 - cn
-- Dictionary
+- addresses-manager.tsx
 - parseBody
 - cart-reducer.test.ts
 - cookie.ts
 - comparison-dialog.tsx
 - dependencies
 - Vivimoon M2 — Purchase Core Implementation Plan
-- variant-selector.tsx
+- Product
 - devDependencies
 - Vivimoon — Client Scope Design Spec
 - compilerOptions
@@ -41,12 +41,12 @@
 - spec-table.tsx
 - Two-tier component architecture (ui/ vs commerce/)
 - Product Detail Page (PDP) structure
-- cart.ts
-- common.ts
+- pricing/mock.ts
+- api/config.ts
 - add-to-cart.tsx
 - checkout-address-prefill.test.tsx
 - Vivimoon Storefront Baseline Design Spec
-- i18n/config.ts
+- favorites-routes.test.ts
 - Placeholder/Empty Image Asset
 - Cart (CartProvider context+reducer, localStorage persistence)
 - Blank Placeholder Image Concept
@@ -80,25 +80,24 @@
 - triage-labels.md
 - Vivimoon
 - account/mock.ts
-- vouchers/page.tsx
+- add-to-cart.test.tsx
 - mobile-nav.tsx
 - loyalty/mock.ts
-- addresses-manager.tsx
-- orders/page.tsx
+- collection-filters.tsx
+- cart.ts
 - Process
 - Vivimoon M1 — Foundation Implementation Plan
 - dictionaries.ts
 - scripts
-- cart/page.tsx
-- submit/route.ts
-- schemas/orders.ts
-- orders/route.test.ts
+- AddressForm
+- discovery/mock.ts
+- checkout.ts
+- common.ts
 - Vivimoon M4 — Discovery Implementation Plan
 - auth.ts
 - 0001-proxy-seam-replaces-repository-interface.md
 - 0002-server-components-self-fetch-mutable-state.md
 - 0003-client-never-computes-money.md
-- shipping/mock.ts
 - radix-ui
 - react-hook-form
 - ForgotPasswordForm
@@ -106,7 +105,7 @@
 - @types/node
 - @vitejs/plugin-react
 - to-spec/SKILL.md
-- discovery/mock.ts
+- discovery.ts
 - 0004-rx-schema-ships-cyl-axis-before-toric-ui.md
 - 0005-eye-enlargement-computed-not-stored.md
 - zustand
@@ -116,17 +115,16 @@
 - prettier
 - 0008-cart-hydration-gate-flag.md
 - 0009-session-tokens-signed-and-expiring.md
-- response.ts
+- apiOk
 - 1. Overview
 - rx-selector.tsx
 - 3. Architecture — the proxy seam
-- order-status-timeline.tsx
-- checkout-buy-now.test.tsx
+- schemas/orders.ts
 - payments.ts
 - SignUpForm
 - Vivimoon.vn — Live Site Data-Model Audit
 - checkout/page.tsx
-- api/config.ts
+- vouchers/mock.ts
 - checkout-price-preview.test.tsx
 - 0010-product-line-excludes-correction-complexity.md
 - 0011-eye-enlargement-derives-from-graphic-diameter.md
@@ -148,14 +146,14 @@
 ## Surprising Connections (you probably didn't know these)
 - `README.md: Vivimoon Next.js project README` --semantically_similar_to--> `Tech stack (Next.js App Router, React 19, TS strict, Tailwind v4, shadcn/ui, embla, RHF+zod, GA4, Vitest)`  [INFERRED] [semantically similar]
   README.md → docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md
-- `GET()` --calls--> `apiOk()`  [EXTRACTED]
-  app/api/collections/route.ts → lib/api/response.ts
 - `DialogOverlay()` --calls--> `cn()`  [EXTRACTED]
   components/ui/dialog.tsx → lib/utils/cn.ts
 - `DialogFooter()` --calls--> `cn()`  [EXTRACTED]
   components/ui/dialog.tsx → lib/utils/cn.ts
 - `DialogDescription()` --calls--> `cn()`  [EXTRACTED]
   components/ui/dialog.tsx → lib/utils/cn.ts
+- `SelectLabel()` --calls--> `cn()`  [EXTRACTED]
+  components/ui/select.tsx → lib/utils/cn.ts
 
 ## Import Cycles
 - None detected.
@@ -165,31 +163,31 @@
 - **Four swappable architecture seams (data, theming, i18n, analytics) isolating volatility** — docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productrepository, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_theming_seam, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_i18n_seam, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_analytics_seam [EXTRACTED 1.00]
 - **Coolmate apparel patterns re-modeled for Vivimoon contact-lens domain** — docs_research_coolmate_website_analysis_product_card, docs_research_coolmate_website_analysis_pdp, docs_research_coolmate_website_analysis_color_variant_url_pattern, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productcard, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant [INFERRED 0.85]
 
-## Communities (125 total, 39 thin omitted)
+## Communities (123 total, 41 thin omitted)
 
-### Community 0 - "apiOk"
-Cohesion: 0.22
-Nodes (20): GET(), POST(), DELETE(), GET(), POST(), GET(), PATCH(), GET() (+12 more)
+### Community 0 - "apiFail"
+Cohesion: 0.19
+Nodes (18): addressErrorResponse(), DELETE(), PATCH(), GET(), POST(), DELETE(), GET(), POST() (+10 more)
 
 ### Community 1 - "cn"
 Cohesion: 0.10
 Nodes (34): HeroCarousel(), Slide, CONTEXT_KEYS, LensViewer(), ProductGallery(), RatingStars(), Accordion(), AccordionContent() (+26 more)
 
-### Community 2 - "Dictionary"
-Cohesion: 0.26
-Nodes (16): Stage, Stage, Alert(), AlertDescription(), alertVariants, Button(), buttonVariants, Field() (+8 more)
+### Community 2 - "addresses-manager.tsx"
+Cohesion: 0.23
+Nodes (19): AddressDict, EMPTY_FORM, FormState, Stage, Stage, Alert(), AlertDescription(), alertVariants (+11 more)
 
 ### Community 3 - "parseBody"
-Cohesion: 0.20
-Nodes (17): jar, POST(), POST(), POST(), POST(), POST(), POST(), POST() (+9 more)
+Cohesion: 0.26
+Nodes (14): jar, POST(), POST(), POST(), POST(), POST(), POST(), POST() (+6 more)
 
 ### Community 4 - "cart-reducer.test.ts"
 Cohesion: 0.11
 Nodes (21): CartLineItem(), dict, line, lineWithRx, rx, atA, atB, empty (+13 more)
 
 ### Community 5 - "cookie.ts"
-Cohesion: 0.12
-Nodes (11): jar, BASELINE_LINES, jar, jar, secret(), SESSION_COOKIE, sessionCookieOptions(), sign() (+3 more)
+Cohesion: 0.11
+Nodes (13): ADDRESS, jar, POST(), BASELINE_LINES, jar, jar, secret(), SESSION_COOKIE (+5 more)
 
 ### Community 6 - "comparison-dialog.tsx"
 Cohesion: 0.10
@@ -203,9 +201,9 @@ Nodes (25): class-variance-authority, clsx, embla-carousel-react, @hookform/reso
 Cohesion: 0.11
 Nodes (19): File Structure, Global Constraints, M2 Definition of Done, Scope note: why `cyl`/`axis` exist in the schema but not the UI, Task 10: Order placement, Task 11: Guest → member cart merge, Task 12: Buy Now, Task 13: M2 verification (+11 more)
 
-### Community 9 - "variant-selector.tsx"
-Cohesion: 0.26
-Nodes (8): resolveVariant(), coloredProduct, colorlessProduct, dict, VariantSelector(), selectColor(), Variant, distinctColorVariants()
+### Community 9 - "Product"
+Cohesion: 0.17
+Nodes (12): ProductCard(), product, resolveVariant(), coloredProduct, colorlessProduct, dict, VariantSelector(), selectColor() (+4 more)
 
 ### Community 10 - "devDependencies"
 Cohesion: 0.08
@@ -224,12 +222,12 @@ Cohesion: 0.09
 Nodes (21): aliases, components, hooks, lib, ui, utils, iconLibrary, menuAccent (+13 more)
 
 ### Community 14 - "catalog.ts"
-Cohesion: 0.10
-Nodes (24): Collection, collectionSchema, CompareRequest, compareRequestSchema, ComparisonRow, comparisonRowSchema, Currency, LensGalleryContexts (+16 more)
+Cohesion: 0.09
+Nodes (25): gallery, Collection, collectionSchema, CompareRequest, compareRequestSchema, ComparisonRow, comparisonRowSchema, Currency (+17 more)
 
 ### Community 15 - "mock/index.ts"
-Cohesion: 0.11
-Nodes (20): addresses, collections, favorites, galleries, HOME_ADDRESS, OFFICE_ADDRESS, orders, products (+12 more)
+Cohesion: 0.09
+Nodes (21): addresses, collections, favorites, galleries, products, reviews, defaultShippingOptions, shippingRates (+13 more)
 
 ### Community 16 - "Product domain type"
 Cohesion: 0.11
@@ -244,16 +242,16 @@ Cohesion: 0.11
 Nodes (19): Multi-language/locale switcher (topbar), Utility topbar (Coolmate), Task 7: i18n seam (config, dictionaries, middleware), Task 8: Analytics seam (GA4), Analytics seam (GA4 via typed track() wrapper), GA4 ecommerce events (view_item_list, select_item, view_item, add_to_cart, remove_from_cart, view_cart, begin_checkout, purchase), getDictionary(locale) function, @next/third-parties GoogleAnalytics component (+11 more)
 
 ### Community 19 - "cart-store.ts"
-Cohesion: 0.14
-Nodes (15): mockedApiRequest, track, makeLine(), seedLastOrder(), cartCount(), cartReducer(), CART_STORAGE, CartStore (+7 more)
+Cohesion: 0.11
+Nodes (15): mockedApiRequest, track, ORDER_RESPONSE, makeLine(), seedLastOrder(), cartCount(), cartReducer(), CART_STORAGE (+7 more)
 
 ### Community 20 - "Coolmate.me Feature & Structure Analysis"
 Cohesion: 0.12
 Nodes (16): Screen-reader-only accessible text investment, Announcement bar (Coolmate), Blog / content-marketing hub, Care & Share CSR program, Community Threads (UGC/community hub), Cookie consent banner + preference center, CXP by Coolmate (custom-print sub-brand), Footer (contact, link columns, address, certifications) (+8 more)
 
 ### Community 21 - "orders/index.ts"
-Cohesion: 0.27
-Nodes (4): GUEST_ADDRESS, placeGuestOrder(), orders, OrderError
+Cohesion: 0.21
+Nodes (6): GET(), GET(), GUEST_ADDRESS, placeGuestOrder(), orders, OrderError
 
 ### Community 22 - "AddressesManager"
 Cohesion: 0.22
@@ -271,17 +269,17 @@ Nodes (14): Task 12: Carousels & CategoryGrid, Task 13: Layout chrome (Announcem
 Cohesion: 0.15
 Nodes (13): Color variants as distinct URLs (?color=slug) for SEO/deep-linking, CoolClub loyalty program + CoolCash currency, Fabric-technology brand system (cross-cutting taxonomy: CoolDry, CoolSoft, CoolRib, CoolFlex, ZeroMark), Fit-feedback histogram (Tight/True-to-size/Loose) in reviews, Product Detail Page (PDP) structure, Task 16: PDP components (Gallery, VariantSelector, SpecTable, ReviewsList), Task 17: PDP page + Add-to-cart, Task 18: Cart page + line item + order summary (+5 more)
 
-### Community 26 - "cart.ts"
-Cohesion: 0.09
-Nodes (26): vouchers, UsePricedCartResult, pricing, bestVoucher(), mockPricing, Pricing, PricingError, BASELINE_LINES (+18 more)
+### Community 26 - "pricing/mock.ts"
+Cohesion: 0.19
+Nodes (10): pricing, bestVoucher(), mockPricing, Pricing, PricingError, BASELINE_LINES, voucherApplies(), voucherDiscount() (+2 more)
 
-### Community 27 - "common.ts"
-Cohesion: 0.10
-Nodes (18): BASELINE_LINES, upstreamBaseUrl(), upstreamTimeoutMs(), pricedCartSchema, comparisonMatrixSchema, ApiError, apiErrorSchema, envelopeSchema() (+10 more)
+### Community 27 - "api/config.ts"
+Cohesion: 0.14
+Nodes (17): ApiMode, DEPENDS_ON, rawMode(), readMode(), resolveMode(), ResourceName, RESOURCES, saved (+9 more)
 
 ### Community 28 - "add-to-cart.tsx"
-Cohesion: 0.16
-Nodes (14): AddToCart(), dict, push, ProductCard(), ProductGrid(), Gtag, product, track() (+6 more)
+Cohesion: 0.24
+Nodes (11): AddToCart(), ProductGrid(), useBuyNow(), Gtag, product, track(), AnalyticsEvent, Ga4Item (+3 more)
 
 ### Community 29 - "checkout-address-prefill.test.tsx"
 Cohesion: 0.33
@@ -290,10 +288,6 @@ Nodes (4): DEFAULT_ADDRESS, fetchRoutingTo(), json(), PRICED_RESPONSE
 ### Community 30 - "Vivimoon Storefront Baseline Design Spec"
 Cohesion: 0.24
 Nodes (11): Gender filter toggle (in-place homepage filtering), Hero banner carousel (7 slides), Homepage structure (hero carousel, promo tiles, category grid), Product card component (hover-swap, swatches, badges, price), Themed collection sections with product carousels, Build sequence (13 high-level steps), Baseline goals (demoable bilingual storefront, clean seams, prop-driven components), Explicit non-goals (Rx upload, loyalty, real payment, real DB, auth, deferred with seams) (+3 more)
-
-### Community 31 - "i18n/config.ts"
-Cohesion: 0.12
-Nodes (16): LocaleLayout(), HomePage(), CategoryGrid(), CollectionCarousel(), AnnouncementBar(), Footer(), LocaleSwitcher(), MegaNav() (+8 more)
 
 ### Community 32 - "Placeholder/Empty Image Asset"
 Cohesion: 0.25
@@ -340,40 +334,36 @@ Cohesion: 0.29
 Nodes (6): Conventions, Issue tracker: GitHub, Pull requests as a triage surface, Wayfinding operations, When a skill says "fetch the relevant ticket", When a skill says "publish to the issue tracker"
 
 ### Community 63 - "rx.ts"
-Cohesion: 0.13
-Nodes (21): EyeFields(), eyeSummary(), RxSummary(), lensTypeSchema, AXIS_STEPS, LensType, Rx, RxEye (+13 more)
+Cohesion: 0.14
+Nodes (19): EyeFields(), eyeSummary(), RxSummary(), lensTypeSchema, AXIS_STEPS, LensType, Rx, RxEye (+11 more)
 
 ### Community 64 - "Domain Docs"
 Cohesion: 0.33
 Nodes (5): Before exploring, read these, Domain Docs, File structure, Flag ADR conflicts, Use the glossary's vocabulary
 
 ### Community 65 - "types/index.ts"
-Cohesion: 0.15
-Nodes (10): definition, mockedApiRequest, mockedApiRequest, gallery, product, ReviewSourceBadge(), ReviewsList(), reviews (+2 more)
+Cohesion: 0.16
+Nodes (10): definition, mockedApiRequest, mockedApiRequest, ReviewSourceBadge(), ReviewsList(), reviews, Review, ReviewSource (+2 more)
 
 ### Community 69 - "account/mock.ts"
-Cohesion: 0.08
-Nodes (21): ADDRESS, jar, addressErrorResponse(), DELETE(), PATCH(), account, Account, AddressError (+13 more)
-
-### Community 70 - "vouchers/page.tsx"
-Cohesion: 0.16
-Nodes (19): fetchLoyalty(), formatDate(), LoyaltyPage(), discountLabel(), fetchVouchers(), formatDate(), VouchersPage(), formatDate() (+11 more)
+Cohesion: 0.10
+Nodes (15): GET(), PATCH(), Account, AddressError, addressStore, favoriteStore, mockAccount, AccountPatch (+7 more)
 
 ### Community 71 - "mobile-nav.tsx"
-Cohesion: 0.26
-Nodes (9): Sheet(), SheetClose(), SheetContent(), SheetDescription(), SheetFooter(), SheetHeader(), SheetOverlay(), SheetTitle() (+1 more)
+Cohesion: 0.19
+Nodes (12): MobileNav(), getNavItems(), NavItem, Sheet(), SheetClose(), SheetContent(), SheetDescription(), SheetFooter() (+4 more)
 
 ### Community 72 - "loyalty/mock.ts"
 Cohesion: 0.10
 Nodes (12): jar, ADDRESS, jar, LINES, loyaltyHistory, Loyalty, mockLoyalty, store (+4 more)
 
-### Community 73 - "addresses-manager.tsx"
-Cohesion: 0.12
-Nodes (19): AddressDict, AddressForm(), EMPTY_FORM, FormState, CollectionFilters(), REPLACEMENTS, SORTS, TYPES (+11 more)
+### Community 73 - "collection-filters.tsx"
+Cohesion: 0.17
+Nodes (14): CollectionFilters(), REPLACEMENTS, SORTS, TYPES, Select(), SelectContent(), SelectGroup(), SelectItem() (+6 more)
 
-### Community 74 - "orders/page.tsx"
-Cohesion: 0.19
-Nodes (15): AddressesPage(), fetchAddresses(), fetchOrder(), OrderDetailPage(), fetchOrders(), formatDate(), OrderHistoryPage(), STATUS_VARIANT (+7 more)
+### Community 74 - "cart.ts"
+Cohesion: 0.12
+Nodes (15): BASELINE_LINES, UsePricedCartResult, cartLineSchema, cartStateSchema, priceCartRequestSchema, PricedCart, pricedCartSchema, PriceLineInput (+7 more)
 
 ### Community 75 - "Process"
 Cohesion: 0.15
@@ -384,40 +374,32 @@ Cohesion: 0.11
 Nodes (18): File Structure, Global Constraints, M1 Definition of Done, Task 10: Browser API client, session sync, and the sign-in / sign-up pages, Task 11: Forgot-password OTP flow, Task 12: Account resource and route handlers, Task 13: Account page, route guards, and M1 verification, Task 1: API config and response envelope (+10 more)
 
 ### Community 77 - "dictionaries.ts"
-Cohesion: 0.12
-Nodes (16): user, FavoritesPage(), fetchFavorites(), ForgotPasswordPage(), SignInPage(), push, SignUpPage(), TrackRequestPage() (+8 more)
+Cohesion: 0.05
+Nodes (78): user, AddressesPage(), fetchAddresses(), FavoritesPage(), fetchFavorites(), fetchLoyalty(), formatDate(), LoyaltyPage() (+70 more)
 
 ### Community 78 - "scripts"
 Cohesion: 0.15
 Nodes (12): name, private, scripts, build, dev, lint, start, test (+4 more)
 
-### Community 79 - "cart/page.tsx"
-Cohesion: 0.25
-Nodes (15): CartPage(), SuccessPage(), CollectionPage(), resolveTitle(), Header(), Empty(), EmptyContent(), EmptyDescription() (+7 more)
+### Community 80 - "discovery/mock.ts"
+Cohesion: 0.16
+Nodes (12): GET(), quiz, ADR-0005, discovery, Discovery, DiscoveryError, mockDiscovery, toComparisonRow() (+4 more)
 
-### Community 80 - "submit/route.ts"
-Cohesion: 0.43
-Nodes (3): GET(), POST(), discovery
+### Community 81 - "checkout.ts"
+Cohesion: 0.18
+Nodes (9): ADDRESS, LINES, pricedLineSchema, Address, addressSchema, shippingOptionSchema, ShippingQuoteRequest, shippingQuoteRequestSchema (+1 more)
 
-### Community 81 - "schemas/orders.ts"
+### Community 82 - "common.ts"
 Cohesion: 0.12
-Nodes (16): ADDRESS, LINES, pricedLineSchema, Address, addressSchema, shippingOptionSchema, ShippingQuoteRequest, shippingQuoteRequestSchema (+8 more)
-
-### Community 82 - "orders/route.test.ts"
-Cohesion: 0.29
-Nodes (3): ADDRESS, BASELINE_LINES, jar
+Nodes (10): ADDRESS, BASELINE_LINES, jar, comparisonMatrixSchema, ApiError, apiErrorSchema, ERROR_CODES, ErrorCode (+2 more)
 
 ### Community 83 - "Vivimoon M4 — Discovery Implementation Plan"
 Cohesion: 0.13
 Nodes (15): File Structure, Global Constraints, M4 Definition of Done, Scope note: the §6/§10 eyeEnlargement conflict, Task 1: Mirrored reviews — source badge, Task 2: Comparison — eye-enlargement banding, schemas, discovery resource, Task 3: Comparison — store, toggle, persistent tray, Task 4: Comparison — matrix Dialog (+7 more)
 
 ### Community 84 - "auth.ts"
-Cohesion: 0.06
-Nodes (31): jar, ADDRESS, jar, LINES, Auth, mockAuth, OtpRecord, otps (+23 more)
-
-### Community 89 - "shipping/mock.ts"
-Cohesion: 0.26
-Nodes (7): defaultShippingOptions, shippingRates, shipping, mockShipping, Shipping, ShippingError, ShippingOption
+Cohesion: 0.05
+Nodes (33): jar, ADDRESS, jar, LINES, MockUser, users, Auth, mockAuth (+25 more)
 
 ### Community 92 - "ForgotPasswordForm"
 Cohesion: 0.36
@@ -427,33 +409,33 @@ Nodes (6): ForgotPasswordForm(), reportServer(), requestCode(), submitPassword()
 Cohesion: 0.22
 Nodes (8): Further Notes, Implementation Decisions, Out of Scope, Problem Statement, Process, Solution, Testing Decisions, User Stories
 
-### Community 97 - "discovery/mock.ts"
-Cohesion: 0.08
-Nodes (32): quiz, ADR-0005, Discovery, DiscoveryError, mockDiscovery, toComparisonRow(), QuizAnswer, quizAnswerSchema (+24 more)
+### Community 97 - "discovery.ts"
+Cohesion: 0.11
+Nodes (21): QuizAnswer, quizAnswerSchema, quizDefinitionSchema, QuizOption, quizOptionSchema, QuizQuestion, quizQuestionSchema, QuizSubmitRequest (+13 more)
 
 ### Community 101 - "5. Migration Strategy"
 Cohesion: 0.33
 Nodes (6): 5. Migration Strategy, Adapting drift, Conformance suite, Cutover order, Per-resource cutover, Runtime validation
 
-### Community 109 - "response.ts"
-Cohesion: 0.23
-Nodes (7): GET(), GET(), GET(), req(), GET(), GET(), catalog
+### Community 109 - "apiOk"
+Cohesion: 0.17
+Nodes (14): POST(), GET(), GET(), POST(), GET(), GET(), req(), GET() (+6 more)
 
 ### Community 110 - "1. Overview"
 Cohesion: 0.50
 Nodes (4): 1. Overview, Baseline non-goals now in scope, Goals, Non-goals
 
 ### Community 111 - "rx-selector.tsx"
-Cohesion: 0.21
-Nodes (9): emptyRxDraft, RxDraft, RxEyeDraft, RxRanges, RxSelector(), dict, FieldLegend(), FieldSet() (+1 more)
+Cohesion: 0.19
+Nodes (10): emptyRxDraft, RxDraft, RxEyeDraft, RxRanges, RxSelector(), dict, FieldLegend(), FieldSet() (+2 more)
 
 ### Community 112 - "3. Architecture — the proxy seam"
 Cohesion: 0.67
 Nodes (3): 3. Architecture — the proxy seam, Configuration, Resource layout
 
-### Community 113 - "order-status-timeline.tsx"
-Cohesion: 0.33
-Nodes (5): OrderStatusTimeline(), PROGRESSION, TERMINAL_DISTINCT, ORDER_STATUSES, OrderStatus
+### Community 113 - "schemas/orders.ts"
+Cohesion: 0.11
+Nodes (16): OrderStatusTimeline(), PROGRESSION, TERMINAL_DISTINCT, HOME_ADDRESS, OFFICE_ADDRESS, orders, priceLineInputSchema, OrderLine (+8 more)
 
 ### Community 115 - "payments.ts"
 Cohesion: 0.13
@@ -468,12 +450,12 @@ Cohesion: 0.40
 Nodes (4): 1. Site structure, 2. Product detail page — data fields observed, 3. Open question — not acted on, Vivimoon.vn — Live Site Data-Model Audit
 
 ### Community 120 - "checkout/page.tsx"
-Cohesion: 0.10
-Nodes (23): AccountForm(), SignInForm(), CheckoutPage(), FavoriteButton(), toggle(), AlertTitle(), mockedApiRequest, toPriceLines() (+15 more)
+Cohesion: 0.09
+Nodes (24): AccountForm(), SignInForm(), CheckoutPage(), FavoriteButton(), toggle(), AlertTitle(), mockedApiRequest, toPriceLines() (+16 more)
 
-### Community 122 - "api/config.ts"
-Cohesion: 0.18
-Nodes (11): ApiMode, DEPENDS_ON, rawMode(), readMode(), resolveMode(), ResourceName, RESOURCES, saved (+3 more)
+### Community 122 - "vouchers/mock.ts"
+Cohesion: 0.31
+Nodes (5): vouchers, vouchers, mockVouchers, Vouchers, Voucher
 
 ### Community 124 - "checkout-price-preview.test.tsx"
 Cohesion: 0.40
@@ -504,7 +486,7 @@ Nodes (3): fetchRoutingTo(), json(), PRICED_RESPONSE
 ## Knowledge Gaps
 - **459 isolated node(s):** `Stage`, `push`, `push`, `Stage`, `push` (+454 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **39 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **41 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
