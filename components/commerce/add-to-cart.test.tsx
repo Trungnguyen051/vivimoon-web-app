@@ -5,6 +5,7 @@ import { AddToCart } from './add-to-cart';
 import { useCartStore } from '@/features/cart/cart-store';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import type { Product } from '@/lib/types';
+import { productLineSchema } from '@/lib/api/schemas/catalog';
 
 const push = vi.fn();
 vi.mock('next/navigation', () => ({
@@ -16,7 +17,7 @@ const dict = getDictionary('en');
 function makeProduct(overrides: Partial<Product> = {}): Product {
   return {
     id: 'p1', slug: 'hazel', name: 'Hazel', brandId: 'v', brandName: 'Vivimoon',
-    type: 'clear', replacement: 'monthly', description: '', images: ['/a.jpg'], badges: [],
+    productLine: 'trongSuot', replacement: 'monthly', description: '', images: ['/a.jpg'], badges: [],
     specs: { material: '', waterContent: '', baseCurve: '', diameter: '', origin: '' },
     requiresRx: true,
     variants: [
@@ -43,7 +44,7 @@ beforeEach(() => {
 
 describe('AddToCart — Rx gating (Task 5, Step 4)', () => {
   it('disables the button until a valid Rx is entered, then enables it', async () => {
-    const product = makeProduct({ requiresRx: true, type: 'clear' });
+    const product = makeProduct({ requiresRx: true });
     render(<AddToCart product={product} locale="en" dict={dict} />);
     const addButton = screen.getByRole('button', { name: dict.common.addToCart });
     expect(addButton).toBeDisabled();
@@ -54,7 +55,7 @@ describe('AddToCart — Rx gating (Task 5, Step 4)', () => {
   });
 
   it('shows the required-Rx message only after the shopper has touched the selector', async () => {
-    const product = makeProduct({ requiresRx: true, type: 'clear' });
+    const product = makeProduct({ requiresRx: true });
     render(<AddToCart product={product} locale="en" dict={dict} />);
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
 
@@ -84,7 +85,7 @@ describe('AddToCart — Rx gating (Task 5, Step 4)', () => {
   });
 
   it('adding the same variant at two different powers produces two distinct cart lines', async () => {
-    const product = makeProduct({ requiresRx: true, type: 'clear' });
+    const product = makeProduct({ requiresRx: true });
     render(<AddToCart product={product} locale="en" dict={dict} />);
 
     await fillRightSphAndMirror('-2.5');
@@ -104,7 +105,7 @@ describe('AddToCart — Rx gating (Task 5, Step 4)', () => {
 
 describe('AddToCart — Buy Now (Task 12)', () => {
   it('disables Buy Now with the same Rx gating as Add to Cart', async () => {
-    const product = makeProduct({ requiresRx: true, type: 'clear' });
+    const product = makeProduct({ requiresRx: true });
     render(<AddToCart product={product} locale="en" dict={dict} />);
     expect(screen.getByRole('button', { name: dict.common.buyNow })).toBeDisabled();
 
@@ -129,4 +130,25 @@ describe('AddToCart — Buy Now (Task 12)', () => {
     expect(state.buyNowLine?.variantId).toBe('v1');
     expect(push).toHaveBeenCalledWith('/en/checkout');
   });
+});
+
+describe('AddToCart — Rx is decoupled from the product taxonomy (ADR-0010)', () => {
+  // The Rx rules branch on RX_LENS_TYPE, a fixed constant, not on any product
+  // field. No real product line can therefore reach the toric/multifocal
+  // branches: every line must collect sph alone and gate on sph alone.
+  it.each(productLineSchema.options)(
+    'collects sph and no ADD for a %s product, and enables the button on sph alone',
+    async (productLine) => {
+      const product = makeProduct({ requiresRx: true, productLine });
+      render(<AddToCart product={product} locale="en" dict={dict} />);
+
+      expect(screen.queryByLabelText(`${dict.rx.rightEye} ${dict.rx.add}`)).not.toBeInTheDocument();
+      expect(screen.queryByLabelText(`${dict.rx.leftEye} ${dict.rx.add}`)).not.toBeInTheDocument();
+
+      const addButton = screen.getByRole('button', { name: dict.common.addToCart });
+      expect(addButton).toBeDisabled();
+      await fillRightSphAndMirror('-2.5');
+      expect(addButton).toBeEnabled();
+    },
+  );
 });

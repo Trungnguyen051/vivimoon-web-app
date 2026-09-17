@@ -8,7 +8,7 @@ import type { Product } from '@/lib/types';
 const dict = getDictionary('en');
 const coloredProduct: Product = {
   id: 'p1', slug: 'hazel', name: 'Hazel', brandId: 'v', brandName: 'Vivimoon',
-  type: 'colored', replacement: 'monthly', description: '', images: ['/a.jpg'], badges: [],
+  productLine: 'coMau', replacement: 'monthly', description: '', images: ['/a.jpg'], badges: [],
   specs: { material: '', waterContent: '', baseCurve: '', diameter: '', origin: '' },
   requiresRx: true,
   variants: [
@@ -19,7 +19,7 @@ const coloredProduct: Product = {
 };
 const colorlessProduct: Product = {
   ...coloredProduct,
-  id: 'p2', slug: 'aqua', name: 'Aqua', type: 'clear',
+  id: 'p2', slug: 'aqua', name: 'Aqua', productLine: 'trongSuot',
   variants: [{ id: 'v3', sku: 'AQ-1', price: 25, currency: 'USD', stock: 10 }],
 };
 

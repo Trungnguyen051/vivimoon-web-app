@@ -15,9 +15,10 @@ describe('GET /api/products', () => {
     expect(body.data.length).toBeGreaterThan(0);
   });
 
-  it('applies the type filter from search params', async () => {
-    const body = await (await listProducts(req('/api/products?type=colored'))).json();
-    expect(body.data.every((p: { type: string }) => p.type === 'colored')).toBe(true);
+  it('applies the productLine filter from search params', async () => {
+    const body = await (await listProducts(req('/api/products?productLine=coMau'))).json();
+    expect(body.data.length).toBeGreaterThan(0);
+    expect(body.data.every((p: { productLine: string }) => p.productLine === 'coMau')).toBe(true);
   });
 
   it('rejects an invalid sort with validation_failed', async () => {

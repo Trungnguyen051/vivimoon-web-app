@@ -22,9 +22,9 @@ describeUpstream('catalog contract against the live API', () => {
     expect(list.length).toBeGreaterThan(0);
   });
 
-  it('GET /products supports the type filter', async () => {
-    const list = await upstreamFetch('/products?type=colored', z.array(productSchema));
-    expect(list.every((p) => p.type === 'colored')).toBe(true);
+  it('GET /products supports the productLine filter', async () => {
+    const list = await upstreamFetch('/products?productLine=coMau', z.array(productSchema));
+    expect(list.every((p) => p.productLine === 'coMau')).toBe(true);
   });
 
   it('GET /products/:slug returns one product matching the contract', async () => {

@@ -4,7 +4,7 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { RxSelector, emptyRxDraft, type RxDraft } from './rx-selector';
 import { getDictionary } from '@/lib/i18n/dictionaries';
-import type { LensType } from '@/lib/api/schemas/catalog';
+import type { LensType } from '@/lib/api/schemas/rx';
 
 const dict = getDictionary('en');
 

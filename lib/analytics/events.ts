@@ -17,7 +17,7 @@ export function toGa4Items(
     item_id: variant?.sku ?? product.id,
     item_name: product.name,
     item_brand: product.brandName,
-    item_category: product.type,
+    item_category: product.productLine,
     price: variant?.price ?? cheapestVariant(product).price,
     quantity: quantity ?? 1,
   }));

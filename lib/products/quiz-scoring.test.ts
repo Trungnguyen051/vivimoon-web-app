@@ -9,7 +9,7 @@ function product(overrides: Partial<Product> & Pick<Product, 'id'>): Product {
     name: overrides.id,
     brandId: 'vivimoon',
     brandName: 'Vivimoon',
-    type: 'clear',
+    productLine: 'trongSuot',
     replacement: 'daily',
     description: 'd',
     images: ['/a.jpg'],
@@ -31,16 +31,16 @@ const questions: QuizQuestion[] = [
     id: 'q1',
     prompt: 'Look?',
     options: [
-      { id: 'q1-colored', label: 'Colored', tags: { 'type:colored': 2 } },
-      { id: 'q1-clear', label: 'Clear', tags: { 'type:clear': 2 } },
+      { id: 'q1-colored', label: 'Colored', tags: { 'productLine:coMau': 2 } },
+      { id: 'q1-clear', label: 'Clear', tags: { 'productLine:trongSuot': 2 } },
     ],
   },
 ];
 
-const colored1 = product({ id: 'colored-1', type: 'colored', reviewCount: 5 });
-const colored2 = product({ id: 'colored-2', type: 'colored', reviewCount: 1 });
-const clear1 = product({ id: 'clear-1', type: 'clear', reviewCount: 5 });
-const clear2 = product({ id: 'clear-2', type: 'clear', reviewCount: 1 });
+const colored1 = product({ id: 'colored-1', productLine: 'coMau', reviewCount: 5 });
+const colored2 = product({ id: 'colored-2', productLine: 'coMau', reviewCount: 1 });
+const clear1 = product({ id: 'clear-1', productLine: 'trongSuot', reviewCount: 5 });
+const clear2 = product({ id: 'clear-2', productLine: 'trongSuot', reviewCount: 1 });
 const fixtureProducts = [clear1, clear2, colored1, colored2];
 
 describe('scoreQuiz', () => {

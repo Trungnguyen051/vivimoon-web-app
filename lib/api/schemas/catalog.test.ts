@@ -1,11 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { productSchema, variantSchema, reviewSchema, productQuerySchema, parseProductQueryLoose, lensGallerySchema } from './catalog';
 
-// type: 'clear' as the baseline so most tests don't have to think about the
-// colored-requires-graphicDiameter invariant; tests that care set type explicitly.
+// productLine: 'trongSuot' as the baseline so most tests don't have to think
+// about the colored-requires-graphicDiameter invariant; tests that care set
+// productLine explicitly.
 const validProduct = {
   id: 'p1', slug: 'aqua', name: 'Aqua', brandId: 'b1', brandName: 'Brand',
-  type: 'clear', replacement: 'daily', description: 'd', images: ['/a.jpg'],
+  productLine: 'trongSuot', replacement: 'daily', description: 'd', images: ['/a.jpg'],
   badges: ['new'],
   specs: {
     material: 'Hydrogel', waterContent: '38%', baseCurve: '8.6mm',
@@ -23,8 +24,8 @@ describe('productSchema', () => {
     expect(productSchema.parse(validProduct).slug).toBe('aqua');
   });
 
-  it('rejects an unknown lens type', () => {
-    const bad = { ...validProduct, type: 'banana' };
+  it('rejects an unknown product line', () => {
+    const bad = { ...validProduct, productLine: 'banana' };
     expect(() => productSchema.parse(bad)).toThrow();
   });
 
@@ -54,23 +55,29 @@ describe('productSchema', () => {
     expect(parsed.specs).not.toHaveProperty('uvProtection');
   });
 
-  it('accepts specs with or without a graphicDiameter for a colorless type', () => {
+  it('accepts specs with or without a graphicDiameter for a trongSuot product', () => {
     const withGraphicDiameter = { ...validProduct, specs: { ...validProduct.specs, graphicDiameter: '13.3mm' } };
     expect(productSchema.parse(withGraphicDiameter).specs.graphicDiameter).toBe('13.3mm');
     expect(productSchema.parse(validProduct).specs.graphicDiameter).toBeUndefined();
   });
 
-  it('rejects a colored product with no graphicDiameter', () => {
-    const bad = { ...validProduct, type: 'colored' };
+  // Both colored lines have a graphic zone — vanNhu is a glitter-textured
+  // colored lens, not a third colorless one — so the invariant covers both.
+  it.each(['coMau', 'vanNhu'] as const)('rejects a %s product with no graphicDiameter', (productLine) => {
+    const bad = { ...validProduct, productLine };
     expect(() => productSchema.parse(bad)).toThrow();
   });
 
-  it('accepts a colored product that has a graphicDiameter', () => {
+  it.each(['coMau', 'vanNhu'] as const)('accepts a %s product that has a graphicDiameter', (productLine) => {
     const good = {
-      ...validProduct, type: 'colored',
+      ...validProduct, productLine,
       specs: { ...validProduct.specs, graphicDiameter: '13.3mm' },
     };
-    expect(productSchema.parse(good).type).toBe('colored');
+    expect(productSchema.parse(good).productLine).toBe(productLine);
+  });
+
+  it.each(['toric', 'multifocal'])('rejects %s as a productLine — it is not a real Vivimoon line', (gone) => {
+    expect(() => productSchema.parse({ ...validProduct, productLine: gone })).toThrow();
   });
 
   it('variants no longer carry a packSize field, even if one is passed in', () => {
@@ -160,8 +167,8 @@ describe('reviewSchema', () => {
 
 describe('productQuerySchema', () => {
   it('parses URL search params, ignoring blanks', () => {
-    const q = productQuerySchema.parse({ type: 'colored', color: '', sort: 'price-asc' });
-    expect(q).toEqual({ type: 'colored', sort: 'price-asc' });
+    const q = productQuerySchema.parse({ productLine: 'coMau', color: '', sort: 'price-asc' });
+    expect(q).toEqual({ productLine: 'coMau', sort: 'price-asc' });
   });
 
   it('rejects an unknown sort', () => {
@@ -201,17 +208,17 @@ describe('lensGallerySchema', () => {
 
 describe('parseProductQueryLoose', () => {
   it('keeps a valid field and drops an invalid one from a mixed query', () => {
-    const q = parseProductQueryLoose({ type: 'colored', sort: 'banana' });
-    expect(q).toEqual({ type: 'colored' });
+    const q = parseProductQueryLoose({ productLine: 'coMau', sort: 'banana' });
+    expect(q).toEqual({ productLine: 'coMau' });
   });
 
   it('behaves the same as productQuerySchema.parse for an all-valid query', () => {
-    const input = { type: 'colored', sort: 'price-asc' };
+    const input = { productLine: 'coMau', sort: 'price-asc' };
     expect(parseProductQueryLoose(input)).toEqual(productQuerySchema.parse(input));
   });
 
   it('still drops blank-string params', () => {
-    const q = parseProductQueryLoose({ type: 'colored', color: '' });
-    expect(q).toEqual({ type: 'colored' });
+    const q = parseProductQueryLoose({ productLine: 'coMau', color: '' });
+    expect(q).toEqual({ productLine: 'coMau' });
   });
 });

@@ -2,7 +2,12 @@ import { z } from 'zod';
 import { EYE_ENLARGEMENT_BANDS } from '@/lib/products/eye-enlargement';
 import { distinctColorVariants } from '@/lib/products/variant-colors';
 
-export const lensTypeSchema = z.enum(['clear', 'colored', 'toric', 'multifocal']);
+/**
+ * Vivimoon's own three-way category split — trong suốt (clear), có màu
+ * (colored), vân nhũ (glitter-textured colored). Carries no signal about
+ * prescription complexity: the Rx rules own their own vocabulary (ADR-0010).
+ */
+export const productLineSchema = z.enum(['trongSuot', 'coMau', 'vanNhu']);
 export const replacementScheduleSchema = z.enum(['daily', 'monthly', 'threeMonth', 'sixMonth']);
 export const productBadgeSchema = z.enum(['new', 'bestseller', 'sale']);
 export const currencySchema = z.enum(['VND', 'USD']);
@@ -15,7 +20,7 @@ export const productSpecsSchema = z.object({
   diameter: z.string(),
   // The colored/graphic-zone diameter, distinct from total `diameter` — what
   // actually drives the visual enlargement effect (ADR-0011). Absent for any
-  // lens with no colored zone (clear, toric, multifocal).
+  // lens with no colored zone, i.e. a `trongSuot` product.
   graphicDiameter: z.string().optional(),
   origin: z.string(),
 });
@@ -51,7 +56,7 @@ export const productSchema = z.object({
   name: z.string(),
   brandId: z.string(),
   brandName: z.string(),
-  type: lensTypeSchema,
+  productLine: productLineSchema,
   replacement: replacementScheduleSchema,
   description: z.string(),
   images: z.array(z.string()).min(1),
@@ -90,13 +95,14 @@ export const productSchema = z.object({
       path: ['variants'],
     });
   }
-  if (p.type === 'colored' && !p.specs.graphicDiameter) {
+  if (p.productLine !== 'trongSuot' && !p.specs.graphicDiameter) {
     ctx.addIssue({
       code: 'custom',
       // eyeEnlargementBand(undefined) bands 'natural', which is correct for a
       // colorless lens (ADR-0011) but wrong for a colored product that's
       // simply missing data — enforced here so every consumer can rely on it
-      // rather than each guessing or guarding separately.
+      // rather than each guessing or guarding separately. Both coMau and
+      // vanNhu have a colored zone; only trongSuot has none.
       message: 'a colored product must specify specs.graphicDiameter',
       path: ['specs', 'graphicDiameter'],
     });
@@ -175,7 +181,7 @@ const blankToUndefined = <T extends z.ZodTypeAny>(inner: T) =>
 
 /** Parses raw URL search params, so pages can hand `searchParams` straight in. */
 export const productQuerySchema = z.object({
-  type: blankToUndefined(lensTypeSchema),
+  productLine: blankToUndefined(productLineSchema),
   replacement: blankToUndefined(replacementScheduleSchema),
   brandId: blankToUndefined(z.string()),
   color: blankToUndefined(z.string()),
@@ -188,7 +194,7 @@ export const productQuerySchema = z.object({
  *
  * `productQuerySchema.safeParse` is all-or-nothing: a single bad param (e.g.
  * an unrecognized `sort` value) fails the whole object, discarding otherwise
- * valid filters like `type`. That's correct for API route handlers, which
+ * valid filters like `productLine`. That's correct for API route handlers, which
  * need to reject bad input and answer HTTP 400 naming the invalid field —
  * they should keep using `productQuerySchema` directly. Pages rendering a
  * user-facing URL should instead degrade gracefully per-field, so this is a
@@ -202,7 +208,7 @@ export function parseProductQueryLoose(input: Record<string, unknown>): ProductQ
   return productQuerySchema.parse(kept);
 }
 
-export type LensType = z.infer<typeof lensTypeSchema>;
+export type ProductLine = z.infer<typeof productLineSchema>;
 export type ReplacementSchedule = z.infer<typeof replacementScheduleSchema>;
 export type ProductBadge = z.infer<typeof productBadgeSchema>;
 export type Currency = z.infer<typeof currencySchema>;

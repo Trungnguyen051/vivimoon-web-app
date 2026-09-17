@@ -3,7 +3,7 @@ import { cheapestVariant } from './cheapest-variant';
 import type { Product } from '@/lib/api/schemas/catalog';
 
 const product = (variants: Product['variants']): Product => ({
-  id: 'p', slug: 'p', name: 'P', brandId: 'b', brandName: 'B', type: 'clear', replacement: 'daily',
+  id: 'p', slug: 'p', name: 'P', brandId: 'b', brandName: 'B', productLine: 'trongSuot', replacement: 'daily',
   description: '', images: ['/a.jpg'], badges: [],
   specs: { material: '', waterContent: '', baseCurve: '', diameter: '', origin: '' },
   requiresRx: true, variants, rating: 4, reviewCount: 0,

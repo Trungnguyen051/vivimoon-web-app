@@ -5,7 +5,7 @@ export const QUIZ_RESULTS_CAP = 6;
 
 /** The same tag vocabulary `content/quiz.ts` weights options against. */
 function productTags(product: Product): string[] {
-  return [`type:${product.type}`, `replacement:${product.replacement}`, ...product.badges.map((b) => `badge:${b}`)];
+  return [`productLine:${product.productLine}`, `replacement:${product.replacement}`, ...product.badges.map((b) => `badge:${b}`)];
 }
 
 function accumulateWeights(answers: QuizAnswer[], questions: QuizQuestion[]): Record<string, number> {
@@ -24,7 +24,7 @@ function accumulateWeights(answers: QuizAnswer[], questions: QuizQuestion[]): Re
 
 /**
  * Sums the tag weights of each chosen option, then scores every product by
- * matching its own derived tags (type/replacement/badges) against those
+ * matching its own derived tags (productLine/replacement/badges) against those
  * weights. Pure and I/O-free — takes `products` as a parameter rather than
  * importing the catalog, so it's testable against a small fixture list.
  *

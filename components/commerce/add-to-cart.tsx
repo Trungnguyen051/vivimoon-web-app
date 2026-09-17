@@ -14,7 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/features/cart/use-cart';
 import { useBuyNow } from '@/features/cart/use-buy-now';
 import { lineKey } from '@/lib/cart/line-key';
-import { rxSchemaForLensType } from '@/lib/api/schemas/rx';
+import { RX_LENS_TYPE, rxSchemaForLensType } from '@/lib/api/schemas/rx';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
 import { toGa4Items } from '@/lib/analytics/events';
 import type { CartLine } from '@/features/cart/cart.types';
@@ -40,7 +40,10 @@ export function AddToCart({ product, locale, dict }: { product: Product; locale:
 
   // Only meaningful (and only parsed) when the product requires a prescription;
   // a cosmetic product that doesn't collect one is never gated by this.
-  const parsedRx = product.requiresRx ? rxSchemaForLensType(product.type).safeParse(rxDraft) : undefined;
+  // RX_LENS_TYPE, not a product field: the product taxonomy carries no
+  // correction-complexity signal (ADR-0010), so no product can reach the
+  // toric/multifocal Rx branches.
+  const parsedRx = product.requiresRx ? rxSchemaForLensType(RX_LENS_TYPE).safeParse(rxDraft) : undefined;
   const canAdd = !product.requiresRx || parsedRx?.success === true;
 
   const buildLine = (): CartLine => {
@@ -93,7 +96,7 @@ export function AddToCart({ product, locale, dict }: { product: Product; locale:
         <RxSelector
           value={rxDraft}
           onChange={(next) => { setRxDraft(next); setTouchedRx(true); }}
-          lensType={product.type}
+          lensType={RX_LENS_TYPE}
           dict={dict}
         />
       ) : null}

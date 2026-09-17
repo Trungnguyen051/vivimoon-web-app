@@ -12,10 +12,10 @@ describe('mockCatalog', () => {
     expect(await mockCatalog.getProductBySlug('nope')).toBeNull();
   });
 
-  it('filters by lens type', async () => {
-    const list = await mockCatalog.listProducts({ type: 'colored' });
+  it('filters by product line', async () => {
+    const list = await mockCatalog.listProducts({ productLine: 'coMau' });
     expect(list.length).toBeGreaterThan(0);
-    expect(list.every((p) => p.type === 'colored')).toBe(true);
+    expect(list.every((p) => p.productLine === 'coMau')).toBe(true);
   });
 
   it('filters by replacement schedule', async () => {

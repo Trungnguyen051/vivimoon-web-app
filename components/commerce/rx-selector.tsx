@@ -1,6 +1,6 @@
 'use client';
 import { useId } from 'react';
-import type { LensType } from '@/lib/api/schemas/catalog';
+import type { LensType } from '@/lib/api/schemas/rx';
 import type { AddBand } from '@/lib/products/rx-ranges';
 import { RX_RANGES, formatSph } from '@/lib/products/rx-ranges';
 import type { Dictionary } from '@/lib/i18n/dictionaries';

@@ -7,8 +7,8 @@ const validDefinition = {
       id: 'q1',
       prompt: 'Look?',
       options: [
-        { id: 'q1-a', label: 'Colored', tags: { 'type:colored': 2 } },
-        { id: 'q1-b', label: 'Clear', tags: { 'type:clear': 2 } },
+        { id: 'q1-a', label: 'Colored', tags: { 'productLine:coMau': 2 } },
+        { id: 'q1-b', label: 'Clear', tags: { 'productLine:trongSuot': 2 } },
       ],
     },
   ],

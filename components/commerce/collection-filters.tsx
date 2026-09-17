@@ -1,12 +1,15 @@
 'use client';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
+import { productLineSchema } from '@/lib/api/schemas/catalog';
 import {
   Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 
-const TYPES = ['clear', 'colored', 'toric', 'multifocal'];
+// From the schema, not a parallel list: a new line can't be added to the
+// taxonomy and silently stay unselectable here.
+const PRODUCT_LINES = productLineSchema.options;
 const REPLACEMENTS = ['daily', 'monthly', 'threeMonth', 'sixMonth'];
 const SORTS = ['newest', 'price-asc', 'price-desc', 'bestselling'];
 const ALL = 'all';
@@ -15,7 +18,7 @@ export function CollectionFilters({ dict }: { dict: Dictionary }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
-  const hasFilters = ['type', 'replacement', 'sort'].some((k) => params.get(k));
+  const hasFilters = ['productLine', 'replacement', 'sort'].some((k) => params.get(k));
 
   const setParam = (key: string, value: string) => {
     const next = new URLSearchParams(params.toString());
@@ -26,15 +29,15 @@ export function CollectionFilters({ dict }: { dict: Dictionary }) {
 
   return (
     <div className="flex flex-wrap items-center gap-2.5">
-      <Select value={params.get('type') ?? ALL} onValueChange={(v) => setParam('type', v)}>
-        <SelectTrigger className="w-40" aria-label={dict.filters.type}>
-          <SelectValue placeholder={dict.filters.type} />
+      <Select value={params.get('productLine') ?? ALL} onValueChange={(v) => setParam('productLine', v)}>
+        <SelectTrigger className="w-40" aria-label={dict.filters.productLine}>
+          <SelectValue placeholder={dict.filters.productLine} />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
-            <SelectItem value={ALL}>{dict.filters.type}</SelectItem>
-            {TYPES.map((t) => (
-              <SelectItem key={t} value={t}>{dict.filters.types[t as keyof typeof dict.filters.types]}</SelectItem>
+            <SelectItem value={ALL}>{dict.filters.productLine}</SelectItem>
+            {PRODUCT_LINES.map((t) => (
+              <SelectItem key={t} value={t}>{dict.filters.productLines[t]}</SelectItem>
             ))}
           </SelectGroup>
         </SelectContent>

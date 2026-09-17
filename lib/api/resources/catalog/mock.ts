@@ -14,7 +14,7 @@ export const mockCatalog = {
 
   async listProducts(query: ProductQuery = {}): Promise<Product[]> {
     let list = [...products];
-    if (query.type) list = list.filter((p) => p.type === query.type);
+    if (query.productLine) list = list.filter((p) => p.productLine === query.productLine);
     if (query.replacement) list = list.filter((p) => p.replacement === query.replacement);
     if (query.brandId) list = list.filter((p) => p.brandId === query.brandId);
     if (query.color) list = list.filter((p) => p.variants.some((v) => v.color === query.color));
@@ -50,7 +50,7 @@ export const mockCatalog = {
       .filter(
         (p) =>
           p.id !== product.id &&
-          (p.type === product.type || p.replacement === product.replacement),
+          (p.productLine === product.productLine || p.replacement === product.replacement),
       )
       .slice(0, limit);
   },

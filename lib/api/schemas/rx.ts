@@ -1,6 +1,21 @@
 import { z } from 'zod';
 import { sphSteps, addBands, cylValues, axisSteps } from '@/lib/products/rx-ranges';
-import { lensTypeSchema } from './catalog';
+
+/**
+ * The correction-complexity vocabulary the Rx rules branch on — owned here,
+ * deliberately NOT the product catalog's `productLineSchema` (ADR-0010). The
+ * real catalog carries no toric or multifocal product, so nothing in the
+ * product taxonomy may imply prescription complexity; these values stay
+ * dormant here until a real line for them exists.
+ */
+export const rxLensTypeSchema = z.enum(['clear', 'colored', 'toric', 'multifocal']);
+
+/**
+ * What every live call site passes. A fixed constant rather than a product
+ * field: no real product can reach the toric/multifocal branches, so wiring a
+ * real signal back in later is a change here, not a schema migration.
+ */
+export const RX_LENS_TYPE = 'clear' as const satisfies LensType;
 
 const SPH_STEPS = sphSteps();
 const AXIS_STEPS = axisSteps();
@@ -55,7 +70,7 @@ export type Rx = z.infer<typeof rxSchema>;
  *  the selector builds and what `lineKey()` accepts — see lib/cart/line-key.ts. */
 export type RxInput = z.input<typeof rxSchema>;
 
-export type LensType = z.infer<typeof lensTypeSchema>;
+export type LensType = z.infer<typeof rxLensTypeSchema>;
 
 /**
  * Narrows the Rx rules to one lens type.

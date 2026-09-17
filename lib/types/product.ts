@@ -3,7 +3,7 @@
  * definition of a Product. Edit `lib/api/schemas/catalog.ts`, not this file.
  */
 export type {
-  LensType,
+  ProductLine,
   ReplacementSchedule,
   ProductBadge,
   Currency,

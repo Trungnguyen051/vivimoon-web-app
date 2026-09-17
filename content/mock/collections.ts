@@ -11,7 +11,10 @@ export const collections: Collection[] = [
   {
     slug: 'colored-lenses',
     title: 'collection.colored',
-    productIds: products.filter((p) => p.type === 'colored').map((p) => p.id),
+    // Both colored lines belong here — vân nhũ is a glitter-textured colored
+    // lens, not a third colorless one (the same split productSchema enforces
+    // for graphicDiameter).
+    productIds: products.filter((p) => p.productLine !== 'trongSuot').map((p) => p.id),
   },
   {
     slug: 'daily-lenses',

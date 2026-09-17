@@ -23,8 +23,8 @@ export const quiz: QuizDefinition = {
       id: 'look',
       prompt: 'What look are you going for?',
       options: [
-        { id: 'look-natural', label: 'Natural, barely-there clarity', tags: { 'type:clear': 2 } },
-        { id: 'look-color', label: 'A noticeable color change', tags: { 'type:colored': 2 } },
+        { id: 'look-natural', label: 'Natural, barely-there clarity', tags: { 'productLine:trongSuot': 2 } },
+        { id: 'look-color', label: 'A noticeable color change', tags: { 'productLine:coMau': 2, 'productLine:vanNhu': 2 } },
       ],
     },
     {
@@ -48,15 +48,15 @@ export const quiz: QuizDefinition = {
       prompt: 'How long do you usually wear lenses per day?',
       options: [
         { id: 'wear-short', label: 'A few hours here and there', tags: { 'replacement:daily': 1 } },
-        { id: 'wear-allday', label: 'All day, every day', tags: { 'replacement:monthly': 1, 'type:clear': 1 } },
+        { id: 'wear-allday', label: 'All day, every day', tags: { 'replacement:monthly': 1, 'productLine:trongSuot': 1 } },
       ],
     },
     {
       id: 'occasion',
       prompt: "What's the occasion?",
       options: [
-        { id: 'occasion-everyday', label: 'Everyday wear', tags: { 'type:clear': 1, 'replacement:daily': 1 } },
-        { id: 'occasion-special', label: 'A special look for photos or events', tags: { 'type:colored': 1, 'badge:new': 1 } },
+        { id: 'occasion-everyday', label: 'Everyday wear', tags: { 'productLine:trongSuot': 1, 'replacement:daily': 1 } },
+        { id: 'occasion-special', label: 'A special look for photos or events', tags: { 'productLine:vanNhu': 1, 'badge:new': 1 } },
       ],
     },
   ],

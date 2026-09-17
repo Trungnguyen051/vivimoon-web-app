@@ -16,8 +16,8 @@ const definition: QuizDefinition = {
       id: 'q1',
       prompt: 'First question?',
       options: [
-        { id: 'q1-a', label: 'Option A', tags: { 'type:colored': 2 } },
-        { id: 'q1-b', label: 'Option B', tags: { 'type:clear': 2 } },
+        { id: 'q1-a', label: 'Option A', tags: { 'productLine:coMau': 2 } },
+        { id: 'q1-b', label: 'Option B', tags: { 'productLine:trongSuot': 2 } },
       ],
     },
     {
@@ -34,7 +34,7 @@ const definition: QuizDefinition = {
 function product(id: string): Product {
   return {
     id, slug: id, name: `Product ${id}`, brandId: 'vivimoon', brandName: 'Vivimoon',
-    type: 'clear', replacement: 'daily', description: 'd', images: ['/a.jpg'], badges: [],
+    productLine: 'trongSuot', replacement: 'daily', description: 'd', images: ['/a.jpg'], badges: [],
     specs: { material: 'M', waterContent: '50%', baseCurve: '8.6mm', diameter: '14.2mm', origin: 'M' },
     requiresRx: true,
     variants: [{ id: `${id}-v1`, sku: 'S', price: 10, currency: 'USD', stock: 1 }],

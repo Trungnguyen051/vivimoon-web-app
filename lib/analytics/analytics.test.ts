@@ -5,7 +5,7 @@ import type { Product } from '@/lib/types';
 
 const product = {
   id: 'p1', slug: 'p1', name: 'Aqua', brandId: 'v', brandName: 'Vivimoon',
-  type: 'clear', replacement: 'daily', description: '', images: [], badges: [],
+  productLine: 'trongSuot', replacement: 'daily', description: '', images: [], badges: [],
   specs: { material: '', waterContent: '', baseCurve: '', diameter: '', origin: '' },
   requiresRx: true,
   variants: [{ id: 'v1', sku: 'SKU1', price: 25, currency: 'USD', stock: 10 }],
@@ -17,7 +17,7 @@ describe('toGa4Items', () => {
     const [item] = toGa4Items([{ product, variant: product.variants[0], quantity: 2 }]);
     expect(item).toEqual({
       item_id: 'SKU1', item_name: 'Aqua', item_brand: 'Vivimoon',
-      item_category: 'clear', price: 25, quantity: 2,
+      item_category: 'trongSuot', price: 25, quantity: 2,
     });
   });
 });

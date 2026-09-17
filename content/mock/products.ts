@@ -7,7 +7,7 @@ export const products: Product[] = [
     name: 'Aqua Daily Clear',
     brandId: 'vivimoon',
     brandName: 'Vivimoon',
-    type: 'clear',
+    productLine: 'trongSuot',
     replacement: 'daily',
     description:
       'Ultra-breathable daily disposable lenses with high moisture retention for all-day comfort.',
@@ -39,7 +39,7 @@ export const products: Product[] = [
     name: 'Breeze Daily Clear',
     brandId: 'vivimoon',
     brandName: 'Vivimoon',
-    type: 'clear',
+    productLine: 'trongSuot',
     replacement: 'daily',
     description:
       'Lightweight daily lenses engineered for sensitive eyes, with a smooth, low-profile edge design.',
@@ -71,7 +71,7 @@ export const products: Product[] = [
     name: 'Ocean 3-Month Clear',
     brandId: 'vivimoon',
     brandName: 'Vivimoon',
-    type: 'clear',
+    productLine: 'trongSuot',
     replacement: 'threeMonth',
     description:
       'Reusable 3-month lenses offering consistent clarity and reliable hydration between replacements.',
@@ -103,7 +103,7 @@ export const products: Product[] = [
     name: 'Hazel Monthly Colored',
     brandId: 'vivimoon',
     brandName: 'Vivimoon',
-    type: 'colored',
+    productLine: 'coMau',
     replacement: 'monthly',
     description:
       'Monthly colored lenses with a natural gradient pattern for a subtle, everyday enhancement.',
@@ -149,7 +149,9 @@ export const products: Product[] = [
     name: 'Mystic Daily Colored',
     brandId: 'vivimoon',
     brandName: 'Vivimoon',
-    type: 'colored',
+    // The one vân nhũ fixture — a glitter-textured colored lens, the third
+    // real Vivimoon line alongside trong suốt and có màu.
+    productLine: 'vanNhu',
     replacement: 'daily',
     description:
       'Daily colored lenses with vivid pigmentation, currently on sale for a limited time.',
@@ -183,14 +185,14 @@ export const products: Product[] = [
   },
   {
     id: 'p-torica-monthly',
-    slug: 'torica-monthly-toric',
-    name: 'Torica Monthly Toric',
+    slug: 'torica-monthly-clear',
+    name: 'Torica Monthly Clear',
     brandId: 'vivimoon',
     brandName: 'Vivimoon',
-    type: 'toric',
+    productLine: 'trongSuot',
     replacement: 'monthly',
     description:
-      'Monthly toric lenses designed for astigmatism, with stabilized rotation control for sharp vision.',
+      'Monthly clear lenses with a stabilized fit that holds its position for sharp vision all day.',
     images: ['/images/products/torica-monthly-1.jpg', '/images/products/torica-monthly-2.jpg'],
     badges: [],
     specs: {
@@ -215,14 +217,14 @@ export const products: Product[] = [
   },
   {
     id: 'p-torica-biweekly',
-    slug: 'torica-6month-toric',
-    name: 'Torica 6-Month Toric',
+    slug: 'torica-6month-clear',
+    name: 'Torica 6-Month Clear',
     brandId: 'vivimoon',
     brandName: 'Vivimoon',
-    type: 'toric',
+    productLine: 'trongSuot',
     replacement: 'sixMonth',
     description:
-      '6-month toric lenses offering precise astigmatism correction and consistent all-day comfort.',
+      '6-month clear lenses offering precise vision and consistent all-day comfort.',
     images: [
       '/images/products/torica-biweekly-1.jpg',
       '/images/products/torica-biweekly-2.jpg',
@@ -250,14 +252,14 @@ export const products: Product[] = [
   },
   {
     id: 'p-focalpro-monthly',
-    slug: 'focalpro-monthly-multifocal',
-    name: 'Focalpro Monthly Multifocal',
+    slug: 'focalpro-monthly-clear',
+    name: 'Focalpro Monthly Clear',
     brandId: 'vivimoon',
     brandName: 'Vivimoon',
-    type: 'multifocal',
+    productLine: 'trongSuot',
     replacement: 'monthly',
     description:
-      'Monthly multifocal lenses providing seamless near and far vision correction for presbyopia.',
+      'Monthly clear lenses providing seamless, stable vision correction from morning to night.',
     images: [
       '/images/products/focalpro-monthly-1.jpg',
       '/images/products/focalpro-monthly-2.jpg',
@@ -285,14 +287,14 @@ export const products: Product[] = [
   },
   {
     id: 'p-focalpro-daily',
-    slug: 'focalpro-daily-multifocal',
-    name: 'Focalpro Daily Multifocal',
+    slug: 'focalpro-daily-clear',
+    name: 'Focalpro Daily Clear',
     brandId: 'vivimoon',
     brandName: 'Vivimoon',
-    type: 'multifocal',
+    productLine: 'trongSuot',
     replacement: 'daily',
     description:
-      'Daily disposable multifocal lenses for effortless presbyopia correction without the upkeep.',
+      'Daily disposable clear lenses for effortless vision correction without the upkeep.',
     images: ['/images/products/focalpro-daily-1.jpg', '/images/products/focalpro-daily-2.jpg'],
     badges: [],
     specs: {

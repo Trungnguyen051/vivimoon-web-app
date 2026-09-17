@@ -9,7 +9,7 @@ import { describe, it, expect } from 'vitest';
 import { z } from 'zod';
 import { products, collections, reviews, users, vouchers, orders, galleries } from '@/content/mock';
 import { quiz } from '@/content/quiz';
-import { productSchema, collectionSchema, reviewSchema, lensGallerySchema } from '@/lib/api/schemas/catalog';
+import { productSchema, collectionSchema, reviewSchema, lensGallerySchema, productLineSchema } from '@/lib/api/schemas/catalog';
 import { quizDefinitionSchema } from '@/lib/api/schemas/discovery';
 import { userSchema } from '@/lib/api/schemas/auth';
 import { voucherSchema } from '@/lib/api/schemas/cart';
@@ -124,6 +124,26 @@ describe('fixture conformance', () => {
   it('content/quiz.ts satisfies quizDefinitionSchema', () => {
     const result = quizDefinitionSchema.safeParse(quiz);
     expect(result.success, result.success ? '' : result.error.issues.map((x) => `${x.path.join('.')} ${x.message}`).join('; ')).toBe(true);
+  });
+
+  it('every productLine is reachable from at least one quiz option tag', () => {
+    // scoreQuiz derives `productLine:<value>` per product (lib/products/quiz-scoring.ts);
+    // a line no option weights can never be recommended to anyone.
+    const tagged = new Set(
+      quiz.questions.flatMap((q) => q.options.flatMap((o) => Object.keys(o.tags))),
+    );
+    for (const line of productLineSchema.options) {
+      expect(tagged.has(`productLine:${line}`), `no quiz option weights productLine:${line}`).toBe(true);
+    }
+  });
+
+  it('the colored-lenses collection holds every colored product', () => {
+    // Both coMau and vanNhu are colored lines — only trongSuot has no colored
+    // zone — so neither may silently fall out of the collection.
+    const colored = products.filter((p) => p.productLine !== 'trongSuot').map((p) => p.id);
+    const collected = collections.find((c) => c.slug === 'colored-lenses')?.productIds ?? [];
+    expect(colored.length).toBeGreaterThan(1);
+    expect([...collected].sort()).toEqual([...colored].sort());
   });
 
   it('quiz question and option ids are unique', () => {

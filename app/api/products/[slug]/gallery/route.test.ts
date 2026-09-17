@@ -19,7 +19,7 @@ describe('GET /api/products/[slug]/gallery', () => {
   });
 
   it('returns ok:true with null data for a product that exists but has no gallery', async () => {
-    const res = await req('torica-monthly-toric');
+    const res = await req('torica-monthly-clear');
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body).toEqual({ ok: true, data: null });

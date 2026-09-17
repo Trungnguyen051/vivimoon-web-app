@@ -8,8 +8,8 @@ export const en = {
     productsLabel: 'products', noResults: 'No products match your filters.',
   },
   filters: {
-    type: 'Lens type', replacement: 'Replacement', color: 'Color', sort: 'Sort', clear: 'Clear filters',
-    types: { clear: 'Clear', colored: 'Colored', toric: 'Toric', multifocal: 'Multifocal' },
+    productLine: 'Lens type', replacement: 'Replacement', color: 'Color', sort: 'Sort', clear: 'Clear filters',
+    productLines: { trongSuot: 'Clear', coMau: 'Colored', vanNhu: 'Glitter' },
     replacements: { daily: 'Daily', monthly: 'Monthly', threeMonth: '3-Month', sixMonth: '6-Month' },
     sorts: { newest: 'Newest', 'price-asc': 'Price: low to high', 'price-desc': 'Price: high to low', bestselling: 'Best selling' },
   },
