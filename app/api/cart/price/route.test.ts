@@ -19,7 +19,7 @@ function req(body: unknown): Request {
 }
 
 // Same two known variants as lib/api/resources/pricing/mock.test.ts:
-//   p-aqua-daily-30 (price 25) x2 + p-hazel-monthly-brown-30 (price 48) x1
+//   p-aqua-daily-30 (price 25) x2 + p-hazel-monthly-brown-30 (price 20) x1
 const BASELINE_LINES = [
   { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2 },
   { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1 },
@@ -36,7 +36,7 @@ describe('POST /api/cart/price', () => {
 
   it('prices a non-trivial baseline from the catalogue, then ignores a posted unitPrice claiming otherwise', async () => {
     const clean = await (await POST(req({ lines: BASELINE_LINES }))).json();
-    expect(clean.data.subtotal).toBe(98);
+    expect(clean.data.subtotal).toBe(70);
 
     // Every line claims unitPrice: 1 — an untyped JSON body, exactly what a
     // hand-crafted client request could send. priceLineInputSchema does not
@@ -48,7 +48,7 @@ describe('POST /api/cart/price', () => {
         }),
       )
     ).json();
-    expect(rigged.data.subtotal).toBe(98);
+    expect(rigged.data.subtotal).toBe(70);
   });
 
   it('rejects a malformed body with 400 validation_failed', async () => {
@@ -83,7 +83,7 @@ describe('POST /api/cart/price', () => {
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body.data.shipping).toBe(3);
-    expect(body.data.total).toBe(98 + 3 - body.data.discount);
+    expect(body.data.total).toBe(70 + 3 - body.data.discount);
   });
 
   it('404s a tampered shipping optionId, not a silent 0 fee', async () => {

@@ -3,7 +3,7 @@ import { mockOrders, resetMockOrdersState, OrderError } from './mock';
 import type { PlaceOrderRequest } from '@/lib/api/schemas/orders';
 
 // Same two known variants as lib/api/resources/pricing/mock.test.ts:
-//   p-aqua-daily-30 (price 25 USD) x2 + p-hazel-monthly-brown-30 (price 48 USD) x1
+//   p-aqua-daily-30 (price 25 USD) x2 + p-hazel-monthly-brown-30 (price 20 USD) x1
 const BASELINE_LINES = [
   { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2 },
   { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1 },
@@ -38,7 +38,7 @@ describe('mockOrders.place', () => {
     // such field, but the mock itself must not trust one even if handed it.
     const rigged = { ...req(), total: 1 } as unknown as PlaceOrderRequest;
     const order = await mockOrders.place(rigged, null);
-    expect(order.totals.subtotal).toBe(98);
+    expect(order.totals.subtotal).toBe(70);
     expect(order.totals.total).toBeGreaterThan(1);
     expect(order.totals.currency).toBe('USD');
   });

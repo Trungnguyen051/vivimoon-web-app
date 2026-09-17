@@ -4,8 +4,8 @@ import type { PriceCartRequest } from '@/lib/api/schemas/cart';
 
 // Two known variants from content/mock/products.ts:
 //   p-aqua-daily-30        price 25, USD
-//   p-hazel-monthly-brown-30  price 48, USD
-// 2 x 25 + 1 x 48 = 98 — a non-trivial baseline, not a round number, so a
+//   p-hazel-monthly-brown-30  price 20, USD
+// 2 x 25 + 1 x 20 = 70 — a non-trivial baseline, not a round number, so a
 // broken implementation (e.g. one that prices everything at 0, or at the
 // posted `unitPrice`) cannot pass by accident.
 const BASELINE_LINES = [
@@ -27,7 +27,7 @@ function reqWithShipping(
 describe('mockPricing.priceCart', () => {
   it('sums the server-looked-up price times quantity for a non-trivial cart', async () => {
     const result = await mockPricing.priceCart(req(BASELINE_LINES));
-    expect(result.subtotal).toBe(98);
+    expect(result.subtotal).toBe(70);
     expect(result.lines).toEqual([
       {
         lineKey: 'l1',
@@ -41,8 +41,8 @@ describe('mockPricing.priceCart', () => {
         lineKey: 'l2',
         variantId: 'p-hazel-monthly-brown-30',
         quantity: 1,
-        unitPrice: 48,
-        lineTotal: 48,
+        unitPrice: 20,
+        lineTotal: 20,
         currency: 'USD',
       },
     ]);
@@ -60,11 +60,11 @@ describe('mockPricing.priceCart', () => {
     } as unknown as PriceCartRequest;
 
     const result = await mockPricing.priceCart(rigged);
-    expect(result.subtotal).toBe(98);
+    expect(result.subtotal).toBe(70);
   });
 
   it('auto-applies the best applicable voucher and does not stack', async () => {
-    // At subtotal 98: SUMMER10 (10%) = 9, SAVE15 (fixed) = 15. SAVE15 wins.
+    // At subtotal 70: SUMMER10 (10%) = 7, SAVE15 (fixed) = 15. SAVE15 wins.
     // EXPIRED50, STALE-ACTIVE60 and USED5OFF would all win bigger discounts
     // if they were wrongly considered — they must not be.
     const result = await mockPricing.priceCart(req(BASELINE_LINES));
@@ -75,7 +75,7 @@ describe('mockPricing.priceCart', () => {
     // always 0 until Task 8, and this proves both that value and the
     // subtotal + shipping - discount arithmetic in one assertion.
     expect(result.shipping).toBe(0);
-    expect(result.total).toBe(83);
+    expect(result.total).toBe(55);
   });
 
   it('applies no voucher when the cart is below every eligible minSpend', async () => {
@@ -130,7 +130,7 @@ describe('mockPricing.priceCart', () => {
     );
     expect(result.shipping).toBe(3);
     expect(result.discount).toBe(15);
-    expect(result.total).toBe(98 + 3 - 15);
+    expect(result.total).toBe(70 + 3 - 15);
   });
 
   it('rejects a shipping optionId that does not match any option in the real quote', async () => {
@@ -157,7 +157,7 @@ describe('mockPricing.priceCart', () => {
         reqWithShipping(BASELINE_LINES, { province: 'Ho Chi Minh City', district: 'District 1' }),
       );
       expect(result.shipping).toBe(3);
-      expect(result.total).toBe(98 + 3 - 15);
+      expect(result.total).toBe(70 + 3 - 15);
     });
 
     it('matches exactly what an explicit optionId for the cheapest option would charge', async () => {
@@ -184,20 +184,20 @@ describe('mockPricing.priceCart', () => {
       const result = await mockPricing.priceCart(req(BASELINE_LINES));
       const codes = result.appliedVouchers.map((v) => v.code);
       expect(codes).not.toContain('MEMBER20');
-      // Unchanged from the guest baseline: SAVE15 still wins at 98.
+      // Unchanged from the guest baseline: SAVE15 still wins at 70.
       expect(result.appliedVouchers[0].code).toBe('SAVE15');
       expect(result.discount).toBe(15);
     });
 
     it('applies the memberOnly voucher once signed in, and it outbids the guest winner', async () => {
-      // At subtotal 98: MEMBER20 (fixed 20) beats SAVE15 (fixed 15) and
-      // SUMMER10 (10% = 9) — the same cart, re-priced under a session,
+      // At subtotal 70: MEMBER20 (fixed 20) beats SAVE15 (fixed 15) and
+      // SUMMER10 (10% = 7) — the same cart, re-priced under a session,
       // yields a *different* (larger) discount purely from userId flipping.
       const result = await mockPricing.priceCart(req(BASELINE_LINES), 'user-1');
       expect(result.appliedVouchers).toHaveLength(1);
       expect(result.appliedVouchers[0].code).toBe('MEMBER20');
       expect(result.discount).toBe(20);
-      expect(result.total).toBe(98 - 20);
+      expect(result.total).toBe(70 - 20);
     });
 
     it('does not apply a memberOnly voucher below its minSpend even when signed in', async () => {

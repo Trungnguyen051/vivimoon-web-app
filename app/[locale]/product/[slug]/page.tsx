@@ -48,7 +48,11 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
 
         <div className="grid gap-10 md:grid-cols-2 lg:gap-16">
           {gallery ? (
-            <LensViewer gallery={gallery} alt={product.name} dict={dict.viewer} />
+            // Keyed by product.id for the same reason as AddToCart below — a
+            // client-side nav between two PDPs must remount this rather than
+            // reuse it, or activeEyeColor can point at a key the new
+            // product's gallery doesn't have.
+            <LensViewer key={product.id} gallery={gallery} alt={product.name} dict={dict.viewer} />
           ) : (
             <ProductGallery images={product.images} alt={product.name} />
           )}

@@ -20,7 +20,7 @@ const { signSession } = await import('@/lib/auth/cookie');
 
 function signIn(userId = 'user-1') { jar.set('vivimoon_session', signSession(userId)); }
 
-// Same baseline as route.test.ts: 2 x p-aqua-daily-30 (25) + 1 x p-hazel-monthly-brown-30 (48) = 98.
+// Same baseline as route.test.ts: 2 x p-aqua-daily-30 (25) + 1 x p-hazel-monthly-brown-30 (20) = 70.
 const BASELINE_LINES = [
   { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2 },
   { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1 },
@@ -47,7 +47,7 @@ describe('POST /api/cart/price — guest -> member merge (spec §9)', () => {
     const body = await (await POST(req({ lines: BASELINE_LINES }))).json();
     expect(body.data.appliedVouchers.map((v: { code: string }) => v.code)).toEqual(['MEMBER20']);
     expect(body.data.discount).toBe(20);
-    expect(body.data.total).toBe(98 - 20);
+    expect(body.data.total).toBe(70 - 20);
   });
 
   it('is idempotent — pricing the same session twice does not change or accumulate the discount', async () => {

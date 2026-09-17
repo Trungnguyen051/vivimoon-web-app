@@ -1,9 +1,10 @@
 import { products, collections, reviews, galleries } from '@/content/mock';
 import type { Collection, LensGallery, Product, ProductQuery, Review, Variant } from '@/lib/api/schemas/catalog';
+import { cheapestVariant } from '@/lib/products/cheapest-variant';
 
 /** Lowest variant price, used for sorting. */
 export function minPrice(product: Product): number {
-  return Math.min(...product.variants.map((v) => v.price));
+  return cheapestVariant(product).price;
 }
 
 export const mockCatalog = {

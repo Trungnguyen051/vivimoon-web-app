@@ -124,7 +124,9 @@ export const products: Product[] = [
         sku: 'HZM-BR-30',
         color: 'brown',
         colorLabel: 'Hazel Brown',
-        price: 48,
+        // Collapsed from two pack-size variants (M6.4, #27) — this keeps the
+        // smaller 10-pack's price ($20), not the 30-pack's ($48).
+        price: 20,
         currency: 'USD',
         stock: 30,
       },
@@ -133,7 +135,7 @@ export const products: Product[] = [
         sku: 'HZM-GR-30',
         color: 'gray',
         colorLabel: 'Storm Gray',
-        price: 48,
+        price: 20,
         currency: 'USD',
         stock: 25,
       },
@@ -168,8 +170,10 @@ export const products: Product[] = [
         sku: 'MYS-VI-30',
         color: 'violet',
         colorLabel: 'Mystic Violet',
-        price: 45,
-        compareAtPrice: 58,
+        // Collapsed from two pack-size variants (M6.4, #27) — this keeps the
+        // smaller 10-pack's price ($18 / compareAt $24), not the 30-pack's.
+        price: 18,
+        compareAtPrice: 24,
         currency: 'USD',
         stock: 20,
       },

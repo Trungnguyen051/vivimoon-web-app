@@ -1,4 +1,5 @@
 import type { Product, Variant } from '@/lib/types';
+import { cheapestVariant } from '@/lib/products/cheapest-variant';
 
 export interface Ga4Item {
   item_id: string;
@@ -17,7 +18,7 @@ export function toGa4Items(
     item_name: product.name,
     item_brand: product.brandName,
     item_category: product.type,
-    price: variant?.price ?? Math.min(...product.variants.map((v) => v.price)),
+    price: variant?.price ?? cheapestVariant(product).price,
     quantity: quantity ?? 1,
   }));
 }

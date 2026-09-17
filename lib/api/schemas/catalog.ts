@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { EYE_ENLARGEMENT_BANDS } from '@/lib/products/eye-enlargement';
+import { distinctColorVariants } from '@/lib/products/variant-colors';
 
 export const lensTypeSchema = z.enum(['clear', 'colored', 'toric', 'multifocal']);
 export const replacementScheduleSchema = z.enum(['daily', 'monthly', 'threeMonth', 'sixMonth']);
@@ -29,12 +30,20 @@ export const variantSchema = z.object({
   compareAtPrice: z.number().int().nonnegative().optional(),
   currency: currencySchema,
   stock: z.number().int().nonnegative(),
-}).refine(
+}).superRefine((v, ctx) => {
   // CartLine.color is built from colorLabel (add-to-cart.tsx), not color —
   // if only color were set, the cart line would silently lose its color.
-  (v) => (v.color === undefined) === (v.colorLabel === undefined),
-  { message: 'color and colorLabel must both be present or both be absent', path: ['colorLabel'] },
-);
+  // Falsy (not just `undefined`) so an empty-string value counts as absent,
+  // matching distinctColorVariants' truthy filter.
+  if (Boolean(v.color) !== Boolean(v.colorLabel)) {
+    ctx.addIssue({
+      code: 'custom',
+      message: 'color and colorLabel must both be present or both be absent',
+      // Points at whichever field is actually missing.
+      path: [v.color ? 'colorLabel' : 'color'],
+    });
+  }
+});
 
 export const productSchema = z.object({
   id: z.string(),
@@ -59,8 +68,10 @@ export const productSchema = z.object({
   // pick a variant — enforcing these here (construction/validation boundary)
   // means every consumer (compare, spec table, cart) can trust the invariant
   // instead of each re-deriving or silently mishandling bad data.
-  const colors = p.variants.map((v) => v.color).filter((c): c is string => c !== undefined);
-  if (new Set(colors).size !== colors.length) {
+  // Reuses distinctColorVariants' own (truthy) definition of "has a color"
+  // rather than a second, independent dedup, so the two can't diverge.
+  const coloredVariants = p.variants.filter((v) => v.color);
+  if (distinctColorVariants(p.variants).length !== coloredVariants.length) {
     ctx.addIssue({
       code: 'custom',
       // A repeated color would make the second variant unreachable in the UI
@@ -69,7 +80,7 @@ export const productSchema = z.object({
       path: ['variants'],
     });
   }
-  const hasColorlessVariant = p.variants.some((v) => v.color === undefined);
+  const hasColorlessVariant = p.variants.some((v) => !v.color);
   if (hasColorlessVariant && p.variants.length > 1) {
     ctx.addIssue({
       code: 'custom',
@@ -79,7 +90,7 @@ export const productSchema = z.object({
       path: ['variants'],
     });
   }
-  if (p.type === 'colored' && p.specs.graphicDiameter === undefined) {
+  if (p.type === 'colored' && !p.specs.graphicDiameter) {
     ctx.addIssue({
       code: 'custom',
       // eyeEnlargementBand(undefined) bands 'natural', which is correct for a
