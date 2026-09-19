@@ -83,7 +83,23 @@ export const mockOrders = {
       userId,
     );
 
-    const lines = priced.lines.map((line, i) => ({ ...line, rx: input.lines[i]?.rx }));
+    // Never places a partial order (ADR-0012): pricing reports lines it could
+    // not price rather than throwing, so placement is the layer that must
+    // refuse — silently dropping one here would charge the shopper for less
+    // than the cart they submitted.
+    if (priced.unavailableLines.length > 0) {
+      throw new OrderError(
+        `cart contains ${priced.unavailableLines.length} line(s) that are no longer available`,
+        'validation_failed',
+      );
+    }
+
+    // Matched by lineKey, not by position: `priced.lines` is a partition of
+    // the request's lines, so an index into `input.lines` is only ever the
+    // same line by luck — and would silently attach one line's prescription
+    // to another.
+    const rxByLineKey = new Map(input.lines.map((l) => [l.lineKey, l.rx]));
+    const lines = priced.lines.map((line) => ({ ...line, rx: rxByLineKey.get(line.lineKey) }));
 
     const order: Order = {
       id: randomId('order'),
@@ -97,7 +113,9 @@ export const mockOrders = {
         appliedVouchers: priced.appliedVouchers,
         shipping: priced.shipping,
         total: priced.total,
-        currency: priced.currency,
+        // Present whenever any line priced, and the guard above means at
+        // least one did — an all-unavailable cart never reaches here.
+        currency: priced.currency!,
       },
       address: input.address,
       payment: { method: input.paymentMethod, status: 'pending' },

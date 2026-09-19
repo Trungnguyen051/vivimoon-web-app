@@ -36,6 +36,10 @@ export const en = {
     checkout: 'Checkout', remove: 'Remove',
     orderSummary: 'Order summary', shipping: 'Shipping', free: 'Free', total: 'Total',
     discount: 'Discount',
+    unavailable: 'No longer available',
+    unavailableNote: 'Unavailable items are not included in the total.',
+    unavailableBlocksCheckout: 'Remove unavailable items to continue.',
+    priceError: 'We couldn’t update your total. Please try again.',
   },
   checkout: {
     title: 'Checkout', recipient: 'Recipient name', email: 'Email', line1: 'Address',

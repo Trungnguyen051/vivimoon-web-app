@@ -2,7 +2,9 @@ import { catalog } from '@/lib/api/resources/catalog';
 import { shipping } from '@/lib/api/resources/shipping';
 import { vouchers as voucherFixtures } from '@/content/mock';
 import type { Currency } from '@/lib/api/schemas/catalog';
-import type { PriceCartRequest, PricedCart, PricedLine, Voucher } from '@/lib/api/schemas/cart';
+import type {
+  PriceCartRequest, PricedCart, PricedLine, UnavailableLine, Voucher,
+} from '@/lib/api/schemas/cart';
 
 /** Thrown by the mock so the route handler can map it to an envelope. */
 export class PricingError extends Error {
@@ -83,6 +85,7 @@ export const mockPricing = {
     }
 
     const lines: PricedLine[] = [];
+    const unavailableLines: UnavailableLine[] = [];
     for (const line of input.lines) {
       if (!Number.isInteger(line.quantity) || line.quantity <= 0) {
         throw new PricingError(
@@ -93,7 +96,12 @@ export const mockPricing = {
 
       const found = await catalog.getVariantById(line.variantId);
       if (!found) {
-        throw new PricingError(`Unknown variant "${line.variantId}"`, 'not_found');
+        // Reported, not thrown (ADR-0012). A cart persisted in localStorage
+        // outlives any catalogue change, so an unknown variant is an expected
+        // state of a returning shopper's cart, not a malformed request —
+        // throwing let one stale line blank out the price of every other.
+        unavailableLines.push({ lineKey: line.lineKey, variantId: line.variantId });
+        continue;
       }
 
       lines.push({
@@ -106,7 +114,9 @@ export const mockPricing = {
       });
     }
 
-    const currency: Currency = lines[0].currency;
+    // Undefined only when nothing priced — there is then no catalogue variant
+    // to read a currency off, and every total below is 0 anyway.
+    const currency: Currency | undefined = lines[0]?.currency;
     if (lines.some((l) => l.currency !== currency)) {
       throw new PricingError('Cart lines must share a single currency', 'validation_failed');
     }
@@ -140,6 +150,7 @@ export const mockPricing = {
 
     return {
       lines,
+      unavailableLines,
       subtotal,
       discount,
       appliedVouchers: applied,

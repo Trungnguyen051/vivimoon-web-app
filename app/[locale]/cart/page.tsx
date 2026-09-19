@@ -26,7 +26,11 @@ export default function CartPage({ params }: { params: Promise<{ locale: string 
   // session-status change is what "merge" reduces to here — it lets a
   // `memberOnly` voucher apply the moment a shopper signs in without a
   // page reload.
-  const { result } = usePricedCart(lines, hydrated, sessionStatus);
+  const { result, isError } = usePricedCart(lines, hydrated, sessionStatus);
+  // Lines the catalogue can no longer price (ADR-0012). Excluded from every
+  // total server-side; here they stay visible and removable so nothing the
+  // shopper put in their cart disappears without them seeing it.
+  const unavailableKeys = new Set(result?.unavailableLines?.map((l) => l.lineKey) ?? []);
   const { track } = useAnalytics();
 
   // `view_cart` fires exactly once per cart view, the moment the first server
@@ -35,7 +39,10 @@ export default function CartPage({ params }: { params: Promise<{ locale: string 
   // pre-discount item value), never a client-computed total.
   const viewCartFiredRef = useRef(false);
   useEffect(() => {
-    if (!result || viewCartFiredRef.current) return;
+    // `currency` is absent only when no line priced at all — there is no
+    // cart value to report, so the event is skipped rather than sent with a
+    // zero in a guessed currency.
+    if (!result || !result.currency || viewCartFiredRef.current) return;
     viewCartFiredRef.current = true;
     track({
       name: 'view_cart',
@@ -102,6 +109,7 @@ export default function CartPage({ params }: { params: Promise<{ locale: string 
             return (
               <CartLineItem key={l.lineKey} line={l} locale={locale} dict={dict}
                 lineTotal={pricedLine?.lineTotal ?? null}
+                unavailable={unavailableKeys.has(l.lineKey)}
                 onQty={(key, q) => (q < 1 ? handleRemove(key) : updateQty(key, q))}
                 onRemove={handleRemove} />
             );
@@ -114,6 +122,15 @@ export default function CartPage({ params }: { params: Promise<{ locale: string 
           total={result?.total ?? null}
           currency={currency} locale={locale} dict={dict}
           ctaHref={`/${locale}/checkout`} ctaLabel={dict.cart.checkout}
+          note={unavailableKeys.size > 0 ? dict.cart.unavailableNote : undefined}
+          // Checkout is blocked, not silently partial: order placement
+          // refuses an unavailable line anyway (ADR-0012), so sending the
+          // shopper on would only fail later, further from the fix.
+          ctaBlockedReason={
+            unavailableKeys.size > 0
+              ? dict.cart.unavailableBlocksCheckout
+              : isError ? dict.cart.priceError : undefined
+          }
         />
       </div>
     </div>

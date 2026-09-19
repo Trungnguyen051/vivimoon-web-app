@@ -55,6 +55,7 @@ describe('CartPage', () => {
         { lineKey: 'kB', variantId: lineB.variantId, quantity: 2, unitPrice: 25, lineTotal: 999, currency: 'USD' },
         { lineKey: 'kA', variantId: lineA.variantId, quantity: 1, unitPrice: 25, lineTotal: 111, currency: 'USD' },
       ],
+      unavailableLines: [],
       subtotal: 1110, discount: 0, appliedVouchers: [], shipping: 0, total: 1110, currency: 'USD',
     };
     mockedApiRequest.mockResolvedValue({ ok: true, data: priced });
@@ -66,10 +67,75 @@ describe('CartPage', () => {
     expect(screen.getByText('$999.00')).toBeInTheDocument();
   });
 
+  // ADR-0012 / issue #29. A cart persisted in localStorage outlives a
+  // catalogue change, so one stale line used to blank out every total and
+  // leave the shopper stuck with no explanation.
+  describe('a line the catalogue can no longer price', () => {
+    const gone = makeLine({ lineKey: 'kGone', variantId: 'vGone', name: 'Ocean' });
+    const kept = makeLine({ lineKey: 'kKept', variantId: 'vKept', name: 'Aqua' });
+    const partiallyPriced: PricedCart = {
+      lines: [
+        { lineKey: 'kKept', variantId: 'vKept', quantity: 1, unitPrice: 25, lineTotal: 25, currency: 'USD' },
+      ],
+      unavailableLines: [{ lineKey: 'kGone', variantId: 'vGone' }],
+      subtotal: 25, discount: 0, appliedVouchers: [], shipping: 0, total: 25, currency: 'USD',
+    };
+
+    async function renderWithStaleLine() {
+      mockedApiRequest.mockResolvedValue({ ok: true, data: partiallyPriced });
+      useCartStore.setState({ lines: [kept, gone], hydrated: true });
+      await renderCartPage();
+      await waitFor(() => expect(screen.getByText('No longer available')).toBeInTheDocument(), { timeout: 2000 });
+    }
+
+    it('still shows the rest of the cart its real total', async () => {
+      await renderWithStaleLine();
+      // The surviving line's total — not the blank '—' the whole cart used
+      // to collapse to when one line went missing.
+      expect(screen.getAllByText('$25.00').length).toBeGreaterThan(0);
+    });
+
+    it('keeps the stale line visible and removable rather than dropping it', async () => {
+      await renderWithStaleLine();
+      expect(screen.getByText('Ocean')).toBeInTheDocument();
+      expect(screen.getAllByRole('button', { name: 'Remove' })).toHaveLength(2);
+    });
+
+    it('blocks checkout, naming what has to happen first', async () => {
+      await renderWithStaleLine();
+      expect(screen.getByRole('button', { name: 'Checkout' })).toBeDisabled();
+      expect(screen.getByText('Remove unavailable items to continue.')).toBeInTheDocument();
+      expect(screen.getByText('Unavailable items are not included in the total.')).toBeInTheDocument();
+    });
+
+    it('does not block checkout when every line prices', async () => {
+      mockedApiRequest.mockResolvedValue({
+        ok: true,
+        data: { ...partiallyPriced, unavailableLines: [] },
+      });
+      useCartStore.setState({ lines: [kept], hydrated: true });
+      await renderCartPage();
+      await waitFor(() => expect(screen.getByRole('link', { name: 'Checkout' })).toBeInTheDocument(), { timeout: 2000 });
+      expect(screen.queryByText('No longer available')).not.toBeInTheDocument();
+    });
+  });
+
+  it('says so when the price request fails, instead of leaving a stale total to read as current', async () => {
+    mockedApiRequest.mockResolvedValue({ ok: false, error: { code: 'internal', message: 'boom' } });
+    useCartStore.setState({ lines: [makeLine()], hydrated: true });
+    await renderCartPage();
+    await waitFor(
+      () => expect(screen.getByText('We couldn’t update your total. Please try again.')).toBeInTheDocument(),
+      { timeout: 2000 },
+    );
+    expect(screen.getByRole('button', { name: 'Checkout' })).toBeDisabled();
+  });
+
   it('fires view_cart exactly once per cart view, even through a later re-price', async () => {
     const line = makeLine();
     const priced: PricedCart = {
       lines: [{ lineKey: line.lineKey, variantId: line.variantId, quantity: 1, unitPrice: 25, lineTotal: 25, currency: 'USD' }],
+      unavailableLines: [],
       subtotal: 25, discount: 0, appliedVouchers: [], shipping: 0, total: 25, currency: 'USD',
     };
     mockedApiRequest.mockResolvedValue({ ok: true, data: priced });
@@ -87,6 +153,7 @@ describe('CartPage', () => {
     const line2 = makeLine({ quantity: 2 });
     const priced2: PricedCart = {
       lines: [{ lineKey: line2.lineKey, variantId: line2.variantId, quantity: 2, unitPrice: 25, lineTotal: 50, currency: 'USD' }],
+      unavailableLines: [],
       subtotal: 50, discount: 0, appliedVouchers: [], shipping: 0, total: 50, currency: 'USD',
     };
     mockedApiRequest.mockResolvedValue({ ok: true, data: priced2 });

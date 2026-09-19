@@ -15,6 +15,12 @@ export function toPriceLines(lines: CartLine[]) {
 export interface UsePricedCartResult {
   result: PricedCart | null;
   isPending: boolean;
+  /**
+   * True when the last price request failed. Surfaced rather than swallowed:
+   * a dropped response leaves the previous `result` on screen, so without
+   * this the shopper reads a stale total as a current one (issue #29).
+   */
+  isError: boolean;
 }
 
 /**
@@ -71,6 +77,7 @@ export function usePricedCart(
 ): UsePricedCartResult {
   const [result, setResult] = useState<PricedCart | null>(null);
   const [isPending, setIsPending] = useState(false);
+  const [isError, setIsError] = useState(false);
   const isFirstFireRef = useRef(true);
   const controllerRef = useRef<AbortController | null>(null);
   const prevSessionStatusRef = useRef(sessionStatus);
@@ -109,6 +116,7 @@ export function usePricedCart(
       }).then((res) => {
         if (cancelled) return; // superseded by a newer request — drop this response
         setIsPending(false);
+        setIsError(!res.ok);
         if (res.ok) setResult(res.data);
       });
     };
@@ -130,5 +138,11 @@ export function usePricedCart(
   }, [lines, hydrated, isEmpty, sessionStatus, shippingPending, shippingKey]);
 
   const pending = isEmpty || shippingPending;
-  return { result: pending ? null : result, isPending: pending ? false : isPending };
+  return {
+    result: pending ? null : result,
+    isPending: pending ? false : isPending,
+    // Nothing is being priced, so nothing is failing — an error from a
+    // previous, now-irrelevant cart must not stick to an empty one.
+    isError: pending ? false : isError,
+  };
 }

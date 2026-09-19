@@ -36,6 +36,7 @@ function makeLine(overrides: Partial<CartLine> = {}): CartLine {
 
 const PRICED_RESPONSE = {
   lines: [{ lineKey: 'existing', variantId: 'p-aqua-daily-30', quantity: 1, unitPrice: 25, lineTotal: 25, currency: 'USD' }],
+  unavailableLines: [],
   subtotal: 25, discount: 5, appliedVouchers: [{ code: 'SAVE5', title: 'x', description: 'x', type: 'fixed', value: 5, expiresAt: '2099-01-01', status: 'active' }],
   shipping: 3, total: 23, currency: 'USD',
 };

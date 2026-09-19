@@ -130,6 +130,10 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
     ? { province: watchedProvince, district: watchedDistrict }
     : null;
   const { result: priced } = usePricedCart(lines, hydrated || isBuyNow, sessionStatus, shippingAddress);
+  // Order placement refuses a cart with an unavailable line (ADR-0012), so
+  // the button is blocked here rather than letting the shopper fill the whole
+  // form and fail at submit. The cart page is where the line can be removed.
+  const hasUnavailableLines = (priced?.unavailableLines?.length ?? 0) > 0;
 
   const fields = [
     { name: 'recipient' as const, label: dict.checkout.recipient, message: dict.checkout.errors.required, autoComplete: 'name', type: 'text' },
@@ -238,7 +242,14 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
           />
 
           <p className="text-sm text-muted-foreground">{dict.checkout.payNote}</p>
-          <Button type="submit" disabled={isSubmitting || preferenceLoading} className="h-12 w-full text-base">
+          {hasUnavailableLines ? (
+            <p className="text-sm font-medium text-destructive">{dict.cart.unavailableBlocksCheckout}</p>
+          ) : null}
+          <Button
+            type="submit"
+            disabled={isSubmitting || preferenceLoading || hasUnavailableLines}
+            className="h-12 w-full text-base"
+          >
             {dict.checkout.placeOrder}
           </Button>
         </div>
@@ -249,6 +260,7 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
         shipping={priced?.shipping ?? null}
         total={priced?.total ?? null}
         currency={currency} locale={locale} dict={dict}
+        note={hasUnavailableLines ? dict.cart.unavailableNote : undefined}
       />
     </div>
   );

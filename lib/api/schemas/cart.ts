@@ -114,19 +114,41 @@ export const pricedLineSchema = z.object({
 });
 
 /**
+ * A requested line the catalogue can no longer price, because its `variantId`
+ * names a variant that no longer exists (ADR-0012). Carries no money: an
+ * unavailable line is excluded from every total, so there is nothing to
+ * report but its identity.
+ */
+export const unavailableLineSchema = z.object({
+  lineKey: z.string(),
+  variantId: z.string(),
+});
+
+/**
  * Response of POST /api/cart/price. `shipping` is always `0` until Task 8
  * quotes it against a real address — no address exists yet in M2. The field
  * is present and typed from day one regardless, so Task 7's cart summary
  * component is never written against a shape that changes under it later.
+ *
+ * `lines` and `unavailableLines` partition the request's lines: every
+ * requested line appears in exactly one of them (ADR-0012). A pricing
+ * response is therefore never silently short — a caller that ignores
+ * `unavailableLines` is visibly missing lines it asked about, rather than
+ * quietly being handed a smaller cart.
  */
 export const pricedCartSchema = z.object({
   lines: z.array(pricedLineSchema),
+  unavailableLines: z.array(unavailableLineSchema),
   subtotal: z.number().int().nonnegative(),
   discount: z.number().int().nonnegative(),
   appliedVouchers: z.array(voucherSchema),
   shipping: z.number().int().nonnegative(),
   total: z.number().int().nonnegative(),
-  currency: currencySchema,
+  // Absent only when NO line could be priced: currency is read off the
+  // catalogue variants, so a cart with nothing priceable has no currency to
+  // report rather than a zero in some arbitrary one. Every total is 0 in
+  // that case, and the UI shows the unavailable lines instead of a price.
+  currency: currencySchema.optional(),
 });
 
 export type VoucherType = z.infer<typeof voucherTypeSchema>;
@@ -136,4 +158,5 @@ export type PriceLineInput = z.infer<typeof priceLineInputSchema>;
 export type ShippingSelection = z.infer<typeof shippingSelectionSchema>;
 export type PriceCartRequest = z.infer<typeof priceCartRequestSchema>;
 export type PricedLine = z.infer<typeof pricedLineSchema>;
+export type UnavailableLine = z.infer<typeof unavailableLineSchema>;
 export type PricedCart = z.infer<typeof pricedCartSchema>;

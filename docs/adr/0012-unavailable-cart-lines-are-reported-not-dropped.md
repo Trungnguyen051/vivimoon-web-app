@@ -1,0 +1,9 @@
+# An unpriceable cart line is reported, never silently dropped
+
+The cart persists raw `variantId`s to `localStorage`, so a cart outlives any catalogue change. `pricing.priceCart` used to throw `not_found` on the first unknown variant, and `usePricedCart` silently discarded a non-ok response — so one stale line blanked out the price of the whole cart, permanently, with no error shown and no way for the shopper to recover short of clearing site data. M6.4 deleted four variants and surfaced this, but any catalogue change triggers it.
+
+Pricing now partitions its input: every requested line comes back in either `lines` (priced) or `unavailableLines` (the variant is gone). Unavailable lines carry no money and are excluded from every total, so `currency` is absent exactly when nothing priced. A caller that ignores `unavailableLines` is visibly missing lines it asked about, rather than being quietly handed a smaller cart.
+
+Dropping unpriceable lines silently was rejected because `priceCart` is also what `orders.place` prices against: a silent drop there would place — and charge for — a smaller order than the cart the shopper submitted. Placement instead refuses outright while any unavailable line is present, and both the cart page and checkout block their CTA with that reason rather than failing at submit. The shopper sees the line, flagged and excluded from totals, with a remove button; nothing they put in their cart disappears without them seeing it.
+
+Two consequences worth naming. `orders.place` matched priced lines to their prescriptions by array index, which was only ever correct while pricing returned exactly one line per input in order; it now matches by `lineKey`. And `usePricedCart` exposes `isError`, because a swallowed failure leaves the previous total on screen where the shopper reads it as current.

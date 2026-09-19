@@ -42,6 +42,7 @@ const DEFAULT_ADDRESS = {
 
 const PRICED_RESPONSE = {
   lines: [{ lineKey: 'existing', variantId: 'p-aqua-daily-30', quantity: 1, unitPrice: 25, lineTotal: 25, currency: 'USD' }],
+  unavailableLines: [],
   subtotal: 25, discount: 0, appliedVouchers: [], shipping: 3, total: 28, currency: 'USD',
 };
 

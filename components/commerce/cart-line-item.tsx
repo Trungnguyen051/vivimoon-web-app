@@ -4,20 +4,27 @@ import type { CartLine } from '@/features/cart/cart.types';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { formatPrice } from '@/lib/utils/format';
+import { cn } from '@/lib/utils/cn';
 import { QuantityStepper } from './quantity-stepper';
 import { RxSummary } from './rx-summary';
 
 export function CartLineItem({
-  line, locale, dict, lineTotal = null, onQty, onRemove,
+  line, locale, dict, lineTotal = null, unavailable = false, onQty, onRemove,
 }: {
   line: CartLine; locale: Locale; dict: Dictionary;
   /** Server-priced line total. Null until POST /api/cart/price answers. */
   lineTotal?: number | null;
+  /**
+   * The catalogue no longer sells this variant (ADR-0012). The line stays
+   * visible and removable but carries no price and no quantity control —
+   * there is nothing to re-price it to.
+   */
+  unavailable?: boolean;
   onQty: (lineKey: string, qty: number) => void;
   onRemove: (lineKey: string) => void;
 }) {
   return (
-    <div className="flex gap-4 border-b py-6 first:pt-0">
+    <div className={cn('flex gap-4 border-b py-6 first:pt-0', unavailable && 'opacity-60')}>
       <div className="relative size-24 shrink-0 overflow-hidden rounded-lg bg-muted">
         {line.image ? <Image src={line.image} alt={line.name} fill className="object-cover" sizes="96px" /> : null}
       </div>
@@ -29,6 +36,9 @@ export function CartLineItem({
             {/* Two lines can share a variantId and differ only by prescription
                 (spec §7) — without this they'd read as a duplicate-line bug. */}
             {line.rx ? <RxSummary rx={line.rx} dict={dict} /> : null}
+            {unavailable ? (
+              <p className="mt-2 text-sm font-medium text-destructive">{dict.cart.unavailable}</p>
+            ) : null}
           </div>
           <button
             onClick={() => onRemove(line.lineKey)}
@@ -39,14 +49,16 @@ export function CartLineItem({
           </button>
         </div>
         <div className="mt-auto flex items-end justify-between gap-3 pt-4">
-          <QuantityStepper
-            value={line.quantity}
-            onChange={(next) => onQty(line.lineKey, next)}
-            decreaseLabel={dict.common.decreaseQty}
-            increaseLabel={dict.common.increaseQty}
-          />
-          <p className="font-semibold tabular-nums">
-            {lineTotal === null ? '—' : formatPrice(lineTotal, line.currency, locale)}
+          {unavailable ? null : (
+            <QuantityStepper
+              value={line.quantity}
+              onChange={(next) => onQty(line.lineKey, next)}
+              decreaseLabel={dict.common.decreaseQty}
+              increaseLabel={dict.common.increaseQty}
+            />
+          )}
+          <p className="ml-auto font-semibold tabular-nums">
+            {unavailable || lineTotal === null ? '—' : formatPrice(lineTotal, line.currency, locale)}
           </p>
         </div>
       </div>

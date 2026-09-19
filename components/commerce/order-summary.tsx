@@ -9,6 +9,7 @@ import { Separator } from '@/components/ui/separator';
 
 export function OrderSummary({
   subtotal, discount, shipping, total, currency, locale, dict, ctaHref, ctaLabel,
+  note, ctaBlockedReason,
 }: {
   /** Null until POST /api/cart/price answers. Money is server-owned (spec §7). */
   subtotal: number | null;
@@ -21,6 +22,14 @@ export function OrderSummary({
    *  rendering exactly as before. Never derive this on the client. */
   total?: number | null;
   currency: Currency; locale: Locale; dict: Dictionary; ctaHref?: string; ctaLabel?: string;
+  /** Caveat about what the totals above do or don't include. */
+  note?: string;
+  /**
+   * Why checkout can't proceed. Present = the CTA renders disabled with this
+   * as its explanation, so the block is never a dead button with no reason
+   * (ADR-0012).
+   */
+  ctaBlockedReason?: string;
 }) {
   const price = (n: number | null) => (n === null ? '—' : formatPrice(n, currency, locale));
   const shippingText =
@@ -52,12 +61,20 @@ export function OrderSummary({
           <span className="font-medium">{dict.cart.total}</span>
           <span className="text-lg font-semibold tabular-nums">{price(totalValue)}</span>
         </div>
+        {note ? <p className="text-xs text-muted-foreground">{note}</p> : null}
       </CardContent>
       {ctaHref && ctaLabel ? (
-        <CardFooter>
-          <Button asChild className="h-12 w-full text-base">
-            <Link href={ctaHref}>{ctaLabel}</Link>
-          </Button>
+        <CardFooter className="flex-col items-stretch gap-2">
+          {ctaBlockedReason ? (
+            <>
+              <Button disabled className="h-12 w-full text-base">{ctaLabel}</Button>
+              <p className="text-center text-xs text-destructive">{ctaBlockedReason}</p>
+            </>
+          ) : (
+            <Button asChild className="h-12 w-full text-base">
+              <Link href={ctaHref}>{ctaLabel}</Link>
+            </Button>
+          )}
         </CardFooter>
       ) : null}
     </Card>

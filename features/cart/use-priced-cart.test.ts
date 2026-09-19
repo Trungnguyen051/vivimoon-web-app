@@ -32,6 +32,7 @@ function pricedCartFor(line: CartLine, lineTotal: number): PricedCart {
     lines: [
       { lineKey: line.lineKey, variantId: line.variantId, quantity: line.quantity, unitPrice: line.unitPrice, lineTotal, currency: line.currency },
     ],
+    unavailableLines: [],
     subtotal: lineTotal,
     discount: 0,
     appliedVouchers: [],

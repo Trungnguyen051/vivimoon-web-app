@@ -38,6 +38,10 @@ export const vi: Dictionary = {
     checkout: 'Thanh toán', remove: 'Xóa',
     orderSummary: 'Tóm tắt đơn hàng', shipping: 'Vận chuyển', free: 'Miễn phí', total: 'Tổng cộng',
     discount: 'Giảm giá',
+    unavailable: 'Sản phẩm không còn bán',
+    unavailableNote: 'Sản phẩm không còn bán không được tính vào tổng cộng.',
+    unavailableBlocksCheckout: 'Vui lòng xóa sản phẩm không còn bán để tiếp tục.',
+    priceError: 'Không cập nhật được tổng tiền. Vui lòng thử lại.',
   },
   checkout: {
     title: 'Thanh toán', recipient: 'Tên người nhận', email: 'Email', line1: 'Địa chỉ',

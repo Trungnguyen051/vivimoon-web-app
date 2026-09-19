@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { ORDER_STATUSES } from '@/lib/orders/statuses';
 import { priceLineInputSchema, pricedLineSchema, pricedCartSchema } from './cart';
+import { currencySchema } from './catalog';
 import { rxSchema } from './rx';
 import { addressSchema } from './checkout';
 import { paymentMethodTypeSchema, paymentStatusSchema } from './payments';
@@ -29,7 +30,13 @@ export const orderSchema = z.object({
   status: orderStatusSchema,
   placedAt: z.string(),
   lines: z.array(orderLineSchema),
-  totals: pricedCartSchema.omit({ lines: true }),
+  // A placed order has no unavailable lines — placement refuses while any
+  // exist (ADR-0012) — so the field is dropped rather than carried as an
+  // always-empty array, and `currency` is narrowed back to required: an
+  // order that priced nothing cannot exist.
+  totals: pricedCartSchema
+    .omit({ lines: true, unavailableLines: true })
+    .extend({ currency: currencySchema }),
   address: addressSchema,
   payment: z.object({ method: paymentMethodTypeSchema, status: paymentStatusSchema }),
   // Exactly one of the two: a logged-in shopper's order attaches their user id,

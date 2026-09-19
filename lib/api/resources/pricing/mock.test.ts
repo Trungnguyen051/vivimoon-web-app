@@ -99,16 +99,57 @@ describe('mockPricing.priceCart', () => {
     expect(codes).not.toContain('STALE-ACTIVE60');
   });
 
-  it('rejects an unknown variantId with a typed not_found error, not a silent zero', async () => {
-    await expect(
-      mockPricing.priceCart(req([{ lineKey: 'l1', variantId: 'nope-does-not-exist', quantity: 1 }])),
-    ).rejects.toMatchObject({ code: 'not_found' });
-    await expect(
-      mockPricing.priceCart(req([{ lineKey: 'l1', variantId: 'nope-does-not-exist', quantity: 1 }])),
-    ).rejects.toBeInstanceOf(PricingError);
+  // ADR-0012. A cart persisted in localStorage outlives any catalogue change,
+  // so an unknown variant is an expected state of a returning shopper's cart
+  // — reported per line, never thrown, and never silently dropped either.
+  it('reports an unknown variantId as unavailable instead of throwing', async () => {
+    const result = await mockPricing.priceCart(
+      req([{ lineKey: 'l1', variantId: 'nope-does-not-exist', quantity: 1 }]),
+    );
+    expect(result.unavailableLines).toEqual([
+      { lineKey: 'l1', variantId: 'nope-does-not-exist' },
+    ]);
+    expect(result.lines).toEqual([]);
+  });
+
+  it('still prices every known line when one line is unavailable', async () => {
+    const result = await mockPricing.priceCart(
+      req([
+        { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2 },
+        { lineKey: 'l2', variantId: 'nope-does-not-exist', quantity: 1 },
+      ]),
+    );
+    expect(result.lines.map((l) => l.lineKey)).toEqual(['l1']);
+    expect(result.unavailableLines.map((l) => l.lineKey)).toEqual(['l2']);
+    // The surviving line's own total, not a zero, and not the whole cart's
+    // price blanked out by its stale neighbour.
+    expect(result.subtotal).toBe(50);
+  });
+
+  it('omits currency, and zeroes every total, when no line could be priced', async () => {
+    const result = await mockPricing.priceCart(
+      req([{ lineKey: 'l1', variantId: 'ghost', quantity: 1 }]),
+    );
+    expect(result.currency).toBeUndefined();
+    expect(result.subtotal).toBe(0);
+    expect(result.total).toBe(0);
+  });
+
+  it('every requested line comes back in exactly one of lines/unavailableLines', async () => {
+    const requested = [
+      { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1 },
+      { lineKey: 'l2', variantId: 'ghost', quantity: 1 },
+      { lineKey: 'l3', variantId: 'p-breeze-daily-30', quantity: 1 },
+    ];
+    const result = await mockPricing.priceCart(req(requested));
+    const returned = [...result.lines, ...result.unavailableLines].map((l) => l.lineKey).sort();
+    expect(returned).toEqual(['l1', 'l2', 'l3']);
   });
 
   it('rejects a zero or negative quantity', async () => {
+    await expect(
+      mockPricing.priceCart(req([{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 0 }])),
+    ).rejects.toBeInstanceOf(PricingError);
     await expect(
       mockPricing.priceCart(req([{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 0 }])),
     ).rejects.toMatchObject({ code: 'validation_failed' });

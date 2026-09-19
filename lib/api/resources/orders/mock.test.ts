@@ -94,10 +94,27 @@ describe('mockOrders.place', () => {
     expect(order.address).toEqual(ADDRESS);
   });
 
-  it('rejects an unknown variantId with a typed not_found error', async () => {
+  // ADR-0012: pricing reports an unknown variant rather than throwing, so
+  // placement is the layer that must refuse — never place a smaller order
+  // than the cart the shopper submitted.
+  it('refuses to place an order containing an unavailable line', async () => {
     await expect(
       mockOrders.place(req({ lines: [{ lineKey: 'l1', variantId: 'ghost', quantity: 1 }] }), null),
-    ).rejects.toMatchObject({ code: 'not_found' });
+    ).rejects.toMatchObject({ code: 'validation_failed' });
+  });
+
+  it('refuses even when other lines in the same order price fine', async () => {
+    await expect(
+      mockOrders.place(
+        req({
+          lines: [
+            { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1 },
+            { lineKey: 'l2', variantId: 'ghost', quantity: 1 },
+          ],
+        }),
+        null,
+      ),
+    ).rejects.toMatchObject({ code: 'validation_failed' });
   });
 
   it('charges the cheapest quoted shipping option for the address, with no picker to choose one (M5.4, issue #21)', async () => {

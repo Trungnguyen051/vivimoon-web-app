@@ -113,10 +113,11 @@ describe('POST /api/orders', () => {
     expect(body.error.code).toBe('validation_failed');
   });
 
-  it('404s an unknown variantId with the typed not_found error', async () => {
+  // ADR-0012: placement refuses rather than quietly placing a smaller order.
+  it('400s an order containing a line that is no longer available', async () => {
     const res = await POST(req(validBody({ lines: [{ lineKey: 'l1', variantId: 'ghost', quantity: 1 }] })));
     const body = await res.json();
-    expect(res.status).toBe(404);
-    expect(body.error.code).toBe('not_found');
+    expect(res.status).toBe(400);
+    expect(body.error.code).toBe('validation_failed');
   });
 });

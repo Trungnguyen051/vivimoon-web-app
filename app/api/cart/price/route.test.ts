@@ -65,12 +65,17 @@ describe('POST /api/cart/price', () => {
     expect((await res.json()).error.code).toBe('validation_failed');
   });
 
-  it('404s an unknown variantId with the typed not_found error', async () => {
+  // ADR-0012: an unknown variant is a stale persisted cart, not a bad
+  // request — the route answers 200 and names the line, so the rest of the
+  // cart still prices.
+  it('answers ok and reports an unknown variantId as an unavailable line', async () => {
     const res = await POST(req({ lines: [{ lineKey: 'l1', variantId: 'ghost-variant', quantity: 1 }] }));
     const body = await res.json();
-    expect(res.status).toBe(404);
-    expect(body.ok).toBe(false);
-    expect(body.error.code).toBe('not_found');
+    expect(res.status).toBe(200);
+    expect(body.ok).toBe(true);
+    expect(body.data.unavailableLines).toEqual([
+      { lineKey: 'l1', variantId: 'ghost-variant' },
+    ]);
   });
 
   it('folds a chosen shipping option into shipping and total end-to-end', async () => {
