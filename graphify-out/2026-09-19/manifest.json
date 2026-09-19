@@ -84,9 +84,9 @@
     "semantic_hash": ""
   },
   "components/commerce/collection-filters.tsx": {
-    "mtime": 1789660931.8016267,
-    "seen": 1789661016.1790001,
-    "ast_hash": "c08dc53b60257ea15d0118de24757255",
+    "mtime": 1789814911.7662947,
+    "seen": 1789815105.972765,
+    "ast_hash": "8107fbf3ce32c34f45cfe077046902fd",
     "semantic_hash": ""
   },
   "components/commerce/hero-carousel.tsx": {
@@ -156,15 +156,15 @@
     "semantic_hash": ""
   },
   "components/commerce/variant-selector.test.tsx": {
-    "mtime": 1789660490.4463856,
-    "seen": 1789661016.179033,
-    "ast_hash": "63aa8731ea79baf768b5ad41682f5d1d",
+    "mtime": 1789814986.5526037,
+    "seen": 1789815105.9728022,
+    "ast_hash": "9075b6c3ff7a794d756b394121f7fe3a",
     "semantic_hash": ""
   },
   "components/commerce/variant-selector.tsx": {
-    "mtime": 1788748565.2934906,
-    "seen": 1788748671.977708,
-    "ast_hash": "1fe1130d2661b7fed72c9214bb951c18",
+    "mtime": 1789815049.1736155,
+    "seen": 1789815105.972803,
+    "ast_hash": "0917ef0b1d38fa2d29736fbc3e3be411",
     "semantic_hash": ""
   },
   "components/layout/announcement-bar.tsx": {
@@ -786,15 +786,15 @@
     "semantic_hash": "b63fbae9ae606275d40437a14070c5b9"
   },
   "lib/api/schemas/catalog.test.ts": {
-    "mtime": 1789660522.8967385,
-    "seen": 1789661016.179125,
-    "ast_hash": "b0a8409c6ed5f4f02a28a7bd94df1ca6",
+    "mtime": 1789814950.385568,
+    "seen": 1789815105.9729018,
+    "ast_hash": "3641408bb35c0bad4b5e80ce8a60fd2e",
     "semantic_hash": ""
   },
   "lib/api/schemas/catalog.ts": {
-    "mtime": 1789660381.1043742,
-    "seen": 1789661016.179125,
-    "ast_hash": "e05125ba556b1d52ea95a5ee176ad8d3",
+    "mtime": 1789814928.0046358,
+    "seen": 1789815105.9729018,
+    "ast_hash": "bf9945cb1fa75bf3c3bf6be43a7237c1",
     "semantic_hash": ""
   },
   "lib/api/schemas/common.ts": {
@@ -1926,9 +1926,9 @@
     "semantic_hash": ""
   },
   "content/quiz.ts": {
-    "mtime": 1789660931.8006017,
-    "seen": 1789661016.179069,
-    "ast_hash": "c6cf04834d11e9c2961abf9fbdf0f247",
+    "mtime": 1789814911.7660458,
+    "seen": 1789815105.9728398,
+    "ast_hash": "2957ea88e119c314762db187abd43473",
     "semantic_hash": ""
   },
   "lib/api/schemas/discovery.test.ts": {
