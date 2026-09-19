@@ -3,7 +3,7 @@ import type { QuizDefinition } from '@/lib/api/schemas/discovery';
 /**
  * PROVISIONAL — real question set and tag weights pending Vivimoon (spec
  * §11). Owner: Vivimoon. Six placeholder questions, tag weights drawn from
- * real product fields (`type`/`replacement`/`badges` — see
+ * real product fields (`productLine`/`replacement`/`badges` — see
  * `lib/products/quiz-scoring.ts`) so scoring against the real catalog is
  * meaningful even with placeholder copy. Replacing the questions or
  * re-tuning weights later is a data edit in this one file.
@@ -56,7 +56,7 @@ export const quiz: QuizDefinition = {
       prompt: "What's the occasion?",
       options: [
         { id: 'occasion-everyday', label: 'Everyday wear', tags: { 'productLine:trongSuot': 1, 'replacement:daily': 1 } },
-        { id: 'occasion-special', label: 'A special look for photos or events', tags: { 'productLine:vanNhu': 1, 'badge:new': 1 } },
+        { id: 'occasion-special', label: 'A special look for photos or events', tags: { 'productLine:coMau': 1, 'productLine:vanNhu': 1, 'badge:new': 1 } },
       ],
     },
   ],

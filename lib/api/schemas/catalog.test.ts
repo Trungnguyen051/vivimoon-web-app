@@ -55,10 +55,17 @@ describe('productSchema', () => {
     expect(parsed.specs).not.toHaveProperty('uvProtection');
   });
 
-  it('accepts specs with or without a graphicDiameter for a trongSuot product', () => {
-    const withGraphicDiameter = { ...validProduct, specs: { ...validProduct.specs, graphicDiameter: '13.3mm' } };
-    expect(productSchema.parse(withGraphicDiameter).specs.graphicDiameter).toBe('13.3mm');
+  it('accepts a trongSuot product with no graphicDiameter', () => {
     expect(productSchema.parse(validProduct).specs.graphicDiameter).toBeUndefined();
+  });
+
+  // The converse of the colored-lines invariant below: a clear lens has no
+  // colored zone, so a stray value would band it as enlarging in the
+  // comparison matrix and render a graphic-diameter spec row for a lens
+  // that has none.
+  it('rejects a trongSuot product that carries a graphicDiameter', () => {
+    const bad = { ...validProduct, specs: { ...validProduct.specs, graphicDiameter: '13.3mm' } };
+    expect(() => productSchema.parse(bad)).toThrow();
   });
 
   // Both colored lines have a graphic zone — vanNhu is a glitter-textured

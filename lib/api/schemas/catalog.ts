@@ -95,15 +95,28 @@ export const productSchema = z.object({
       path: ['variants'],
     });
   }
-  if (p.productLine !== 'trongSuot' && !p.specs.graphicDiameter) {
+  // graphicDiameter tracks the colored zone exactly: present iff the product
+  // has one. Enforced in both directions here so every consumer can rely on
+  // it rather than each guessing or guarding separately. Both coMau and
+  // vanNhu have a colored zone; only trongSuot has none.
+  const hasColoredZone = p.productLine !== 'trongSuot';
+  if (hasColoredZone && !p.specs.graphicDiameter) {
     ctx.addIssue({
       code: 'custom',
       // eyeEnlargementBand(undefined) bands 'natural', which is correct for a
       // colorless lens (ADR-0011) but wrong for a colored product that's
-      // simply missing data — enforced here so every consumer can rely on it
-      // rather than each guessing or guarding separately. Both coMau and
-      // vanNhu have a colored zone; only trongSuot has none.
+      // simply missing data.
       message: 'a colored product must specify specs.graphicDiameter',
+      path: ['specs', 'graphicDiameter'],
+    });
+  }
+  if (!hasColoredZone && p.specs.graphicDiameter) {
+    ctx.addIssue({
+      code: 'custom',
+      // A stray value on a clear lens would otherwise band it as enlarging in
+      // the comparison matrix and render a "Graphic diameter" spec row for a
+      // lens that has no colored zone at all.
+      message: 'a clear product must not specify specs.graphicDiameter',
       path: ['specs', 'graphicDiameter'],
     });
   }

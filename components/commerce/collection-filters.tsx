@@ -1,7 +1,7 @@
 'use client';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
-import { productLineSchema } from '@/lib/api/schemas/catalog';
+import { productLineSchema, replacementScheduleSchema } from '@/lib/api/schemas/catalog';
 import {
   Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 // From the schema, not a parallel list: a new line can't be added to the
 // taxonomy and silently stay unselectable here.
 const PRODUCT_LINES = productLineSchema.options;
-const REPLACEMENTS = ['daily', 'monthly', 'threeMonth', 'sixMonth'];
+const REPLACEMENTS = replacementScheduleSchema.options;
 const SORTS = ['newest', 'price-asc', 'price-desc', 'bestselling'];
 const ALL = 'all';
 
@@ -51,7 +51,7 @@ export function CollectionFilters({ dict }: { dict: Dictionary }) {
           <SelectGroup>
             <SelectItem value={ALL}>{dict.filters.replacement}</SelectItem>
             {REPLACEMENTS.map((r) => (
-              <SelectItem key={r} value={r}>{dict.filters.replacements[r as keyof typeof dict.filters.replacements]}</SelectItem>
+              <SelectItem key={r} value={r}>{dict.filters.replacements[r]}</SelectItem>
             ))}
           </SelectGroup>
         </SelectContent>

@@ -37,6 +37,18 @@ describe('VariantSelector', () => {
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ id: 'v1' }));
   });
 
+  // The component is correct on its own, not only because PDP callers key it
+  // by product.id: a caller that reuses one instance across products must not
+  // be left holding the previous product's variant.
+  it('re-seeds and re-emits when the product changes without a remount', () => {
+    const onChange = vi.fn();
+    const { rerender } = render(
+      <VariantSelector product={coloredProduct} dict={dict} onVariantChange={onChange} />,
+    );
+    rerender(<VariantSelector product={colorlessProduct} dict={dict} onVariantChange={onChange} />);
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ id: 'v3' }));
+  });
+
   it('renders no color picker for a colorless product, but still emits its sole variant', () => {
     const onChange = vi.fn();
     render(<VariantSelector product={colorlessProduct} dict={dict} onVariantChange={onChange} />);

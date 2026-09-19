@@ -16,15 +16,26 @@ export function VariantSelector({
   product: Product; dict: Dictionary; onVariantChange: (v: Variant) => void;
 }) {
   const colors = useMemo(() => distinctColorVariants(product.variants), [product.variants]);
+  const [selectedFor, setSelectedFor] = useState(product.id);
   const [color, setColor] = useState<string | undefined>(colors[0]?.color);
 
-  // Emits the initial variant on mount. Callers key AddToCart by product.id
-  // (app/[locale]/product/[slug]/page.tsx) so a product swap remounts this
-  // component rather than reusing it — this only ever runs once per instance.
+  // Re-seed on a product swap, during render (React's documented "adjust state
+  // when a prop changes" pattern) rather than in an effect. This makes the
+  // component correct standalone rather than only because PDP callers key it
+  // by product.id: a caller that reuses one instance across products (a
+  // quick-add modal, a carousel) would otherwise render the new product's
+  // swatches while the parent still holds the old product's variant.
+  if (selectedFor !== product.id) {
+    setSelectedFor(product.id);
+    setColor(colors[0]?.color);
+  }
+
+  // Emits the current product's default variant — on mount, and again whenever
+  // the product changes (after the re-seed above has landed).
   useEffect(() => {
-    onVariantChange(resolveVariant(product, color));
+    onVariantChange(resolveVariant(product, colors[0]?.color));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [product.id]);
 
   function selectColor(next: string | undefined) {
     setColor(next);
