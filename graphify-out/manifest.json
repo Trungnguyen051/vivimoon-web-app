@@ -30,9 +30,9 @@
     "semantic_hash": ""
   },
   "app/[locale]/page.tsx": {
-    "mtime": 1788450043.0059655,
-    "seen": 1788493407.492001,
-    "ast_hash": "a0b4ef544c0e5b6977d1f93f7f18033c",
+    "mtime": 1791694956.451577,
+    "seen": 1791695185.2137432,
+    "ast_hash": "80ac7912a4b40d513d13035b5b64802c",
     "semantic_hash": ""
   },
   "app/[locale]/product/[slug]/page.tsx": {
@@ -72,15 +72,15 @@
     "semantic_hash": ""
   },
   "components/commerce/category-grid.tsx": {
-    "mtime": 1786876576.404409,
-    "seen": 1787625522.0458949,
-    "ast_hash": "78558205dcbaf841741fd463d26ce0b3",
-    "semantic_hash": "78558205dcbaf841741fd463d26ce0b3"
+    "mtime": 1791695030.3357234,
+    "seen": 1791695185.213804,
+    "ast_hash": "5068e939f0840028650e9812738d66a8",
+    "semantic_hash": ""
   },
   "components/commerce/collection-carousel.tsx": {
-    "mtime": 1788450025.5161164,
-    "seen": 1788493407.492051,
-    "ast_hash": "64532dc507185a3d5bc75428e44a5f4c",
+    "mtime": 1791695082.9033399,
+    "seen": 1791695185.213805,
+    "ast_hash": "b7bff5263a86c3b5287f1b9d8cc7d633",
     "semantic_hash": ""
   },
   "components/commerce/collection-filters.tsx": {
@@ -90,10 +90,10 @@
     "semantic_hash": ""
   },
   "components/commerce/hero-carousel.tsx": {
-    "mtime": 1788105879.9797187,
-    "seen": 1788249058.242392,
-    "ast_hash": "0d618f6e2774fc7337de659fc5471560",
-    "semantic_hash": "0d618f6e2774fc7337de659fc5471560"
+    "mtime": 1791694998.6586874,
+    "seen": 1791695185.213814,
+    "ast_hash": "f3ea166b76944d86935b847a7be77ea3",
+    "semantic_hash": ""
   },
   "components/commerce/order-summary.tsx": {
     "mtime": 1789815490.1225,
@@ -396,15 +396,15 @@
     "semantic_hash": "e337dcc7b7b3cc468e1af0f5c17aca4f"
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1789815441.2208073,
-    "seen": 1789815879.4503622,
-    "ast_hash": "65acea2d0852a0ebf51859657e35ef07",
+    "mtime": 1791694919.7885044,
+    "seen": 1791695185.2139552,
+    "ast_hash": "b2e0320cbc350ab332f6d0ffd9f8bdf5",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/vi.ts": {
-    "mtime": 1789815449.1306992,
-    "seen": 1789815879.450363,
-    "ast_hash": "1583730f80ace84e32d3b2547163082c",
+    "mtime": 1791694930.2439375,
+    "seen": 1791695185.213956,
+    "ast_hash": "1e53b71c2c92eba782b247082c9575b5",
     "semantic_hash": ""
   },
   "lib/types/collection.ts": {
@@ -2097,6 +2097,114 @@
     "mtime": 1789815545.32418,
     "seen": 1789815879.450411,
     "ast_hash": "a1ad5214e5af8c1a6abd6fb184ccd740",
+    "semantic_hash": ""
+  },
+  "components/commerce/content-carousel.tsx": {
+    "mtime": 1791695098.080739,
+    "seen": 1791695185.2138119,
+    "ast_hash": "3502c606db096ee80d2388ffee63a8d4",
+    "semantic_hash": ""
+  },
+  "components/commerce/quiz-cta.tsx": {
+    "mtime": 1791695014.9495845,
+    "seen": 1791695185.213828,
+    "ast_hash": "3138a157d2d2b01366c1566ebe2c4141",
+    "semantic_hash": ""
+  },
+  "components/commerce/shop-by-filter.tsx": {
+    "mtime": 1791695045.4259746,
+    "seen": 1791695185.2138371,
+    "ast_hash": "bce41afb7b1bda2e9faeb88db3ac3260",
+    "semantic_hash": ""
+  },
+  "public/images/makeup-natural.png": {
+    "mtime": 1791693984.3351207,
+    "seen": 1791694731.491732,
+    "ast_hash": "b31f254c58ea354f64b135fe5d876eab",
+    "semantic_hash": ""
+  },
+  "public/images/makeup-orange.png": {
+    "mtime": 1791693984.3437006,
+    "seen": 1791694731.491733,
+    "ast_hash": "fa4e0bb0a8602153bd367117319e7162",
+    "semantic_hash": ""
+  },
+  "public/images/makeup-pink.png": {
+    "mtime": 1791693984.3386197,
+    "seen": 1791694731.491734,
+    "ast_hash": "ba9cf0fe258e13dc9e828b92c9dc9f5d",
+    "semantic_hash": ""
+  },
+  "public/images/makeup-smoky.png": {
+    "mtime": 1791693984.3467903,
+    "seen": 1791694731.491734,
+    "ast_hash": "c25041bb9039e3ae990f2cdd77176c9d",
+    "semantic_hash": ""
+  },
+  "public/images/moment-grad.png": {
+    "mtime": 1791693984.3232398,
+    "seen": 1791694731.491735,
+    "ast_hash": "2e75a63a20c6d1fdfed8e33557b721ef",
+    "semantic_hash": ""
+  },
+  "public/images/moment-party.png": {
+    "mtime": 1791693984.3194754,
+    "seen": 1791694731.4917362,
+    "ast_hash": "4e47ff38f1781cb681ea852d6bd40c3f",
+    "semantic_hash": ""
+  },
+  "public/images/moment-wedding.png": {
+    "mtime": 1791693984.3293588,
+    "seen": 1791694731.4917362,
+    "ast_hash": "575d52c68e83c75befe06e52e5139fe0",
+    "semantic_hash": ""
+  },
+  "public/images/promo-return-policy.png": {
+    "mtime": 1791693984.3723404,
+    "seen": 1791694731.491754,
+    "ast_hash": "5836e724c57f1fd19fddfd631b725e1f",
+    "semantic_hash": ""
+  },
+  "public/images/tv-avatar.png": {
+    "mtime": 1791693984.3665602,
+    "seen": 1791694731.491755,
+    "ast_hash": "6fd4115349e83d70f17c289d39653bfb",
+    "semantic_hash": ""
+  },
+  "public/images/tv-thumb-1.png": {
+    "mtime": 1791693984.3496134,
+    "seen": 1791694731.491756,
+    "ast_hash": "164ce7e3614c7ec6a8c0e8be7259ef78",
+    "semantic_hash": ""
+  },
+  "public/images/tv-thumb-2.png": {
+    "mtime": 1791693984.35349,
+    "seen": 1791694731.4917572,
+    "ast_hash": "6efdcc44621d18ed8bf15dd7cb5bfc53",
+    "semantic_hash": ""
+  },
+  "public/images/tv-thumb-3.png": {
+    "mtime": 1791693984.3577256,
+    "seen": 1791694731.4917572,
+    "ast_hash": "285d3c0bdf82661a3983d7ea154e1816",
+    "semantic_hash": ""
+  },
+  "public/images/tv-thumb-4.png": {
+    "mtime": 1791693984.3618517,
+    "seen": 1791694731.491758,
+    "ast_hash": "fa9d118a28421ea9a75a54ef5cbf5c27",
+    "semantic_hash": ""
+  },
+  "components/commerce/carousel-nav.tsx": {
+    "mtime": 1791695054.6425447,
+    "seen": 1791695185.213801,
+    "ast_hash": "143480e653d28e0de32def6f133944a3",
+    "semantic_hash": ""
+  },
+  "components/ui/pill-link.tsx": {
+    "mtime": 1791694980.2905233,
+    "seen": 1791695185.21386,
+    "ast_hash": "72d013b200cdbf8640b2be27524275f4",
     "semantic_hash": ""
   }
 }
