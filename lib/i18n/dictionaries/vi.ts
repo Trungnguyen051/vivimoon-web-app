@@ -50,6 +50,12 @@ export const vi: Dictionary = {
       ],
     },
   },
+  brandStory: {
+    headingLine1: 'Sinh ra tại Hàn Quốc',
+    headingLine2: 'Được yêu tại Việt Nam',
+    body: 'Vivimoon tin rằng lens không chỉ là thiết bị y tế — đó là phụ kiện thời trang, là biểu đạt cá tính. Chúng tôi mang công nghệ Silicone Hydrogel Hàn Quốc đến với phụ nữ Việt, kết hợp giữa vẻ đẹp và sức khỏe đôi mắt',
+    cta: 'Tìm hiểu về Vivimoon',
+  },
   filters: {
     productLine: 'Loại lens', replacement: 'Thời gian dùng', color: 'Màu', sort: 'Sắp xếp', clear: 'Xóa bộ lọc',
     productLines: { trongSuot: 'Trong suốt', coMau: 'Có màu', vanNhu: 'Vân nhũ' },

@@ -48,6 +48,12 @@ export const en = {
       ],
     },
   },
+  brandStory: {
+    headingLine1: 'Born in Korea',
+    headingLine2: 'Loved in Vietnam',
+    body: 'Vivimoon believes a lens is not just a medical device — it is a fashion accessory, a way to express who you are. We bring Korean Silicone Hydrogel technology to Vietnamese women, pairing beauty with eye health',
+    cta: 'About Vivimoon',
+  },
   filters: {
     productLine: 'Lens type', replacement: 'Replacement', color: 'Color', sort: 'Sort', clear: 'Clear filters',
     productLines: { trongSuot: 'Clear', coMau: 'Colored', vanNhu: 'Glitter' },

@@ -24,15 +24,15 @@
     "semantic_hash": ""
   },
   "app/[locale]/layout.tsx": {
-    "mtime": 1792318132.8673396,
-    "seen": 1792318890.293231,
+    "mtime": 1792341620.0294137,
+    "seen": 1792341641.824984,
     "ast_hash": "e47976dd1a373c4cb62595aaebfbb09c",
     "semantic_hash": ""
   },
   "app/[locale]/page.tsx": {
-    "mtime": 1792338429.1540756,
-    "seen": 1792338776.3375602,
-    "ast_hash": "460d983e13aae40c4fe449ec5ad8e348",
+    "mtime": 1792341620.5037444,
+    "seen": 1792341641.824987,
+    "ast_hash": "ea840553ceeb19771d7197fed019c297",
     "semantic_hash": ""
   },
   "app/[locale]/product/[slug]/page.tsx": {
@@ -168,8 +168,8 @@
     "semantic_hash": ""
   },
   "components/layout/announcement-bar.tsx": {
-    "mtime": 1786876576.410182,
-    "seen": 1787625522.0459058,
+    "mtime": 1792341620.0304701,
+    "seen": 1792341641.825095,
     "ast_hash": "03168b18acdeceeb21cd1b25dbf31994",
     "semantic_hash": "03168b18acdeceeb21cd1b25dbf31994"
   },
@@ -180,8 +180,8 @@
     "semantic_hash": ""
   },
   "components/layout/header.tsx": {
-    "mtime": 1788534086.6257834,
-    "seen": 1788534240.339645,
+    "mtime": 1792341620.0308542,
+    "seen": 1792341641.825096,
     "ast_hash": "52245e111ce1df7aef39f05ae665d992",
     "semantic_hash": ""
   },
@@ -192,20 +192,20 @@
     "semantic_hash": "11783defd6cf62f6a7bfc1edf0bb58ff"
   },
   "components/layout/mega-nav.tsx": {
-    "mtime": 1786876576.411089,
-    "seen": 1787625522.045909,
+    "mtime": 1792341620.031397,
+    "seen": 1792341641.825099,
     "ast_hash": "ce44af68cc166d32a577e5e1e5b4d42d",
     "semantic_hash": "ce44af68cc166d32a577e5e1e5b4d42d"
   },
   "components/layout/mobile-nav.tsx": {
-    "mtime": 1788534091.6720598,
-    "seen": 1788534240.339648,
+    "mtime": 1792341620.0316901,
+    "seen": 1792341641.8251,
     "ast_hash": "a1d97eb72e02f65d5c0d3ab4adb38973",
     "semantic_hash": ""
   },
   "components/layout/nav-items.ts": {
-    "mtime": 1786874001.8577979,
-    "seen": 1787625522.0459101,
+    "mtime": 1792341620.0321069,
+    "seen": 1792341641.8251011,
     "ast_hash": "bf8af648b29efa641d75fd70a59c32a9",
     "semantic_hash": "bf8af648b29efa641d75fd70a59c32a9"
   },
@@ -396,15 +396,15 @@
     "semantic_hash": "e337dcc7b7b3cc468e1af0f5c17aca4f"
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1792338744.878948,
-    "seen": 1792338776.337815,
-    "ast_hash": "aea883bf292f427d63edcc8bc6b86777",
+    "mtime": 1792341620.5224693,
+    "seen": 1792341641.8252149,
+    "ast_hash": "3319fc73fbe2f4a7964adac988b40a42",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/vi.ts": {
-    "mtime": 1792338405.3557844,
-    "seen": 1792338776.337816,
-    "ast_hash": "230180e43ff890fe97f6249fb93cd680",
+    "mtime": 1792341620.522828,
+    "seen": 1792341641.825216,
+    "ast_hash": "2f13afccd435213a6220564db3713a37",
     "semantic_hash": ""
   },
   "lib/types/collection.ts": {
@@ -456,8 +456,8 @@
     "semantic_hash": "84dcd1722791e5413eea0009ded341f8"
   },
   "package.json": {
-    "mtime": 1787933300.2484376,
-    "seen": 1788249058.242499,
+    "mtime": 1792341290.3806176,
+    "seen": 1792341641.825237,
     "ast_hash": "a21bd8433e84bb2fba05c62fa01684d8",
     "semantic_hash": "a21bd8433e84bb2fba05c62fa01684d8"
   },
@@ -2106,8 +2106,8 @@
     "semantic_hash": ""
   },
   "components/commerce/quiz-cta.tsx": {
-    "mtime": 1792338660.3109176,
-    "seen": 1792338776.3376708,
+    "mtime": 1792341620.2866151,
+    "seen": 1792341641.825078,
     "ast_hash": "743c8c93023e7f80e65212c4ed8432ef",
     "semantic_hash": ""
   },
@@ -2231,9 +2231,21 @@
     "ast_hash": "56f66d1df4ef7746f29feb9acc26b77c",
     "semantic_hash": ""
   },
+  "app/[locale]/about/page.tsx": {
+    "mtime": 1792341620.5034022,
+    "seen": 1792341641.824959,
+    "ast_hash": "28c223cd427b43b6bb6dbd831bc495ed",
+    "semantic_hash": ""
+  },
+  "components/commerce/brand-story.tsx": {
+    "mtime": 1792341620.5039318,
+    "seen": 1792341641.825046,
+    "ast_hash": "fa28ae41a0d3d9618091ca4085b940ea",
+    "semantic_hash": ""
+  },
   "components/commerce/quiz-cta.test.tsx": {
-    "mtime": 1792338725.5861783,
-    "seen": 1792338776.3376698,
+    "mtime": 1792341620.28641,
+    "seen": 1792341641.825078,
     "ast_hash": "c384d3cbe8000815a1f69cad410948a2",
     "semantic_hash": ""
   }

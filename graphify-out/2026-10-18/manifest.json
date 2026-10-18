@@ -30,9 +30,9 @@
     "semantic_hash": ""
   },
   "app/[locale]/page.tsx": {
-    "mtime": 1792320691.9081066,
-    "seen": 1792320792.772068,
-    "ast_hash": "43e5ec3d888ee4a50d9efa6bf4605a11",
+    "mtime": 1792340255.462802,
+    "seen": 1792340492.026282,
+    "ast_hash": "5c0c73078ea68a82f3d9cf1296395cb3",
     "semantic_hash": ""
   },
   "app/[locale]/product/[slug]/page.tsx": {
@@ -396,15 +396,15 @@
     "semantic_hash": "e337dcc7b7b3cc468e1af0f5c17aca4f"
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1792320680.6673255,
-    "seen": 1792320792.772344,
-    "ast_hash": "224ca29c627082c7ea053774ab76e149",
+    "mtime": 1792340255.4621298,
+    "seen": 1792340492.026502,
+    "ast_hash": "7ebcaef908e750e0a9b774b9e6bc70dc",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/vi.ts": {
-    "mtime": 1792320680.6675472,
-    "seen": 1792320792.772345,
-    "ast_hash": "9a736c1a73dc87ed17c51c019519492b",
+    "mtime": 1792340255.462499,
+    "seen": 1792340492.0265028,
+    "ast_hash": "42a01bbac67985f1846e869bd53f5348",
     "semantic_hash": ""
   },
   "lib/types/collection.ts": {
@@ -2106,8 +2106,8 @@
     "semantic_hash": ""
   },
   "components/commerce/quiz-cta.tsx": {
-    "mtime": 1791695014.9495845,
-    "seen": 1791695185.213828,
+    "mtime": 1792340085.2772887,
+    "seen": 1792340492.026371,
     "ast_hash": "3138a157d2d2b01366c1566ebe2c4141",
     "semantic_hash": ""
   },
@@ -2229,6 +2229,18 @@
     "mtime": 1792320680.667067,
     "seen": 1792320792.77222,
     "ast_hash": "56f66d1df4ef7746f29feb9acc26b77c",
+    "semantic_hash": ""
+  },
+  "app/[locale]/about/page.tsx": {
+    "mtime": 1792340484.4350865,
+    "seen": 1792340492.0262542,
+    "ast_hash": "28c223cd427b43b6bb6dbd831bc495ed",
+    "semantic_hash": ""
+  },
+  "components/commerce/brand-story.tsx": {
+    "mtime": 1792340200.3770502,
+    "seen": 1792340492.02634,
+    "ast_hash": "fa28ae41a0d3d9618091ca4085b940ea",
     "semantic_hash": ""
   }
 }
