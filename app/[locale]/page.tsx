@@ -7,6 +7,14 @@ import { ShopByFilter } from '@/components/commerce/shop-by-filter';
 import { ContentCarousel } from '@/components/commerce/content-carousel';
 import { notFound } from 'next/navigation';
 import { HomeSection } from '@/components/layout/home-section';
+import { BrandStory } from '@/components/commerce/brand-story';
+
+/* Provisional creative: the only catalog photography not already on this page. Real brand imagery is pending. */
+const BRAND_STORY_IMAGES = [
+  { id: 'craft', src: '/images/cat-best.jpg' },
+  { id: 'color', src: '/images/cat-colored.jpg' },
+  { id: 'daily', src: '/images/cat-daily.jpg' },
+];
 
 const TV_THUMBS = ['/images/tv-thumb-1.png', '/images/tv-thumb-2.png', '/images/tv-thumb-3.png', '/images/tv-thumb-4.png'];
 
@@ -97,6 +105,16 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         />
       </HomeSection>
 
+      <HomeSection>
+        <BrandStory
+          headingLine1={dict.brandStory.headingLine1}
+          headingLine2={dict.brandStory.headingLine2}
+          body={dict.brandStory.body}
+          ctaLabel={dict.brandStory.cta}
+          href={`/${l}/about`}
+          images={BRAND_STORY_IMAGES}
+        />
+      </HomeSection>
     </>
   );
 }
