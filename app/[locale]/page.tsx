@@ -1,15 +1,12 @@
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
-import { catalog } from '@/lib/api/resources/catalog';
 import { HeroCarousel } from '@/components/commerce/hero-carousel';
 import { CategoryGrid } from '@/components/commerce/category-grid';
-import { CollectionCarousel } from '@/components/commerce/collection-carousel';
 import { QuizCta } from '@/components/commerce/quiz-cta';
 import { ShopByFilter } from '@/components/commerce/shop-by-filter';
 import { ContentCarousel } from '@/components/commerce/content-carousel';
-import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { PageContainer } from '@/components/layout/page-container';
+import { HomeSection } from '@/components/layout/home-section';
 
 const TV_THUMBS = ['/images/tv-thumb-1.png', '/images/tv-thumb-2.png', '/images/tv-thumb-3.png', '/images/tv-thumb-4.png'];
 
@@ -18,9 +15,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   if (!isLocale(locale)) notFound();
   const l = locale as Locale;
   const dict = getDictionary(l);
-
-  const newArrivals = await catalog.getCollection('new-arrivals');
-  const newArrivalsProducts = newArrivals ? await catalog.getProductsByIds(newArrivals.productIds) : [];
 
   return (
     <>
@@ -33,16 +27,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         ]}
       />
 
-      <PageContainer className="space-y-16 md:space-y-24">
+      <HomeSection>
         <CategoryGrid
           title={dict.home.moments.title}
-          subtitle={dict.home.moments.subtitle}
           seeMoreHref={`/${l}/collection/bestsellers`}
           seeMoreLabel={dict.home.moments.viewAll}
           items={[
-            { label: dict.home.moments.gradPhotos, href: `/${l}/collection/bestsellers`, image: '/images/moment-grad.png' },
-            { label: dict.home.moments.party, href: `/${l}/collection/bestsellers`, image: '/images/moment-party.png' },
-            { label: dict.home.moments.wedding, href: `/${l}/collection/bestsellers`, image: '/images/moment-wedding.png' },
+            { id: 'grad', label: dict.home.moments.gradPhotos, href: `/${l}/collection/bestsellers`, image: '/images/moment-grad.png' },
+            { id: 'wedding', label: dict.home.moments.wedding, href: `/${l}/collection/bestsellers`, image: '/images/moment-wedding.png' },
+            { id: 'party', label: dict.home.moments.party, href: `/${l}/collection/bestsellers`, image: '/images/moment-party.png' },
           ]}
         />
 
@@ -55,21 +48,24 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           ctaLabel={dict.home.quiz.cta}
           href={`/${l}/quiz`}
         />
+      </HomeSection>
 
+      <HomeSection tinted>
         <CategoryGrid
           title={dict.home.makeup.title}
-          subtitle={dict.home.makeup.subtitle}
           seeMoreHref={`/${l}/collection/colored-lenses`}
           seeMoreLabel={dict.home.makeup.viewAll}
           columns={4}
           items={[
-            { label: dict.home.makeup.natural, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-natural.png' },
-            { label: dict.home.makeup.pink, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-pink.png' },
-            { label: dict.home.makeup.orange, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-orange.png' },
-            { label: dict.home.makeup.smoky, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-smoky.png' },
+            { id: 'natural', label: dict.home.makeup.natural, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-natural.png' },
+            { id: 'pink', label: dict.home.makeup.pink, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-pink.png' },
+            { id: 'orange', label: dict.home.makeup.orange, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-orange.png' },
+            { id: 'smoky', label: dict.home.makeup.smoky, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-smoky.png' },
           ]}
         />
+      </HomeSection>
 
+      <HomeSection>
         <ShopByFilter
           title={dict.home.shopByFilter.title}
           seeMoreHref={`/${l}/collection/colored-lenses`}
@@ -90,27 +86,17 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             { number: '6', unit: dict.home.shopByFilter.durationUnit.month, count: `14 ${dict.collection.productsLabel}`, href: `/${l}/collection/bestsellers?replacement=sixMonth` },
           ]}
         />
+      </HomeSection>
 
-        <CollectionCarousel
-          title={dict.collection.newArrivals}
-          products={newArrivalsProducts}
-          locale={l}
-          dict={dict}
-          seeMoreHref={`/${l}/collection/new-arrivals`}
-          seeMoreLabel={dict.common.seeMore}
-        />
-
+      <HomeSection tinted>
         <ContentCarousel
           title={dict.home.tv.title}
           subtitle={dict.home.tv.subtitle}
           avatar="/images/tv-avatar.png"
           items={dict.home.tv.items.map((it, i) => ({ ...it, image: TV_THUMBS[i] }))}
         />
+      </HomeSection>
 
-        <div className="relative aspect-[1744/660] w-full overflow-hidden rounded-2xl">
-          <Image src="/images/promo-return-policy.png" alt="" fill className="object-cover" />
-        </div>
-      </PageContainer>
     </>
   );
 }

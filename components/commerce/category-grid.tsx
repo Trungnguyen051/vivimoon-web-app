@@ -7,11 +7,11 @@ import { PillLink } from '@/components/ui/pill-link';
 const COLUMN_CLASSES = { 3: 'sm:grid-cols-3', 4: 'sm:grid-cols-2 lg:grid-cols-4' } as const;
 
 export function CategoryGrid({
-  items, title, subtitle, seeMoreHref, seeMoreLabel, columns = 3,
+  items, title, seeMoreHref, seeMoreLabel, columns = 3,
 }: {
-  items: { label: string; href: string; image: string }[];
+  /** `id` is the tile's identity: label, href and image are all content and any can repeat. */
+  items: { id: string; label: string; href: string; image: string }[];
   title?: string;
-  subtitle?: string;
   seeMoreHref?: string;
   seeMoreLabel?: string;
   columns?: 3 | 4;
@@ -21,16 +21,13 @@ export function CategoryGrid({
       {title ? (
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">{title}</h2>
-          <div className="flex flex-col items-start gap-4 sm:items-end">
-            {subtitle ? <p className="max-w-xs text-muted-foreground sm:text-right">{subtitle}</p> : null}
-            {seeMoreHref && seeMoreLabel ? <PillLink href={seeMoreHref}>{seeMoreLabel}</PillLink> : null}
-          </div>
+          {seeMoreHref && seeMoreLabel ? <PillLink href={seeMoreHref}>{seeMoreLabel}</PillLink> : null}
         </div>
       ) : null}
       <div className={cn('grid grid-cols-1 gap-4', COLUMN_CLASSES[columns])}>
         {items.map((it) => (
           <Link
-            key={it.image}
+            key={it.id}
             href={it.href}
             className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-muted"
           >

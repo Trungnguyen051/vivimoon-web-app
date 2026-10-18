@@ -10,8 +10,7 @@ export const en = {
   home: {
     moments: {
       title: 'Lens for every moment',
-      subtitle: 'Vivimoon has lens styles for every need — parties, grad photos, weddings...',
-      viewAll: 'VIEW ALL',
+      viewAll: 'VIEW ALL PRODUCTS',
       party: 'Parties', gradPhotos: 'Grad photos', wedding: 'Wedding / Bride',
     },
     quiz: {
@@ -22,14 +21,13 @@ export const en = {
       cta: 'Take the quiz',
     },
     makeup: {
-      title: 'Lens for every make-up look',
-      subtitle: 'Find lenses that match your makeup style',
-      viewAll: 'VIEW ALL',
-      natural: 'Natural & fresh', pink: 'Pink-tone makeup', orange: 'Orange-tone makeup', smoky: 'Western tone, smoky eyes',
+      title: 'Lens for every makeup look',
+      viewAll: 'VIEW ALL PRODUCTS',
+      natural: 'Fresh & natural', pink: 'Pink-tone makeup', orange: 'Orange-tone makeup', smoky: 'Western tone / Smoky eyes',
     },
     shopByFilter: {
       title: 'What lens are you looking for?',
-      viewAll: 'VIEW ALL',
+      viewAll: 'VIEW ALL PRODUCTS',
       byColor: 'By color', byDuration: 'By wear duration',
       colors: { brown: 'Brown', black: 'Black', gray: 'Gray', vivid: 'Vivid', clear: 'Clear' },
       durationUnit: { day: 'Day', month: 'Month' },

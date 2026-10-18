@@ -12,9 +12,8 @@ export const vi: Dictionary = {
   home: {
     moments: {
       title: 'Lens cho từng khoảnh khắc',
-      subtitle: 'Vivimoon có nhiều mẫu lens phù hợp cho mọi nhu cầu của bạn như: dự tiệc, chụp ảnh, đám cưới,...',
-      viewAll: 'XEM TẤT CẢ',
-      party: 'Dự tiệc', gradPhotos: 'Chụp ảnh kỷ yếu', wedding: 'Đám cưới/ Cô dâu',
+      viewAll: 'XEM TẤT CẢ SẢN PHẨM',
+      party: 'Dự tiệc', gradPhotos: 'Chụp ảnh kỷ yếu', wedding: 'Đám cưới/ Cô Dâu',
     },
     quiz: {
       title: 'Chưa chọn được lens?',
@@ -24,14 +23,13 @@ export const vi: Dictionary = {
       cta: 'Làm trắc nghiệm ngay',
     },
     makeup: {
-      title: 'Lens cho mọi make-up look',
-      subtitle: 'Tìm lens theo nhu cầu make up của bạn',
-      viewAll: 'XEM TẤT CẢ',
-      natural: 'Tự nhiên trong trẻo', pink: 'Make up tông hồng', orange: 'Make up tông cam', smoky: 'Tông Tây, mắt khói',
+      title: 'Lens cho mọi makeup look',
+      viewAll: 'XEM TẤT CẢ SẢN PHẨM',
+      natural: 'Tự nhiên trong trẻo', pink: 'Make up tone Hồng', orange: 'Make up tone Cam', smoky: 'Make up tone Tây/ Mắt khói',
     },
     shopByFilter: {
       title: 'Bạn đang tìm lens gì?',
-      viewAll: 'XEM TẤT CẢ',
+      viewAll: 'XEM TẤT CẢ SẢN PHẨM',
       byColor: 'Theo màu sắc', byDuration: 'Theo thời hạn',
       colors: { brown: 'Nâu', black: 'Đen', gray: 'Xám', vivid: 'Sặc sỡ', clear: 'Không màu' },
       durationUnit: { day: 'Ngày', month: 'Tháng' },
