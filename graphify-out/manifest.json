@@ -72,9 +72,9 @@
     "semantic_hash": ""
   },
   "components/commerce/category-grid.tsx": {
-    "mtime": 1791695030.3357234,
-    "seen": 1791695185.213804,
-    "ast_hash": "5068e939f0840028650e9812738d66a8",
+    "mtime": 1792314006.3677893,
+    "seen": 1792314094.31699,
+    "ast_hash": "fa361f1d5a0f438ecaa4e2035229ce57",
     "semantic_hash": ""
   },
   "components/commerce/collection-carousel.tsx": {
@@ -2205,6 +2205,12 @@
     "mtime": 1791694980.2905233,
     "seen": 1791695185.21386,
     "ast_hash": "72d013b200cdbf8640b2be27524275f4",
+    "semantic_hash": ""
+  },
+  "components/commerce/category-grid.test.tsx": {
+    "mtime": 1792313991.808746,
+    "seen": 1792314094.316986,
+    "ast_hash": "8141bad3643225087ec5fbef59e40938",
     "semantic_hash": ""
   }
 }
