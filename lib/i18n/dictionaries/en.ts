@@ -1,7 +1,14 @@
 export const en = {
-  nav: { new: 'New', men: 'Men', women: 'Women', sport: 'Sport', accessories: 'Accessories', sale: 'Sale', quiz: 'Quiz' },
+  nav: {
+    new: 'New', men: 'Men', women: 'Women', sport: 'Sport', accessories: 'Accessories', sale: 'Sale',
+    about: 'About Vivimoon', products: 'Products', knowledge: 'Knowledge', support: 'Support', orderTracking: 'Track order',
+  },
   common: { shopNow: 'Shop Now', seeMore: 'See more', addToCart: 'Add to cart', buyNow: 'Buy now', search: 'Search...', decreaseQty: 'Decrease quantity', increaseQty: 'Increase quantity', menu: 'Menu' },
-  announcement: { freeShipping: 'Free shipping on orders over $50' },
+  announcement: {
+    freeShipping: 'FREE SHIPPING ON ORDERS FROM 300,000₫',
+    authentic: 'AUTHENTIC KOREAN LENSES',
+    licensed: 'LICENSED BY THE MINISTRY OF HEALTH',
+  },
   collection: {
     newArrivals: 'New Arrivals', bestsellers: 'Bestsellers', sale: 'Sale',
     colored: 'Colored Lenses', daily: 'Daily Lenses',
