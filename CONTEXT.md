@@ -54,3 +54,7 @@ _Avoid_: Gallery alone (ambiguous with the standard gallery it falls back to), M
 **Quiz**:
 The step-by-step questionnaire that scores a shopper's tag-weighted answers into product recommendations. Content (6 questions, tag weights) is provisional pending Vivimoon's real question set.
 _Avoid_: Lens-Matching Quiz (same concept — Quiz is the canonical short form)
+
+**Color Family**:
+A named group of catalog colors used as a single merchandising entry point on the homepage — Nâu, Đen, Xám, and Màu sắc nổi bật ("standout colors", which gathers every vivid color rather than naming one). A Color Family is a browsing concept only: it has no field on a Product or Variant, which each still carry one `color`. The homepage tile for a family shows up to three representative swatches and links into the collection filtered to that family's colors.
+_Avoid_: Color group, swatch group, palette
