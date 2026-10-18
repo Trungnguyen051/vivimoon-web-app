@@ -8,6 +8,25 @@ import { ContentCarousel } from '@/components/commerce/content-carousel';
 import { notFound } from 'next/navigation';
 import { HomeSection } from '@/components/layout/home-section';
 import { BrandStory } from '@/components/commerce/brand-story';
+import { COLOR_FAMILIES, colorFamilyHref, type ColorFamily } from '@/lib/products/color-families';
+
+/* The design's counts. Placeholders until the catalog grows a facet-count seam (#30);
+   Đen reads 10 while the fixtures carry no black lenses at all, which #41 fixes. */
+const FAMILY_COUNTS: Record<ColorFamily['id'], number> = { brown: 14, black: 10, gray: 24, vivid: 8 };
+
+/* Product photography, since the design weights these tiles like the colour ones.
+   Each id is both the dictionary key and the replacement filter value.
+
+   Each tile opens the collection that covers it best, which today is only true of
+   `daily`: no collection contains a threeMonth or sixMonth product, though the
+   catalog has both, so those two tiles land empty until the fixtures catch up (#49) —
+   the same tracked gap as the Đen family's (#41), not a reason to drop the tiles the
+   design specifies. */
+const DURATION_TILES = [
+  { id: 'daily', image: '/images/products/aqua-daily-1.jpg', collection: 'daily-lenses' },
+  { id: 'threeMonth', image: '/images/products/hazel-monthly-1.jpg', collection: 'bestsellers' },
+  { id: 'sixMonth', image: '/images/products/torica-monthly-1.jpg', collection: 'bestsellers' },
+] as const;
 
 /* Provisional creative: the only catalog photography not already on this page. Real brand imagery is pending. */
 const BRAND_STORY_IMAGES = [
@@ -78,21 +97,19 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           title={dict.home.shopByFilter.title}
           seeMoreHref={`/${l}/collection/colored-lenses`}
           seeMoreLabel={dict.home.shopByFilter.viewAll}
-          colorLabel={dict.home.shopByFilter.byColor}
-          colorItems={[
-            { label: dict.home.shopByFilter.colors.brown, count: `14 ${dict.collection.productsLabel}`, swatch: '#8a5a33', href: `/${l}/collection/colored-lenses?color=brown` },
-            { label: dict.home.shopByFilter.colors.black, count: `12 ${dict.collection.productsLabel}`, swatch: '#1a1a1a', href: `/${l}/collection/colored-lenses?color=black` },
-            { label: dict.home.shopByFilter.colors.gray, count: `24 ${dict.collection.productsLabel}`, swatch: '#9c9c9c', href: `/${l}/collection/colored-lenses?color=gray` },
-            { label: dict.home.shopByFilter.colors.vivid, count: `6 ${dict.collection.productsLabel}`, swatch: '#8f5fd1', href: `/${l}/collection/colored-lenses?color=violet` },
-            { label: dict.home.shopByFilter.colors.clear, count: `2 ${dict.collection.productsLabel}`, swatch: '#e8e8e8', href: `/${l}/collection/colored-lenses?color=clear` },
-          ]}
-          durationLabel={dict.home.shopByFilter.byDuration}
-          durationItems={[
-            { number: '1', unit: dict.home.shopByFilter.durationUnit.day, count: `14 ${dict.collection.productsLabel}`, href: `/${l}/collection/daily-lenses?replacement=daily` },
-            { number: '1', unit: dict.home.shopByFilter.durationUnit.month, count: `14 ${dict.collection.productsLabel}`, href: `/${l}/collection/bestsellers?replacement=monthly` },
-            { number: '3', unit: dict.home.shopByFilter.durationUnit.month, count: `14 ${dict.collection.productsLabel}`, href: `/${l}/collection/bestsellers?replacement=threeMonth` },
-            { number: '6', unit: dict.home.shopByFilter.durationUnit.month, count: `14 ${dict.collection.productsLabel}`, href: `/${l}/collection/bestsellers?replacement=sixMonth` },
-          ]}
+          colorFamilies={COLOR_FAMILIES.map((family) => ({
+            id: family.id,
+            label: dict.home.shopByFilter.colors[family.id],
+            count: `${FAMILY_COUNTS[family.id]} ${dict.collection.productsLabel}`,
+            swatches: family.swatches,
+            href: colorFamilyHref(family, l),
+          }))}
+          durations={DURATION_TILES.map((tile) => ({
+            id: tile.id,
+            label: dict.home.shopByFilter.durations[tile.id],
+            image: tile.image,
+            href: `/${l}/collection/${tile.collection}?replacement=${tile.id}`,
+          }))}
         />
       </HomeSection>
 

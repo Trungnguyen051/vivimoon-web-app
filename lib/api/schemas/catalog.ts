@@ -197,6 +197,7 @@ export const productQuerySchema = z.object({
   productLine: blankToUndefined(productLineSchema),
   replacement: blankToUndefined(replacementScheduleSchema),
   brandId: blankToUndefined(z.string()),
+  /** One color, or a comma-separated set of them — a Color Family tile sends its whole set (CONTEXT.md). */
   color: blankToUndefined(z.string()),
   sort: blankToUndefined(z.enum(['newest', 'price-asc', 'price-desc', 'bestselling'])),
 });

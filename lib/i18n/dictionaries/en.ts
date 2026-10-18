@@ -40,9 +40,8 @@ export const en = {
     shopByFilter: {
       title: 'What lens are you looking for?',
       viewAll: 'VIEW ALL PRODUCTS',
-      byColor: 'By color', byDuration: 'By wear duration',
-      colors: { brown: 'Brown', black: 'Black', gray: 'Gray', vivid: 'Vivid', clear: 'Clear' },
-      durationUnit: { day: 'Day', month: 'Month' },
+      colors: { brown: 'Brown', black: 'Black', gray: 'Gray', vivid: 'Standout colors' },
+      durations: { daily: '1-day lenses', threeMonth: '3-month lenses', sixMonth: '6-month lenses' },
     },
     tv: {
       title: 'VIVIMOON TV',

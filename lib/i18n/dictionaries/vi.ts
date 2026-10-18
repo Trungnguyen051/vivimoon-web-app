@@ -42,9 +42,8 @@ export const vi: Dictionary = {
     shopByFilter: {
       title: 'Bạn đang tìm lens gì?',
       viewAll: 'XEM TẤT CẢ SẢN PHẨM',
-      byColor: 'Theo màu sắc', byDuration: 'Theo thời hạn',
-      colors: { brown: 'Nâu', black: 'Đen', gray: 'Xám', vivid: 'Sặc sỡ', clear: 'Không màu' },
-      durationUnit: { day: 'Ngày', month: 'Tháng' },
+      colors: { brown: 'Nâu', black: 'Đen', gray: 'Xám', vivid: 'Màu sắc nổi bật' },
+      durations: { daily: 'Lens 1 ngày', threeMonth: 'Lens 3 tháng', sixMonth: 'Lens 6 tháng' },
     },
     tv: {
       title: 'VIVIMOON TV',

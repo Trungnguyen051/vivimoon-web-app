@@ -17,7 +17,12 @@ export const mockCatalog = {
     if (query.productLine) list = list.filter((p) => p.productLine === query.productLine);
     if (query.replacement) list = list.filter((p) => p.replacement === query.replacement);
     if (query.brandId) list = list.filter((p) => p.brandId === query.brandId);
-    if (query.color) list = list.filter((p) => p.variants.some((v) => v.color === query.color));
+    // A comma-separated set, so one link can carry a whole Color Family (CONTEXT.md);
+    // a single color is just a set of one, which is what every other caller sends.
+    if (query.color) {
+      const wanted = query.color.split(',');
+      list = list.filter((p) => p.variants.some((v) => v.color !== undefined && wanted.includes(v.color)));
+    }
 
     switch (query.sort) {
       case 'price-asc': list.sort((a, b) => minPrice(a) - minPrice(b)); break;
