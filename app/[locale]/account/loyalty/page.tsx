@@ -10,6 +10,7 @@ import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empt
 import { toIntlLocale } from '@/lib/utils/format';
 import type { ApiResult } from '@/lib/api/client';
 import type { LoyaltyBalance } from '@/lib/api/schemas/loyalty';
+import { PageContainer } from '@/components/layout/page-container';
 
 /**
  * Goes through the same-origin route handler rather than importing the
@@ -38,47 +39,49 @@ export default async function LoyaltyPage({ params }: { params: Promise<{ locale
   const { balance, history } = await fetchLoyalty(locale);
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
-      <h1 className="text-3xl font-semibold tracking-tight">{dict.loyalty.title}</h1>
+    <PageContainer>
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
+        <h1 className="text-3xl font-semibold tracking-tight">{dict.loyalty.title}</h1>
 
-      <Card>
-        <CardContent className="flex flex-col items-center gap-1 py-8">
-          <span className="text-sm text-muted-foreground">{dict.loyalty.balance}</span>
-          <span className="text-4xl font-semibold tracking-tight">{balance}</span>
-        </CardContent>
-      </Card>
+        <Card>
+          <CardContent className="flex flex-col items-center gap-1 py-8">
+            <span className="text-sm text-muted-foreground">{dict.loyalty.balance}</span>
+            <span className="text-4xl font-semibold tracking-tight">{balance}</span>
+          </CardContent>
+        </Card>
 
-      <h2 className="text-lg font-medium">{dict.loyalty.historyTitle}</h2>
-      {history.length === 0 ? (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <Gift />
-            </EmptyMedia>
-            <EmptyTitle>{dict.loyalty.empty}</EmptyTitle>
-          </EmptyHeader>
-        </Empty>
-      ) : (
-        <ul className="flex flex-col gap-3">
-          {history.map((entry) => (
-            <li key={entry.id}>
-              <Card>
-                <CardContent className="flex items-center justify-between gap-4 py-4">
-                  <div className="flex flex-col gap-1">
-                    <span className="font-medium">{entry.description}</span>
-                    <span className="text-sm text-muted-foreground">{formatDate(entry.createdAt, locale)}</span>
-                  </div>
-                  <span className="font-medium text-primary">+{entry.points}</span>
-                </CardContent>
-              </Card>
-            </li>
-          ))}
-        </ul>
-      )}
+        <h2 className="text-lg font-medium">{dict.loyalty.historyTitle}</h2>
+        {history.length === 0 ? (
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <Gift />
+              </EmptyMedia>
+              <EmptyTitle>{dict.loyalty.empty}</EmptyTitle>
+            </EmptyHeader>
+          </Empty>
+        ) : (
+          <ul className="flex flex-col gap-3">
+            {history.map((entry) => (
+              <li key={entry.id}>
+                <Card>
+                  <CardContent className="flex items-center justify-between gap-4 py-4">
+                    <div className="flex flex-col gap-1">
+                      <span className="font-medium">{entry.description}</span>
+                      <span className="text-sm text-muted-foreground">{formatDate(entry.createdAt, locale)}</span>
+                    </div>
+                    <span className="font-medium text-primary">+{entry.points}</span>
+                  </CardContent>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        )}
 
-      <Link href={`/${locale}/account`} className="text-sm text-muted-foreground underline underline-offset-4">
-        {dict.account.title}
-      </Link>
-    </div>
+        <Link href={`/${locale}/account`} className="text-sm text-muted-foreground underline underline-offset-4">
+          {dict.account.title}
+        </Link>
+      </div>
+    </PageContainer>
   );
 }

@@ -12,6 +12,7 @@ import { formatPrice, toIntlLocale } from '@/lib/utils/format';
 import type { ApiResult } from '@/lib/api/client';
 import type { Voucher } from '@/lib/api/schemas/cart';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
+import { PageContainer } from '@/components/layout/page-container';
 
 /**
  * Goes through the same-origin route handler rather than importing the
@@ -46,45 +47,47 @@ export default async function VouchersPage({ params }: { params: Promise<{ local
   const vouchers = await fetchVouchers(locale);
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
-      <h1 className="text-3xl font-semibold tracking-tight">{dict.vouchers.title}</h1>
+    <PageContainer>
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
+        <h1 className="text-3xl font-semibold tracking-tight">{dict.vouchers.title}</h1>
 
-      {vouchers.length === 0 ? (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <Ticket />
-            </EmptyMedia>
-            <EmptyTitle>{dict.vouchers.empty}</EmptyTitle>
-          </EmptyHeader>
-        </Empty>
-      ) : (
-        <ul className="flex flex-col gap-3">
-          {vouchers.map((v) => (
-            <li key={v.code}>
-              <Card>
-                <CardContent className="flex flex-col gap-2 py-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="font-mono font-semibold tracking-wide">{v.code}</span>
-                    <Badge>{discountLabel(v, locale, dict.vouchers)}</Badge>
-                  </div>
-                  <p className="text-sm text-muted-foreground">{v.description}</p>
-                  <div className="flex flex-wrap gap-x-4 text-xs text-muted-foreground">
-                    {v.minSpend !== undefined ? (
-                      <span>{dict.vouchers.minSpend}: {formatPrice(v.minSpend, 'USD', locale)}</span>
-                    ) : null}
-                    <span>{dict.vouchers.expires}: {formatDate(v.expiresAt, locale)}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </li>
-          ))}
-        </ul>
-      )}
+        {vouchers.length === 0 ? (
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <Ticket />
+              </EmptyMedia>
+              <EmptyTitle>{dict.vouchers.empty}</EmptyTitle>
+            </EmptyHeader>
+          </Empty>
+        ) : (
+          <ul className="flex flex-col gap-3">
+            {vouchers.map((v) => (
+              <li key={v.code}>
+                <Card>
+                  <CardContent className="flex flex-col gap-2 py-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-mono font-semibold tracking-wide">{v.code}</span>
+                      <Badge>{discountLabel(v, locale, dict.vouchers)}</Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{v.description}</p>
+                    <div className="flex flex-wrap gap-x-4 text-xs text-muted-foreground">
+                      {v.minSpend !== undefined ? (
+                        <span>{dict.vouchers.minSpend}: {formatPrice(v.minSpend, 'USD', locale)}</span>
+                      ) : null}
+                      <span>{dict.vouchers.expires}: {formatDate(v.expiresAt, locale)}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        )}
 
-      <Link href={`/${locale}/account`} className="text-sm text-muted-foreground underline underline-offset-4">
-        {dict.account.title}
-      </Link>
-    </div>
+        <Link href={`/${locale}/account`} className="text-sm text-muted-foreground underline underline-offset-4">
+          {dict.account.title}
+        </Link>
+      </div>
+    </PageContainer>
   );
 }

@@ -7,6 +7,7 @@ import { fetchViaSelf } from '@/lib/api/server-fetch';
 import type { ApiResult } from '@/lib/api/client';
 import type { User } from '@/lib/api/schemas/auth';
 import { AccountForm } from './account-form';
+import { PageContainer } from '@/components/layout/page-container';
 
 /**
  * Goes through the same-origin route handler rather than importing the
@@ -36,27 +37,29 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
   const user = await fetchAccount(locale);
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
-      <h1 className="text-3xl font-semibold tracking-tight">{dict.account.title}</h1>
-      <div className="flex flex-wrap gap-4">
-        <Link href={`/${locale}/account/orders`} className="text-sm text-muted-foreground underline underline-offset-4">
-          {dict.account.viewOrders}
-        </Link>
-        <Link href={`/${locale}/account/addresses`} className="text-sm text-muted-foreground underline underline-offset-4">
-          {dict.addresses.title}
-        </Link>
-        <Link href={`/${locale}/account/favorites`} className="text-sm text-muted-foreground underline underline-offset-4">
-          {dict.favorites.title}
-        </Link>
-        <Link href={`/${locale}/account/vouchers`} className="text-sm text-muted-foreground underline underline-offset-4">
-          {dict.vouchers.title}
-        </Link>
-        <Link href={`/${locale}/account/loyalty`} className="text-sm text-muted-foreground underline underline-offset-4">
-          {dict.loyalty.title}
-        </Link>
+    <PageContainer>
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
+        <h1 className="text-3xl font-semibold tracking-tight">{dict.account.title}</h1>
+        <div className="flex flex-wrap gap-4">
+          <Link href={`/${locale}/account/orders`} className="text-sm text-muted-foreground underline underline-offset-4">
+            {dict.account.viewOrders}
+          </Link>
+          <Link href={`/${locale}/account/addresses`} className="text-sm text-muted-foreground underline underline-offset-4">
+            {dict.addresses.title}
+          </Link>
+          <Link href={`/${locale}/account/favorites`} className="text-sm text-muted-foreground underline underline-offset-4">
+            {dict.favorites.title}
+          </Link>
+          <Link href={`/${locale}/account/vouchers`} className="text-sm text-muted-foreground underline underline-offset-4">
+            {dict.vouchers.title}
+          </Link>
+          <Link href={`/${locale}/account/loyalty`} className="text-sm text-muted-foreground underline underline-offset-4">
+            {dict.loyalty.title}
+          </Link>
+        </div>
+        <h2 className="text-lg font-medium">{dict.account.infoTitle}</h2>
+        <AccountForm user={user} dict={dict.account} />
       </div>
-      <h2 className="text-lg font-medium">{dict.account.infoTitle}</h2>
-      <AccountForm user={user} dict={dict.account} />
-    </div>
+    </PageContainer>
   );
 }

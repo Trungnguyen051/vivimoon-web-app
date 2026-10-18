@@ -7,6 +7,7 @@ import { SearchX } from 'lucide-react';
 import { ProductGrid } from '@/components/commerce/product-grid';
 import { CollectionFilters } from '@/components/commerce/collection-filters';
 import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { PageContainer } from '@/components/layout/page-container';
 
 function resolveTitle(dict: Dictionary, key: string): string {
   const parts = key.split('.');
@@ -44,27 +45,29 @@ export default async function CollectionPage({
   const products = filtered.filter((p) => ids.has(p.id));
 
   return (
-    <div className="space-y-8">
-      <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{resolveTitle(dict, collection.title)}</h1>
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <CollectionFilters dict={dict} />
-        {products.length > 0 ? (
-          <p className="text-sm text-muted-foreground">{products.length} {dict.collection.productsLabel}</p>
-        ) : null}
+    <PageContainer>
+      <div className="space-y-8">
+        <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{resolveTitle(dict, collection.title)}</h1>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <CollectionFilters dict={dict} />
+          {products.length > 0 ? (
+            <p className="text-sm text-muted-foreground">{products.length} {dict.collection.productsLabel}</p>
+          ) : null}
+        </div>
+        {products.length === 0 ? (
+          <Empty className="rounded-xl border py-16">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <SearchX />
+              </EmptyMedia>
+              <EmptyTitle>{dict.collection.noResults}</EmptyTitle>
+              <EmptyDescription>{dict.filters.clear}</EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        ) : (
+          <ProductGrid products={products} locale={l} dict={dict} listId={collection.slug} />
+        )}
       </div>
-      {products.length === 0 ? (
-        <Empty className="rounded-xl border py-16">
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <SearchX />
-            </EmptyMedia>
-            <EmptyTitle>{dict.collection.noResults}</EmptyTitle>
-            <EmptyDescription>{dict.filters.clear}</EmptyDescription>
-          </EmptyHeader>
-        </Empty>
-      ) : (
-        <ProductGrid products={products} locale={l} dict={dict} listId={collection.slug} />
-      )}
-    </div>
+    </PageContainer>
   );
 }

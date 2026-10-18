@@ -3,6 +3,7 @@ import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { discovery } from '@/lib/api/resources/discovery';
 import { QuizFlow } from './quiz-flow';
+import { PageContainer } from '@/components/layout/page-container';
 
 export default async function QuizPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -12,5 +13,9 @@ export default async function QuizPage({ params }: { params: Promise<{ locale: s
 
   const definition = await discovery.getQuizDefinition();
 
-  return <QuizFlow definition={definition} locale={l} dict={dict} />;
+  return (
+    <PageContainer>
+      <QuizFlow definition={definition} locale={l} dict={dict} />
+    </PageContainer>
+  );
 }

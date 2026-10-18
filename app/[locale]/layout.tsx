@@ -24,7 +24,8 @@ export default async function LocaleLayout({
       <SessionSync />
       <AnnouncementBar text={dict.announcement.freeShipping} />
       <Header locale={locale as Locale} dict={dict} />
-      <main className="mx-auto w-full max-w-7xl px-4 py-10 md:py-14">{children}</main>
+      {/* Width and padding belong to the page, not here — see ADR-0013. Pages opt in via PageContainer. */}
+      <main>{children}</main>
       <Footer locale={locale as Locale} dict={dict} />
       <ComparisonTray locale={locale as Locale} dict={dict} />
     </>

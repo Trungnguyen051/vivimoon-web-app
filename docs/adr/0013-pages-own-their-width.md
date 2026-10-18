@@ -1,6 +1,6 @@
 # Pages own their own width; the locale layout stops wrapping them in a container
 
-**Status:** accepted — not yet implemented. Spec'd during the homepage/wireframe alignment grilling (Q9).
+**Status:** accepted — mechanism implemented in #32: `<main>` no longer constrains width, a `PageContainer` carries it, and every route opts in. The homepage still wraps its hero along with everything else, so nothing renders full-bleed yet; the hero moves outside the container in #33, which this unblocks.
 
 `app/[locale]/layout.tsx` wrapped every route in `<main className="mx-auto w-full max-w-7xl px-4 py-10 md:py-14">`, so no page could render anything edge-to-edge. The homepage wireframe needs a full-bleed hero flush under the header, with the sections below it still guttered — a shape the shared container makes impossible from `page.tsx`.
 

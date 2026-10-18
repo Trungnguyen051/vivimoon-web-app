@@ -9,6 +9,7 @@ import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empt
 import { ProductGrid } from '@/components/commerce/product-grid';
 import type { ApiResult } from '@/lib/api/client';
 import type { Product } from '@/lib/api/schemas/catalog';
+import { PageContainer } from '@/components/layout/page-container';
 
 /**
  * Goes through the same-origin route handler rather than importing the
@@ -33,25 +34,27 @@ export default async function FavoritesPage({ params }: { params: Promise<{ loca
   const products = await fetchFavorites(locale);
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-12">
-      <h1 className="text-3xl font-semibold tracking-tight">{dict.favorites.title}</h1>
+    <PageContainer>
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-12">
+        <h1 className="text-3xl font-semibold tracking-tight">{dict.favorites.title}</h1>
 
-      {products.length === 0 ? (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <Heart />
-            </EmptyMedia>
-            <EmptyTitle>{dict.favorites.empty}</EmptyTitle>
-          </EmptyHeader>
-        </Empty>
-      ) : (
-        <ProductGrid products={products} locale={locale} dict={dict} listId="favorites" />
-      )}
+        {products.length === 0 ? (
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <Heart />
+              </EmptyMedia>
+              <EmptyTitle>{dict.favorites.empty}</EmptyTitle>
+            </EmptyHeader>
+          </Empty>
+        ) : (
+          <ProductGrid products={products} locale={locale} dict={dict} listId="favorites" />
+        )}
 
-      <Link href={`/${locale}/account`} className="text-sm text-muted-foreground underline underline-offset-4">
-        {dict.account.title}
-      </Link>
-    </div>
+        <Link href={`/${locale}/account`} className="text-sm text-muted-foreground underline underline-offset-4">
+          {dict.account.title}
+        </Link>
+      </div>
+    </PageContainer>
   );
 }

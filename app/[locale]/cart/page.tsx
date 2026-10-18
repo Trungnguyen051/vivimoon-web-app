@@ -14,6 +14,7 @@ import { CartLineItem } from '@/components/commerce/cart-line-item';
 import { OrderSummary } from '@/components/commerce/order-summary';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
 import { cartLinesToGa4Items } from '@/lib/analytics/events';
+import { PageContainer } from '@/components/layout/page-container';
 
 export default function CartPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = use(params);
@@ -68,71 +69,77 @@ export default function CartPage({ params }: { params: Promise<{ locale: string 
   // flashes the empty state for a frame on load.
   if (!hydrated) {
     return (
-      <div className="space-y-8">
-        <Skeleton className="h-9 w-48" />
-        <div className="grid gap-10 md:grid-cols-3 md:gap-12">
-          <div className="space-y-6 md:col-span-2">
-            <Skeleton className="h-32 w-full" />
-            <Skeleton className="h-32 w-full" />
+      <PageContainer>
+        <div className="space-y-8">
+          <Skeleton className="h-9 w-48" />
+          <div className="grid gap-10 md:grid-cols-3 md:gap-12">
+            <div className="space-y-6 md:col-span-2">
+              <Skeleton className="h-32 w-full" />
+              <Skeleton className="h-32 w-full" />
+            </div>
+            <Skeleton className="h-64 w-full" />
           </div>
-          <Skeleton className="h-64 w-full" />
         </div>
-      </div>
+      </PageContainer>
     );
   }
 
   if (lines.length === 0) {
     return (
-      <Empty className="py-24">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <ShoppingBag />
-          </EmptyMedia>
-          <EmptyTitle>{dict.cart.empty}</EmptyTitle>
-        </EmptyHeader>
-        <EmptyContent>
-          <Button asChild className="h-11 px-6 text-base">
-            <Link href={`/${locale}`}>{dict.common.shopNow}</Link>
-          </Button>
-        </EmptyContent>
-      </Empty>
+      <PageContainer>
+        <Empty className="py-24">
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <ShoppingBag />
+            </EmptyMedia>
+            <EmptyTitle>{dict.cart.empty}</EmptyTitle>
+          </EmptyHeader>
+          <EmptyContent>
+            <Button asChild className="h-11 px-6 text-base">
+              <Link href={`/${locale}`}>{dict.common.shopNow}</Link>
+            </Button>
+          </EmptyContent>
+        </Empty>
+      </PageContainer>
     );
   }
 
   return (
-    <div className="space-y-8">
-      <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{dict.cart.title}</h1>
-      <div className="grid gap-10 md:grid-cols-3 md:gap-12">
-        <div className="md:col-span-2">
-          {lines.map((l) => {
-            const pricedLine = result?.lines.find((pl) => pl.lineKey === l.lineKey);
-            return (
-              <CartLineItem key={l.lineKey} line={l} locale={locale} dict={dict}
-                lineTotal={pricedLine?.lineTotal ?? null}
-                unavailable={unavailableKeys.has(l.lineKey)}
-                onQty={(key, q) => (q < 1 ? handleRemove(key) : updateQty(key, q))}
-                onRemove={handleRemove} />
-            );
-          })}
+    <PageContainer>
+      <div className="space-y-8">
+        <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{dict.cart.title}</h1>
+        <div className="grid gap-10 md:grid-cols-3 md:gap-12">
+          <div className="md:col-span-2">
+            {lines.map((l) => {
+              const pricedLine = result?.lines.find((pl) => pl.lineKey === l.lineKey);
+              return (
+                <CartLineItem key={l.lineKey} line={l} locale={locale} dict={dict}
+                  lineTotal={pricedLine?.lineTotal ?? null}
+                  unavailable={unavailableKeys.has(l.lineKey)}
+                  onQty={(key, q) => (q < 1 ? handleRemove(key) : updateQty(key, q))}
+                  onRemove={handleRemove} />
+              );
+            })}
+          </div>
+          <OrderSummary
+            subtotal={result?.subtotal ?? null}
+            discount={result?.discount ?? null}
+            shipping={result?.shipping ?? null}
+            total={result?.total ?? null}
+            currency={currency} locale={locale} dict={dict}
+            ctaHref={`/${locale}/checkout`} ctaLabel={dict.cart.checkout}
+            note={unavailableKeys.size > 0 ? dict.cart.unavailableNote : undefined}
+            // Checkout is blocked, not silently partial: order placement
+            // refuses an unavailable line anyway (ADR-0012), so sending the
+            // shopper on would only fail later, further from the fix.
+            ctaBlockedReason={
+              unavailableKeys.size > 0
+                ? dict.cart.unavailableBlocksCheckout
+                : isError ? dict.cart.priceError : undefined
+            }
+          />
         </div>
-        <OrderSummary
-          subtotal={result?.subtotal ?? null}
-          discount={result?.discount ?? null}
-          shipping={result?.shipping ?? null}
-          total={result?.total ?? null}
-          currency={currency} locale={locale} dict={dict}
-          ctaHref={`/${locale}/checkout`} ctaLabel={dict.cart.checkout}
-          note={unavailableKeys.size > 0 ? dict.cart.unavailableNote : undefined}
-          // Checkout is blocked, not silently partial: order placement
-          // refuses an unavailable line anyway (ADR-0012), so sending the
-          // shopper on would only fail later, further from the fix.
-          ctaBlockedReason={
-            unavailableKeys.size > 0
-              ? dict.cart.unavailableBlocksCheckout
-              : isError ? dict.cart.priceError : undefined
-          }
-        />
       </div>
-    </div>
+    </PageContainer>
   );
 }

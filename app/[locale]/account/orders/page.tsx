@@ -11,6 +11,7 @@ import { fetchViaSelf } from '@/lib/api/server-fetch';
 import { formatPrice, toIntlLocale } from '@/lib/utils/format';
 import type { ApiResult } from '@/lib/api/client';
 import type { Order } from '@/lib/api/schemas/orders';
+import { PageContainer } from '@/components/layout/page-container';
 
 /**
  * Goes through the same-origin route handler rather than importing the
@@ -56,44 +57,46 @@ export default async function OrderHistoryPage({ params }: { params: Promise<{ l
   const orders = await fetchOrders(locale);
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
-      <h1 className="text-3xl font-semibold tracking-tight">{dict.orders.title}</h1>
+    <PageContainer>
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
+        <h1 className="text-3xl font-semibold tracking-tight">{dict.orders.title}</h1>
 
-      {orders.length === 0 ? (
-        <Empty>
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <PackageOpen />
-            </EmptyMedia>
-            <EmptyTitle>{dict.orders.empty}</EmptyTitle>
-          </EmptyHeader>
-        </Empty>
-      ) : (
-        <ul className="flex flex-col gap-3">
-          {orders.map((order) => (
-            <li key={order.id}>
-              <Link href={`/${locale}/account/orders/${order.id}`} className="block">
-                <Card className="transition-colors hover:bg-muted/50">
-                  <CardContent className="flex items-center justify-between gap-4 py-4">
-                    <div className="flex flex-col gap-1">
-                      <span className="font-medium">{order.code}</span>
-                      <span className="text-sm text-muted-foreground">{formatDate(order.placedAt, locale)}</span>
-                    </div>
-                    <div className="flex flex-col items-end gap-1">
-                      <Badge variant={STATUS_VARIANT[order.status]}>{dict.orders.statuses[order.status]}</Badge>
-                      <span className="font-medium">{formatPrice(order.totals.total, order.totals.currency, locale)}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+        {orders.length === 0 ? (
+          <Empty>
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <PackageOpen />
+              </EmptyMedia>
+              <EmptyTitle>{dict.orders.empty}</EmptyTitle>
+            </EmptyHeader>
+          </Empty>
+        ) : (
+          <ul className="flex flex-col gap-3">
+            {orders.map((order) => (
+              <li key={order.id}>
+                <Link href={`/${locale}/account/orders/${order.id}`} className="block">
+                  <Card className="transition-colors hover:bg-muted/50">
+                    <CardContent className="flex items-center justify-between gap-4 py-4">
+                      <div className="flex flex-col gap-1">
+                        <span className="font-medium">{order.code}</span>
+                        <span className="text-sm text-muted-foreground">{formatDate(order.placedAt, locale)}</span>
+                      </div>
+                      <div className="flex flex-col items-end gap-1">
+                        <Badge variant={STATUS_VARIANT[order.status]}>{dict.orders.statuses[order.status]}</Badge>
+                        <span className="font-medium">{formatPrice(order.totals.total, order.totals.currency, locale)}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
 
-      <Link href={`/${locale}/account`} className="text-sm text-muted-foreground underline underline-offset-4">
-        {dict.account.title}
-      </Link>
-    </div>
+        <Link href={`/${locale}/account`} className="text-sm text-muted-foreground underline underline-offset-4">
+          {dict.account.title}
+        </Link>
+      </div>
+    </PageContainer>
   );
 }

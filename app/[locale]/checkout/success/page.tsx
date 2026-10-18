@@ -9,6 +9,7 @@ import { getDictionary } from '@/lib/i18n/dictionaries';
 import { useCart } from '@/features/cart/use-cart';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
 import { cartLinesToGa4Items } from '@/lib/analytics/events';
+import { PageContainer } from '@/components/layout/page-container';
 
 export default function SuccessPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = use(params);
@@ -46,21 +47,23 @@ export default function SuccessPage({ params }: { params: Promise<{ locale: stri
   }, []);
 
   return (
-    <Empty className="py-24">
-      <EmptyHeader>
-        <EmptyMedia variant="icon" className="bg-primary/10 text-primary">
-          <CheckCircle2 />
-        </EmptyMedia>
-        <EmptyTitle>{dict.checkout.success}</EmptyTitle>
-        {orderId ? (
-          <EmptyDescription>{dict.checkout.orderId}: {orderId}</EmptyDescription>
-        ) : null}
-      </EmptyHeader>
-      <EmptyContent>
-        <Button asChild className="h-11 px-6 text-base">
-          <Link href={`/${locale}`}>{dict.common.shopNow}</Link>
-        </Button>
-      </EmptyContent>
-    </Empty>
+    <PageContainer>
+      <Empty className="py-24">
+        <EmptyHeader>
+          <EmptyMedia variant="icon" className="bg-primary/10 text-primary">
+            <CheckCircle2 />
+          </EmptyMedia>
+          <EmptyTitle>{dict.checkout.success}</EmptyTitle>
+          {orderId ? (
+            <EmptyDescription>{dict.checkout.orderId}: {orderId}</EmptyDescription>
+          ) : null}
+        </EmptyHeader>
+        <EmptyContent>
+          <Button asChild className="h-11 px-6 text-base">
+            <Link href={`/${locale}`}>{dict.common.shopNow}</Link>
+          </Button>
+        </EmptyContent>
+      </Empty>
+    </PageContainer>
   );
 }

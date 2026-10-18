@@ -3,6 +3,7 @@ import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { orders } from '@/lib/api/resources/orders';
 import { OrderDetailView } from '@/components/commerce/order-detail-view';
+import { PageContainer } from '@/components/layout/page-container';
 
 /**
  * Public — no session, so nothing here needs the cookie-forwarding,
@@ -20,8 +21,10 @@ export default async function TrackedOrderPage({ params }: { params: Promise<{ l
   if (!order) notFound();
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
-      <OrderDetailView order={order} locale={locale} dict={dict} />
-    </div>
+    <PageContainer>
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
+        <OrderDetailView order={order} locale={locale} dict={dict} />
+      </div>
+    </PageContainer>
   );
 }

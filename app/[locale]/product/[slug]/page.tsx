@@ -15,6 +15,7 @@ import { RatingStars } from '@/components/commerce/rating-stars';
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { PageContainer } from '@/components/layout/page-container';
 
 export default async function ProductPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params;
@@ -30,63 +31,65 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
   const gallery = await catalog.getGallery(product.id);
 
   return (
-    <div className="space-y-16 md:space-y-24">
-      <div className="space-y-8">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href={`/${l}`}>Vivimoon</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{product.name}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+    <PageContainer>
+      <div className="space-y-16 md:space-y-24">
+        <div className="space-y-8">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href={`/${l}`}>Vivimoon</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{product.name}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
 
-        <div className="grid gap-10 md:grid-cols-2 lg:gap-16">
-          {gallery ? (
-            // Keyed by product.id for the same reason as AddToCart below — a
-            // client-side nav between two PDPs must remount this rather than
-            // reuse it, or activeEyeColor can point at a key the new
-            // product's gallery doesn't have.
-            <LensViewer key={product.id} gallery={gallery} alt={product.name} dict={dict.viewer} />
-          ) : (
-            <ProductGallery images={product.images} alt={product.name} />
-          )}
-          <div className="flex flex-col gap-5">
-            <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{product.name}</h1>
-            <div className="flex items-center gap-2">
-              <RatingStars rating={product.rating} />
-              <span className="text-sm text-muted-foreground">
-                {product.rating.toFixed(1)} · {product.reviewCount}
-              </span>
-            </div>
-            <p className="max-w-prose leading-relaxed text-muted-foreground">{product.description}</p>
-            {/* Keyed by product.id so a client-side nav between two PDPs (e.g. a
-                related-product link) remounts AddToCart instead of reusing its
-                instance — its local state (variant, qty, rx draft) is
-                per-product and has no other way to reset without a full page
-                reload. */}
-            <AddToCart key={product.id} product={product} locale={l} dict={dict} />
-            <div className="flex flex-wrap gap-2">
-              <FavoriteButton productId={product.id} locale={l} dict={dict.favorites} />
-              <CompareToggle productId={product.id} dict={dict} variant="button" />
+          <div className="grid gap-10 md:grid-cols-2 lg:gap-16">
+            {gallery ? (
+              // Keyed by product.id for the same reason as AddToCart below — a
+              // client-side nav between two PDPs must remount this rather than
+              // reuse it, or activeEyeColor can point at a key the new
+              // product's gallery doesn't have.
+              <LensViewer key={product.id} gallery={gallery} alt={product.name} dict={dict.viewer} />
+            ) : (
+              <ProductGallery images={product.images} alt={product.name} />
+            )}
+            <div className="flex flex-col gap-5">
+              <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{product.name}</h1>
+              <div className="flex items-center gap-2">
+                <RatingStars rating={product.rating} />
+                <span className="text-sm text-muted-foreground">
+                  {product.rating.toFixed(1)} · {product.reviewCount}
+                </span>
+              </div>
+              <p className="max-w-prose leading-relaxed text-muted-foreground">{product.description}</p>
+              {/* Keyed by product.id so a client-side nav between two PDPs (e.g. a
+                  related-product link) remounts AddToCart instead of reusing its
+                  instance — its local state (variant, qty, rx draft) is
+                  per-product and has no other way to reset without a full page
+                  reload. */}
+              <AddToCart key={product.id} product={product} locale={l} dict={dict} />
+              <div className="flex flex-wrap gap-2">
+                <FavoriteButton productId={product.id} locale={l} dict={dict.favorites} />
+                <CompareToggle productId={product.id} dict={dict} variant="button" />
+              </div>
             </div>
           </div>
         </div>
+
+        <section className="space-y-6">
+          <h2 className="text-2xl font-semibold tracking-tight">{dict.pdp.specs}</h2>
+          <SpecTable specs={product.specs} dict={dict} />
+        </section>
+
+        <CollectionCarousel title={dict.pdp.related} products={related} locale={l} dict={dict} seeMoreHref={`/${l}/collection/bestsellers`} seeMoreLabel={dict.common.seeMore} />
+
+        <ReviewsList reviews={reviews} dict={dict} />
       </div>
-
-      <section className="space-y-6">
-        <h2 className="text-2xl font-semibold tracking-tight">{dict.pdp.specs}</h2>
-        <SpecTable specs={product.specs} dict={dict} />
-      </section>
-
-      <CollectionCarousel title={dict.pdp.related} products={related} locale={l} dict={dict} seeMoreHref={`/${l}/collection/bestsellers`} seeMoreLabel={dict.common.seeMore} />
-
-      <ReviewsList reviews={reviews} dict={dict} />
-    </div>
+    </PageContainer>
   );
 }

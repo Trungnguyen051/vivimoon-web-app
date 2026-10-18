@@ -7,6 +7,7 @@ import { fetchViaSelf } from '@/lib/api/server-fetch';
 import { OrderDetailView } from '@/components/commerce/order-detail-view';
 import type { ApiResult } from '@/lib/api/client';
 import type { Order } from '@/lib/api/schemas/orders';
+import { PageContainer } from '@/components/layout/page-container';
 
 /**
  * Goes through the same-origin route handler rather than importing the
@@ -34,11 +35,13 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ lo
   const order = await fetchOrder(id, locale);
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
-      <OrderDetailView order={order} locale={locale} dict={dict} />
-      <Link href={`/${locale}/account/orders`} className="text-sm text-muted-foreground underline underline-offset-4">
-        {dict.orderDetail.backToOrders}
-      </Link>
-    </div>
+    <PageContainer>
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
+        <OrderDetailView order={order} locale={locale} dict={dict} />
+        <Link href={`/${locale}/account/orders`} className="text-sm text-muted-foreground underline underline-offset-4">
+          {dict.orderDetail.backToOrders}
+        </Link>
+      </div>
+    </PageContainer>
   );
 }
