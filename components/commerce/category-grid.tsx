@@ -30,7 +30,7 @@ export function CategoryGrid({
       <div className={cn('grid grid-cols-1 gap-4', COLUMN_CLASSES[columns])}>
         {items.map((it) => (
           <Link
-            key={it.href}
+            key={it.image}
             href={it.href}
             className="group relative aspect-[4/5] overflow-hidden rounded-2xl bg-muted"
           >
