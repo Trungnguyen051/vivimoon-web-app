@@ -30,9 +30,9 @@
     "semantic_hash": ""
   },
   "app/[locale]/page.tsx": {
-    "mtime": 1792318116.256704,
-    "seen": 1792318890.29324,
-    "ast_hash": "57fd958b7b536ce2632683529706e8f4",
+    "mtime": 1792319127.732675,
+    "seen": 1792320029.641782,
+    "ast_hash": "59b92d5c1ad6dc293b17395043e5baca",
     "semantic_hash": ""
   },
   "app/[locale]/product/[slug]/page.tsx": {
@@ -90,9 +90,9 @@
     "semantic_hash": ""
   },
   "components/commerce/hero-carousel.tsx": {
-    "mtime": 1791694998.6586874,
-    "seen": 1791695185.213814,
-    "ast_hash": "f3ea166b76944d86935b847a7be77ea3",
+    "mtime": 1792319873.2392864,
+    "seen": 1792320029.6418629,
+    "ast_hash": "dfb24ce71c37e821bc7b335c345f4345",
     "semantic_hash": ""
   },
   "components/commerce/order-summary.tsx": {
@@ -492,10 +492,10 @@
     "semantic_hash": "d76ed5b51bda7dc44ea95e17d52f4202"
   },
   "vitest.setup.ts": {
-    "mtime": 1786866787.2428217,
-    "seen": 1787625522.04595,
-    "ast_hash": "b6047cb48430aab17d0c9a3cec1e4bb5",
-    "semantic_hash": "b6047cb48430aab17d0c9a3cec1e4bb5"
+    "mtime": 1792319303.3372483,
+    "seen": 1792320029.6420429,
+    "ast_hash": "f2e0335c1ba5c4c18120d0bc322d5d1d",
+    "semantic_hash": ""
   },
   "AGENTS.md": {
     "mtime": 1786866417.0,
@@ -2223,6 +2223,12 @@
     "mtime": 1792318723.1498475,
     "seen": 1792318890.294314,
     "ast_hash": "0cf445011394abf54bde19aa08c1618f",
+    "semantic_hash": ""
+  },
+  "components/commerce/hero-carousel.test.tsx": {
+    "mtime": 1792319158.3169668,
+    "seen": 1792320029.641862,
+    "ast_hash": "cf6203c24f41aeaa5d88567c9bd8124d",
     "semantic_hash": ""
   }
 }
