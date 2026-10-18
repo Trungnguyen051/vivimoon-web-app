@@ -23,16 +23,17 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const newArrivalsProducts = newArrivals ? await catalog.getProductsByIds(newArrivals.productIds) : [];
 
   return (
-    <PageContainer>
-      <div className="space-y-16 md:space-y-24">
-        <HeroCarousel
-          ctaLabel={dict.common.shopNow}
-          slides={[
-            { image: '/images/hero-1.jpg', href: `/${l}/collection/new-arrivals`, alt: dict.collection.newArrivals },
-            { image: '/images/hero-2.jpg', href: `/${l}/collection/sale`, alt: dict.collection.sale },
-          ]}
-        />
+    <>
+      {/* Full-bleed and flush under the header: the hero sits outside PageContainer (ADR-0013). */}
+      <HeroCarousel
+        ctaLabel={dict.common.shopNow}
+        slides={[
+          { id: 'new-arrivals', image: '/images/hero-1.jpg', href: `/${l}/collection/new-arrivals`, alt: dict.collection.newArrivals },
+          { id: 'sale', image: '/images/hero-2.jpg', href: `/${l}/collection/sale`, alt: dict.collection.sale },
+        ]}
+      />
 
+      <PageContainer className="space-y-16 md:space-y-24">
         <CategoryGrid
           title={dict.home.moments.title}
           subtitle={dict.home.moments.subtitle}
@@ -109,7 +110,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <div className="relative aspect-[1744/660] w-full overflow-hidden rounded-2xl">
           <Image src="/images/promo-return-policy.png" alt="" fill className="object-cover" />
         </div>
-      </div>
-    </PageContainer>
+      </PageContainer>
+    </>
   );
 }
