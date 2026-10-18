@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { COLOR_FAMILIES, colorFamilyHref } from './color-families';
+import { COLOR_FAMILIES, COLOR_FAMILY_COLLECTION, colorFamilyHref, countColorFamily } from './color-families';
 import { mockCatalog } from '@/lib/api/resources/catalog/mock';
 import { parseProductQueryLoose } from '@/lib/api/schemas/catalog';
 import { products } from '@/content/mock';
@@ -42,6 +42,19 @@ describe('Color Family', () => {
    */
   it.each(COLOR_FAMILIES.filter((f) => f.id !== 'black'))('$id does not dead-end', async (family) => {
     expect(await followTile(colorFamilyHref(family, 'vi'))).not.toHaveLength(0);
+  });
+
+  /**
+   * The number on a tile is a promise about the page behind it. Hard-coded counts
+   * broke that quietly — Nâu advertised 14 products over a collection holding one,
+   * and Đen advertised 10 over none — so the count is derived from the same
+   * collection the link opens, and this pins the two together.
+   */
+  it.each(COLOR_FAMILIES)('$id counts exactly the products its tile lists', async (family) => {
+    const collection = await mockCatalog.getCollection(COLOR_FAMILY_COLLECTION);
+    const inCollection = await mockCatalog.getProductsByIds(collection!.productIds);
+
+    expect(countColorFamily(family, inCollection)).toBe((await followTile(colorFamilyHref(family, 'vi'))).length);
   });
 
   /**

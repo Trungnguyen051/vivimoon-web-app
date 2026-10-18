@@ -8,11 +8,8 @@ import { ContentCarousel } from '@/components/commerce/content-carousel';
 import { notFound } from 'next/navigation';
 import { HomeSection } from '@/components/layout/home-section';
 import { BrandStory } from '@/components/commerce/brand-story';
-import { COLOR_FAMILIES, colorFamilyHref, type ColorFamily } from '@/lib/products/color-families';
-
-/* The design's counts. Placeholders until the catalog grows a facet-count seam (#30);
-   Đen reads 10 while the fixtures carry no black lenses at all, which #41 fixes. */
-const FAMILY_COUNTS: Record<ColorFamily['id'], number> = { brown: 14, black: 10, gray: 24, vivid: 8 };
+import { COLOR_FAMILIES, COLOR_FAMILY_COLLECTION, colorFamilyHref, countColorFamily } from '@/lib/products/color-families';
+import { catalog } from '@/lib/api/resources/catalog';
 
 /* Product photography, since the design weights these tiles like the colour ones.
    Each id is both the dictionary key and the replacement filter value.
@@ -42,6 +39,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   if (!isLocale(locale)) notFound();
   const l = locale as Locale;
   const dict = getDictionary(l);
+
+  /* The tiles state how many products are behind them, so the count is read from the
+     very collection the tile opens rather than hard-coded (#36 shipped the design's
+     14/10/24/8 over a collection holding two). */
+  const familyCollection = await catalog.getCollection(COLOR_FAMILY_COLLECTION);
+  const familyProducts = familyCollection ? await catalog.getProductsByIds(familyCollection.productIds) : [];
 
   return (
     <>
@@ -100,7 +103,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           colorFamilies={COLOR_FAMILIES.map((family) => ({
             id: family.id,
             label: dict.home.shopByFilter.colors[family.id],
-            count: `${FAMILY_COUNTS[family.id]} ${dict.collection.productsLabel}`,
+            count: `${countColorFamily(family, familyProducts)} ${dict.collection.productsLabel}`,
             swatches: family.swatches,
             href: colorFamilyHref(family, l),
           }))}
