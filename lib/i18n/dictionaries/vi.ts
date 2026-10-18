@@ -9,6 +9,44 @@ export const vi: Dictionary = {
     colored: 'Lens màu', daily: 'Lens hằng ngày',
     productsLabel: 'sản phẩm', noResults: 'Không có sản phẩm phù hợp với bộ lọc.',
   },
+  home: {
+    moments: {
+      title: 'Lens cho từng khoảnh khắc',
+      subtitle: 'Vivimoon có nhiều mẫu lens phù hợp cho mọi nhu cầu của bạn như: dự tiệc, chụp ảnh, đám cưới,...',
+      viewAll: 'XEM TẤT CẢ',
+      party: 'Dự tiệc', gradPhotos: 'Chụp ảnh kỷ yếu', wedding: 'Đám cưới/ Cô dâu',
+    },
+    quiz: {
+      title: 'Chưa chọn được lens?',
+      subtitle: 'Chỉ cần trả lời 3 câu hỏi dưới đây, Vivimoon sẽ gợi ý mẫu lens phù hợp với bạn',
+      stepLabel: 'Bạn tìm lens không độ hay lens cận?',
+      optionA: 'Lens không độ', optionB: 'Lens cận',
+      cta: 'Làm trắc nghiệm ngay',
+    },
+    makeup: {
+      title: 'Lens cho mọi make-up look',
+      subtitle: 'Tìm lens theo nhu cầu make up của bạn',
+      viewAll: 'XEM TẤT CẢ',
+      natural: 'Tự nhiên trong trẻo', pink: 'Make up tông hồng', orange: 'Make up tông cam', smoky: 'Tông Tây, mắt khói',
+    },
+    shopByFilter: {
+      title: 'Bạn đang tìm lens gì?',
+      viewAll: 'XEM TẤT CẢ',
+      byColor: 'Theo màu sắc', byDuration: 'Theo thời hạn',
+      colors: { brown: 'Nâu', black: 'Đen', gray: 'Xám', vivid: 'Sặc sỡ', clear: 'Không màu' },
+      durationUnit: { day: 'Ngày', month: 'Tháng' },
+    },
+    tv: {
+      title: 'VIVIMOON TV',
+      subtitle: 'Xem chi tiết lens qua các video make up và đánh giá từ người dùng',
+      items: [
+        { title: 'Lens cận khóa ẩm màu đen tự nhiên 1 tháng', tags: ['1 tháng', 'Màu đen'] },
+        { title: 'Lens cận khóa ẩm màu nâu mật ong 1 ngày', tags: ['1 ngày', 'Màu nâu'] },
+        { title: 'Lens 1 ngày màu xanh dương ánh xám bạc Jade Green', tags: ['1 tháng', 'Xanh dương'] },
+        { title: 'Lens 1 ngày màu xanh dương ánh xám bạc Jade Green', tags: ['1 tháng', 'Xanh dương'] },
+      ],
+    },
+  },
   filters: {
     productLine: 'Loại lens', replacement: 'Thời gian dùng', color: 'Màu', sort: 'Sắp xếp', clear: 'Xóa bộ lọc',
     productLines: { trongSuot: 'Trong suốt', coMau: 'Có màu', vanNhu: 'Vân nhũ' },

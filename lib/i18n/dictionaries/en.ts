@@ -7,6 +7,44 @@ export const en = {
     colored: 'Colored Lenses', daily: 'Daily Lenses',
     productsLabel: 'products', noResults: 'No products match your filters.',
   },
+  home: {
+    moments: {
+      title: 'Lens for every moment',
+      subtitle: 'Vivimoon has lens styles for every need — parties, grad photos, weddings...',
+      viewAll: 'VIEW ALL',
+      party: 'Parties', gradPhotos: 'Grad photos', wedding: 'Wedding / Bride',
+    },
+    quiz: {
+      title: 'Haven’t picked a lens yet?',
+      subtitle: 'Just answer 3 quick questions and Vivimoon will suggest the right lens for you',
+      stepLabel: 'Looking for plano or prescription lenses?',
+      optionA: 'No-power lens', optionB: 'Prescription lens',
+      cta: 'Take the quiz',
+    },
+    makeup: {
+      title: 'Lens for every make-up look',
+      subtitle: 'Find lenses that match your makeup style',
+      viewAll: 'VIEW ALL',
+      natural: 'Natural & fresh', pink: 'Pink-tone makeup', orange: 'Orange-tone makeup', smoky: 'Western tone, smoky eyes',
+    },
+    shopByFilter: {
+      title: 'What lens are you looking for?',
+      viewAll: 'VIEW ALL',
+      byColor: 'By color', byDuration: 'By wear duration',
+      colors: { brown: 'Brown', black: 'Black', gray: 'Gray', vivid: 'Vivid', clear: 'Clear' },
+      durationUnit: { day: 'Day', month: 'Month' },
+    },
+    tv: {
+      title: 'VIVIMOON TV',
+      subtitle: 'See lenses in detail through makeup videos and reviews from real users',
+      items: [
+        { title: 'Moisture-lock prescription lens, natural black, 1 month', tags: ['1 month', 'Black'] },
+        { title: 'Moisture-lock prescription lens, honey brown, 1 day', tags: ['1 day', 'Brown'] },
+        { title: 'Jade Green daily lens, silver-grey blue shimmer', tags: ['1 month', 'Blue'] },
+        { title: 'Jade Green daily lens, silver-grey blue shimmer', tags: ['1 month', 'Blue'] },
+      ],
+    },
+  },
   filters: {
     productLine: 'Lens type', replacement: 'Replacement', color: 'Color', sort: 'Sort', clear: 'Clear filters',
     productLines: { trongSuot: 'Clear', coMau: 'Colored', vanNhu: 'Glitter' },

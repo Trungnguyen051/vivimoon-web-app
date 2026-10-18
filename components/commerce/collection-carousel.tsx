@@ -1,11 +1,12 @@
 'use client';
 import Link from 'next/link';
 import useEmblaCarousel from 'embla-carousel-react';
-import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import type { Product } from '@/lib/types';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { ProductCard } from './product-card';
+import { CarouselNav } from './carousel-nav';
 
 export function CollectionCarousel({
   title, products, locale, dict, seeMoreHref, seeMoreLabel,
@@ -25,21 +26,8 @@ export function CollectionCarousel({
             {seeMoreLabel}
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
-          <div className="hidden items-center gap-1.5 md:flex">
-            <button
-              aria-label="Previous"
-              onClick={() => embla?.scrollPrev()}
-              className="flex size-9 items-center justify-center rounded-full border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            >
-              <ChevronLeft className="size-4" />
-            </button>
-            <button
-              aria-label="Next"
-              onClick={() => embla?.scrollNext()}
-              className="flex size-9 items-center justify-center rounded-full border text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-            >
-              <ChevronRight className="size-4" />
-            </button>
+          <div className="hidden md:flex">
+            <CarouselNav embla={embla} />
           </div>
         </div>
       </div>

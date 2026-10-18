@@ -1,10 +1,10 @@
 'use client';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
+import { PillLink } from '@/components/ui/pill-link';
 
 type Slide = { image: string; href: string; alt: string };
 
@@ -41,12 +41,7 @@ export function HeroCarousel({ slides, ctaLabel }: { slides: Slide[]; ctaLabel: 
                   <h2 className="max-w-md text-3xl font-semibold tracking-tight text-white md:text-5xl">
                     {s.alt}
                   </h2>
-                  <Link
-                    href={s.href}
-                    className="inline-flex h-11 w-fit items-center rounded-full bg-white px-6 text-sm font-medium text-black transition-transform hover:-translate-y-px"
-                  >
-                    {ctaLabel}
-                  </Link>
+                  <PillLink href={s.href} variant="light">{ctaLabel}</PillLink>
                 </div>
               </div>
             </div>
