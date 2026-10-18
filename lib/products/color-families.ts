@@ -1,4 +1,5 @@
 import type { Locale } from '@/lib/i18n/config';
+import type { Product } from '@/lib/api/schemas/catalog';
 
 /**
  * A Color Family is a named group of catalog colors used as one browsing entry
@@ -29,11 +30,23 @@ export const COLOR_FAMILIES: ColorFamily[] = [
   { id: 'vivid', colors: ['violet'], swatches: ['#6d3fb0', '#8f5fd1', '#b48ae4'] },
 ];
 
+/** The collection every family tile opens — shared so a tile's count and its link can't drift apart. */
+export const COLOR_FAMILY_COLLECTION = 'colored-lenses';
+
 /**
  * Colored lenses filtered to this family. The catalog matches `color` against a
  * comma-separated set, so a family of several colors is one link rather than one
  * link per color.
  */
 export function colorFamilyHref(family: ColorFamily, locale: Locale): string {
-  return `/${locale}/collection/colored-lenses?color=${family.colors.join(',')}`;
+  return `/${locale}/collection/${COLOR_FAMILY_COLLECTION}?color=${family.colors.join(',')}`;
+}
+
+/**
+ * How many of `products` carry one of the family's colors — the number its tile
+ * shows. Pass the products of `COLOR_FAMILY_COLLECTION`, which is what the tile's
+ * link opens, so the count states what the shopper will actually find.
+ */
+export function countColorFamily(family: ColorFamily, products: Product[]): number {
+  return products.filter((p) => p.variants.some((v) => v.color !== undefined && family.colors.includes(v.color))).length;
 }
