@@ -40,13 +40,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         />
 
         <QuizCta
+          eyebrow={dict.home.quiz.eyebrow}
           title={dict.home.quiz.title}
           subtitle={dict.home.quiz.subtitle}
-          stepLabel={dict.home.quiz.stepLabel}
-          optionA={dict.home.quiz.optionA}
-          optionB={dict.home.quiz.optionB}
+          socialProof={dict.home.quiz.socialProof}
           ctaLabel={dict.home.quiz.cta}
           href={`/${l}/quiz`}
+          steps={dict.home.quiz.steps}
         />
       </HomeSection>
 

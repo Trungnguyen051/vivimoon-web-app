@@ -16,11 +16,16 @@ export const vi: Dictionary = {
       party: 'Dự tiệc', gradPhotos: 'Chụp ảnh kỷ yếu', wedding: 'Đám cưới/ Cô Dâu',
     },
     quiz: {
-      title: 'Chưa chọn được lens?',
-      subtitle: 'Chỉ cần trả lời 3 câu hỏi dưới đây, Vivimoon sẽ gợi ý mẫu lens phù hợp với bạn',
-      stepLabel: 'Bạn tìm lens không độ hay lens cận?',
-      optionA: 'Lens không độ', optionB: 'Lens cận',
-      cta: 'Làm trắc nghiệm ngay',
+      eyebrow: 'TÌM LENS HỢP VỚI BẠN',
+      title: 'Chưa biết chọn lens nào?',
+      subtitle: 'Trả lời vài câu hỏi nhanh, Vivimoon sẽ gợi ý mẫu lens phù hợp với bạn',
+      cta: 'Làm quiz 30 giây',
+      socialProof: '12.400 người đã tìm được lens hợp mắt',
+      steps: [
+        { id: 'experience', prompt: 'Bạn đã từng đeo lens chưa?', options: ['Chưa bao giờ', 'Vài lần', 'Thường xuyên'] },
+        { id: 'look', prompt: 'Bạn muốn look như thế nào?', options: ['Tự nhiên', 'Mắt to', 'Sắc sảo'] },
+        { id: 'duration', prompt: 'Đeo lens bao lâu mỗi lần?', options: ['Cả ngày', '4–6 tiếng', 'Dịp đặc biệt'] },
+      ],
     },
     makeup: {
       title: 'Lens cho mọi makeup look',
