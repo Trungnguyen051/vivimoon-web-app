@@ -43,6 +43,14 @@ export const en = {
       colors: { brown: 'Brown', black: 'Black', gray: 'Gray', vivid: 'Standout colors' },
       durations: { daily: '1-day lenses', threeMonth: '3-month lenses', sixMonth: '6-month lenses' },
     },
+    /* Bodies are deliberate placeholders: the design's were truncated in the wireframe
+       metadata and the real strings are pending from Vivimoon (#53). Swap them here. */
+    trust: {
+      authentic: { title: 'Guaranteed 100% authentic', body: 'Placeholder for the authenticity promise — final copy pending from Vivimoon.' },
+      consult: { title: 'Free consultation', body: 'Placeholder for the consultation service — final copy pending from Vivimoon.' },
+      returns: { title: '30-day returns', body: 'Placeholder for the returns policy — final copy pending from Vivimoon.' },
+      express: { title: 'Express delivery', body: 'Placeholder for the delivery promise — final copy pending from Vivimoon.' },
+    },
     tv: {
       title: 'VIVIMOON TV',
       more: 'EXPLORE MORE',

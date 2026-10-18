@@ -45,6 +45,14 @@ export const vi: Dictionary = {
       colors: { brown: 'Nâu', black: 'Đen', gray: 'Xám', vivid: 'Màu sắc nổi bật' },
       durations: { daily: 'Lens 1 ngày', threeMonth: 'Lens 3 tháng', sixMonth: 'Lens 6 tháng' },
     },
+    /* Bodies are deliberate placeholders: the design's were truncated in the wireframe
+       metadata and the real strings are pending from Vivimoon (#53). Swap them here. */
+    trust: {
+      authentic: { title: 'Hàng Chính Hãng 100%', body: 'Nội dung cam kết chính hãng — chờ bản chính thức từ Vivimoon.' },
+      consult: { title: 'Tư vấn miễn phí', body: 'Nội dung dịch vụ tư vấn — chờ bản chính thức từ Vivimoon.' },
+      returns: { title: 'Đổi trả trong 30 ngày', body: 'Nội dung chính sách đổi trả — chờ bản chính thức từ Vivimoon.' },
+      express: { title: 'Giao hàng hoả tốc', body: 'Nội dung dịch vụ giao hàng — chờ bản chính thức từ Vivimoon.' },
+    },
     tv: {
       title: 'VIVIMOON TV',
       more: 'KHÁM PHÁ THÊM',

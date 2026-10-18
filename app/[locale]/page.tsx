@@ -8,6 +8,7 @@ import { ContentCarousel } from '@/components/commerce/content-carousel';
 import { notFound } from 'next/navigation';
 import { HomeSection } from '@/components/layout/home-section';
 import { BrandStory } from '@/components/commerce/brand-story';
+import { TrustBadges } from '@/components/commerce/trust-badges';
 import { COLOR_FAMILIES, COLOR_FAMILY_COLLECTION, colorFamilyHref, countColorFamily } from '@/lib/products/color-families';
 import { catalog } from '@/lib/api/resources/catalog';
 
@@ -138,6 +139,17 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </HomeSection>
 
       <HomeSection>
+        <TrustBadges
+          badges={[
+            { id: 'authentic', ...dict.home.trust.authentic },
+            { id: 'consult', ...dict.home.trust.consult },
+            { id: 'returns', ...dict.home.trust.returns },
+            { id: 'express', ...dict.home.trust.express },
+          ]}
+        />
+      </HomeSection>
+
+      <HomeSection tinted>
         <BrandStory
           headingLine1={dict.brandStory.headingLine1}
           headingLine2={dict.brandStory.headingLine2}
