@@ -20,13 +20,9 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
         >
           Vivimoon
         </Link>
+        {/* The design's nav is exactly five items; the Quiz is reached from the
+            homepage teaser rather than a sixth link in this row (#40). */}
         <MegaNav locale={locale} dict={dict} />
-        <Link
-          href={`/${locale}/quiz`}
-          className="hidden text-sm text-muted-foreground transition-colors hover:text-foreground md:block"
-        >
-          {dict.nav.quiz}
-        </Link>
         <div className="ml-auto flex items-center gap-1 md:gap-2">
           <div className="hidden items-center gap-2 rounded-full border px-3.5 py-2 text-muted-foreground transition-colors focus-within:border-ring md:flex">
             <Search className="size-4" />

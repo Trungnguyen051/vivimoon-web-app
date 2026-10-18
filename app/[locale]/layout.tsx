@@ -22,7 +22,7 @@ export default async function LocaleLayout({
   return (
     <>
       <SessionSync />
-      <AnnouncementBar text={dict.announcement.freeShipping} />
+      <AnnouncementBar segments={[dict.announcement.freeShipping, dict.announcement.authentic, dict.announcement.licensed]} />
       <Header locale={locale as Locale} dict={dict} />
       {/* Width and padding belong to the page, not here — see ADR-0013. Pages opt in via PageContainer. */}
       <main>{children}</main>
