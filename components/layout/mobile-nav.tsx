@@ -6,9 +6,13 @@ import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { getNavItems } from './nav-items';
 import { LocaleSwitcher } from './locale-switcher';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+
+const ROW_CLASS = 'flex min-h-11 items-center rounded-md px-2 text-base font-medium';
 
 export function MobileNav({ locale, dict }: { locale: Locale; dict: Dictionary }) {
-  const items = getNavItems(dict);
+  const items = getNavItems(dict, locale);
+
   return (
     <Sheet>
       <SheetTrigger
@@ -34,25 +38,39 @@ export function MobileNav({ locale, dict }: { locale: Locale; dict: Dictionary }
           </form>
         </div>
 
+        {/* The same five items as the desktop nav, from the same source — only the
+            disclosure differs: an accordion here, a dropdown there. */}
         <nav className="flex flex-col px-2">
-          {items.map((it) => (
-            <SheetClose asChild key={it.slug}>
-              <Link
-                href={`/${locale}/collection/${it.slug}`}
-                className="flex min-h-11 items-center rounded-md px-2 text-base font-medium hover:bg-muted"
-              >
-                {it.label}
-              </Link>
-            </SheetClose>
-          ))}
-          <SheetClose asChild>
-            <Link
-              href={`/${locale}/quiz`}
-              className="flex min-h-11 items-center rounded-md px-2 text-base font-medium hover:bg-muted"
-            >
-              {dict.nav.quiz}
-            </Link>
-          </SheetClose>
+          {items.map((item) =>
+            item.kind === 'group' ? (
+              <Accordion key={item.id} type="single" collapsible>
+                <AccordionItem value={item.id} className="border-b-0">
+                  <AccordionTrigger className={`${ROW_CLASS} hover:bg-muted hover:no-underline`}>
+                    {item.label}
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-0">
+                    {item.items.map((child) => (
+                      <SheetClose asChild key={child.id}>
+                        <Link href={child.href} className={`${ROW_CLASS} pl-6 font-normal hover:bg-muted`}>
+                          {child.label}
+                        </Link>
+                      </SheetClose>
+                    ))}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            ) : item.kind === 'link' ? (
+              <SheetClose asChild key={item.id}>
+                <Link href={item.href} className={`${ROW_CLASS} hover:bg-muted`}>
+                  {item.label}
+                </Link>
+              </SheetClose>
+            ) : (
+              <span key={item.id} className={`${ROW_CLASS} text-muted-foreground`}>
+                {item.label}
+              </span>
+            ),
+          )}
         </nav>
 
         <div className="mt-auto border-t p-4">
