@@ -12,6 +12,22 @@ describe('mockCatalog', () => {
     expect(await mockCatalog.getProductBySlug('nope')).toBeNull();
   });
 
+  it('filters by a comma-separated set of colors', async () => {
+    const [brown, violet, both] = await Promise.all([
+      mockCatalog.listProducts({ color: 'brown' }),
+      mockCatalog.listProducts({ color: 'violet' }),
+      mockCatalog.listProducts({ color: 'brown,violet' }),
+    ]);
+
+    expect(brown.length).toBeGreaterThan(0);
+    expect(violet.length).toBeGreaterThan(0);
+    expect(both.map((p) => p.id).sort()).toEqual([...new Set([...brown, ...violet].map((p) => p.id))].sort());
+  });
+
+  it('matches no product for an unknown color', async () => {
+    expect(await mockCatalog.listProducts({ color: 'chartreuse' })).toHaveLength(0);
+  });
+
   it('filters by product line', async () => {
     const list = await mockCatalog.listProducts({ productLine: 'coMau' });
     expect(list.length).toBeGreaterThan(0);

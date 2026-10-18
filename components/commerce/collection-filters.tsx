@@ -18,7 +18,9 @@ export function CollectionFilters({ dict }: { dict: Dictionary }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
-  const hasFilters = ['productLine', 'replacement', 'sort'].some((k) => params.get(k));
+  // `color` has no Select of its own, but a Color Family tile sets it, so it has to
+  // count as a filter — otherwise that path lands on a filtered grid with no way to clear it.
+  const hasFilters = ['productLine', 'replacement', 'sort', 'color'].some((k) => params.get(k));
 
   const setParam = (key: string, value: string) => {
     const next = new URLSearchParams(params.toString());
