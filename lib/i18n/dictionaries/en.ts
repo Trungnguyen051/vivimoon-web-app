@@ -14,11 +14,16 @@ export const en = {
       party: 'Parties', gradPhotos: 'Grad photos', wedding: 'Wedding / Bride',
     },
     quiz: {
-      title: 'Haven’t picked a lens yet?',
-      subtitle: 'Just answer 3 quick questions and Vivimoon will suggest the right lens for you',
-      stepLabel: 'Looking for plano or prescription lenses?',
-      optionA: 'No-power lens', optionB: 'Prescription lens',
-      cta: 'Take the quiz',
+      eyebrow: 'FIND THE LENS THAT FITS YOU',
+      title: 'Not sure which lens to pick?',
+      subtitle: 'Answer a few quick questions and Vivimoon will suggest the right lens for you',
+      cta: 'Take the 30-second quiz',
+      socialProof: '12,400 people have found lenses that fit',
+      steps: [
+        { id: 'experience', prompt: 'Have you worn lenses before?', options: ['Never', 'A few times', 'Often'] },
+        { id: 'look', prompt: 'What look are you going for?', options: ['Natural', 'Bigger eyes', 'Striking'] },
+        { id: 'duration', prompt: 'How long do you wear them each time?', options: ['All day', '4–6 hours', 'Special occasions'] },
+      ],
     },
     makeup: {
       title: 'Lens for every makeup look',

@@ -30,9 +30,9 @@
     "semantic_hash": ""
   },
   "app/[locale]/page.tsx": {
-    "mtime": 1792319127.732675,
-    "seen": 1792320029.641782,
-    "ast_hash": "59b92d5c1ad6dc293b17395043e5baca",
+    "mtime": 1792320691.9081066,
+    "seen": 1792320792.772068,
+    "ast_hash": "43e5ec3d888ee4a50d9efa6bf4605a11",
     "semantic_hash": ""
   },
   "app/[locale]/product/[slug]/page.tsx": {
@@ -72,9 +72,9 @@
     "semantic_hash": ""
   },
   "components/commerce/category-grid.tsx": {
-    "mtime": 1792314006.3677893,
-    "seen": 1792314094.31699,
-    "ast_hash": "fa361f1d5a0f438ecaa4e2035229ce57",
+    "mtime": 1792320726.256812,
+    "seen": 1792320792.7721741,
+    "ast_hash": "62a785b859fd38cb3d6b9b05bd526eb9",
     "semantic_hash": ""
   },
   "components/commerce/collection-carousel.tsx": {
@@ -396,15 +396,15 @@
     "semantic_hash": "e337dcc7b7b3cc468e1af0f5c17aca4f"
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1791694919.7885044,
-    "seen": 1791695185.2139552,
-    "ast_hash": "b2e0320cbc350ab332f6d0ffd9f8bdf5",
+    "mtime": 1792320680.6673255,
+    "seen": 1792320792.772344,
+    "ast_hash": "224ca29c627082c7ea053774ab76e149",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/vi.ts": {
-    "mtime": 1791694930.2439375,
-    "seen": 1791695185.213956,
-    "ast_hash": "1e53b71c2c92eba782b247082c9575b5",
+    "mtime": 1792320680.6675472,
+    "seen": 1792320792.772345,
+    "ast_hash": "9a736c1a73dc87ed17c51c019519492b",
     "semantic_hash": ""
   },
   "lib/types/collection.ts": {
@@ -2159,12 +2159,6 @@
     "ast_hash": "575d52c68e83c75befe06e52e5139fe0",
     "semantic_hash": ""
   },
-  "public/images/promo-return-policy.png": {
-    "mtime": 1791693984.3723404,
-    "seen": 1791694731.491754,
-    "ast_hash": "5836e724c57f1fd19fddfd631b725e1f",
-    "semantic_hash": ""
-  },
   "public/images/tv-avatar.png": {
     "mtime": 1791693984.3665602,
     "seen": 1791694731.491755,
@@ -2208,9 +2202,9 @@
     "semantic_hash": ""
   },
   "components/commerce/category-grid.test.tsx": {
-    "mtime": 1792313991.808746,
-    "seen": 1792314094.316986,
-    "ast_hash": "8141bad3643225087ec5fbef59e40938",
+    "mtime": 1792320712.260105,
+    "seen": 1792320792.7721732,
+    "ast_hash": "1213231c0e4004089a769552536a3f05",
     "semantic_hash": ""
   },
   "components/layout/page-container.tsx": {
@@ -2229,6 +2223,12 @@
     "mtime": 1792319158.3169668,
     "seen": 1792320029.641862,
     "ast_hash": "cf6203c24f41aeaa5d88567c9bd8124d",
+    "semantic_hash": ""
+  },
+  "components/layout/home-section.tsx": {
+    "mtime": 1792320680.667067,
+    "seen": 1792320792.77222,
+    "ast_hash": "56f66d1df4ef7746f29feb9acc26b77c",
     "semantic_hash": ""
   }
 }
