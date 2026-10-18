@@ -3,7 +3,7 @@ export const en = {
     new: 'New', men: 'Men', women: 'Women', sport: 'Sport', accessories: 'Accessories', sale: 'Sale',
     about: 'About Vivimoon', products: 'Products', knowledge: 'Knowledge', support: 'Support', orderTracking: 'Track order',
   },
-  common: { shopNow: 'Shop Now', seeMore: 'See more', addToCart: 'Add to cart', buyNow: 'Buy now', search: 'Search...', decreaseQty: 'Decrease quantity', increaseQty: 'Increase quantity', menu: 'Menu' },
+  common: { shopNow: 'Shop Now', seeMore: 'See more', addToCart: 'Add to cart', buyNow: 'Buy now', search: 'Search...', decreaseQty: 'Decrease quantity', increaseQty: 'Increase quantity', menu: 'Menu', goToSlide: 'Go to slide' },
   announcement: {
     freeShipping: 'FREE SHIPPING ON ORDERS FROM 300,000₫',
     authentic: 'AUTHENTIC KOREAN LENSES',
@@ -45,12 +45,12 @@ export const en = {
     },
     tv: {
       title: 'VIVIMOON TV',
-      subtitle: 'See lenses in detail through makeup videos and reviews from real users',
+      more: 'EXPLORE MORE',
       items: [
-        { title: 'Moisture-lock prescription lens, natural black, 1 month', tags: ['1 month', 'Black'] },
-        { title: 'Moisture-lock prescription lens, honey brown, 1 day', tags: ['1 day', 'Brown'] },
-        { title: 'Jade Green daily lens, silver-grey blue shimmer', tags: ['1 month', 'Blue'] },
-        { title: 'Jade Green daily lens, silver-grey blue shimmer', tags: ['1 month', 'Blue'] },
+        { id: 'hazel', title: 'Moisture-lock prescription lens, honey brown, 1 month', tags: ['1 month', 'Prescription'], href: '/product/hazel-monthly-colored' },
+        { id: 'mystic', title: 'Mystic Violet daily lens, smoky purple', tags: ['1 day', 'Prescription'], href: '/product/mystic-daily-colored' },
+        { id: 'aqua', title: 'Aqua Daily clear lens, all-day moisture', tags: ['1 day', 'Prescription'], href: '/product/aqua-daily-clear' },
+        { id: 'torica', title: 'Torica 6-month prescription lens for dry eyes', tags: ['6 months', 'Prescription'], href: '/product/torica-6month-clear' },
       ],
     },
   },

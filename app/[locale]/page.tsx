@@ -32,7 +32,15 @@ const BRAND_STORY_IMAGES = [
   { id: 'daily', src: '/images/cat-daily.jpg' },
 ];
 
-const TV_THUMBS = ['/images/tv-thumb-1.png', '/images/tv-thumb-2.png', '/images/tv-thumb-3.png', '/images/tv-thumb-4.png'];
+/* Keyed by item id, not by position: an index would tie the thumbnails to dictionary
+   order across both locales, and a fifth item would hand next/image an undefined src
+   and take the homepage down rather than just miss a picture. */
+const TV_THUMBS: Record<string, string> = {
+  hazel: '/images/tv-thumb-1.png',
+  mystic: '/images/tv-thumb-2.png',
+  aqua: '/images/tv-thumb-3.png',
+  torica: '/images/tv-thumb-4.png',
+};
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -119,9 +127,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <HomeSection tinted>
         <ContentCarousel
           title={dict.home.tv.title}
-          subtitle={dict.home.tv.subtitle}
           avatar="/images/tv-avatar.png"
-          items={dict.home.tv.items.map((it, i) => ({ ...it, image: TV_THUMBS[i] }))}
+          items={dict.home.tv.items.map((it) => ({ ...it, image: TV_THUMBS[it.id] ?? '/images/placeholder.jpg', href: `/${l}${it.href}` }))}
+          moreLabel={dict.home.tv.more}
+          slideLabel={dict.common.goToSlide}
+          /* No video index route exists; the colour collection is the nearest browsing
+             destination, though two of the four cards are clear lenses. Revisit with #42. */
+          moreHref={`/${l}/collection/colored-lenses`}
         />
       </HomeSection>
 

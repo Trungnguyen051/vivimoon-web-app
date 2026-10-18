@@ -5,7 +5,7 @@ export const vi: Dictionary = {
     new: 'Mới', men: 'Nam', women: 'Nữ', sport: 'Thể thao', accessories: 'Phụ kiện', sale: 'Giảm giá',
     about: 'Về Vivimoon', products: 'Sản Phẩm', knowledge: 'Kiến thức', support: 'Hỗ trợ', orderTracking: 'Tra cứu đơn hàng',
   },
-  common: { shopNow: 'Mua ngay', seeMore: 'Xem thêm', addToCart: 'Thêm vào giỏ', buyNow: 'Mua ngay', search: 'Tìm kiếm...', decreaseQty: 'Giảm số lượng', increaseQty: 'Tăng số lượng', menu: 'Menu' },
+  common: { shopNow: 'Mua ngay', seeMore: 'Xem thêm', addToCart: 'Thêm vào giỏ', buyNow: 'Mua ngay', search: 'Tìm kiếm...', decreaseQty: 'Giảm số lượng', increaseQty: 'Tăng số lượng', menu: 'Menu', goToSlide: 'Chuyển tới slide' },
   announcement: {
     freeShipping: 'MIỄN PHÍ VẬN CHUYỂN ĐƠN TỪ 300.000₫',
     authentic: 'LENS HÀN QUỐC CHÍNH HÃNG',
@@ -47,12 +47,12 @@ export const vi: Dictionary = {
     },
     tv: {
       title: 'VIVIMOON TV',
-      subtitle: 'Xem chi tiết lens qua các video make up và đánh giá từ người dùng',
+      more: 'KHÁM PHÁ THÊM',
       items: [
-        { title: 'Lens cận khóa ẩm màu đen tự nhiên 1 tháng', tags: ['1 tháng', 'Màu đen'] },
-        { title: 'Lens cận khóa ẩm màu nâu mật ong 1 ngày', tags: ['1 ngày', 'Màu nâu'] },
-        { title: 'Lens 1 ngày màu xanh dương ánh xám bạc Jade Green', tags: ['1 tháng', 'Xanh dương'] },
-        { title: 'Lens 1 ngày màu xanh dương ánh xám bạc Jade Green', tags: ['1 tháng', 'Xanh dương'] },
+        { id: 'hazel', title: 'Lens cận khóa ẩm màu nâu mật ong 1 tháng', tags: ['1 tháng', 'Lens cận'], href: '/product/hazel-monthly-colored' },
+        { id: 'mystic', title: 'Lens 1 ngày màu tím khói Mystic Violet', tags: ['1 ngày', 'Lens cận'], href: '/product/mystic-daily-colored' },
+        { id: 'aqua', title: 'Lens trong suốt Aqua Daily cấp ẩm cả ngày', tags: ['1 ngày', 'Lens cận'], href: '/product/aqua-daily-clear' },
+        { id: 'torica', title: 'Lens cận Torica 6 tháng cho mắt khô', tags: ['6 tháng', 'Lens cận'], href: '/product/torica-6month-clear' },
       ],
     },
   },
