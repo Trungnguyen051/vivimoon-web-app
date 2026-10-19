@@ -18,8 +18,7 @@ import { catalog } from '@/lib/api/resources/catalog';
    Each tile opens the collection that covers it best, which today is only true of
    `daily`: no collection contains a threeMonth or sixMonth product, though the
    catalog has both, so those two tiles land empty until the fixtures catch up (#49) —
-   the same tracked gap as the Đen family's (#41), not a reason to drop the tiles the
-   design specifies. */
+   a tracked gap, not a reason to drop the tiles the design specifies. */
 const DURATION_TILES = [
   { id: 'daily', image: '/images/products/aqua-daily-1.jpg', collection: 'daily-lenses' },
   { id: 'threeMonth', image: '/images/products/hazel-monthly-1.jpg', collection: 'bestsellers' },

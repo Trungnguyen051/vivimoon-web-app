@@ -118,6 +118,7 @@
   "116": "checkout-address-prefill.test.tsx",
   "117": "SignUpForm",
   "118": "Vivimoon.vn — Live Site Data-Model Audit",
+  "119": "embla-carousel-react",
   "120": "radix-ui",
   "123": "[locale]/page.tsx",
   "124": "account-form.test.tsx",
@@ -129,6 +130,5 @@
   "133": "0013-pages-own-their-width.md",
   "134": "0012-unavailable-cart-lines-are-reported-not-dropped.md",
   "135": "prettier",
-  "136": "lucide-react",
   "137": "checkout/page.tsx"
 }

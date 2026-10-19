@@ -1,7 +1,7 @@
 # Graph Report - vivimoon-web-app  (2026-10-19)
 
 ## Corpus Check
-- 341 files · ~410,891 words
+- 341 files · ~411,016 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9b8f3abb`
+- Built from commit: `8d7bafdf`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -128,6 +128,7 @@
 - checkout-address-prefill.test.tsx
 - SignUpForm
 - Vivimoon.vn — Live Site Data-Model Audit
+- embla-carousel-react
 - radix-ui
 - [locale]/page.tsx
 - account-form.test.tsx
@@ -139,7 +140,6 @@
 - 0013-pages-own-their-width.md
 - 0012-unavailable-cart-lines-are-reported-not-dropped.md
 - prettier
-- lucide-react
 - checkout/page.tsx
 
 ## God Nodes (most connected - your core abstractions)
@@ -206,7 +206,7 @@ Nodes (19): ORDER_RESPONSE, fetchRoutingTo(), json(), PRICED_RESPONSE, CheckoutP
 
 ### Community 7 - "dependencies"
 Cohesion: 0.08
-Nodes (25): class-variance-authority, clsx, embla-carousel-react, @hookform/resolvers, next, @next/third-parties, dependencies, class-variance-authority (+17 more)
+Nodes (25): class-variance-authority, clsx, @hookform/resolvers, lucide-react, next, @next/third-parties, dependencies, class-variance-authority (+17 more)
 
 ### Community 8 - "Vivimoon M2 — Purchase Core Implementation Plan"
 Cohesion: 0.11

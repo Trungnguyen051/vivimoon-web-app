@@ -36,11 +36,8 @@ describe('Color Family', () => {
     expect(listed.map((p) => p.id).sort()).toEqual(expected.map((p) => p.id).sort());
   });
 
-  /**
-   * The tile promises products behind it. `black` is the one knowingly empty tile —
-   * the fixtures carry no black lenses until #41 — and that gap is tracked, not hidden.
-   */
-  it.each(COLOR_FAMILIES.filter((f) => f.id !== 'black'))('$id does not dead-end', async (family) => {
+  /** Every tile promises products behind it; #41 closed the last gap, so none is exempt. */
+  it.each(COLOR_FAMILIES)('$id does not dead-end', async (family) => {
     expect(await followTile(colorFamilyHref(family, 'vi'))).not.toHaveLength(0);
   });
 
