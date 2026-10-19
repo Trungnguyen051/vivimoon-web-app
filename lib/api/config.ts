@@ -6,7 +6,7 @@
  * identity users, so it must not go upstream while either is still mocked —
  * fixture IDs will not match real ones and references dangle.
  */
-export const RESOURCES = ['catalog', 'identity', 'discovery', 'commerce'] as const;
+export const RESOURCES = ['catalog', 'identity', 'discovery', 'commerce', 'editorial'] as const;
 export type ResourceName = (typeof RESOURCES)[number];
 
 export type ApiMode = 'mock' | 'upstream';

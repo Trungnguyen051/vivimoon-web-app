@@ -8,7 +8,8 @@ export type NavLink = { id: string; label: string; href: string };
  * One top-level entry in the primary nav. The three kinds are the point: Kiến thức
  * and Hỗ trợ have no routes yet, and a `text` item cannot carry an href, so they
  * are inert by construction rather than by styling — no dead link can ship while
- * their own tickets are still open (#40). #42 turns Kiến thức into a `link`.
+ * its own ticket is still open (#40). #42 gave Kiến thức a route, so it is a `link`
+ * now; Hỗ trợ is the last one still waiting.
  */
 export type NavItem =
   | ({ kind: 'link' } & NavLink)
@@ -31,7 +32,7 @@ export function getNavItems(dict: Dictionary, locale: Locale): NavItem[] {
   return [
     { kind: 'link', id: 'about', label: dict.nav.about, href: `/${locale}/about` },
     { kind: 'group', id: 'products', label: dict.nav.products, items: getCollectionLinks(dict, locale) },
-    { kind: 'text', id: 'knowledge', label: dict.nav.knowledge },
+    { kind: 'link', id: 'knowledge', label: dict.nav.knowledge, href: `/${locale}/articles` },
     { kind: 'text', id: 'support', label: dict.nav.support },
     { kind: 'link', id: 'order-tracking', label: dict.nav.orderTracking, href: `/${locale}/orders/track` },
   ];

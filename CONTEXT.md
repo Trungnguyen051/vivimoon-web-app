@@ -55,6 +55,10 @@ _Avoid_: Gallery alone (ambiguous with the standard gallery it falls back to), M
 The step-by-step questionnaire that scores a shopper's tag-weighted answers into product recommendations. Content (6 questions, tag weights) is provisional pending Vivimoon's real question set.
 _Avoid_: Lens-Matching Quiz (same concept — Quiz is the canonical short form)
 
+**Article**:
+One editorial piece behind the homepage's Kiến thức section, with a title, excerpt and body in every supported locale. Unlike UI copy, an Article's translations live with the content in the fixtures rather than in the dictionary — an article is authored as a whole in each language, and a dictionary key per paragraph would not scale. Its body is plain paragraphs, not markup, so rendering needs no parser. Articles reference no Product, which is why `editorial` is its own resource key rather than part of `discovery`.
+_Avoid_: Post, blog entry, news item
+
 **Color Family**:
 A named group of catalog colors used as a single merchandising entry point on the homepage — Nâu, Đen, Xám, and Màu sắc nổi bật ("standout colors", which gathers every vivid color rather than naming one). A Color Family is a browsing concept only: it has no field on a Product or Variant, which each still carry one `color`. The homepage tile for a family shows up to three representative swatches and links into the collection filtered to that family's colors.
 _Avoid_: Color group, swatch group, palette

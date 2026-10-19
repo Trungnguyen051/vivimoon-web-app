@@ -7,10 +7,11 @@
  */
 import { describe, it, expect } from 'vitest';
 import { z } from 'zod';
-import { products, collections, reviews, users, vouchers, orders, galleries } from '@/content/mock';
+import { products, collections, reviews, users, vouchers, orders, galleries, articles } from '@/content/mock';
 import { quiz } from '@/content/quiz';
 import { productSchema, collectionSchema, reviewSchema, lensGallerySchema, productLineSchema } from '@/lib/api/schemas/catalog';
 import { quizDefinitionSchema } from '@/lib/api/schemas/discovery';
+import { articleSchema } from '@/lib/api/schemas/editorial';
 import { userSchema } from '@/lib/api/schemas/auth';
 import { voucherSchema } from '@/lib/api/schemas/cart';
 import { orderSchema, orderStatusSchema } from '@/lib/api/schemas/orders';
@@ -37,6 +38,10 @@ describe('fixture conformance', () => {
 
   it('every product satisfies productSchema', () => {
     expectAllValid(productSchema, products, 'product');
+  });
+
+  it('every article satisfies articleSchema', () => {
+    expectAllValid(articleSchema, articles, 'article');
   });
 
   it('every collection satisfies collectionSchema', () => {
@@ -74,6 +79,12 @@ describe('fixture conformance', () => {
   it('variant ids are globally unique', () => {
     const all = products.flatMap((p) => p.variants.map((v) => v.id));
     expect(all.length).toBe(new Set(all).size);
+  });
+
+  /** A slug is both the article's route key and its React key, so a duplicate hides one article. */
+  it('article slugs are unique', () => {
+    const slugs = articles.map((a) => a.slug);
+    expect(slugs.length).toBe(new Set(slugs).size);
   });
 
   it('product slugs are unique', () => {

@@ -53,12 +53,12 @@ describe('MegaNav', () => {
   it('renders the routeless items as text and the rest as links', () => {
     render(<MegaNav locale="vi" dict={viDict} />);
 
-    for (const label of [viDict.nav.knowledge, viDict.nav.support]) {
-      expect(screen.getByText(label)).toBeInTheDocument();
-      expect(screen.queryByRole('link', { name: label })).not.toBeInTheDocument();
-    }
+    // Hỗ trợ is the last item without a route; #42 gave Kiến thức one.
+    expect(screen.getByText(viDict.nav.support)).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: viDict.nav.support })).not.toBeInTheDocument();
 
     expect(screen.getByRole('link', { name: viDict.nav.about })).toHaveAttribute('href', '/vi/about');
     expect(screen.getByRole('link', { name: viDict.nav.orderTracking })).toHaveAttribute('href', '/vi/orders/track');
+    expect(screen.getByRole('link', { name: viDict.nav.knowledge })).toHaveAttribute('href', '/vi/articles');
   });
 });

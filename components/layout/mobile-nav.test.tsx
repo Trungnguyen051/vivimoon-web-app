@@ -34,12 +34,12 @@ describe('MobileNav', () => {
   it('renders the routeless items as text and the rest as links', async () => {
     await openDrawer();
 
-    for (const label of [viDict.nav.knowledge, viDict.nav.support]) {
-      expect(await screen.findByText(label)).toBeInTheDocument();
-      expect(screen.queryByRole('link', { name: label })).not.toBeInTheDocument();
-    }
+    // Hỗ trợ is the last item without a route; #42 gave Kiến thức one.
+    expect(await screen.findByText(viDict.nav.support)).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: viDict.nav.support })).not.toBeInTheDocument();
 
     expect(screen.getByRole('link', { name: viDict.nav.about })).toHaveAttribute('href', '/vi/about');
     expect(screen.getByRole('link', { name: viDict.nav.orderTracking })).toHaveAttribute('href', '/vi/orders/track');
+    expect(screen.getByRole('link', { name: viDict.nav.knowledge })).toHaveAttribute('href', '/vi/articles');
   });
 });
