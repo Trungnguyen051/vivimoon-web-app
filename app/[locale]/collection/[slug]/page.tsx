@@ -5,6 +5,7 @@ import { catalog } from '@/lib/api/resources/catalog';
 import { parseProductQueryLoose } from '@/lib/api/schemas/catalog';
 import { SearchX } from 'lucide-react';
 import { ProductGrid } from '@/components/commerce/product-grid';
+import { collectionListId } from '@/lib/analytics/list-id';
 import { CollectionFilters } from '@/components/commerce/collection-filters';
 import { distinctColorVariants } from '@/lib/products/variant-colors';
 import { Button } from '@/components/ui/button';
@@ -86,7 +87,7 @@ export default async function CollectionPage({
             ) : null}
           </Empty>
         ) : (
-          <ProductGrid products={products} locale={l} dict={dict} listId={collection.slug} />
+          <ProductGrid products={products} locale={l} dict={dict} listId={collectionListId(collection.slug, query, colors)} />
         )}
       </div>
     </PageContainer>

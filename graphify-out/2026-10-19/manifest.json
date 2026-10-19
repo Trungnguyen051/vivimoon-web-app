@@ -18,8 +18,8 @@
     "semantic_hash": ""
   },
   "app/[locale]/collection/[slug]/page.tsx": {
-    "mtime": 1792378492.403429,
-    "seen": 1792378665.66467,
+    "mtime": 1792378929.3440647,
+    "seen": 1792379717.739159,
     "ast_hash": "df0fb0f68e700ac39d792d0254daf7a8",
     "semantic_hash": ""
   },
@@ -84,14 +84,14 @@
     "semantic_hash": ""
   },
   "components/commerce/collection-filters.tsx": {
-    "mtime": 1792378472.9750934,
-    "seen": 1792378665.6647959,
+    "mtime": 1792378929.3501647,
+    "seen": 1792379717.739268,
     "ast_hash": "f38062b9ef8b6e84c9186b0d6e383bb0",
     "semantic_hash": ""
   },
   "components/commerce/hero-carousel.tsx": {
-    "mtime": 1792319873.2392864,
-    "seen": 1792320029.6418629,
+    "mtime": 1792379617.4678376,
+    "seen": 1792379717.739285,
     "ast_hash": "dfb24ce71c37e821bc7b335c345f4345",
     "semantic_hash": ""
   },
@@ -114,8 +114,8 @@
     "semantic_hash": ""
   },
   "components/commerce/product-card.tsx": {
-    "mtime": 1788748477.0263603,
-    "seen": 1788748671.977692,
+    "mtime": 1792379619.1719956,
+    "seen": 1792379717.7393012,
     "ast_hash": "c060a62748795b542894052054910fe5",
     "semantic_hash": ""
   },
@@ -396,14 +396,14 @@
     "semantic_hash": "e337dcc7b7b3cc468e1af0f5c17aca4f"
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1792378472.918274,
-    "seen": 1792378665.665092,
+    "mtime": 1792378929.4364543,
+    "seen": 1792379717.739532,
     "ast_hash": "7c73f2c31998d65e689caa63a34df43c",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/vi.ts": {
-    "mtime": 1792378472.9184806,
-    "seen": 1792378665.6650932,
+    "mtime": 1792378929.4371781,
+    "seen": 1792379717.739533,
     "ast_hash": "5237744692ad4c015c66c11296de8c2f",
     "semantic_hash": ""
   },
@@ -450,10 +450,10 @@
     "semantic_hash": ""
   },
   "next.config.ts": {
-    "mtime": 1786869554.3976572,
-    "seen": 1787625522.045944,
-    "ast_hash": "84dcd1722791e5413eea0009ded341f8",
-    "semantic_hash": "84dcd1722791e5413eea0009ded341f8"
+    "mtime": 1792379131.177821,
+    "seen": 1792379717.73957,
+    "ast_hash": "daad32b4de0b92afe04301ebf0a6cc76",
+    "semantic_hash": ""
   },
   "package.json": {
     "mtime": 1792341290.3806176,
@@ -492,8 +492,8 @@
     "semantic_hash": "d76ed5b51bda7dc44ea95e17d52f4202"
   },
   "vitest.setup.ts": {
-    "mtime": 1792377997.210769,
-    "seen": 1792378665.665151,
+    "mtime": 1792378929.4408846,
+    "seen": 1792379717.739586,
     "ast_hash": "686440c3d72b23dce5b4c283c98100d4",
     "semantic_hash": ""
   },
@@ -2100,9 +2100,9 @@
     "semantic_hash": ""
   },
   "components/commerce/content-carousel.tsx": {
-    "mtime": 1792345044.6402273,
-    "seen": 1792376433.4699829,
-    "ast_hash": "d93357d4162319c694317094d801f360",
+    "mtime": 1792379028.4764292,
+    "seen": 1792379717.73928,
+    "ast_hash": "8ab0dd5f054b3df1cb1d6912525fb478",
     "semantic_hash": ""
   },
   "components/commerce/quiz-cta.tsx": {
@@ -2238,8 +2238,8 @@
     "semantic_hash": ""
   },
   "components/commerce/brand-story.tsx": {
-    "mtime": 1792342432.7986329,
-    "seen": 1792343580.959539,
+    "mtime": 1792379617.47084,
+    "seen": 1792379717.739257,
     "ast_hash": "fa28ae41a0d3d9618091ca4085b940ea",
     "semantic_hash": ""
   },
@@ -2358,15 +2358,27 @@
     "semantic_hash": ""
   },
   "components/commerce/collection-filters.test.tsx": {
-    "mtime": 1792378516.356319,
-    "seen": 1792378665.6647942,
+    "mtime": 1792378929.345192,
+    "seen": 1792379717.739267,
     "ast_hash": "fee74026740e81d38ef6c923f5c3efe1",
     "semantic_hash": ""
   },
   "lib/products/filters-colors.test.ts": {
-    "mtime": 1792378492.410363,
-    "seen": 1792378665.665111,
+    "mtime": 1792378929.438029,
+    "seen": 1792379717.739549,
     "ast_hash": "2a48ba34d28e2057e794be825248da25",
+    "semantic_hash": ""
+  },
+  "tests/image-pipeline.test.ts": {
+    "mtime": 1792379596.9193876,
+    "seen": 1792379717.73958,
+    "ast_hash": "77cc4672b96df9de85ee91a8a784fd94",
+    "semantic_hash": ""
+  },
+  "docs/adr/0014-image-optimization-is-on.md": {
+    "mtime": 1792379636.481421,
+    "seen": 1792379717.7396202,
+    "ast_hash": "9de1e1f543987608af8745e57fc88a47",
     "semantic_hash": ""
   }
 }
