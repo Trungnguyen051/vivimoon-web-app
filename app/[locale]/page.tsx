@@ -9,6 +9,8 @@ import { notFound } from 'next/navigation';
 import { HomeSection } from '@/components/layout/home-section';
 import { BrandStory } from '@/components/commerce/brand-story';
 import { TrustBadges } from '@/components/commerce/trust-badges';
+import { ArticleCards } from '@/components/commerce/article-cards';
+import { editorial } from '@/lib/api/resources/editorial';
 import { COLOR_FAMILIES, COLOR_FAMILY_COLLECTION, colorFamilyHref, countColorFamily } from '@/lib/products/color-families';
 import { DURATION_TILES, durationTileHref } from '@/lib/products/duration-tiles';
 import { catalog } from '@/lib/api/resources/catalog';
@@ -41,6 +43,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
      14/10/24/8 over a collection holding two). */
   const familyCollection = await catalog.getCollection(COLOR_FAMILY_COLLECTION);
   const familyProducts = familyCollection ? await catalog.getProductsByIds(familyCollection.productIds) : [];
+
+  /* The design shows three; the index behind the CTA shows the rest. */
+  const knowledgeArticles = (await editorial.listArticles()).slice(0, 3);
 
   return (
     <>
@@ -126,6 +131,21 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </HomeSection>
 
       <HomeSection>
+        <ArticleCards
+          title={dict.home.knowledge.title}
+          viewAllHref={`/${l}/articles`}
+          viewAllLabel={dict.home.knowledge.viewAll}
+          articles={knowledgeArticles.map((article) => ({
+            slug: article.slug,
+            title: article.title[l],
+            excerpt: article.excerpt[l],
+            image: article.image,
+            href: `/${l}/articles/${article.slug}`,
+          }))}
+        />
+      </HomeSection>
+
+      <HomeSection tinted>
         <TrustBadges
           badges={[
             { id: 'authentic', ...dict.home.trust.authentic },
@@ -136,7 +156,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         />
       </HomeSection>
 
-      <HomeSection tinted>
+      <HomeSection>
         <BrandStory
           headingLine1={dict.brandStory.headingLine1}
           headingLine2={dict.brandStory.headingLine2}

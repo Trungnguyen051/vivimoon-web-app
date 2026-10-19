@@ -43,6 +43,10 @@ export const en = {
       colors: { brown: 'Brown', black: 'Black', gray: 'Gray', vivid: 'Standout colors' },
       durations: { daily: '1-day lenses', threeMonth: '3-month lenses', sixMonth: '6-month lenses' },
     },
+    knowledge: {
+      title: 'Knowledge',
+      viewAll: 'View all',
+    },
     /* Bodies are deliberate placeholders: the design's were truncated in the wireframe
        metadata and the real strings are pending from Vivimoon (#53). Swap them here. */
     trust: {
@@ -61,6 +65,9 @@ export const en = {
         { id: 'torica', title: 'Torica 6-month prescription lens for dry eyes', tags: ['6 months', 'Prescription'], href: '/product/torica-6month-clear' },
       ],
     },
+  },
+  articles: {
+    title: 'Knowledge', publishedOn: 'Published', backToIndex: 'All articles',
   },
   brandStory: {
     headingLine1: 'Born in Korea',

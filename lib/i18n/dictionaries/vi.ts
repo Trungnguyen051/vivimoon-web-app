@@ -45,6 +45,10 @@ export const vi: Dictionary = {
       colors: { brown: 'Nâu', black: 'Đen', gray: 'Xám', vivid: 'Màu sắc nổi bật' },
       durations: { daily: 'Lens 1 ngày', threeMonth: 'Lens 3 tháng', sixMonth: 'Lens 6 tháng' },
     },
+    knowledge: {
+      title: 'Kiến thức',
+      viewAll: 'Xem Tất cả',
+    },
     /* Bodies are deliberate placeholders: the design's were truncated in the wireframe
        metadata and the real strings are pending from Vivimoon (#53). Swap them here. */
     trust: {
@@ -63,6 +67,9 @@ export const vi: Dictionary = {
         { id: 'torica', title: 'Lens cận Torica 6 tháng cho mắt khô', tags: ['6 tháng', 'Lens cận'], href: '/product/torica-6month-clear' },
       ],
     },
+  },
+  articles: {
+    title: 'Kiến thức', publishedOn: 'Đăng ngày', backToIndex: 'Tất cả bài viết',
   },
   brandStory: {
     headingLine1: 'Sinh ra tại Hàn Quốc',

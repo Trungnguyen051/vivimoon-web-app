@@ -9,3 +9,4 @@ export { orders } from './orders';
 export { addresses } from './addresses';
 export { favorites } from './favorites';
 export { loyaltyHistory } from './loyalty';
+export { articles } from './articles';
