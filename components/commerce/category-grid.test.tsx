@@ -18,9 +18,9 @@ describe('CategoryGrid', () => {
     render(
       <CategoryGrid
         items={[
-          { id: 'grad', label: 'Dự tiệc', href: '/vi/collection/bestsellers', image: '/images/placeholder.png' },
-          { id: 'wedding', label: 'Dự tiệc', href: '/vi/collection/bestsellers', image: '/images/placeholder.png' },
-          { id: 'party', label: 'Dự tiệc', href: '/vi/collection/bestsellers', image: '/images/placeholder.png' },
+          { id: 'grad', label: 'Dự tiệc', href: '/vi/collection/bestsellers', image: '/images/placeholder.jpg' },
+          { id: 'wedding', label: 'Dự tiệc', href: '/vi/collection/bestsellers', image: '/images/placeholder.jpg' },
+          { id: 'party', label: 'Dự tiệc', href: '/vi/collection/bestsellers', image: '/images/placeholder.jpg' },
         ]}
       />,
     );

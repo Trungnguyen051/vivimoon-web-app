@@ -4,7 +4,7 @@ import { ContentCarousel } from './content-carousel';
 import { en } from '@/lib/i18n/dictionaries/en';
 import { vi as viDict } from '@/lib/i18n/dictionaries/vi';
 
-const items = viDict.home.tv.items.map((it, i) => ({ ...it, image: `/images/tv-thumb-${i + 1}.png`, href: `/vi${it.href}` }));
+const items = viDict.home.tv.items.map((it, i) => ({ ...it, image: `/images/tv-thumb-${i + 1}.jpg`, href: `/vi${it.href}` }));
 
 describe('ContentCarousel', () => {
   it('gives every card its own destination', () => {

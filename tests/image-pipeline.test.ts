@@ -1,25 +1,27 @@
 import { describe, it, expect } from 'vitest';
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import nextConfig from '../next.config';
 
 const SKIP = new Set(['node_modules', '.next', '.git', 'graphify-out', 'public', 'docs']);
 
-/** Every .tsx in the repo, so a component in a directory nobody listed is still checked. */
+/** Every .ts/.tsx in the repo, so neither a component nor a fixture escapes the checks below. */
 function sourceFiles(dir = '.'): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     if (SKIP.has(entry.name)) return [];
     const path = join(dir, entry.name);
     if (entry.isDirectory()) return sourceFiles(path);
-    return entry.name.endsWith('.tsx') ? [path] : [];
+    return /\.tsx?$/.test(entry.name) ? [path] : [];
   });
 }
 
 /** `<Image … />` tags, and how many openings were found — they differ when a tag resists this match. */
 function imageTags(source: string) {
   return {
-    tags: source.match(/<Image\b[^>]*?\/>/g) ?? [],
-    openings: (source.match(/<Image\b/g) ?? []).length,
+    // Whitespace after the tag name is required, so that a mention of the component in
+    // prose — this file's own failure messages, for one — is not parsed as a tag.
+    tags: source.match(/<Image\s[^>]*?\/>/g) ?? [],
+    openings: (source.match(/<Image\s/g) ?? []).length,
   };
 }
 
@@ -48,6 +50,23 @@ describe('image pipeline', () => {
     );
 
     expect(offenders, `fill <Image> without sizes in:\n${offenders.join('\n')}`).toEqual([]);
+  });
+
+  /**
+   * An image path is a string, so renaming an asset and missing one call site ships a
+   * broken image with the typecheck and every test still green — which is how a
+   * reference to a `placeholder.png` that never existed survived unnoticed.
+   */
+  it('points every image path at a file that exists', () => {
+    const missing = sourceFiles().flatMap((path) => {
+      const refs = readFileSync(path, 'utf8').match(/['"`]\/images\/[^'"`$]+?\.(?:png|jpe?g|webp|avif|svg)['"`]/g) ?? [];
+      return refs
+        .map((ref) => ref.slice(1, -1))
+        .filter((ref) => !existsSync(join('public', ref)))
+        .map((ref) => `${path}: ${ref}`);
+    });
+
+    expect(missing, `image paths with no file:\n${missing.join('\n')}`).toEqual([]);
   });
 
   /**
