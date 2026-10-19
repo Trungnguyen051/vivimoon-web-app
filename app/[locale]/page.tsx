@@ -1,5 +1,6 @@
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
+import { toIntlLocale } from '@/lib/utils/format';
 import { HeroCarousel } from '@/components/commerce/hero-carousel';
 import { CategoryGrid } from '@/components/commerce/category-grid';
 import { QuizCta } from '@/components/commerce/quiz-cta';
@@ -14,6 +15,12 @@ import { editorial } from '@/lib/api/resources/editorial';
 import { COLOR_FAMILIES, COLOR_FAMILY_COLLECTION, colorFamilyHref, countColorFamily } from '@/lib/products/color-families';
 import { DURATION_TILES, durationTileHref } from '@/lib/products/duration-tiles';
 import { catalog } from '@/lib/api/resources/catalog';
+
+/* How many shoppers the Quiz has matched — mock, pending a real source (#67), and the
+   one number on this page not derived from the catalog. It lives here rather than inside
+   the sentence so the dictionary keeps the word order around `{count}`, and so each
+   locale groups the digits its own way. */
+const QUIZ_MATCHES = 12_400;
 
 /* Provisional creative: the only catalog photography not already on this page. Real brand imagery is pending. */
 const BRAND_STORY_IMAGES = [
@@ -75,7 +82,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           eyebrow={dict.home.quiz.eyebrow}
           title={dict.home.quiz.title}
           subtitle={dict.home.quiz.subtitle}
-          socialProof={dict.home.quiz.socialProof}
+          socialProof={dict.home.quiz.socialProof.replace('{count}', new Intl.NumberFormat(toIntlLocale(l)).format(QUIZ_MATCHES))}
           ctaLabel={dict.home.quiz.cta}
           href={`/${l}/quiz`}
           steps={dict.home.quiz.steps}

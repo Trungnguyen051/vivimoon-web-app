@@ -4,6 +4,8 @@ import { QuizCta } from './quiz-cta';
 import { en } from '@/lib/i18n/dictionaries/en';
 import { vi as viDict } from '@/lib/i18n/dictionaries/vi';
 import { quiz } from '@/content/quiz';
+import { toIntlLocale } from '@/lib/utils/format';
+import type { Locale } from '@/lib/i18n/config';
 
 const steps = [
   { id: 'experience', prompt: 'Bạn đã từng đeo lens chưa?', options: ['Chưa bao giờ', 'Vài lần', 'Thường xuyên'] },
@@ -34,6 +36,20 @@ describe('QuizCta', () => {
       expect(screen.getByText(step.prompt)).toBeInTheDocument();
       for (const option of step.options) expect(screen.getByText(option)).toBeInTheDocument();
     }
+  });
+
+  /**
+   * The social-proof sentence is assembled: the count comes from the page, the words and
+   * their order from the dictionary. Nothing caught the join before — dropping the count
+   * would have rendered the bare fragment "người đã tìm được lens hợp mắt" with a green
+   * suite — and a locale's digit grouping is exactly the kind of thing a literal got wrong.
+   */
+  it.each([['en', en, '12,400'], ['vi', viDict, '12.400']])('%s states the match count in its own number format', (locale, dict, grouped) => {
+    const sentence = dict.home.quiz.socialProof.replace('{count}', new Intl.NumberFormat(toIntlLocale(locale as Locale)).format(12_400));
+
+    expect(dict.home.quiz.socialProof).toContain('{count}');
+    expect(sentence).toContain(grouped);
+    expect(sentence).not.toContain('{count}');
   });
 
   /**

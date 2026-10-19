@@ -29,7 +29,7 @@ export const vi: Dictionary = {
       title: 'Chưa biết chọn lens nào?',
       subtitle: 'Trả lời vài câu hỏi nhanh, Vivimoon sẽ gợi ý mẫu lens phù hợp với bạn',
       cta: 'Làm quiz 30 giây',
-      socialProof: '12.400 người đã tìm được lens hợp mắt',
+      socialProof: '{count} người đã tìm được lens hợp mắt',
       steps: [
         { id: 'experience', prompt: 'Bạn đã từng đeo lens chưa?', options: ['Chưa bao giờ', 'Vài lần', 'Thường xuyên'] },
         { id: 'look', prompt: 'Bạn muốn look như thế nào?', options: ['Tự nhiên', 'Mắt to', 'Sắc sảo'] },
@@ -51,13 +51,14 @@ export const vi: Dictionary = {
       title: 'Kiến thức',
       viewAll: 'Xem Tất cả',
     },
-    /* Bodies are deliberate placeholders: the design's were truncated in the wireframe
-       metadata and the real strings are pending from Vivimoon (#53). Swap them here. */
+    /* Mock copy, like the catalog fixtures: the design's bodies were truncated in the
+       wireframe metadata, so these say what each badge promises without inventing a
+       policy specific. Vivimoon's final strings replace them here (#53). */
     trust: {
-      authentic: { title: 'Hàng Chính Hãng 100%', body: 'Nội dung cam kết chính hãng — chờ bản chính thức từ Vivimoon.' },
-      consult: { title: 'Tư vấn miễn phí', body: 'Nội dung dịch vụ tư vấn — chờ bản chính thức từ Vivimoon.' },
-      returns: { title: 'Đổi trả trong 30 ngày', body: 'Nội dung chính sách đổi trả — chờ bản chính thức từ Vivimoon.' },
-      express: { title: 'Giao hàng hoả tốc', body: 'Nội dung dịch vụ giao hàng — chờ bản chính thức từ Vivimoon.' },
+      authentic: { title: 'Hàng Chính Hãng 100%', body: 'Lens nhập khẩu chính ngạch, có giấy tờ chứng minh nguồn gốc.' },
+      consult: { title: 'Tư vấn miễn phí', body: 'Đội ngũ Vivimoon giúp bạn chọn độ cận và màu lens phù hợp.' },
+      returns: { title: 'Đổi trả trong 30 ngày', body: 'Chưa ưng ý? Đổi trả nhanh chóng, không rườm rà.' },
+      express: { title: 'Giao hàng hoả tốc', body: 'Đơn hàng được đóng gói và gửi đi ngay trong ngày.' },
     },
     tv: {
       title: 'VIVIMOON TV',

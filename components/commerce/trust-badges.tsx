@@ -10,8 +10,9 @@ export type TrustBadge = { id: keyof typeof GLYPHS; title: string; body: string 
 
 /**
  * The four promises the design puts where the return-policy promo band used to be.
- * The bodies are placeholders until Vivimoon supplies the real copy (#53); they read as
- * obviously unfinished rather than passing as final copy.
+ * A badge states something Vivimoon stands behind, not something the storefront does
+ * (CONTEXT.md), so the bodies are mock copy awaiting their final strings (#53) — they
+ * read as finished, which is the point and the risk: nothing here flags them.
  */
 export function TrustBadges({ badges }: { badges: TrustBadge[] }) {
   return (
