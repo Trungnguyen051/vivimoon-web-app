@@ -14,7 +14,7 @@ export const vi: Dictionary = {
   collection: {
     newArrivals: 'Hàng mới về', bestsellers: 'Bán chạy', sale: 'Giảm giá',
     colored: 'Lens màu', daily: 'Lens hằng ngày', allLenses: 'Tất cả lens',
-    productsLabel: 'sản phẩm', noResults: 'Không có sản phẩm phù hợp với bộ lọc.',
+    productsLabel: 'sản phẩm', noResults: 'Không có sản phẩm phù hợp với bộ lọc.', showAll: 'Xem tất cả sản phẩm',
   },
   home: {
     moments: {
@@ -79,6 +79,7 @@ export const vi: Dictionary = {
   },
   filters: {
     productLine: 'Loại lens', replacement: 'Thời gian dùng', color: 'Màu', sort: 'Sắp xếp', clear: 'Xóa bộ lọc',
+    colors: { brown: 'Nâu', black: 'Đen', gray: 'Xám', violet: 'Tím' },
     productLines: { trongSuot: 'Trong suốt', coMau: 'Có màu', vanNhu: 'Vân nhũ' },
     replacements: { daily: 'Hằng ngày', monthly: 'Hằng tháng', threeMonth: '3 tháng', sixMonth: '6 tháng' },
     sorts: { newest: 'Mới nhất', 'price-asc': 'Giá: thấp đến cao', 'price-desc': 'Giá: cao đến thấp', bestselling: 'Bán chạy' },

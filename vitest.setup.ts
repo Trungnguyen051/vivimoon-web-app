@@ -34,3 +34,15 @@ if (!window.matchMedia) {
     dispatchEvent: () => false,
   });
 }
+
+/*
+ * Radix's Select probes pointer-capture and scrolls the highlighted item into view
+ * on open; jsdom implements neither, so the listbox never opens and every option
+ * query fails. Inert like the observer stubs above: nothing here simulates pointer
+ * behaviour, which is fine — these tests assert what the control says and does, not
+ * how it tracks a pointer.
+ */
+Element.prototype.hasPointerCapture ??= () => false;
+Element.prototype.setPointerCapture ??= () => {};
+Element.prototype.releasePointerCapture ??= () => {};
+Element.prototype.scrollIntoView ??= () => {};

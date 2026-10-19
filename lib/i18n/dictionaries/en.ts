@@ -12,7 +12,7 @@ export const en = {
   collection: {
     newArrivals: 'New Arrivals', bestsellers: 'Bestsellers', sale: 'Sale',
     colored: 'Colored Lenses', daily: 'Daily Lenses', allLenses: 'All Lenses',
-    productsLabel: 'products', noResults: 'No products match your filters.',
+    productsLabel: 'products', noResults: 'No products match your filters.', showAll: 'Show all products',
   },
   home: {
     moments: {
@@ -77,6 +77,7 @@ export const en = {
   },
   filters: {
     productLine: 'Lens type', replacement: 'Replacement', color: 'Color', sort: 'Sort', clear: 'Clear filters',
+    colors: { brown: 'Brown', black: 'Black', gray: 'Gray', violet: 'Violet' },
     productLines: { trongSuot: 'Clear', coMau: 'Colored', vanNhu: 'Glitter' },
     replacements: { daily: 'Daily', monthly: 'Monthly', threeMonth: '3-Month', sixMonth: '6-Month' },
     sorts: { newest: 'Newest', 'price-asc': 'Price: low to high', 'price-desc': 'Price: high to low', bestselling: 'Best selling' },
