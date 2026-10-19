@@ -2,7 +2,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 import { locales, type Locale } from '@/lib/i18n/config';
 
-export function LocaleSwitcher({ currentLocale }: { currentLocale: Locale }) {
+export function LocaleSwitcher({ currentLocale, label }: { currentLocale: Locale; label: string }) {
   const pathname = usePathname();
   const router = useRouter();
   const switchTo = (locale: Locale) => {
@@ -11,7 +11,7 @@ export function LocaleSwitcher({ currentLocale }: { currentLocale: Locale }) {
   };
   return (
     <select
-      aria-label="Language"
+      aria-label={label}
       value={currentLocale}
       onChange={(e) => switchTo(e.target.value as Locale)}
       className="rounded border bg-transparent px-2 py-1 text-sm"

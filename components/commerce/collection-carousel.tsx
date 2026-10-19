@@ -27,7 +27,13 @@ export function CollectionCarousel({
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
           <div className="hidden md:flex">
-            <CarouselNav embla={embla} />
+            {/* The section title rides along: icon-only arrows would otherwise announce as a run
+    of identical "Trước"/"Tiếp theo" when a page carries more than one carousel. */}
+        <CarouselNav
+          embla={embla}
+          previousLabel={`${dict.common.previous}: ${title}`}
+          nextLabel={`${dict.common.next}: ${title}`}
+        />
           </div>
         </div>
       </div>

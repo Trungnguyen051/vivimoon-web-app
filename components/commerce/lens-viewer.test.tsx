@@ -18,7 +18,7 @@ const gallery: LensGallery = {
 
 describe('LensViewer', () => {
   it('renders a tab for each of the five contexts', () => {
-    render(<LensViewer gallery={gallery} alt="Aqua" dict={en.viewer} />);
+    render(<LensViewer gallery={gallery} alt="Aqua" dict={en.viewer} imageLabel={en.common.image} />);
     expect(screen.getByRole('tab', { name: en.viewer.eye })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: en.viewer.face })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: en.viewer.withMakeup })).toBeInTheDocument();
@@ -27,25 +27,25 @@ describe('LensViewer', () => {
   });
 
   it('shows the active context images, defaulting to the first tab', () => {
-    render(<LensViewer gallery={gallery} alt="Aqua" dict={en.viewer} />);
+    render(<LensViewer gallery={gallery} alt="Aqua" dict={en.viewer} imageLabel={en.common.image} />);
     expect(screen.getByAltText('Aqua')).toHaveAttribute('src', expect.stringContaining('eye-1'));
   });
 
   it('swaps the active image set when switching tabs', async () => {
     const user = userEvent.setup();
-    render(<LensViewer gallery={gallery} alt="Aqua" dict={en.viewer} />);
+    render(<LensViewer gallery={gallery} alt="Aqua" dict={en.viewer} imageLabel={en.common.image} />);
     await user.click(screen.getByRole('tab', { name: en.viewer.face }));
     expect(screen.getByAltText('Aqua')).toHaveAttribute('src', expect.stringContaining('face-1'));
   });
 
   it('disables a tab whose context has no images', () => {
-    render(<LensViewer gallery={gallery} alt="Aqua" dict={en.viewer} />);
+    render(<LensViewer gallery={gallery} alt="Aqua" dict={en.viewer} imageLabel={en.common.image} />);
     expect(screen.getByRole('tab', { name: en.viewer.withoutMakeup })).toBeDisabled();
   });
 
   it('the byEyeColor tab renders an eye-color selector and swaps images on selection', async () => {
     const user = userEvent.setup();
-    render(<LensViewer gallery={gallery} alt="Aqua" dict={en.viewer} />);
+    render(<LensViewer gallery={gallery} alt="Aqua" dict={en.viewer} imageLabel={en.common.image} />);
     await user.click(screen.getByRole('tab', { name: en.viewer.byEyeColor }));
     expect(screen.getByAltText('Aqua')).toHaveAttribute('src', expect.stringContaining('brown-1'));
 

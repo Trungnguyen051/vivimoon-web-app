@@ -17,6 +17,7 @@ describe('HeroCarousel', () => {
     render(
       <HeroCarousel
         ctaLabel="Shop now"
+        labels={{ previous: 'Previous slide', next: 'Next slide', goToSlide: 'Go to slide' }}
         slides={[
           { id: 'sale-a', image: '/images/hero-1.jpg', href: '/en/collection/sale', alt: 'Sale, first look' },
           { id: 'sale-b', image: '/images/hero-1.jpg', href: '/en/collection/sale', alt: 'Sale, second look' },
