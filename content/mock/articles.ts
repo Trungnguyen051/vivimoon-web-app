@@ -9,7 +9,7 @@ import type { Article } from '@/lib/api/schemas/editorial';
 export const articles: Article[] = [
   {
     slug: 'mau-lens-hop-tong-da-vang',
-    image: '/images/moment-grad.png',
+    image: '/images/moment-grad.jpg',
     publishedAt: '2026-09-28',
     title: {
       vi: '5 màu lens phù hợp nhất với tông da vàng Việt Nam 2025',
@@ -34,7 +34,7 @@ export const articles: Article[] = [
   },
   {
     slug: 'silicone-hydrogel-vs-lens-thuong',
-    image: '/images/moment-wedding.png',
+    image: '/images/moment-wedding.jpg',
     publishedAt: '2026-09-14',
     title: {
       vi: 'Silicone Hydrogel vs lens thường: Bác sĩ nhãn khoa nói gì?',
@@ -59,7 +59,7 @@ export const articles: Article[] = [
   },
   {
     slug: 've-sinh-va-bao-quan-lens',
-    image: '/images/moment-party.png',
+    image: '/images/moment-party.jpg',
     publishedAt: '2026-08-30',
     title: {
       vi: 'Cách vệ sinh và bảo quản lens đúng cách để dùng bền hơn',

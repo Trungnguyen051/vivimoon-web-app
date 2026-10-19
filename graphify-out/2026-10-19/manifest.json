@@ -18,9 +18,9 @@
     "semantic_hash": ""
   },
   "app/[locale]/collection/[slug]/page.tsx": {
-    "mtime": 1792378929.3440647,
-    "seen": 1792379717.739159,
-    "ast_hash": "df0fb0f68e700ac39d792d0254daf7a8",
+    "mtime": 1792380127.768157,
+    "seen": 1792380216.1061618,
+    "ast_hash": "9e407c2f8c2186eb4f6031cefcb20acf",
     "semantic_hash": ""
   },
   "app/[locale]/layout.tsx": {
@@ -450,8 +450,8 @@
     "semantic_hash": ""
   },
   "next.config.ts": {
-    "mtime": 1792379131.177821,
-    "seen": 1792379717.73957,
+    "mtime": 1792379808.6436815,
+    "seen": 1792380216.106634,
     "ast_hash": "daad32b4de0b92afe04301ebf0a6cc76",
     "semantic_hash": ""
   },
@@ -2100,8 +2100,8 @@
     "semantic_hash": ""
   },
   "components/commerce/content-carousel.tsx": {
-    "mtime": 1792379028.4764292,
-    "seen": 1792379717.73928,
+    "mtime": 1792379808.6121721,
+    "seen": 1792380216.1062999,
     "ast_hash": "8ab0dd5f054b3df1cb1d6912525fb478",
     "semantic_hash": ""
   },
@@ -2370,15 +2370,27 @@
     "semantic_hash": ""
   },
   "tests/image-pipeline.test.ts": {
-    "mtime": 1792379596.9193876,
-    "seen": 1792379717.73958,
+    "mtime": 1792379808.6443996,
+    "seen": 1792380216.106646,
     "ast_hash": "77cc4672b96df9de85ee91a8a784fd94",
     "semantic_hash": ""
   },
   "docs/adr/0014-image-optimization-is-on.md": {
-    "mtime": 1792379636.481421,
-    "seen": 1792379717.7396202,
+    "mtime": 1792379808.6134956,
+    "seen": 1792380216.10669,
     "ast_hash": "9de1e1f543987608af8745e57fc88a47",
+    "semantic_hash": ""
+  },
+  "lib/analytics/list-id.test.ts": {
+    "mtime": 1792380127.7312424,
+    "seen": 1792380216.106473,
+    "ast_hash": "701336de3784f64207426011b6f93535",
+    "semantic_hash": ""
+  },
+  "lib/analytics/list-id.ts": {
+    "mtime": 1792380127.6949244,
+    "seen": 1792380216.106474,
+    "ast_hash": "990b8dd95ebbf6d023af662b59f3a77b",
     "semantic_hash": ""
   }
 }

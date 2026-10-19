@@ -26,10 +26,10 @@ const BRAND_STORY_IMAGES = [
    order across both locales, and a fifth item would hand next/image an undefined src
    and take the homepage down rather than just miss a picture. */
 const TV_THUMBS: Record<string, string> = {
-  hazel: '/images/tv-thumb-1.png',
-  mystic: '/images/tv-thumb-2.png',
-  aqua: '/images/tv-thumb-3.png',
-  torica: '/images/tv-thumb-4.png',
+  hazel: '/images/tv-thumb-1.jpg',
+  mystic: '/images/tv-thumb-2.jpg',
+  aqua: '/images/tv-thumb-3.jpg',
+  torica: '/images/tv-thumb-4.jpg',
 };
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
@@ -64,9 +64,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           seeMoreHref={`/${l}/collection/bestsellers`}
           seeMoreLabel={dict.home.moments.viewAll}
           items={[
-            { id: 'grad', label: dict.home.moments.gradPhotos, href: `/${l}/collection/bestsellers`, image: '/images/moment-grad.png' },
-            { id: 'wedding', label: dict.home.moments.wedding, href: `/${l}/collection/bestsellers`, image: '/images/moment-wedding.png' },
-            { id: 'party', label: dict.home.moments.party, href: `/${l}/collection/bestsellers`, image: '/images/moment-party.png' },
+            { id: 'grad', label: dict.home.moments.gradPhotos, href: `/${l}/collection/bestsellers`, image: '/images/moment-grad.jpg' },
+            { id: 'wedding', label: dict.home.moments.wedding, href: `/${l}/collection/bestsellers`, image: '/images/moment-wedding.jpg' },
+            { id: 'party', label: dict.home.moments.party, href: `/${l}/collection/bestsellers`, image: '/images/moment-party.jpg' },
           ]}
         />
 
@@ -88,10 +88,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           seeMoreLabel={dict.home.makeup.viewAll}
           columns={4}
           items={[
-            { id: 'natural', label: dict.home.makeup.natural, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-natural.png' },
-            { id: 'pink', label: dict.home.makeup.pink, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-pink.png' },
-            { id: 'orange', label: dict.home.makeup.orange, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-orange.png' },
-            { id: 'smoky', label: dict.home.makeup.smoky, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-smoky.png' },
+            { id: 'natural', label: dict.home.makeup.natural, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-natural.jpg' },
+            { id: 'pink', label: dict.home.makeup.pink, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-pink.jpg' },
+            { id: 'orange', label: dict.home.makeup.orange, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-orange.jpg' },
+            { id: 'smoky', label: dict.home.makeup.smoky, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-smoky.jpg' },
           ]}
         />
       </HomeSection>

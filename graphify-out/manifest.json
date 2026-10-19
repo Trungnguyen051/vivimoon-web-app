@@ -18,8 +18,8 @@
     "semantic_hash": ""
   },
   "app/[locale]/collection/[slug]/page.tsx": {
-    "mtime": 1792380127.768157,
-    "seen": 1792380216.1061618,
+    "mtime": 1792380391.1699173,
+    "seen": 1792381154.783679,
     "ast_hash": "9e407c2f8c2186eb4f6031cefcb20acf",
     "semantic_hash": ""
   },
@@ -30,9 +30,9 @@
     "semantic_hash": ""
   },
   "app/[locale]/page.tsx": {
-    "mtime": 1792377804.2044115,
-    "seen": 1792378665.6646771,
-    "ast_hash": "79bb8cd6b329d1ff8224ce9b89914943",
+    "mtime": 1792380574.982684,
+    "seen": 1792381154.7836852,
+    "ast_hash": "cfe4df62da5bc80f564fe37feb3d4fac",
     "semantic_hash": ""
   },
   "app/[locale]/product/[slug]/page.tsx": {
@@ -90,8 +90,8 @@
     "semantic_hash": ""
   },
   "components/commerce/hero-carousel.tsx": {
-    "mtime": 1792379617.4678376,
-    "seen": 1792379717.739285,
+    "mtime": 1792381133.1797967,
+    "seen": 1792381154.783808,
     "ast_hash": "dfb24ce71c37e821bc7b335c345f4345",
     "semantic_hash": ""
   },
@@ -2117,76 +2117,10 @@
     "ast_hash": "58c85cdb3adf073f63600111356b692e",
     "semantic_hash": ""
   },
-  "public/images/makeup-natural.png": {
-    "mtime": 1791693984.3351207,
-    "seen": 1791694731.491732,
-    "ast_hash": "b31f254c58ea354f64b135fe5d876eab",
-    "semantic_hash": ""
-  },
-  "public/images/makeup-orange.png": {
-    "mtime": 1791693984.3437006,
-    "seen": 1791694731.491733,
-    "ast_hash": "fa4e0bb0a8602153bd367117319e7162",
-    "semantic_hash": ""
-  },
-  "public/images/makeup-pink.png": {
-    "mtime": 1791693984.3386197,
-    "seen": 1791694731.491734,
-    "ast_hash": "ba9cf0fe258e13dc9e828b92c9dc9f5d",
-    "semantic_hash": ""
-  },
-  "public/images/makeup-smoky.png": {
-    "mtime": 1791693984.3467903,
-    "seen": 1791694731.491734,
-    "ast_hash": "c25041bb9039e3ae990f2cdd77176c9d",
-    "semantic_hash": ""
-  },
-  "public/images/moment-grad.png": {
-    "mtime": 1791693984.3232398,
-    "seen": 1791694731.491735,
-    "ast_hash": "2e75a63a20c6d1fdfed8e33557b721ef",
-    "semantic_hash": ""
-  },
-  "public/images/moment-party.png": {
-    "mtime": 1791693984.3194754,
-    "seen": 1791694731.4917362,
-    "ast_hash": "4e47ff38f1781cb681ea852d6bd40c3f",
-    "semantic_hash": ""
-  },
-  "public/images/moment-wedding.png": {
-    "mtime": 1791693984.3293588,
-    "seen": 1791694731.4917362,
-    "ast_hash": "575d52c68e83c75befe06e52e5139fe0",
-    "semantic_hash": ""
-  },
   "public/images/tv-avatar.png": {
-    "mtime": 1791693984.3665602,
-    "seen": 1791694731.491755,
-    "ast_hash": "6fd4115349e83d70f17c289d39653bfb",
-    "semantic_hash": ""
-  },
-  "public/images/tv-thumb-1.png": {
-    "mtime": 1791693984.3496134,
-    "seen": 1791694731.491756,
-    "ast_hash": "164ce7e3614c7ec6a8c0e8be7259ef78",
-    "semantic_hash": ""
-  },
-  "public/images/tv-thumb-2.png": {
-    "mtime": 1791693984.35349,
-    "seen": 1791694731.4917572,
-    "ast_hash": "6efdcc44621d18ed8bf15dd7cb5bfc53",
-    "semantic_hash": ""
-  },
-  "public/images/tv-thumb-3.png": {
-    "mtime": 1791693984.3577256,
-    "seen": 1791694731.4917572,
-    "ast_hash": "285d3c0bdf82661a3983d7ea154e1816",
-    "semantic_hash": ""
-  },
-  "public/images/tv-thumb-4.png": {
-    "mtime": 1791693984.3618517,
-    "seen": 1791694731.491758,
-    "ast_hash": "fa9d118a28421ea9a75a54ef5cbf5c27",
+    "mtime": 1792380564.159998,
+    "seen": 1792381154.784215,
+    "ast_hash": "3eb8a21a1d4a5a7d01202e9c1057a006",
     "semantic_hash": ""
   },
   "components/commerce/carousel-nav.tsx": {
@@ -2202,9 +2136,9 @@
     "semantic_hash": ""
   },
   "components/commerce/category-grid.test.tsx": {
-    "mtime": 1792320712.260105,
-    "seen": 1792320792.7721732,
-    "ast_hash": "1213231c0e4004089a769552536a3f05",
+    "mtime": 1792380605.736552,
+    "seen": 1792381154.7837849,
+    "ast_hash": "ad1ab1e39ca0070581275f1ee1900606",
     "semantic_hash": ""
   },
   "components/layout/page-container.tsx": {
@@ -2280,9 +2214,9 @@
     "semantic_hash": ""
   },
   "components/commerce/content-carousel.test.tsx": {
-    "mtime": 1792345044.6399117,
-    "seen": 1792376433.469982,
-    "ast_hash": "c0b7a09c6eb1982eda7c72b6c1b0ad34",
+    "mtime": 1792380595.7953763,
+    "seen": 1792381154.783802,
+    "ast_hash": "ee63ee292a46f83290b25c1ea9dfa8fd",
     "semantic_hash": ""
   },
   "lib/products/duration-tiles.test.ts": {
@@ -2322,9 +2256,9 @@
     "semantic_hash": ""
   },
   "content/mock/articles.ts": {
-    "mtime": 1792377804.2080197,
-    "seen": 1792378665.664922,
-    "ast_hash": "641b8489bf53a651c442cef8315029c4",
+    "mtime": 1792381133.1825714,
+    "seen": 1792381154.783903,
+    "ast_hash": "b2b0fbae0bd52ce4763f2de092ae2fa1",
     "semantic_hash": ""
   },
   "lib/api/resources/editorial/index.ts": {
@@ -2370,27 +2304,93 @@
     "semantic_hash": ""
   },
   "tests/image-pipeline.test.ts": {
-    "mtime": 1792379808.6443996,
-    "seen": 1792380216.106646,
-    "ast_hash": "77cc4672b96df9de85ee91a8a784fd94",
+    "mtime": 1792381072.3163238,
+    "seen": 1792381154.784108,
+    "ast_hash": "b0675be95854f618a5b9d03b00cc8ac3",
     "semantic_hash": ""
   },
   "docs/adr/0014-image-optimization-is-on.md": {
-    "mtime": 1792379808.6134956,
-    "seen": 1792380216.10669,
-    "ast_hash": "9de1e1f543987608af8745e57fc88a47",
+    "mtime": 1792380948.982367,
+    "seen": 1792381154.784147,
+    "ast_hash": "e0770c7072a6980e6f569cbb2adceb80",
     "semantic_hash": ""
   },
   "lib/analytics/list-id.test.ts": {
-    "mtime": 1792380127.7312424,
-    "seen": 1792380216.106473,
+    "mtime": 1792380391.2052639,
+    "seen": 1792381154.7839549,
     "ast_hash": "701336de3784f64207426011b6f93535",
     "semantic_hash": ""
   },
   "lib/analytics/list-id.ts": {
-    "mtime": 1792380127.6949244,
-    "seen": 1792380216.106474,
+    "mtime": 1792380391.2057877,
+    "seen": 1792381154.783956,
     "ast_hash": "990b8dd95ebbf6d023af662b59f3a77b",
+    "semantic_hash": ""
+  },
+  "public/images/makeup-natural.jpg": {
+    "mtime": 1792380562.6012058,
+    "seen": 1792381154.784178,
+    "ast_hash": "c0960475dad517dde09f9c030542afaa",
+    "semantic_hash": ""
+  },
+  "public/images/makeup-orange.jpg": {
+    "mtime": 1792380563.1379335,
+    "seen": 1792381154.784179,
+    "ast_hash": "9454e75e2c0c0838faa0529826f40ea0",
+    "semantic_hash": ""
+  },
+  "public/images/makeup-pink.jpg": {
+    "mtime": 1792380563.242751,
+    "seen": 1792381154.78418,
+    "ast_hash": "94781a7f97ce02a077bc28fa9e249cf7",
+    "semantic_hash": ""
+  },
+  "public/images/makeup-smoky.jpg": {
+    "mtime": 1792380563.298637,
+    "seen": 1792381154.784182,
+    "ast_hash": "362605d0c67716432d61f1cf3b02c968",
+    "semantic_hash": ""
+  },
+  "public/images/moment-grad.jpg": {
+    "mtime": 1792380563.4191935,
+    "seen": 1792381154.784183,
+    "ast_hash": "0e5c78a1c052cf903a9e1c9288dfc671",
+    "semantic_hash": ""
+  },
+  "public/images/moment-party.jpg": {
+    "mtime": 1792380563.5919995,
+    "seen": 1792381154.784184,
+    "ast_hash": "fbf3531ca570b659a7031040dc5355da",
+    "semantic_hash": ""
+  },
+  "public/images/moment-wedding.jpg": {
+    "mtime": 1792380563.8909872,
+    "seen": 1792381154.7841852,
+    "ast_hash": "cd07211c341b46ff202284a9c143d2fa",
+    "semantic_hash": ""
+  },
+  "public/images/tv-thumb-1.jpg": {
+    "mtime": 1792380563.951218,
+    "seen": 1792381154.7842162,
+    "ast_hash": "a675fd82e1a53062e0cdc87f42897ff3",
+    "semantic_hash": ""
+  },
+  "public/images/tv-thumb-2.jpg": {
+    "mtime": 1792380564.0101178,
+    "seen": 1792381154.7842171,
+    "ast_hash": "46353302a070af9d3679c36a0f13b621",
+    "semantic_hash": ""
+  },
+  "public/images/tv-thumb-3.jpg": {
+    "mtime": 1792380564.0771987,
+    "seen": 1792381154.784218,
+    "ast_hash": "4a10e690d073a96789dd283da524004b",
+    "semantic_hash": ""
+  },
+  "public/images/tv-thumb-4.jpg": {
+    "mtime": 1792380564.1445072,
+    "seen": 1792381154.78422,
+    "ast_hash": "21916e34e166ded852ffd24bfa4da50a",
     "semantic_hash": ""
   }
 }
