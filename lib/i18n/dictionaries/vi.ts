@@ -13,7 +13,7 @@ export const vi: Dictionary = {
   },
   collection: {
     newArrivals: 'Hàng mới về', bestsellers: 'Bán chạy', sale: 'Giảm giá',
-    colored: 'Lens màu', daily: 'Lens hằng ngày',
+    colored: 'Lens màu', daily: 'Lens hằng ngày', allLenses: 'Tất cả lens',
     productsLabel: 'sản phẩm', noResults: 'Không có sản phẩm phù hợp với bộ lọc.',
   },
   home: {

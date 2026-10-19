@@ -11,7 +11,7 @@ export const en = {
   },
   collection: {
     newArrivals: 'New Arrivals', bestsellers: 'Bestsellers', sale: 'Sale',
-    colored: 'Colored Lenses', daily: 'Daily Lenses',
+    colored: 'Colored Lenses', daily: 'Daily Lenses', allLenses: 'All Lenses',
     productsLabel: 'products', noResults: 'No products match your filters.',
   },
   home: {
