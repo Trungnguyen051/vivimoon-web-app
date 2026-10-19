@@ -55,6 +55,10 @@ _Avoid_: Gallery alone (ambiguous with the standard gallery it falls back to), M
 The step-by-step questionnaire that scores a shopper's tag-weighted answers into product recommendations. Content (6 questions, tag weights) is provisional pending Vivimoon's real question set.
 _Avoid_: Lens-Matching Quiz (same concept — Quiz is the canonical short form)
 
+**Trust Badge**:
+One of the four promises the homepage states beneath VIVIMOON TV — authenticity, free consultation, 30-day returns, express delivery. A Trust Badge is a claim Vivimoon stands behind rather than a feature of the storefront, so its wording comes from Vivimoon and the evidence for it is theirs; the same is true of the regulatory line in the announcement bar.
+_Avoid_: USP strip, trust signals, guarantees
+
 **Article**:
 One editorial piece behind the homepage's Kiến thức section, with a title, excerpt and body in every supported locale. Unlike UI copy, an Article's translations live with the content in the fixtures rather than in the dictionary — an article is authored as a whole in each language, and a dictionary key per paragraph would not scale. Its body is plain paragraphs, not markup, so rendering needs no parser. Articles reference no Product, which is why `editorial` is its own resource key rather than part of `discovery`.
 _Avoid_: Post, blog entry, news item

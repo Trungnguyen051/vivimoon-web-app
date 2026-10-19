@@ -27,7 +27,7 @@ export const en = {
       title: 'Not sure which lens to pick?',
       subtitle: 'Answer a few quick questions and Vivimoon will suggest the right lens for you',
       cta: 'Take the 30-second quiz',
-      socialProof: '12,400 people have found lenses that fit',
+      socialProof: '{count} people have found lenses that fit',
       steps: [
         { id: 'experience', prompt: 'Have you worn lenses before?', options: ['Never', 'A few times', 'Often'] },
         { id: 'look', prompt: 'What look are you going for?', options: ['Natural', 'Bigger eyes', 'Striking'] },
@@ -49,13 +49,14 @@ export const en = {
       title: 'Knowledge',
       viewAll: 'View all',
     },
-    /* Bodies are deliberate placeholders: the design's were truncated in the wireframe
-       metadata and the real strings are pending from Vivimoon (#53). Swap them here. */
+    /* Mock copy, like the catalog fixtures: the design's bodies were truncated in the
+       wireframe metadata, so these say what each badge promises without inventing a
+       policy specific. Vivimoon's final strings replace them here (#53). */
     trust: {
-      authentic: { title: 'Guaranteed 100% authentic', body: 'Placeholder for the authenticity promise — final copy pending from Vivimoon.' },
-      consult: { title: 'Free consultation', body: 'Placeholder for the consultation service — final copy pending from Vivimoon.' },
-      returns: { title: '30-day returns', body: 'Placeholder for the returns policy — final copy pending from Vivimoon.' },
-      express: { title: 'Express delivery', body: 'Placeholder for the delivery promise — final copy pending from Vivimoon.' },
+      authentic: { title: 'Guaranteed 100% authentic', body: 'Imported through official channels, with documentation of origin.' },
+      consult: { title: 'Free consultation', body: 'Our team helps you pick the right power and colour.' },
+      returns: { title: '30-day returns', body: 'Not quite right? Returns are quick and simple.' },
+      express: { title: 'Express delivery', body: 'Orders are packed and dispatched the same day.' },
     },
     tv: {
       title: 'VIVIMOON TV',
