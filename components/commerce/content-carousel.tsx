@@ -61,7 +61,7 @@ export function ContentCarousel({
               </div>
               <div className="mt-3 flex items-start gap-3 rounded bg-[#1a1a1a] p-5">
                 <span className="relative size-8 shrink-0 overflow-hidden rounded-full">
-                  <Image src={avatar} alt="" fill className="object-cover" />
+                  <Image src={avatar} alt="" fill className="object-cover" sizes="32px" />
                 </span>
                 <div className="flex-1 space-y-4">
                   <p className="line-clamp-2 text-sm text-white">{it.title}</p>
