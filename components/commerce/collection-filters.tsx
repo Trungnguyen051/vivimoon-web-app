@@ -14,13 +14,30 @@ const REPLACEMENTS = replacementScheduleSchema.options;
 const SORTS = ['newest', 'price-asc', 'price-desc', 'bestselling'];
 const ALL = 'all';
 
-export function CollectionFilters({ dict }: { dict: Dictionary }) {
+export function CollectionFilters({ dict, colors }: { dict: Dictionary; colors: string[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
-  // `color` has no Select of its own, but a Color Family tile sets it, so it has to
-  // count as a filter — otherwise that path lands on a filtered grid with no way to clear it.
   const hasFilters = ['productLine', 'replacement', 'sort', 'color'].some((k) => params.get(k));
+
+  /**
+   * A colour is named by the dictionary, not by a variant's `colorLabel`: that label
+   * is one shade's marketing name in one language ("Hazel Brown"), while this filters
+   * every variant of the colour. `filters-colors.test.ts` fails if a catalog colour
+   * has no label, so the map cannot quietly fall behind the fixtures.
+   */
+  const labelFor = (value: string) =>
+    value
+      .split(',')
+      .map((part) => dict.filters.colors[part as keyof typeof dict.filters.colors] ?? part)
+      .join(' + ');
+
+  // `?color=` (blank) is no filter server-side, so it must not become a blank option here.
+  const activeColor = params.get('color') || ALL;
+  // A Color Family tile can send a set — `?color=brown,gray` — matching no single option.
+  // The set becomes an option of its own rather than leaving the control blank about a
+  // filter that is plainly applied.
+  const colorOptions = activeColor === ALL || colors.includes(activeColor) ? colors : [...colors, activeColor];
 
   const setParam = (key: string, value: string) => {
     const next = new URLSearchParams(params.toString());
@@ -58,6 +75,22 @@ export function CollectionFilters({ dict }: { dict: Dictionary }) {
           </SelectGroup>
         </SelectContent>
       </Select>
+
+      {colors.length > 0 ? (
+        <Select value={activeColor} onValueChange={(v) => setParam('color', v)}>
+          <SelectTrigger className="w-40" aria-label={dict.filters.color}>
+            <SelectValue placeholder={dict.filters.color} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value={ALL}>{dict.filters.color}</SelectItem>
+              {colorOptions.map((value) => (
+                <SelectItem key={value} value={value}>{labelFor(value)}</SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      ) : null}
 
       <Select value={params.get('sort') ?? ALL} onValueChange={(v) => setParam('sort', v)}>
         <SelectTrigger className="w-40" aria-label={dict.filters.sort}>
