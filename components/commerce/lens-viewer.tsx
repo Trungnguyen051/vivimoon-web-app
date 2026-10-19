@@ -20,9 +20,11 @@ const CONTEXT_KEYS = ['eye', 'face', 'withMakeup', 'withoutMakeup'] as const;
  * e.g. "brown") since the mock data owns that vocabulary, not the dictionary.
  */
 export function LensViewer({
-  gallery, alt, dict,
+  gallery, alt, dict, imageLabel,
 }: {
   gallery: LensGallery; alt: string; dict: Dictionary['viewer'];
+  /** Passed in rather than read off `dict`, which is narrowed to this component's own slice. */
+  imageLabel: string;
 }) {
   const eyeColors = Object.keys(gallery.contexts.byEyeColor);
   const [activeEyeColor, setActiveEyeColor] = useState(eyeColors[0]);
@@ -42,7 +44,7 @@ export function LensViewer({
 
       {CONTEXT_KEYS.map((key) => (
         <TabsContent key={key} value={key}>
-          <ProductGallery images={gallery.contexts[key]} alt={alt} />
+          <ProductGallery images={gallery.contexts[key]} alt={alt} imageLabel={imageLabel} />
         </TabsContent>
       ))}
 
@@ -67,7 +69,7 @@ export function LensViewer({
                 </button>
               ))}
             </div>
-            <ProductGallery key={activeEyeColor} images={gallery.contexts.byEyeColor[activeEyeColor]} alt={alt} />
+            <ProductGallery key={activeEyeColor} images={gallery.contexts.byEyeColor[activeEyeColor]} alt={alt} imageLabel={imageLabel} />
           </div>
         ) : null}
       </TabsContent>

@@ -21,8 +21,9 @@ export function MegaNav({ locale, dict }: { locale: Locale; dict: Dictionary }) 
   const items = getNavItems(dict, locale);
   const pathname = usePathname();
 
+  // Radix labels this landmark "Main" by default, which would announce in English.
   return (
-    <NavigationMenu className="hidden md:flex">
+    <NavigationMenu aria-label={dict.common.mainNav} className="hidden md:flex">
       <NavigationMenuList className="gap-4">
         {items.map((item) => (
           <NavigationMenuItem key={item.id}>

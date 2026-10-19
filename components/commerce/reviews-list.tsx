@@ -15,7 +15,7 @@ export function ReviewsList({ reviews, dict }: { reviews: Review[]; dict: Dictio
         <h2 className="text-2xl font-semibold tracking-tight">{dict.pdp.reviews}</h2>
         {reviews.length > 0 ? (
           <div className="flex items-center gap-2">
-            <RatingStars rating={average} />
+            <RatingStars label={dict.common.rating} outOfLabel={dict.common.outOf} rating={average} />
             <span className="text-sm text-muted-foreground">
               {average.toFixed(1)} · {reviews.length}
             </span>
@@ -37,7 +37,7 @@ export function ReviewsList({ reviews, dict }: { reviews: Review[]; dict: Dictio
           {reviews.map((r) => (
             <article key={r.id} className="rounded-xl border p-5">
               <div className="flex items-center justify-between gap-2">
-                <RatingStars rating={r.rating} />
+                <RatingStars label={dict.common.rating} outOfLabel={dict.common.outOf} rating={r.rating} />
                 <span className="text-xs text-muted-foreground">{r.createdAt}</span>
               </div>
               <p className="mt-3 font-medium">{r.title}</p>

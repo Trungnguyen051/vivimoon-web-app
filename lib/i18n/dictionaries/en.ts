@@ -3,7 +3,9 @@ export const en = {
     new: 'New', men: 'Men', women: 'Women', sport: 'Sport', accessories: 'Accessories', sale: 'Sale',
     about: 'About Vivimoon', products: 'Products', knowledge: 'Knowledge', support: 'Support', orderTracking: 'Track order',
   },
-  common: { shopNow: 'Shop Now', seeMore: 'See more', addToCart: 'Add to cart', buyNow: 'Buy now', search: 'Search...', decreaseQty: 'Decrease quantity', increaseQty: 'Increase quantity', menu: 'Menu', goToSlide: 'Go to slide' },
+  common: { shopNow: 'Shop Now', seeMore: 'See more', addToCart: 'Add to cart', buyNow: 'Buy now', search: 'Search...', decreaseQty: 'Decrease quantity', increaseQty: 'Increase quantity', menu: 'Menu', goToSlide: 'Go to slide',
+    previous: 'Previous', next: 'Next', previousSlide: 'Previous slide', nextSlide: 'Next slide',
+    language: 'Language', mainNav: 'Main navigation', breadcrumb: 'Breadcrumb', rating: 'Rating', outOf: 'of', image: 'Image', close: 'Close' },
   announcement: {
     freeShipping: 'FREE SHIPPING ON ORDERS FROM 300,000₫',
     authentic: 'AUTHENTIC KOREAN LENSES',

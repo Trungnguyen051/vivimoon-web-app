@@ -1,16 +1,16 @@
 # Graph Report - vivimoon-web-app  (2026-10-19)
 
 ## Corpus Check
-- 358 files · ~415,705 words
+- 358 files · ~179,141 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1663 nodes · 3958 edges · 136 communities (92 shown, 44 thin omitted)
+- 1663 nodes · 3958 edges · 134 communities (92 shown, 42 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 30 edges (avg confidence: 0.77)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d94431f7`
+- Built from commit: `a9488ad0`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -36,14 +36,14 @@
 - i18n seam (locale-prefixed routes, getDictionary)
 - cart-line-item.test.tsx
 - Coolmate.me Feature & Structure Analysis
-- orders/page.tsx
 - vouchers/page.tsx
+- loyalty/page.tsx
 - api/config.ts
 - Two-tier component architecture (ui/ vs commerce/)
 - Product Detail Page (PDP) structure
 - pricing/mock.ts
 - variant-selector.tsx
-- sign-in.test.tsx
+- prettier
 - readSessionUserId
 - Vivimoon Storefront Baseline Design Spec
 - apiOk
@@ -92,8 +92,6 @@
 - checkout-buy-now.test.tsx
 - scripts
 - cart-line-item.tsx
-- proxy.ts
-- @types/react-dom
 - Vivimoon M4 — Discovery Implementation Plan
 - auth.ts
 - 0001-proxy-seam-replaces-repository-interface.md
@@ -178,11 +176,11 @@
 - **Four swappable architecture seams (data, theming, i18n, analytics) isolating volatility** — docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productrepository, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_theming_seam, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_i18n_seam, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_analytics_seam [EXTRACTED 1.00]
 - **Coolmate apparel patterns re-modeled for Vivimoon contact-lens domain** — docs_research_coolmate_website_analysis_product_card, docs_research_coolmate_website_analysis_pdp, docs_research_coolmate_website_analysis_color_variant_url_pattern, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productcard, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant [INFERRED 0.85]
 
-## Communities (136 total, 44 thin omitted)
+## Communities (134 total, 42 thin omitted)
 
 ### Community 0 - "getDictionary"
-Cohesion: 0.19
-Nodes (14): AboutPage(), user, FavoritesPage(), fetchFavorites(), ArticlesPage(), ForgotPasswordPage(), SignInPage(), SignUpPage() (+6 more)
+Cohesion: 0.17
+Nodes (16): AboutPage(), ArticlesPage(), ForgotPasswordPage(), SignInPage(), SignUpPage(), LocaleLayout(), TrackRequestPage(), TrackedOrderPage() (+8 more)
 
 ### Community 1 - "rx-selector.tsx"
 Cohesion: 0.18
@@ -222,7 +220,7 @@ Nodes (31): CollectionCarousel(), CONTEXT_KEYS, LensViewer(), gallery, ProductGa
 
 ### Community 10 - "devDependencies"
 Cohesion: 0.08
-Nodes (25): eslint, eslint-config-next, jsdom, devDependencies, eslint, eslint-config-next, jsdom, prettier (+17 more)
+Nodes (25): eslint, eslint-config-next, jsdom, devDependencies, eslint, eslint-config-next, jsdom, prettier-plugin-tailwindcss (+17 more)
 
 ### Community 11 - "Vivimoon — Client Scope Design Spec"
 Cohesion: 0.11
@@ -264,13 +262,13 @@ Nodes (13): dict, line, lineWithRx, rx, freshStore(), makeLine(), rxA, rxB (+5 m
 Cohesion: 0.12
 Nodes (16): Screen-reader-only accessible text investment, Announcement bar (Coolmate), Blog / content-marketing hub, Care & Share CSR program, Community Threads (UGC/community hub), Cookie consent banner + preference center, CXP by Coolmate (custom-print sub-brand), Footer (contact, link columns, address, certifications) (+8 more)
 
-### Community 21 - "orders/page.tsx"
+### Community 21 - "vouchers/page.tsx"
 Cohesion: 0.13
-Nodes (25): fetchLoyalty(), formatDate(), LoyaltyPage(), fetchOrders(), formatDate(), OrderHistoryPage(), STATUS_VARIANT, ArticlePage() (+17 more)
+Nodes (26): fetchOrders(), formatDate(), OrderHistoryPage(), STATUS_VARIANT, discountLabel(), fetchVouchers(), formatDate(), VouchersPage() (+18 more)
 
-### Community 22 - "vouchers/page.tsx"
-Cohesion: 0.24
-Nodes (12): AddressesPage(), fetchAddresses(), fetchOrder(), OrderDetailPage(), AccountPage(), fetchAccount(), discountLabel(), fetchVouchers() (+4 more)
+### Community 22 - "loyalty/page.tsx"
+Cohesion: 0.26
+Nodes (11): AddressesPage(), fetchAddresses(), fetchLoyalty(), formatDate(), LoyaltyPage(), fetchOrder(), OrderDetailPage(), AccountPage() (+3 more)
 
 ### Community 23 - "api/config.ts"
 Cohesion: 0.14
@@ -365,12 +363,12 @@ Cohesion: 0.33
 Nodes (5): Before exploring, read these, Domain Docs, File structure, Flag ADR conflicts, Use the glossary's vocabulary
 
 ### Community 65 - "cart/page.tsx"
-Cohesion: 0.25
-Nodes (15): CartPage(), ADR-0012, SuccessPage(), ProductGrid(), Empty(), EmptyContent(), EmptyDescription(), EmptyHeader() (+7 more)
+Cohesion: 0.22
+Nodes (17): FavoritesPage(), fetchFavorites(), CartPage(), ADR-0012, SuccessPage(), ProductGrid(), Empty(), EmptyContent() (+9 more)
 
 ### Community 66 - "dictionaries.ts"
-Cohesion: 0.16
-Nodes (12): LocaleLayout(), AnnouncementBar(), Footer(), Header(), ADR-0013, LocaleSwitcher(), PageContainer(), ADR-0013 (+4 more)
+Cohesion: 0.13
+Nodes (11): user, push, AnnouncementBar(), Footer(), Header(), LocaleSwitcher(), Locale, locales (+3 more)
 
 ### Community 69 - "add-to-cart.tsx"
 Cohesion: 0.24
@@ -549,7 +547,7 @@ Nodes (3): QuizFlow(), definition, mockedApiRequest
 ## Knowledge Gaps
 - **504 isolated node(s):** `Stage`, `push`, `push`, `Stage`, `push` (+499 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **44 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **42 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_

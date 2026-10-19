@@ -30,7 +30,7 @@ export function ComparisonDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-4xl">
+      <DialogContent closeLabel={dict.common.close} className="max-w-[calc(100%-2rem)] sm:max-w-4xl">
         <DialogHeader>
           <DialogTitle>{dict.compare.title}</DialogTitle>
         </DialogHeader>

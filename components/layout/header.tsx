@@ -52,7 +52,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
             ) : null}
           </Link>
           <div className="ml-1 hidden md:block">
-            <LocaleSwitcher currentLocale={locale} />
+            <LocaleSwitcher currentLocale={locale} label={dict.common.language} />
           </div>
         </div>
       </div>

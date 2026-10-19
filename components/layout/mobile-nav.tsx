@@ -21,7 +21,7 @@ export function MobileNav({ locale, dict }: { locale: Locale; dict: Dictionary }
       >
         <Menu className="h-5 w-5" />
       </SheetTrigger>
-      <SheetContent side="left" className="w-80 max-w-[85vw]">
+      <SheetContent side="left" closeLabel={dict.common.close} className="w-80 max-w-[85vw]">
         <SheetHeader className="border-b">
           <SheetTitle>Vivimoon</SheetTitle>
         </SheetHeader>
@@ -74,7 +74,7 @@ export function MobileNav({ locale, dict }: { locale: Locale; dict: Dictionary }
         </nav>
 
         <div className="mt-auto border-t p-4">
-          <LocaleSwitcher currentLocale={locale} />
+          <LocaleSwitcher currentLocale={locale} label={dict.common.language} />
         </div>
       </SheetContent>
     </Sheet>

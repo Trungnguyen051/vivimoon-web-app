@@ -14,7 +14,10 @@ import { PillLink } from '@/components/ui/pill-link';
  */
 type Slide = { id: string; image: string; href: string; alt: string };
 
-export function HeroCarousel({ slides, ctaLabel }: { slides: Slide[]; ctaLabel: string }) {
+/** Icon-only controls have no visible text, so their labels are the whole accessible name. */
+export type CarouselLabels = { previous: string; next: string; goToSlide: string };
+
+export function HeroCarousel({ slides, ctaLabel, labels }: { slides: Slide[]; ctaLabel: string; labels: CarouselLabels }) {
   const [ref, embla] = useEmblaCarousel({ loop: true });
   const [selected, setSelected] = useState(0);
 
@@ -60,14 +63,14 @@ export function HeroCarousel({ slides, ctaLabel }: { slides: Slide[]; ctaLabel: 
       </div>
 
       <button
-        aria-label="Previous slide"
+        aria-label={labels.previous}
         onClick={() => embla?.scrollPrev()}
         className="absolute left-4 top-1/2 md:left-20 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-background/70 text-foreground shadow-sm backdrop-blur-md transition-colors hover:bg-background"
       >
         <ChevronLeft className="size-5" />
       </button>
       <button
-        aria-label="Next slide"
+        aria-label={labels.next}
         onClick={() => embla?.scrollNext()}
         className="absolute right-4 top-1/2 md:right-20 flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-background/70 text-foreground shadow-sm backdrop-blur-md transition-colors hover:bg-background"
       >
@@ -78,7 +81,7 @@ export function HeroCarousel({ slides, ctaLabel }: { slides: Slide[]; ctaLabel: 
         {slides.map((s, i) => (
           <button
             key={s.id}
-            aria-label={`Go to slide ${i + 1}`}
+            aria-label={`${labels.goToSlide} ${i + 1}`}
             aria-current={selected === i}
             onClick={() => embla?.scrollTo(i)}
             className={cn(

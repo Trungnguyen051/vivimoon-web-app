@@ -34,7 +34,7 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
     <PageContainer>
       <div className="space-y-16 md:space-y-24">
         <div className="space-y-8">
-          <Breadcrumb>
+          <Breadcrumb aria-label={dict.common.breadcrumb}>
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
@@ -54,14 +54,14 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
               // client-side nav between two PDPs must remount this rather than
               // reuse it, or activeEyeColor can point at a key the new
               // product's gallery doesn't have.
-              <LensViewer key={product.id} gallery={gallery} alt={product.name} dict={dict.viewer} />
+              <LensViewer key={product.id} gallery={gallery} alt={product.name} dict={dict.viewer} imageLabel={dict.common.image} />
             ) : (
-              <ProductGallery images={product.images} alt={product.name} />
+              <ProductGallery images={product.images} alt={product.name} imageLabel={dict.common.image} />
             )}
             <div className="flex flex-col gap-5">
               <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{product.name}</h1>
               <div className="flex items-center gap-2">
-                <RatingStars rating={product.rating} />
+                <RatingStars label={dict.common.rating} outOfLabel={dict.common.outOf} rating={product.rating} />
                 <span className="text-sm text-muted-foreground">
                   {product.rating.toFixed(1)} · {product.reviewCount}
                 </span>

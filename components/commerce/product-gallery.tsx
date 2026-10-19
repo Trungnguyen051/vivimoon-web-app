@@ -3,13 +3,13 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { cn } from '@/lib/utils/cn';
 
-export function ProductGallery({ images, alt }: { images: string[]; alt: string }) {
+export function ProductGallery({ images, alt, imageLabel }: { images: string[]; alt: string; imageLabel: string }) {
   const [active, setActive] = useState(0);
   return (
     <div className="flex flex-col-reverse gap-4 md:flex-row">
       <div className="flex gap-2 overflow-x-auto md:flex-col md:overflow-visible">
         {images.map((src, i) => (
-          <button key={src} aria-label={`${alt} ${i + 1}`} aria-current={active === i} onClick={() => setActive(i)} className={cn('relative size-16 shrink-0 overflow-hidden rounded-lg border transition-shadow', active === i && 'ring-2 ring-primary ring-offset-2 ring-offset-background')}>
+          <button key={src} aria-label={`${imageLabel} ${i + 1}: ${alt}`} aria-current={active === i} onClick={() => setActive(i)} className={cn('relative size-16 shrink-0 overflow-hidden rounded-lg border transition-shadow', active === i && 'ring-2 ring-primary ring-offset-2 ring-offset-background')}>
             <Image src={src} alt={`${alt} ${i + 1}`} fill className="object-cover" sizes="64px" />
           </button>
         ))}

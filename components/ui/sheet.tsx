@@ -48,10 +48,13 @@ function SheetOverlay({
 function SheetContent({
   className,
   children,
+  closeLabel = "Close",
   side = "right",
   showCloseButton = true,
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
+  /** The close button has only an icon, so this is its whole accessible name. */
+  closeLabel?: string
   side?: "top" | "right" | "bottom" | "left"
   showCloseButton?: boolean
 }) {
@@ -77,7 +80,7 @@ function SheetContent({
             >
               <XIcon
               />
-              <span className="sr-only">Close</span>
+              <span className="sr-only">{closeLabel}</span>
             </Button>
           </SheetPrimitive.Close>
         )}

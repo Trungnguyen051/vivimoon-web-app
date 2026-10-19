@@ -52,6 +52,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       {/* Full-bleed and flush under the header: the hero sits outside PageContainer (ADR-0013). */}
       <HeroCarousel
         ctaLabel={dict.common.shopNow}
+        labels={{ previous: dict.common.previousSlide, next: dict.common.nextSlide, goToSlide: dict.common.goToSlide }}
         slides={[
           { id: 'new-arrivals', image: '/images/hero-1.jpg', href: `/${l}/collection/new-arrivals`, alt: dict.collection.newArrivals },
           { id: 'sale', image: '/images/hero-2.jpg', href: `/${l}/collection/sale`, alt: dict.collection.sale },
