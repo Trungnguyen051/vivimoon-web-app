@@ -17,6 +17,14 @@ export const collections: Collection[] = [
     productIds: products.filter((p) => p.productLine !== 'trongSuot').map((p) => p.id),
   },
   {
+    slug: 'all-lenses',
+    title: 'collection.allLenses',
+    // The whole catalog, because `collection/[slug]` is the only listing route and
+    // the homepage's duration tiles browse by wear duration rather than by range.
+    // Without this, a product in no themed collection is unreachable (#49).
+    productIds: products.map((p) => p.id),
+  },
+  {
     slug: 'daily-lenses',
     title: 'collection.daily',
     productIds: products.filter((p) => p.replacement === 'daily').map((p) => p.id),

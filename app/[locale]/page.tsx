@@ -10,20 +10,8 @@ import { HomeSection } from '@/components/layout/home-section';
 import { BrandStory } from '@/components/commerce/brand-story';
 import { TrustBadges } from '@/components/commerce/trust-badges';
 import { COLOR_FAMILIES, COLOR_FAMILY_COLLECTION, colorFamilyHref, countColorFamily } from '@/lib/products/color-families';
+import { DURATION_TILES, durationTileHref } from '@/lib/products/duration-tiles';
 import { catalog } from '@/lib/api/resources/catalog';
-
-/* Product photography, since the design weights these tiles like the colour ones.
-   Each id is both the dictionary key and the replacement filter value.
-
-   Each tile opens the collection that covers it best, which today is only true of
-   `daily`: no collection contains a threeMonth or sixMonth product, though the
-   catalog has both, so those two tiles land empty until the fixtures catch up (#49) —
-   a tracked gap, not a reason to drop the tiles the design specifies. */
-const DURATION_TILES = [
-  { id: 'daily', image: '/images/products/aqua-daily-1.jpg', collection: 'daily-lenses' },
-  { id: 'threeMonth', image: '/images/products/hazel-monthly-1.jpg', collection: 'bestsellers' },
-  { id: 'sixMonth', image: '/images/products/torica-monthly-1.jpg', collection: 'bestsellers' },
-] as const;
 
 /* Provisional creative: the only catalog photography not already on this page. Real brand imagery is pending. */
 const BRAND_STORY_IMAGES = [
@@ -119,7 +107,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             id: tile.id,
             label: dict.home.shopByFilter.durations[tile.id],
             image: tile.image,
-            href: `/${l}/collection/${tile.collection}?replacement=${tile.id}`,
+            href: durationTileHref(tile, l),
           }))}
         />
       </HomeSection>
