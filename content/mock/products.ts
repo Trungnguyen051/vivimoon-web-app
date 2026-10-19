@@ -144,6 +144,46 @@ export const products: Product[] = [
     reviewCount: 0,
   },
   {
+    id: 'p-onyx-monthly',
+    slug: 'onyx-monthly-colored',
+    name: 'Onyx Monthly Colored',
+    brandId: 'vivimoon',
+    brandName: 'Vivimoon',
+    productLine: 'coMau',
+    replacement: 'monthly',
+    description:
+      'Monthly colored lenses with a soft black limbal ring, for definition without an obvious circle-lens look.',
+    // Shares Hazel Monthly's photography until black-lens imagery exists (#55), so
+    // this product shows brown lenses on its card and PDP. The colour is carried by
+    // colorLabel, not the photo, but it reads as a bug until the real images land.
+    images: ['/images/products/hazel-monthly-1.jpg', '/images/products/hazel-monthly-2.jpg'],
+    badges: [],
+    specs: {
+      material: 'Silicone Hydrogel',
+      waterContent: '45%',
+      baseCurve: '8.6mm',
+      diameter: '14.2mm',
+      graphicDiameter: '13.8mm',
+      origin: 'South Korea',
+    },
+    requiresRx: true,
+    // One black variant, not two shades: productSchema rejects a product whose
+    // variants repeat a color, since color is the only thing VariantSelector picks on.
+    variants: [
+      {
+        id: 'p-onyx-monthly-black-30',
+        sku: 'ONX-BK-30',
+        color: 'black',
+        colorLabel: 'Natural Black',
+        price: 21,
+        currency: 'USD',
+        stock: 26,
+      },
+    ],
+    rating: 4.6,
+    reviewCount: 0,
+  },
+  {
     id: 'p-mystic-daily',
     slug: 'mystic-daily-colored',
     name: 'Mystic Daily Colored',

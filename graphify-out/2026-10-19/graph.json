@@ -2493,7 +2493,7 @@
       "file_type": "code",
       "norm_label": "homepage()",
       "source_file": "app/[locale]/page.tsx",
-      "source_location": "L45"
+      "source_location": "L44"
     },
     {
       "id": "components_commerce_brand_story_brandstory",
@@ -5172,54 +5172,6 @@
       "source_location": "L34"
     },
     {
-      "id": "app_locale_checkout_checkout_buy_now_test_fillrequiredfields",
-      "label": "fillRequiredFields()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "cart-store.ts",
-      "file_type": "code",
-      "norm_label": "fillrequiredfields()",
-      "source_file": "app/[locale]/checkout/checkout-buy-now.test.tsx",
-      "source_location": "L43"
-    },
-    {
-      "id": "app_locale_checkout_checkout_buy_now_test_json",
-      "label": "json()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "cart-store.ts",
-      "file_type": "code",
-      "norm_label": "json()",
-      "source_file": "app/[locale]/checkout/checkout-buy-now.test.tsx",
-      "source_location": "L26"
-    },
-    {
-      "id": "app_locale_checkout_checkout_buy_now_test_makeline",
-      "label": "makeLine()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "cart-store.ts",
-      "file_type": "code",
-      "norm_label": "makeline()",
-      "source_file": "app/[locale]/checkout/checkout-buy-now.test.tsx",
-      "source_location": "L30"
-    },
-    {
-      "id": "app_locale_checkout_checkout_buy_now_test_rendercheckoutpage",
-      "label": "renderCheckoutPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "cart-store.ts",
-      "file_type": "code",
-      "norm_label": "rendercheckoutpage()",
-      "source_file": "app/[locale]/checkout/checkout-buy-now.test.tsx",
-      "source_location": "L13"
-    },
-    {
       "id": "app_locale_checkout_success_success_buy_now_test_makeline",
       "label": "makeLine()",
       "_callable": true,
@@ -6406,6 +6358,54 @@
       "norm_label": "product()",
       "source_file": "lib/products/quiz-scoring.test.ts",
       "source_location": "L6"
+    },
+    {
+      "id": "app_locale_checkout_checkout_buy_now_test_fillrequiredfields",
+      "label": "fillRequiredFields()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "checkout-buy-now.test.tsx",
+      "file_type": "code",
+      "norm_label": "fillrequiredfields()",
+      "source_file": "app/[locale]/checkout/checkout-buy-now.test.tsx",
+      "source_location": "L43"
+    },
+    {
+      "id": "app_locale_checkout_checkout_buy_now_test_json",
+      "label": "json()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "checkout-buy-now.test.tsx",
+      "file_type": "code",
+      "norm_label": "json()",
+      "source_file": "app/[locale]/checkout/checkout-buy-now.test.tsx",
+      "source_location": "L26"
+    },
+    {
+      "id": "app_locale_checkout_checkout_buy_now_test_makeline",
+      "label": "makeLine()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "checkout-buy-now.test.tsx",
+      "file_type": "code",
+      "norm_label": "makeline()",
+      "source_file": "app/[locale]/checkout/checkout-buy-now.test.tsx",
+      "source_location": "L30"
+    },
+    {
+      "id": "app_locale_checkout_checkout_buy_now_test_rendercheckoutpage",
+      "label": "renderCheckoutPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "checkout-buy-now.test.tsx",
+      "file_type": "code",
+      "norm_label": "rendercheckoutpage()",
+      "source_file": "app/[locale]/checkout/checkout-buy-now.test.tsx",
+      "source_location": "L13"
     },
     {
       "id": "lib_api_resources_shipping_mock_shippingerror_constructor",
@@ -8997,7 +8997,7 @@
       "file_type": "code",
       "norm_label": "brand_story_images",
       "source_file": "app/[locale]/page.tsx",
-      "source_location": "L29"
+      "source_location": "L28"
     },
     {
       "id": "app_locale_page_duration_tiles",
@@ -9008,7 +9008,7 @@
       "file_type": "code",
       "norm_label": "duration_tiles",
       "source_file": "app/[locale]/page.tsx",
-      "source_location": "L22"
+      "source_location": "L21"
     },
     {
       "id": "app_locale_page_tv_thumbs",
@@ -9019,7 +9019,7 @@
       "file_type": "code",
       "norm_label": "tv_thumbs",
       "source_file": "app/[locale]/page.tsx",
-      "source_location": "L38"
+      "source_location": "L37"
     },
     {
       "id": "components_commerce_brand_story",
@@ -13243,28 +13243,6 @@
       "source_location": "L1"
     },
     {
-      "id": "app_locale_checkout_checkout_buy_now_test",
-      "label": "checkout-buy-now.test.tsx",
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "cart-store.ts",
-      "file_type": "code",
-      "norm_label": "checkout-buy-now.test.tsx",
-      "source_file": "app/[locale]/checkout/checkout-buy-now.test.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "app_locale_checkout_checkout_buy_now_test_order_response",
-      "label": "ORDER_RESPONSE",
-      "_origin": "ast",
-      "community": 6,
-      "community_name": "cart-store.ts",
-      "file_type": "code",
-      "norm_label": "order_response",
-      "source_file": "app/[locale]/checkout/checkout-buy-now.test.tsx",
-      "source_location": "L38"
-    },
-    {
       "id": "app_locale_checkout_success_success_buy_now_test",
       "label": "success-buy-now.test.tsx",
       "_origin": "ast",
@@ -15722,6 +15700,28 @@
       "source_location": "L843"
     },
     {
+      "id": "app_locale_checkout_checkout_buy_now_test",
+      "label": "checkout-buy-now.test.tsx",
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "checkout-buy-now.test.tsx",
+      "file_type": "code",
+      "norm_label": "checkout-buy-now.test.tsx",
+      "source_file": "app/[locale]/checkout/checkout-buy-now.test.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_locale_checkout_checkout_buy_now_test_order_response",
+      "label": "ORDER_RESPONSE",
+      "_origin": "ast",
+      "community": 80,
+      "community_name": "checkout-buy-now.test.tsx",
+      "file_type": "code",
+      "norm_label": "order_response",
+      "source_file": "app/[locale]/checkout/checkout-buy-now.test.tsx",
+      "source_location": "L38"
+    },
+    {
       "id": "content_mock_shipping_rates",
       "label": "shipping-rates.ts",
       "_origin": "ast",
@@ -17042,36 +17042,6 @@
       "source_url": null
     },
     {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant",
-      "label": "Variant domain type",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 16,
-      "community_name": "Product domain type",
-      "contributor": null,
-      "file_type": "code",
-      "norm_label": "variant domain type",
-      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variantselector",
-      "label": "VariantSelector component",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 16,
-      "community_name": "Product domain type",
-      "contributor": null,
-      "file_type": "code",
-      "norm_label": "variantselector component",
-      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
       "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_file_structure",
       "label": "Planned file structure (app/, lib/, content/, features/cart/, components/, tests/)",
       "_origin": "semantic",
@@ -17232,21 +17202,6 @@
       "contributor": null,
       "file_type": "rationale",
       "norm_label": "data layer swap seam: single named concrete impl in lib/data/index.ts",
-      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant_axes_rationale",
-      "label": "Variant axes baseline: color x packSize, power deferred to future Rx axis",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 16,
-      "community_name": "Product domain type",
-      "contributor": null,
-      "file_type": "rationale",
-      "norm_label": "variant axes baseline: color x packsize, power deferred to future rx axis",
       "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
       "source_location": null,
       "source_url": null
@@ -17777,6 +17732,21 @@
       "source_url": null
     },
     {
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_ordersummary",
+      "label": "OrderSummary component",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 24,
+      "community_name": "Two-tier component architecture (ui/ vs commerce/)",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "ordersummary component",
+      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
       "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productgallery",
       "label": "ProductGallery component",
       "_origin": "semantic",
@@ -17787,6 +17757,21 @@
       "contributor": null,
       "file_type": "code",
       "norm_label": "productgallery component",
+      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productgrid",
+      "label": "ProductGrid component (with filter sidebar)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 24,
+      "community_name": "Two-tier component architecture (ui/ vs commerce/)",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "productgrid component (with filter sidebar)",
       "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
       "source_location": null,
       "source_url": null
@@ -17837,6 +17822,96 @@
       "source_url": null
     },
     {
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant",
+      "label": "Variant domain type",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 24,
+      "community_name": "Two-tier component architecture (ui/ vs commerce/)",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "variant domain type",
+      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variantselector",
+      "label": "VariantSelector component",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 24,
+      "community_name": "Two-tier component architecture (ui/ vs commerce/)",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "variantselector component",
+      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task15_collection_listing_page",
+      "label": "Task 15: Collection listing page + filters",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 24,
+      "community_name": "Two-tier component architecture (ui/ vs commerce/)",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "task 15: collection listing page + filters",
+      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task16_pdp_components",
+      "label": "Task 16: PDP components (Gallery, VariantSelector, SpecTable, ReviewsList)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 24,
+      "community_name": "Two-tier component architecture (ui/ vs commerce/)",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "task 16: pdp components (gallery, variantselector, spectable, reviewslist)",
+      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task17_pdp_page",
+      "label": "Task 17: PDP page + Add-to-cart",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 24,
+      "community_name": "Two-tier component architecture (ui/ vs commerce/)",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "task 17: pdp page + add-to-cart",
+      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task18_cart_page",
+      "label": "Task 18: Cart page + line item + order summary",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 24,
+      "community_name": "Two-tier component architecture (ui/ vs commerce/)",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "task 18: cart page + line item + order summary",
+      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
       "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_component_architecture",
       "label": "Two-tier component architecture (ui/ vs commerce/)",
       "_origin": "semantic",
@@ -17852,16 +17927,16 @@
       "source_url": null
     },
     {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productgrid",
-      "label": "ProductGrid component (with filter sidebar)",
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant_axes_rationale",
+      "label": "Variant axes baseline: color x packSize, power deferred to future Rx axis",
       "_origin": "semantic",
       "author": null,
       "captured_at": null,
-      "community": 25,
-      "community_name": "Product Detail Page (PDP) structure",
+      "community": 24,
+      "community_name": "Two-tier component architecture (ui/ vs commerce/)",
       "contributor": null,
-      "file_type": "code",
-      "norm_label": "productgrid component (with filter sidebar)",
+      "file_type": "rationale",
+      "norm_label": "variant axes baseline: color x packsize, power deferred to future rx axis",
       "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
       "source_location": null,
       "source_url": null
@@ -17923,51 +17998,6 @@
       "file_type": "concept",
       "norm_label": "product detail page (pdp) structure",
       "source_file": "docs/research/coolmate-website-analysis.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task15_collection_listing_page",
-      "label": "Task 15: Collection listing page + filters",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 25,
-      "community_name": "Product Detail Page (PDP) structure",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "task 15: collection listing page + filters",
-      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task16_pdp_components",
-      "label": "Task 16: PDP components (Gallery, VariantSelector, SpecTable, ReviewsList)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 25,
-      "community_name": "Product Detail Page (PDP) structure",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "task 16: pdp components (gallery, variantselector, spectable, reviewslist)",
-      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task17_pdp_page",
-      "label": "Task 17: PDP page + Add-to-cart",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 25,
-      "community_name": "Product Detail Page (PDP) structure",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "task 17: pdp page + add-to-cart",
-      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
       "source_location": null,
       "source_url": null
     },
@@ -18077,6 +18107,36 @@
       "source_url": null
     },
     {
+      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task19_checkout_success",
+      "label": "Task 19: Checkout + success (stubbed payment)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 30,
+      "community_name": "Vivimoon Storefront Baseline Design Spec",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "task 19: checkout + success (stubbed payment)",
+      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task20_final_verification",
+      "label": "Task 20: Final verification (responsive, a11y, build, tests)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 30,
+      "community_name": "Vivimoon Storefront Baseline Design Spec",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "task 20: final verification (responsive, a11y, build, tests)",
+      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
       "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_build_sequence",
       "label": "Build sequence (13 high-level steps)",
       "_origin": "semantic",
@@ -18087,6 +18147,36 @@
       "contributor": null,
       "file_type": "concept",
       "norm_label": "build sequence (13 high-level steps)",
+      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_pages",
+      "label": "Pages table (Home, Collection, PDP, Cart, Checkout, Checkout success)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 30,
+      "community_name": "Vivimoon Storefront Baseline Design Spec",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "pages table (home, collection, pdp, cart, checkout, checkout success)",
+      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_testing_strategy",
+      "label": "Testing strategy (Vitest unit + RTL component tests)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 30,
+      "community_name": "Vivimoon Storefront Baseline Design Spec",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "testing strategy (vitest unit + rtl component tests)",
       "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
       "source_location": null,
       "source_url": null
@@ -19063,96 +19153,6 @@
       "file_type": "image",
       "norm_label": "torica biweekly product image 2 (blank placeholder)",
       "source_file": "public/images/products/torica-biweekly-2.jpg",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_ordersummary",
-      "label": "OrderSummary component",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 80,
-      "community_name": "Task 18: Cart page + line item + order summary",
-      "contributor": null,
-      "file_type": "code",
-      "norm_label": "ordersummary component",
-      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task18_cart_page",
-      "label": "Task 18: Cart page + line item + order summary",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 80,
-      "community_name": "Task 18: Cart page + line item + order summary",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "task 18: cart page + line item + order summary",
-      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task19_checkout_success",
-      "label": "Task 19: Checkout + success (stubbed payment)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 80,
-      "community_name": "Task 18: Cart page + line item + order summary",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "task 19: checkout + success (stubbed payment)",
-      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task20_final_verification",
-      "label": "Task 20: Final verification (responsive, a11y, build, tests)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 80,
-      "community_name": "Task 18: Cart page + line item + order summary",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "task 20: final verification (responsive, a11y, build, tests)",
-      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_pages",
-      "label": "Pages table (Home, Collection, PDP, Cart, Checkout, Checkout success)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 80,
-      "community_name": "Task 18: Cart page + line item + order summary",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "pages table (home, collection, pdp, cart, checkout, checkout success)",
-      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_testing_strategy",
-      "label": "Testing strategy (Vitest unit + RTL component tests)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 80,
-      "community_name": "Task 18: Cart page + line item + order summary",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "testing strategy (vitest unit + rtl component tests)",
-      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
       "source_location": null,
       "source_url": null
     },
@@ -21792,7 +21792,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app/[locale]/page.tsx",
-      "source_location": "L114",
+      "source_location": "L113",
       "weight": 1.0
     },
     {
@@ -21804,7 +21804,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app/[locale]/page.tsx",
-      "source_location": "L116",
+      "source_location": "L115",
       "weight": 1.0
     },
     {
@@ -21816,7 +21816,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app/[locale]/page.tsx",
-      "source_location": "L47",
+      "source_location": "L46",
       "weight": 1.0
     },
     {
@@ -21828,7 +21828,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "app/[locale]/page.tsx",
-      "source_location": "L49",
+      "source_location": "L48",
       "weight": 1.0
     },
     {
@@ -51878,7 +51878,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/[locale]/page.tsx",
-      "source_location": "L22",
+      "source_location": "L21",
       "weight": 1.0
     },
     {
@@ -51889,7 +51889,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/[locale]/page.tsx",
-      "source_location": "L29",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -51900,7 +51900,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/[locale]/page.tsx",
-      "source_location": "L38",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -51911,7 +51911,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/[locale]/page.tsx",
-      "source_location": "L45",
+      "source_location": "L44",
       "weight": 1.0
     },
     {
@@ -63747,5 +63747,5 @@
       "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md"
     }
   ],
-  "built_at_commit": "0a15034ab0a7b52fe1134dce49833b32308a50a9"
+  "built_at_commit": "9b8f3abb982fe9551966fe635a7d5be5d9215276"
 }
