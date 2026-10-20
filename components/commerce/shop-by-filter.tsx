@@ -85,12 +85,16 @@ export function ShopByFilter({
           <Link
             key={duration.id}
             href={duration.href}
-            className="group overflow-hidden rounded bg-white shadow-[0_4px_20px_0_rgba(0,0,0,0.08)] transition-transform hover:-translate-y-0.5"
+            className="group relative block aspect-[16/9] overflow-hidden transition-transform hover:-translate-y-0.5"
           >
-            <span className="relative block aspect-[16/9] overflow-hidden">
-              <Image src={duration.image} alt="" fill className="object-cover" sizes="(max-width:640px) 100vw, 33vw" />
-            </span>
-            <span className="block p-5 font-medium text-[#0a0a0a]">{duration.label}</span>
+            {/* Empty alt: the label beside it already names the card, so announcing
+                the photograph as well would say the same thing twice. */}
+            <Image src={duration.image} alt="" fill className="object-cover" sizes="(max-width:640px) 100vw, 33vw" />
+            {/* Load-bearing, not decoration. The photographs are light product shots,
+                so white text is legible only because of this — measured against the
+                lightest of them rather than eyeballed (#83). */}
+            <span aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent" />
+            <span className="absolute inset-x-0 bottom-0 p-5 text-lg font-medium text-white">{duration.label}</span>
           </Link>
         ))}
       </div>
