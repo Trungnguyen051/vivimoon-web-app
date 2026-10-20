@@ -49,7 +49,7 @@ export function HeroCarousel({ slides, ctaLabel, labels }: { slides: Slide[]; ct
                 {/* Image is full-bleed, copy is not: this inner wrapper matches
                     PageContainer so the headline lines up with the sections below. */}
                 <div className="absolute inset-0 flex flex-col justify-end py-6 md:py-12">
-                  <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4">
+                  <div className="flex w-full flex-col gap-4 px-4 md:px-10">
                     <h2 className="max-w-md text-3xl font-semibold tracking-tight text-white md:text-5xl">
                       {s.alt}
                     </h2>

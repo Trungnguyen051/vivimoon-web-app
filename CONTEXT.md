@@ -64,5 +64,9 @@ One editorial piece behind the homepage's Kiến thức section, with a title, e
 _Avoid_: Post, blog entry, news item
 
 **Color Family**:
-A named group of catalog colors used as a single merchandising entry point on the homepage — Nâu, Đen, Xám, and Màu sắc nổi bật ("standout colors", which gathers every vivid color rather than naming one). A Color Family is a browsing concept only: it has no field on a Product or Variant, which each still carry one `color`. The homepage tile for a family shows up to three representative swatches and links into the collection filtered to that family's colors.
+A named group of catalog colors used as a merchandising entry point on the homepage — Nâu, Đen, Xám, and Màu sắc nổi bật ("standout colors", which gathers every vivid color rather than naming one). A Color Family is a browsing concept only: it has no field on a Product or Variant, which each still carry one `color`. Its homepage tile shows up to three representative swatches and links into the colored-lens collection filtered to that family's colors.
 _Avoid_: Color group, swatch group, palette
+
+**Không màu**:
+The fifth tile in the homepage's Color Family row, and deliberately not a Color Family: it selects the trong suốt Product Line by the _absence_ of color rather than by a set of colors, so it has no swatches and opens the clear lenses rather than a filtered colored-lens collection. It shares the row because a shopper choosing how their eyes should look is equally choosing not to change them.
+_Avoid_: Clear family, colorless family (it is a Product Line, not a Color Family)

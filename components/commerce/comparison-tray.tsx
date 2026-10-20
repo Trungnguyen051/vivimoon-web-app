@@ -34,7 +34,7 @@ export function ComparisonTray({ locale, dict }: { locale: Locale; dict: Diction
   return (
     <>
       <div className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3">
+        <div className="flex items-center gap-3 px-4 py-3 md:px-10">
           <div className="flex flex-1 items-center gap-2 overflow-x-auto">
             {productIds.map((id) => {
               const product = matrix?.products.find((p) => p.id === id);

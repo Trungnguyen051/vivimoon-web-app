@@ -1,17 +1,20 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MegaNav } from './mega-nav';
 import { vi as viDict } from '@/lib/i18n/dictionaries/vi';
 
-vi.mock('next/navigation', () => ({ usePathname: () => '/vi' }));
+const pathname = vi.hoisted(() => ({ current: '/vi' }));
+vi.mock('next/navigation', () => ({ usePathname: () => pathname.current }));
 
 /**
- * Two decisions here would regress silently and look fine on screen. The five
- * collections now live *under* Sản Phẩm rather than in the top row, so a
- * flattening refactor would still render five links and pass a naive check.
- * And Kiến thức and Hỗ trợ have no routes yet (#42 and a Hỗ trợ ticket), so
- * they must stay text — linking them is how a 404 ships.
+ * The decision here would regress silently and look fine on screen: the five
+ * collections live *under* Sản Phẩm rather than in the top row, so a flattening
+ * refactor would still render five links and pass a naive check.
+ *
+ * Every item is navigable now — #42 gave Kiến thức a route and #72 gave Hỗ trợ
+ * one, which emptied the inert `text` variant and retired it. What stops a nav
+ * item pointing at a route nobody built is `tests/nav-destinations.test.ts`.
  */
 describe('MegaNav', () => {
   it('nests every collection under Sản Phẩm rather than in the top row', async () => {
@@ -50,15 +53,49 @@ describe('MegaNav', () => {
     expect(await screen.findByRole('link', { name: viDict.collection.newArrivals })).toBeInTheDocument();
   });
 
-  it('renders the routeless items as text and the rest as links', () => {
+  it('renders every top-level item as a link', () => {
     render(<MegaNav locale="vi" dict={viDict} />);
-
-    // Hỗ trợ is the last item without a route; #42 gave Kiến thức one.
-    expect(screen.getByText(viDict.nav.support)).toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: viDict.nav.support })).not.toBeInTheDocument();
 
     expect(screen.getByRole('link', { name: viDict.nav.about })).toHaveAttribute('href', '/vi/about');
     expect(screen.getByRole('link', { name: viDict.nav.orderTracking })).toHaveAttribute('href', '/vi/orders/track');
     expect(screen.getByRole('link', { name: viDict.nav.knowledge })).toHaveAttribute('href', '/vi/articles');
+    // Hỗ trợ was the last inert item until #72 gave it a route.
+    expect(screen.getByRole('link', { name: viDict.nav.support })).toHaveAttribute('href', '/vi/support');
+  });
+
+  /**
+   * The underline says where you are. Its hard case is Sản Phẩm, which is not a
+   * route of its own: browsing a collection has to light up the trigger, or the
+   * row marks nothing at all for five of the storefront's pages (#74).
+   */
+  describe('the current-route indicator', () => {
+    afterEach(() => {
+      pathname.current = '/vi';
+    });
+
+    it('marks the top-level item you are on', () => {
+      pathname.current = '/vi/articles';
+      render(<MegaNav locale="vi" dict={viDict} />);
+
+      expect(screen.getByRole('link', { name: viDict.nav.knowledge })).toHaveAttribute('aria-current', 'page');
+      expect(screen.getByRole('link', { name: viDict.nav.about })).not.toHaveAttribute('aria-current');
+    });
+
+    it('marks Sản Phẩm while you are inside any of its collections', () => {
+      pathname.current = '/vi/collection/daily-lenses';
+      render(<MegaNav locale="vi" dict={viDict} />);
+
+      expect(screen.getByRole('button', { name: viDict.nav.products })).toHaveAttribute('aria-current', 'true');
+    });
+
+    it('marks nothing on a page with no nav entry', () => {
+      pathname.current = '/vi/cart';
+      render(<MegaNav locale="vi" dict={viDict} />);
+
+      for (const link of screen.getAllByRole('link')) {
+        expect(link).not.toHaveAttribute('aria-current');
+      }
+      expect(screen.getByRole('button', { name: viDict.nav.products })).not.toHaveAttribute('aria-current');
+    });
   });
 });

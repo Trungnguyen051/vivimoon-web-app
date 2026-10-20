@@ -59,16 +59,12 @@ export function MobileNav({ locale, dict }: { locale: Locale; dict: Dictionary }
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
-            ) : item.kind === 'link' ? (
+            ) : (
               <SheetClose asChild key={item.id}>
                 <Link href={item.href} className={`${ROW_CLASS} hover:bg-muted`}>
                   {item.label}
                 </Link>
               </SheetClose>
-            ) : (
-              <span key={item.id} className={`${ROW_CLASS} text-muted-foreground`}>
-                {item.label}
-              </span>
             ),
           )}
         </nav>

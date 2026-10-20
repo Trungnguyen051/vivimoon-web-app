@@ -72,10 +72,22 @@ export const useCartStore = create<CartStore>()(
        * ones, silently discarding anything added between mount and rehydrate.
        * Fold them together through cartReducer instead, so quantities merge by
        * lineKey and no add is lost to the race.
+       *
+       * That fold is only ever right while the race is still open. `hydrated`
+       * is what closes it: once it is true, `current.lines` *is* the stored
+       * cart, and folding it into itself sums every quantity with its own —
+       * the cart doubled on every rehydrate until the badge read 2^48 (#75).
+       * CartHydrator rehydrates from an effect, which StrictMode runs twice,
+       * so this was reached on the very first load in development.
+       *
+       * After hydration the stored cart simply wins. That is also the right
+       * answer across tabs: another tab's change is adopted rather than added
+       * to whatever this one was holding.
        */
       merge: (persisted, current) => {
         const stored = (persisted as Partial<CartState> | undefined)?.lines;
         const persistedLines = Array.isArray(stored) ? stored : [];
+        if (current.hydrated) return { ...current, lines: persistedLines };
         return { ...current, lines: mergeLines(persistedLines, current.lines) };
       },
     },
