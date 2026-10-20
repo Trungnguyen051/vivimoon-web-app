@@ -132,6 +132,41 @@ describe('useCartStore — hydration gating', () => {
     expect(store.getState().lines).toHaveLength(1);
     expect(store.getState().lines[0].quantity).toBe(3);
   });
+
+  /**
+   * The fold above is right for the one window it was built for — a line added
+   * between mount and hydration. The window closes once hydration lands, and
+   * after that `lines` IS the stored cart: folding it into itself sums every
+   * quantity with its own. Nothing exercised a second rehydrate, so the cart
+   * doubled on every page load until the badge read 2^48 (#75).
+   *
+   * CartHydrator calls rehydrate from an effect, which React StrictMode runs
+   * twice per mount, so this is reached in development on the first load.
+   */
+  it('leaves quantities alone when rehydrate runs more than once', async () => {
+    const store = await freshStore();
+    seed([makeLine(rxA, 2)]);
+
+    await store.persist.rehydrate();
+    expect(store.getState().lines[0].quantity).toBe(2);
+
+    await store.persist.rehydrate();
+    await store.persist.rehydrate();
+    expect(store.getState().lines).toHaveLength(1);
+    expect(store.getState().lines[0].quantity).toBe(2);
+  });
+
+  it('takes the stored cart on a later rehydrate, so another tab wins rather than doubles', async () => {
+    const store = await freshStore();
+    seed([makeLine(rxA, 1)]);
+    await store.persist.rehydrate();
+
+    // Another tab changed the cart; rehydrating here must adopt that, not add to it.
+    seed([makeLine(rxA, 5)]);
+    await store.persist.rehydrate();
+
+    expect(store.getState().lines[0].quantity).toBe(5);
+  });
 });
 
 describe('useCartStore — buyNowLine (Task 12)', () => {

@@ -174,9 +174,9 @@
     "semantic_hash": ""
   },
   "components/layout/footer.tsx": {
-    "mtime": 1792471603.6990469,
-    "seen": 1792471759.521492,
-    "ast_hash": "6950dba015a79004b0e1ca3546d7d681",
+    "mtime": 1792472974.7519643,
+    "seen": 1792473116.964117,
+    "ast_hash": "9247a2763743309b8c26e7d1a5077ee8",
     "semantic_hash": ""
   },
   "components/layout/header.tsx": {
@@ -2430,9 +2430,9 @@
     "semantic_hash": ""
   },
   "components/layout/logo.tsx": {
-    "mtime": 1792471240.8976758,
-    "seen": 1792471380.3411012,
-    "ast_hash": "cf2318b61791a0308e8b1af24973bede",
+    "mtime": 1792472949.633984,
+    "seen": 1792473116.964122,
+    "ast_hash": "b832f79192b972144b05ead6b30f89cd",
     "semantic_hash": ""
   },
   "app/[locale]/[...rest]/page.tsx": {
