@@ -235,6 +235,17 @@ export const en = {
   support: {
     comingSoon: 'Our support centre is on its way. Until it lands, the hotline and email in the footer reach a person.',
   },
+  notFound: {
+    title: 'We cannot find that page',
+    body: 'The link may be out of date, or the page may have moved. Everything else is still here.',
+    back: 'Back to the storefront',
+  },
+  errorPage: {
+    title: 'Something went wrong',
+    body: 'That is on us, not you. Trying again often clears it.',
+    retry: 'Try again',
+    back: 'Back to the storefront',
+  },
 };
 
 export type Dictionary = typeof en;

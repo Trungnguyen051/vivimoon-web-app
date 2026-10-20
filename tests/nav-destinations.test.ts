@@ -46,19 +46,31 @@ function resolveRoute(dir: string, segments: string[], viaDynamic = false): { vi
   if (!existsSync(dir)) return null;
 
   const [head, ...rest] = segments;
+  const dirs = readdirSync(dir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name);
 
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
-    const next = join(dir, entry.name);
+  // Most specific first, as the router itself resolves: a literal directory beats
+  // a dynamic one. Taking whichever `readdir` happened to yield first would let
+  // `/en/about` match `[...rest]` and report the About page as dynamic.
+  if (dirs.includes(head)) {
+    const hit = resolveRoute(join(dir, head), rest, viaDynamic);
+    if (hit) return hit;
+  }
 
-    const hit =
-      entry.name === head ? resolveRoute(next, rest, viaDynamic)
-      : /^\[.+\]$/.test(entry.name) ? resolveRoute(next, rest, true)
-      // A route group adds a directory level but no URL segment, so the whole
-      // remaining path is retried inside it.
-      : /^\(.+\)$/.test(entry.name) ? resolveRoute(next, segments, viaDynamic)
-      : null;
+  // `[slug]` but never `[...rest]`: that catch-all exists purely to throw
+  // `notFound()` (#73), so a nav href whose only match is the catch-all is
+  // precisely the dead link this file is here to catch. Resolving through it
+  // would make the whole guard vacuous.
+  for (const name of dirs.filter((n) => /^\[[^.]+\]$/.test(n))) {
+    const hit = resolveRoute(join(dir, name), rest, true);
+    if (hit) return hit;
+  }
 
+  // A route group adds a directory level but no URL segment, so the whole
+  // remaining path is retried inside it.
+  for (const name of dirs.filter((n) => /^\(.+\)$/.test(n))) {
+    const hit = resolveRoute(join(dir, name), segments, viaDynamic);
     if (hit) return hit;
   }
 
