@@ -6737,7 +6737,7 @@
       "file_type": "code",
       "norm_label": "logo()",
       "source_file": "components/layout/logo.tsx",
-      "source_location": "L21"
+      "source_location": "L18"
     },
     {
       "id": "components_layout_mega_nav_meganav",
@@ -16281,7 +16281,7 @@
       "file_type": "concept",
       "norm_label": "adr-0014",
       "source_file": "components/layout/logo.tsx",
-      "source_location": "L19"
+      "source_location": "L16"
     },
     {
       "id": "docs_superpowers_plans_2026_09_03_vivimoon_m4_discovery_file_structure",
@@ -23603,7 +23603,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "components/layout/logo.tsx",
-      "source_location": "L29",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -52707,7 +52707,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "components/layout/logo.tsx",
-      "source_location": "L19",
+      "source_location": "L16",
       "weight": 1.0
     },
     {
@@ -56700,7 +56700,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "components/layout/logo.tsx",
-      "source_location": "L21",
+      "source_location": "L18",
       "weight": 1.0
     },
     {
@@ -67448,5 +67448,5 @@
       "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md"
     }
   ],
-  "built_at_commit": "1ac75e444c0b9d6e570caee48d7927cf563e8081"
+  "built_at_commit": "e19491aa3f9105ee22e95d90cdd44401e7db2373"
 }

@@ -2,31 +2,39 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils/cn';
 
 /**
- * The wordmark, on whatever surface asks for it — the header and the footer size it
- * differently but neither should know which file to reach for.
+ * The wordmark, on whatever surface asks for it. Callers name the surface they sit
+ * on, never a file: the asset cannot be recoloured — each SVG wraps a base64 raster
+ * rather than paths, so `currentColor` has nothing to act on — and which file answers
+ * which surface is this component's business, not the footer's (#74, #76).
  *
- * Only the black file is referenced. `public/Logo-white.svg` exists because the
- * design's footer is dark, but ours is not, and nothing in the app applies the
- * `.dark` class today — so wiring the white one in would ship an image that can
- * never paint. It waits for the footer the design actually draws (#74).
+ * `dark` is the surface, not the theme. Nothing in the app applies the `.dark` class;
+ * the footer and the announcement bar are dark bands inside the light theme. The
+ * `dark:invert` below is the separate, unrelated case of a real dark theme arriving
+ * later, and it is deliberately not what makes the footer work.
  *
- * `dark:invert` is what covers the gap meanwhile: the asset is black ink on a
- * transparent ground, so inverting it yields the white wordmark rather than a box.
- * That matters because the file is a base64 raster inside an `<svg>`, not paths —
- * there is nothing for `currentColor` to act on.
- *
- * `next/image` applies `unoptimized` on its own for a `.svg` source, so this bypasses
- * the optimizer without reopening ADR-0014 or needing `dangerouslyAllowSVG`.
+ * `next/image` applies `unoptimized` on its own for a `.svg` source, so neither
+ * variant reopens ADR-0014 or needs `dangerouslyAllowSVG`.
  */
-export function Logo({ className, priority }: { className?: string; priority?: boolean }) {
+export function Logo({
+  className,
+  priority,
+  surface = 'light',
+}: {
+  className?: string;
+  priority?: boolean;
+  surface?: 'light' | 'dark';
+}) {
+  const onDark = surface === 'dark';
+
   return (
     <Image
-      src="/Logo-black.svg"
+      src={onDark ? '/Logo-white.svg' : '/Logo-black.svg'}
       alt="Vivimoon"
-      width={155}
-      height={48}
+      // Each export is its own crop: 155x48 for the black, 157x56 for the white.
+      width={onDark ? 157 : 155}
+      height={onDark ? 56 : 48}
       priority={priority}
-      className={cn('w-auto object-contain dark:invert', className)}
+      className={cn('w-auto object-contain', !onDark && 'dark:invert', className)}
     />
   );
 }
