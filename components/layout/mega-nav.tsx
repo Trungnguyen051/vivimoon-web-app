@@ -11,9 +11,9 @@ import {
 import { cn } from '@/lib/utils/cn';
 
 /**
- * All three kinds of entry render on the trigger's box — links and inert text
- * included — so the five items sit flush instead of alternating padding, and
- * all five read muted until one is current.
+ * Both kinds of entry render on the trigger's box — the Sản Phẩm group and the
+ * four plain links alike — so the five items sit flush instead of alternating
+ * padding, and all five read muted until one is current.
  */
 const ITEM_CLASS = cn(navigationMenuTriggerStyle(), 'p-0 px-2.5 py-1.5 font-normal text-muted-foreground');
 
@@ -50,16 +50,12 @@ export function MegaNav({ locale, dict }: { locale: Locale; dict: Dictionary }) 
                   </ul>
                 </NavigationMenuContent>
               </>
-            ) : item.kind === 'link' ? (
+            ) : (
               <NavigationMenuLink asChild className={cn(ITEM_CLASS, pathname === item.href && 'text-foreground')}>
                 <Link href={item.href} aria-current={pathname === item.href ? 'page' : undefined}>
                   {item.label}
                 </Link>
               </NavigationMenuLink>
-            ) : (
-              /* No route yet, so no link and no hover affordance — it reads as a label,
-                 not something broken. Its own ticket attaches the href. */
-              <span className={cn(ITEM_CLASS, 'hover:bg-transparent')}>{item.label}</span>
             )}
           </NavigationMenuItem>
         ))}

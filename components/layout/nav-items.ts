@@ -5,16 +5,16 @@ import type { Locale } from '@/lib/i18n/config';
 export type NavLink = { id: string; label: string; href: string };
 
 /**
- * One top-level entry in the primary nav. The three kinds are the point: Kiến thức
- * and Hỗ trợ have no routes yet, and a `text` item cannot carry an href, so they
- * are inert by construction rather than by styling — no dead link can ship while
- * its own ticket is still open (#40). #42 gave Kiến thức a route, so it is a `link`
- * now; Hỗ trợ is the last one still waiting.
+ * One top-level entry in the primary nav. A third kind used to exist — inert `text`,
+ * for an item with nowhere to point — so that no dead link could ship while its own
+ * ticket was open (#40). #42 routed Kiến thức and #72 routed Hỗ trợ, which emptied
+ * that variant, and an alternative with no members stops being a guarantee. What
+ * replaced it is `tests/nav-destinations.test.ts`: an href resolving to a route
+ * nobody built now fails CI rather than 404ing in production.
  */
 export type NavItem =
   | ({ kind: 'link' } & NavLink)
-  | { kind: 'group'; id: string; label: string; items: NavLink[] }
-  | { kind: 'text'; id: string; label: string };
+  | { kind: 'group'; id: string; label: string; items: NavLink[] };
 
 /** The five collections, which the design nests under Sản Phẩm rather than listing flat. */
 function getCollectionLinks(dict: Dictionary, locale: Locale): NavLink[] {
@@ -33,7 +33,7 @@ export function getNavItems(dict: Dictionary, locale: Locale): NavItem[] {
     { kind: 'link', id: 'about', label: dict.nav.about, href: `/${locale}/about` },
     { kind: 'group', id: 'products', label: dict.nav.products, items: getCollectionLinks(dict, locale) },
     { kind: 'link', id: 'knowledge', label: dict.nav.knowledge, href: `/${locale}/articles` },
-    { kind: 'text', id: 'support', label: dict.nav.support },
+    { kind: 'link', id: 'support', label: dict.nav.support, href: `/${locale}/support` },
     { kind: 'link', id: 'order-tracking', label: dict.nav.orderTracking, href: `/${locale}/orders/track` },
   ];
 }

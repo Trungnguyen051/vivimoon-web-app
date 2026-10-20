@@ -235,4 +235,7 @@ export const vi: Dictionary = {
     shipping: 'Vận chuyển', returns: 'Đổi trả', privacy: 'Bảo mật',
     hotline: 'Đường dây nóng', rights: '© 2026 Vivimoon',
   },
+  support: {
+    comingSoon: 'Trung tâm hỗ trợ đang được hoàn thiện. Trong lúc chờ, đường dây nóng và email ở chân trang luôn có người trả lời.',
+  },
 };

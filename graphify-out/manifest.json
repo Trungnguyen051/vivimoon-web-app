@@ -30,8 +30,8 @@
     "semantic_hash": ""
   },
   "app/[locale]/page.tsx": {
-    "mtime": 1792388916.3075147,
-    "seen": 1792389066.598382,
+    "mtime": 1792389136.20714,
+    "seen": 1792470447.977382,
     "ast_hash": "5dc971ef171a5c27d2fb77061deda8e4",
     "semantic_hash": ""
   },
@@ -192,21 +192,21 @@
     "semantic_hash": ""
   },
   "components/layout/mega-nav.tsx": {
-    "mtime": 1792387451.9972408,
-    "seen": 1792389066.59856,
-    "ast_hash": "8f69dd65227dea3eb016f22f60ffb7ed",
+    "mtime": 1792470709.1978498,
+    "seen": 1792470783.631443,
+    "ast_hash": "debfd2a4d32bbe0aa7aeb5693fca61bd",
     "semantic_hash": ""
   },
   "components/layout/mobile-nav.tsx": {
-    "mtime": 1792387451.99805,
-    "seen": 1792389066.598563,
-    "ast_hash": "4cf4644b31e31c0a61f86e56e426c4a9",
+    "mtime": 1792470309.8630073,
+    "seen": 1792470447.977508,
+    "ast_hash": "82c228b7efd23be98825c2ca7736aeaf",
     "semantic_hash": ""
   },
   "components/layout/nav-items.ts": {
-    "mtime": 1792377804.2074046,
-    "seen": 1792378665.664886,
-    "ast_hash": "ef95b571ffc77ec791a67f9d318e1e15",
+    "mtime": 1792470298.1789906,
+    "seen": 1792470447.977509,
+    "ast_hash": "3cda7a5ee513493fd81be95d4951c1ae",
     "semantic_hash": ""
   },
   "components/ui/accordion.tsx": {
@@ -396,15 +396,15 @@
     "semantic_hash": "e337dcc7b7b3cc468e1af0f5c17aca4f"
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1792388916.3072467,
-    "seen": 1792389066.598754,
-    "ast_hash": "a44bece73e98c62bf5d216f82f4364c6",
+    "mtime": 1792470286.2034388,
+    "seen": 1792470447.977633,
+    "ast_hash": "a6e87e4478579304c594bf76d0e9ac11",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/vi.ts": {
-    "mtime": 1792388916.3069756,
-    "seen": 1792389066.5987551,
-    "ast_hash": "042c0105039736a72fe3c4dab67d2125",
+    "mtime": 1792470286.2039962,
+    "seen": 1792470447.977634,
+    "ast_hash": "661e494626a438add2f02c4b15c922a9",
     "semantic_hash": ""
   },
   "lib/types/collection.ts": {
@@ -1470,8 +1470,8 @@
     "semantic_hash": ""
   },
   "CONTEXT.md": {
-    "mtime": 1792388535.7258594,
-    "seen": 1792389066.5988212,
+    "mtime": 1792389136.2066188,
+    "seen": 1792470447.977681,
     "ast_hash": "6875252045fc1fd2a638f2baafa235e2",
     "semantic_hash": ""
   },
@@ -2178,21 +2178,21 @@
     "semantic_hash": ""
   },
   "components/commerce/quiz-cta.test.tsx": {
-    "mtime": 1792388933.129948,
-    "seen": 1792389066.5985248,
+    "mtime": 1792389136.207592,
+    "seen": 1792470447.977482,
     "ast_hash": "0d96c07b56acd65d14461ae908680e8e",
     "semantic_hash": ""
   },
   "components/layout/mega-nav.test.tsx": {
-    "mtime": 1792377804.205853,
-    "seen": 1792378665.664879,
-    "ast_hash": "4dec2a61c9bcd6f64ae10122369fdf73",
+    "mtime": 1792470236.496648,
+    "seen": 1792470447.9775062,
+    "ast_hash": "3352ee61b5aedf1b85c50f9777c12887",
     "semantic_hash": ""
   },
   "components/layout/mobile-nav.test.tsx": {
-    "mtime": 1792377804.2066538,
-    "seen": 1792378665.664883,
-    "ast_hash": "de94cdef99e2bf8e6141e88aa2e0318f",
+    "mtime": 1792470249.386091,
+    "seen": 1792470447.977508,
+    "ast_hash": "3410f75b21d3de96809ddcefca3d10d8",
     "semantic_hash": ""
   },
   "components/ui/navigation-menu.tsx": {
@@ -2232,8 +2232,8 @@
     "semantic_hash": ""
   },
   "components/commerce/trust-badges.tsx": {
-    "mtime": 1792388916.3066154,
-    "seen": 1792389066.598548,
+    "mtime": 1792389136.2080271,
+    "seen": 1792470447.977498,
     "ast_hash": "08a8c195e6bb9825079563327730e83f",
     "semantic_hash": ""
   },
@@ -2397,6 +2397,36 @@
     "mtime": 1792387452.067987,
     "seen": 1792389066.5988,
     "ast_hash": "e68dcf4226dee3eba9041815c4f60f47",
+    "semantic_hash": ""
+  },
+  "app/[locale]/support/page.tsx": {
+    "mtime": 1792470318.2878768,
+    "seen": 1792470447.977387,
+    "ast_hash": "fc82fab3c24eb770b526fa2ba2208fc9",
+    "semantic_hash": ""
+  },
+  "tests/nav-destinations.test.ts": {
+    "mtime": 1792470700.7848241,
+    "seen": 1792470783.631605,
+    "ast_hash": "b0e9a6d07d67dfd1c9fcd94702641c10",
+    "semantic_hash": ""
+  },
+  "docs/adr/0015-page-width-is-full-bleed-with-40px-gutters.md": {
+    "mtime": 1792469157.8755076,
+    "seen": 1792470447.97773,
+    "ast_hash": "5e444649aa283b43445e425a5aabb039",
+    "semantic_hash": ""
+  },
+  "public/Logo-black.svg": {
+    "mtime": 1792469855.9697685,
+    "seen": 1792470447.9777448,
+    "ast_hash": "b8a0476e782782a3282bc32e4176c663",
+    "semantic_hash": ""
+  },
+  "public/Logo-white.svg": {
+    "mtime": 1792469870.3542454,
+    "seen": 1792470447.977746,
+    "ast_hash": "102f70d08668624a84ad6bdcb4804bf0",
     "semantic_hash": ""
   }
 }

@@ -10,8 +10,8 @@ vi.mock('next/navigation', () => ({ usePathname: () => '/vi', useRouter: () => (
 /**
  * The drawer reads the same `getNavItems` source as the desktop nav, so the
  * structure can only diverge by someone flattening it here. That is exactly
- * what this pins: the collections stay behind Sản Phẩm, and the routeless
- * items stay text on the surface a phone actually shows (#40).
+ * what this pins on the surface a phone actually shows: the collections stay
+ * behind Sản Phẩm, and every top-level item leads somewhere (#40, #72).
  */
 describe('MobileNav', () => {
   async function openDrawer() {
@@ -31,15 +31,13 @@ describe('MobileNav', () => {
     expect(screen.getByRole('link', { name: viDict.nav.sale })).toHaveAttribute('href', '/vi/collection/sale');
   });
 
-  it('renders the routeless items as text and the rest as links', async () => {
+  it('renders every top-level item as a link', async () => {
     await openDrawer();
 
-    // Hỗ trợ is the last item without a route; #42 gave Kiến thức one.
-    expect(await screen.findByText(viDict.nav.support)).toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: viDict.nav.support })).not.toBeInTheDocument();
-
-    expect(screen.getByRole('link', { name: viDict.nav.about })).toHaveAttribute('href', '/vi/about');
+    expect(await screen.findByRole('link', { name: viDict.nav.about })).toHaveAttribute('href', '/vi/about');
     expect(screen.getByRole('link', { name: viDict.nav.orderTracking })).toHaveAttribute('href', '/vi/orders/track');
     expect(screen.getByRole('link', { name: viDict.nav.knowledge })).toHaveAttribute('href', '/vi/articles');
+    // Hỗ trợ was the last inert item until #72 gave it a route.
+    expect(screen.getByRole('link', { name: viDict.nav.support })).toHaveAttribute('href', '/vi/support');
   });
 });

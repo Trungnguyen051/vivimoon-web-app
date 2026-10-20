@@ -232,6 +232,9 @@ export const en = {
     shipping: 'Shipping', returns: 'Returns', privacy: 'Privacy',
     hotline: 'Hotline', rights: '© 2026 Vivimoon',
   },
+  support: {
+    comingSoon: 'Our support centre is on its way. Until it lands, the hotline and email in the footer reach a person.',
+  },
 };
 
 export type Dictionary = typeof en;
