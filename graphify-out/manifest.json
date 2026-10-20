@@ -180,9 +180,9 @@
     "semantic_hash": ""
   },
   "components/layout/header.tsx": {
-    "mtime": 1792474511.0108144,
-    "seen": 1792476155.166951,
-    "ast_hash": "f35fdaa6f914737b2016f96c11f599c8",
+    "mtime": 1792482481.287526,
+    "seen": 1792482593.546669,
+    "ast_hash": "84a896fc85c29253cb80185f3aa17061",
     "semantic_hash": ""
   },
   "components/layout/locale-switcher.tsx": {
@@ -192,15 +192,15 @@
     "semantic_hash": ""
   },
   "components/layout/mega-nav.tsx": {
-    "mtime": 1792474511.013344,
-    "seen": 1792476155.166955,
-    "ast_hash": "f9f05778d7fbbd34e06a8e3779f5d396",
+    "mtime": 1792482481.2870052,
+    "seen": 1792482593.546674,
+    "ast_hash": "6afd9e86939efde942890996ced3559f",
     "semantic_hash": ""
   },
   "components/layout/mobile-nav.tsx": {
-    "mtime": 1792474511.0157745,
-    "seen": 1792476155.166956,
-    "ast_hash": "82c228b7efd23be98825c2ca7736aeaf",
+    "mtime": 1792482481.2866213,
+    "seen": 1792482593.546676,
+    "ast_hash": "e9afade5bef98692169893ad3c4d8d02",
     "semantic_hash": ""
   },
   "components/layout/nav-items.ts": {

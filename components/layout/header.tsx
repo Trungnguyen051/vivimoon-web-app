@@ -39,7 +39,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
             link in this row (#40). This is also where search opens — over the nav,
             never shoving it sideways, so one click on the magnifier doesn't slide
             the whole row (#74). */}
-        <div className="relative hidden flex-1 items-center justify-center md:flex">
+        <div className="relative hidden flex-1 items-center justify-center lg:flex">
           <div
             className={cn('transition-opacity duration-150', searchOpen && 'opacity-0')}
             aria-hidden={searchOpen || undefined}
@@ -69,7 +69,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
           ) : null}
         </div>
 
-        <div className="ml-auto flex shrink-0 items-center gap-1 md:ml-0 md:gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-1 lg:ml-0 lg:gap-2">
           {/* Leftmost, so the design's three shopping glyphs stay contiguous and in
               its order — language is a site setting, not a shopping action. */}
           <div className="hidden md:block">
@@ -80,7 +80,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
             aria-label={dict.common.search}
             aria-expanded={searchOpen}
             onClick={() => setSearchOpen((open) => !open)}
-            className={cn(ACTION_CLASS, 'hidden md:flex')}
+            className={cn(ACTION_CLASS, 'hidden lg:flex')}
           >
             <Search className="size-6" />
           </button>

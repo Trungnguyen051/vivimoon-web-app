@@ -17,7 +17,7 @@ export function MobileNav({ locale, dict }: { locale: Locale; dict: Dictionary }
     <Sheet>
       <SheetTrigger
         aria-label={dict.common.menu}
-        className="flex h-11 w-11 items-center justify-center rounded-md hover:bg-muted md:hidden"
+        className="flex h-11 w-11 items-center justify-center rounded-md hover:bg-muted lg:hidden"
       >
         <Menu className="h-5 w-5" />
       </SheetTrigger>
