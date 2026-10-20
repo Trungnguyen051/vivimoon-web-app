@@ -64,7 +64,7 @@ One editorial piece behind the homepage's Kiến thức section, with a title, e
 _Avoid_: Post, blog entry, news item
 
 **Color Family**:
-A named group of catalog colors used as a merchandising entry point on the homepage — Nâu, Đen, Xám, and Màu sắc nổi bật ("standout colors", which gathers every vivid color rather than naming one). A Color Family is a browsing concept only: it has no field on a Product or Variant, which each still carry one `color`. Its homepage tile shows up to three representative swatches and links into the colored-lens collection filtered to that family's colors.
+A named group of catalog colors used as a merchandising entry point on the homepage — Nâu, Đen, Xám, and Màu sắc nổi bật ("standout colors", which gathers every vivid color rather than naming one). A Color Family is a browsing concept only: it has no field on a Product or Variant, which each still carry one `color`. Its homepage tile shows up to three swatches and links into the colored-lens collection filtered to that family's colors. The swatches illustrate the family rather than define it: the `colors` are the filter, and while the catalog is provisional the swatches may name shades Vivimoon intends to carry but does not yet stock.
 _Avoid_: Color group, swatch group, palette
 
 **Không màu**:

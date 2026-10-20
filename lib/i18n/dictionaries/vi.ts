@@ -44,7 +44,7 @@ export const vi: Dictionary = {
     shopByFilter: {
       title: 'Bạn đang tìm lens gì?',
       viewAll: 'XEM TẤT CẢ SẢN PHẨM',
-      colors: { brown: 'Nâu', black: 'Đen', gray: 'Xám', vivid: 'Màu sắc nổi bật' },
+      colors: { brown: 'Nâu', black: 'Đen', gray: 'Xám', vivid: 'Màu sắc nổi bật', clear: 'Không màu' },
       durations: { daily: 'Lens 1 ngày', threeMonth: 'Lens 3 tháng', sixMonth: 'Lens 6 tháng' },
     },
     knowledge: {

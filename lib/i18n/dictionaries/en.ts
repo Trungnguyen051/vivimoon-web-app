@@ -42,7 +42,7 @@ export const en = {
     shopByFilter: {
       title: 'What lens are you looking for?',
       viewAll: 'VIEW ALL PRODUCTS',
-      colors: { brown: 'Brown', black: 'Black', gray: 'Gray', vivid: 'Standout colors' },
+      colors: { brown: 'Brown', black: 'Black', gray: 'Gray', vivid: 'Standout colors', clear: 'Clear' },
       durations: { daily: '1-day lenses', threeMonth: '3-month lenses', sixMonth: '6-month lenses' },
     },
     knowledge: {
