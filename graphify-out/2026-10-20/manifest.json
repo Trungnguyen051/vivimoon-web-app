@@ -396,15 +396,15 @@
     "semantic_hash": "e337dcc7b7b3cc468e1af0f5c17aca4f"
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1792470286.2034388,
-    "seen": 1792470447.977633,
-    "ast_hash": "a6e87e4478579304c594bf76d0e9ac11",
+    "mtime": 1792471940.2200625,
+    "seen": 1792472347.8954911,
+    "ast_hash": "911d8db96e831c6c7aae280ac2669943",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/vi.ts": {
-    "mtime": 1792470286.2039962,
-    "seen": 1792470447.977634,
-    "ast_hash": "661e494626a438add2f02c4b15c922a9",
+    "mtime": 1792471940.2205505,
+    "seen": 1792472347.8954911,
+    "ast_hash": "5da6fa3357922c14b3b2d7712f0ed975",
     "semantic_hash": ""
   },
   "lib/types/collection.ts": {
@@ -2406,9 +2406,9 @@
     "semantic_hash": ""
   },
   "tests/nav-destinations.test.ts": {
-    "mtime": 1792470700.7848241,
-    "seen": 1792470783.631605,
-    "ast_hash": "b0e9a6d07d67dfd1c9fcd94702641c10",
+    "mtime": 1792472090.903797,
+    "seen": 1792472347.895524,
+    "ast_hash": "fb81ac463069a431af13cc23dd9b6b7c",
     "semantic_hash": ""
   },
   "docs/adr/0015-page-width-is-full-bleed-with-40px-gutters.md": {
@@ -2433,6 +2433,30 @@
     "mtime": 1792471240.8976758,
     "seen": 1792471380.3411012,
     "ast_hash": "cf2318b61791a0308e8b1af24973bede",
+    "semantic_hash": ""
+  },
+  "app/[locale]/[...rest]/page.tsx": {
+    "mtime": 1792471959.3933403,
+    "seen": 1792472347.895215,
+    "ast_hash": "03c4744e462062a44ee9689cfcf04f00",
+    "semantic_hash": ""
+  },
+  "app/[locale]/error.tsx": {
+    "mtime": 1792471980.7023704,
+    "seen": 1792472347.8952441,
+    "ast_hash": "467078776e6cf543dec9afe7e6275132",
+    "semantic_hash": ""
+  },
+  "app/[locale]/not-found.tsx": {
+    "mtime": 1792471950.9475517,
+    "seen": 1792472347.895246,
+    "ast_hash": "10cbdd3f91670017f5da4cc843e993e1",
+    "semantic_hash": ""
+  },
+  "app/not-found.tsx": {
+    "mtime": 1792471968.6254847,
+    "seen": 1792472347.895305,
+    "ast_hash": "62df37195b37b139ceae510cf3d3667e",
     "semantic_hash": ""
   }
 }

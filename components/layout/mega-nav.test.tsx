@@ -1,10 +1,11 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MegaNav } from './mega-nav';
 import { vi as viDict } from '@/lib/i18n/dictionaries/vi';
 
-vi.mock('next/navigation', () => ({ usePathname: () => '/vi' }));
+const pathname = vi.hoisted(() => ({ current: '/vi' }));
+vi.mock('next/navigation', () => ({ usePathname: () => pathname.current }));
 
 /**
  * The decision here would regress silently and look fine on screen: the five
@@ -60,5 +61,41 @@ describe('MegaNav', () => {
     expect(screen.getByRole('link', { name: viDict.nav.knowledge })).toHaveAttribute('href', '/vi/articles');
     // Hỗ trợ was the last inert item until #72 gave it a route.
     expect(screen.getByRole('link', { name: viDict.nav.support })).toHaveAttribute('href', '/vi/support');
+  });
+
+  /**
+   * The underline says where you are. Its hard case is Sản Phẩm, which is not a
+   * route of its own: browsing a collection has to light up the trigger, or the
+   * row marks nothing at all for five of the storefront's pages (#74).
+   */
+  describe('the current-route indicator', () => {
+    afterEach(() => {
+      pathname.current = '/vi';
+    });
+
+    it('marks the top-level item you are on', () => {
+      pathname.current = '/vi/articles';
+      render(<MegaNav locale="vi" dict={viDict} />);
+
+      expect(screen.getByRole('link', { name: viDict.nav.knowledge })).toHaveAttribute('aria-current', 'page');
+      expect(screen.getByRole('link', { name: viDict.nav.about })).not.toHaveAttribute('aria-current');
+    });
+
+    it('marks Sản Phẩm while you are inside any of its collections', () => {
+      pathname.current = '/vi/collection/daily-lenses';
+      render(<MegaNav locale="vi" dict={viDict} />);
+
+      expect(screen.getByRole('button', { name: viDict.nav.products })).toHaveAttribute('aria-current', 'true');
+    });
+
+    it('marks nothing on a page with no nav entry', () => {
+      pathname.current = '/vi/cart';
+      render(<MegaNav locale="vi" dict={viDict} />);
+
+      for (const link of screen.getAllByRole('link')) {
+        expect(link).not.toHaveAttribute('aria-current');
+      }
+      expect(screen.getByRole('button', { name: viDict.nav.products })).not.toHaveAttribute('aria-current');
+    });
   });
 });
