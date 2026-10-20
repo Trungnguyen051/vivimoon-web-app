@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ShoppingBag, User, Search } from 'lucide-react';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
+import { Logo } from './logo';
 import { MegaNav } from './mega-nav';
 import { MobileNav } from './mobile-nav';
 import { LocaleSwitcher } from './locale-switcher';
@@ -14,11 +15,10 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3.5 md:gap-8">
         <MobileNav locale={locale} dict={dict} />
-        <Link
-          href={`/${locale}`}
-          className="text-lg font-semibold tracking-[0.2em] uppercase"
-        >
-          Vivimoon
+        {/* The design draws the wordmark at 48px tall; it steps down on narrow
+            screens so it does not crowd the drawer trigger (no mobile frame yet). */}
+        <Link href={`/${locale}`} className="shrink-0">
+          <Logo className="h-8 md:h-12" priority />
         </Link>
         {/* The design's nav is exactly five items; the Quiz is reached from the
             homepage teaser rather than a sixth link in this row (#40). */}

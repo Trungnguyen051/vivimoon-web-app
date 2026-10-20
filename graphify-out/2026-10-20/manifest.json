@@ -192,9 +192,9 @@
     "semantic_hash": ""
   },
   "components/layout/mega-nav.tsx": {
-    "mtime": 1792470304.72898,
-    "seen": 1792470447.977507,
-    "ast_hash": "5c02b566d14128d9be7a551324d8d107",
+    "mtime": 1792470709.1978498,
+    "seen": 1792470783.631443,
+    "ast_hash": "debfd2a4d32bbe0aa7aeb5693fca61bd",
     "semantic_hash": ""
   },
   "components/layout/mobile-nav.tsx": {
@@ -2406,9 +2406,9 @@
     "semantic_hash": ""
   },
   "tests/nav-destinations.test.ts": {
-    "mtime": 1792470212.0650952,
-    "seen": 1792470447.9776692,
-    "ast_hash": "a17e6da18c5d623931696c8ea3e321cd",
+    "mtime": 1792470700.7848241,
+    "seen": 1792470783.631605,
+    "ast_hash": "b0e9a6d07d67dfd1c9fcd94702641c10",
     "semantic_hash": ""
   },
   "docs/adr/0015-page-width-is-full-bleed-with-40px-gutters.md": {

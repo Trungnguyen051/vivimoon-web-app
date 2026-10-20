@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { Separator } from '@/components/ui/separator';
+import { Logo } from './logo';
 
 export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const policyLinks = [
@@ -15,7 +16,7 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
       <div className="mx-auto max-w-7xl px-4 py-16">
         <div className="grid gap-12 md:grid-cols-2 md:gap-8">
           <div className="max-w-sm">
-            <p className="text-2xl font-semibold tracking-[0.15em] uppercase">Vivimoon</p>
+            <Logo className="h-14" />
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               {dict.footer.tagline}
             </p>

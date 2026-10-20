@@ -174,15 +174,15 @@
     "semantic_hash": ""
   },
   "components/layout/footer.tsx": {
-    "mtime": 1788439633.790866,
-    "seen": 1788439911.21246,
-    "ast_hash": "b14d42855c1e21bcf6d06184b0ea58e9",
+    "mtime": 1792471114.6670325,
+    "seen": 1792471380.341096,
+    "ast_hash": "b00d041a42e8f78e5d2e0f490a74c6bd",
     "semantic_hash": ""
   },
   "components/layout/header.tsx": {
-    "mtime": 1792387451.994592,
-    "seen": 1792389066.5985548,
-    "ast_hash": "cb28cbf87f89d9b3e699df7b7bc07fde",
+    "mtime": 1792471114.6661682,
+    "seen": 1792471380.341098,
+    "ast_hash": "e7ff8c479cd146cd58425cfd390dcdaf",
     "semantic_hash": ""
   },
   "components/layout/locale-switcher.tsx": {
@@ -2427,6 +2427,12 @@
     "mtime": 1792469870.3542454,
     "seen": 1792470447.977746,
     "ast_hash": "102f70d08668624a84ad6bdcb4804bf0",
+    "semantic_hash": ""
+  },
+  "components/layout/logo.tsx": {
+    "mtime": 1792471240.8976758,
+    "seen": 1792471380.3411012,
+    "ast_hash": "cf2318b61791a0308e8b1af24973bede",
     "semantic_hash": ""
   }
 }
