@@ -90,9 +90,9 @@
     "semantic_hash": ""
   },
   "components/commerce/hero-carousel.tsx": {
-    "mtime": 1792387451.9896257,
-    "seen": 1792389066.5985038,
-    "ast_hash": "4da411af5f14bca256eb07a113648e61",
+    "mtime": 1792471603.7001605,
+    "seen": 1792471759.52146,
+    "ast_hash": "160f546fc5dee9833a4732f290517725",
     "semantic_hash": ""
   },
   "components/commerce/order-summary.tsx": {
@@ -168,21 +168,21 @@
     "semantic_hash": ""
   },
   "components/layout/announcement-bar.tsx": {
-    "mtime": 1792342558.9883375,
-    "seen": 1792343580.959589,
-    "ast_hash": "8acd5a449b3ec0aa5e61a3a13bb02687",
+    "mtime": 1792471603.6996398,
+    "seen": 1792471759.521491,
+    "ast_hash": "7099f3943737109f4e3475f627c377a1",
     "semantic_hash": ""
   },
   "components/layout/footer.tsx": {
-    "mtime": 1792471114.6670325,
-    "seen": 1792471380.341096,
-    "ast_hash": "b00d041a42e8f78e5d2e0f490a74c6bd",
+    "mtime": 1792471603.6990469,
+    "seen": 1792471759.521492,
+    "ast_hash": "6950dba015a79004b0e1ca3546d7d681",
     "semantic_hash": ""
   },
   "components/layout/header.tsx": {
-    "mtime": 1792471114.6661682,
-    "seen": 1792471380.341098,
-    "ast_hash": "e7ff8c479cd146cd58425cfd390dcdaf",
+    "mtime": 1792471603.6988282,
+    "seen": 1792471759.521492,
+    "ast_hash": "a1047251a56cf345f21a73455fbde1ef",
     "semantic_hash": ""
   },
   "components/layout/locale-switcher.tsx": {
@@ -1740,9 +1740,9 @@
     "semantic_hash": ""
   },
   "components/commerce/comparison-tray.tsx": {
-    "mtime": 1788492999.456638,
-    "seen": 1788493407.4920561,
-    "ast_hash": "399ee07303dec8819e51844e13206f53",
+    "mtime": 1792471603.700719,
+    "seen": 1792471759.521454,
+    "ast_hash": "ba6f0b70508e332070b6b6c53aae89fe",
     "semantic_hash": ""
   },
   "components/commerce/review-source-badge.test.tsx": {
@@ -2142,9 +2142,9 @@
     "semantic_hash": ""
   },
   "components/layout/page-container.tsx": {
-    "mtime": 1792317990.3312774,
-    "seen": 1792318890.293673,
-    "ast_hash": "a252471dd1510d5976ec2a1fd68de7c7",
+    "mtime": 1792471610.6575086,
+    "seen": 1792471759.5215008,
+    "ast_hash": "ce4ade6c6d5536077c6efc21a8e6c29d",
     "semantic_hash": ""
   },
   "docs/adr/0013-pages-own-their-width.md": {

@@ -13,7 +13,7 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
 
   return (
     <footer className="mt-24 border-t">
-      <div className="mx-auto max-w-7xl px-4 py-16">
+      <div className="px-4 py-16 md:px-10">
         <div className="grid gap-12 md:grid-cols-2 md:gap-8">
           <div className="max-w-sm">
             <Logo className="h-14" />
