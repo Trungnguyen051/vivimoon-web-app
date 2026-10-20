@@ -144,8 +144,10 @@
   "142": "orders-loyalty-award.test.ts",
   "143": "schemas/orders.ts",
   "144": "comparison-dialog.test.tsx",
+  "145": "Task 6: ProductRepository interface + mock implementation",
   "146": "[...rest]/page.tsx",
   "147": "cart/page.tsx",
+  "148": "Task 18: Cart page + line item + order summary",
   "149": "collection-filters.tsx",
   "151": "0014-image-optimization-is-on.md"
 }
