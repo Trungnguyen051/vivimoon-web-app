@@ -12,9 +12,10 @@ import { BrandStory } from '@/components/commerce/brand-story';
 import { TrustBadges } from '@/components/commerce/trust-badges';
 import { ArticleCards } from '@/components/commerce/article-cards';
 import { editorial } from '@/lib/api/resources/editorial';
-import { COLOR_FAMILIES, COLOR_FAMILY_COLLECTION, colorFamilyHref, countColorFamily } from '@/lib/products/color-families';
+import { LENS_ENTRIES, lensEntryCollection, lensEntryHref, countLensEntry } from '@/lib/products/lens-entries';
 import { DURATION_TILES, durationTileHref } from '@/lib/products/duration-tiles';
 import { catalog } from '@/lib/api/resources/catalog';
+import type { Product } from '@/lib/api/schemas/catalog';
 
 /* How many shoppers the Quiz has matched — mock, pending a real source (#67), and the
    one number on this page not derived from the catalog. It lives here rather than inside
@@ -48,8 +49,16 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   /* The tiles state how many products are behind them, so the count is read from the
      very collection the tile opens rather than hard-coded (#36 shipped the design's
      14/10/24/8 over a collection holding two). */
-  const familyCollection = await catalog.getCollection(COLOR_FAMILY_COLLECTION);
-  const familyProducts = familyCollection ? await catalog.getProductsByIds(familyCollection.productIds) : [];
+  /* Each entry counts inside the collection its own link opens, so the two distinct
+     collections the row reaches into are both resolved up front and looked up per entry. */
+  const entryCollections = new Map(
+    await Promise.all(
+      [...new Set(LENS_ENTRIES.map(lensEntryCollection))].map(async (slug): Promise<[string, Product[]]> => {
+        const collection = await catalog.getCollection(slug);
+        return [slug, collection ? await catalog.getProductsByIds(collection.productIds) : []];
+      }),
+    ),
+  );
 
   /* The design shows three; the index behind the CTA shows the rest. */
   const knowledgeArticles = (await editorial.listArticles()).slice(0, 3);
@@ -109,12 +118,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           title={dict.home.shopByFilter.title}
           seeMoreHref={`/${l}/collection/colored-lenses`}
           seeMoreLabel={dict.home.shopByFilter.viewAll}
-          colorFamilies={COLOR_FAMILIES.map((family) => ({
-            id: family.id,
-            label: dict.home.shopByFilter.colors[family.id],
-            count: `${countColorFamily(family, familyProducts)} ${dict.collection.productsLabel}`,
-            swatches: family.swatches,
-            href: colorFamilyHref(family, l),
+          colorFamilies={LENS_ENTRIES.map((entry) => ({
+            id: entry.id,
+            label: dict.home.shopByFilter.colors[entry.id],
+            count: `${countLensEntry(entry, entryCollections.get(lensEntryCollection(entry)) ?? [])} ${dict.collection.productsLabel}`,
+            swatches: entry.swatches,
+            href: lensEntryHref(entry, l),
           }))}
           durations={DURATION_TILES.map((tile) => ({
             id: tile.id,

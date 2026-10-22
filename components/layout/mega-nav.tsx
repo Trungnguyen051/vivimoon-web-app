@@ -35,7 +35,7 @@ export function MegaNav({ locale, dict }: { locale: Locale; dict: Dictionary }) 
     /* `viewport={false}` drops the shared centred viewport, so the dropdown renders
        against its own item and opens flush with the left edge of Sản Phẩm rather
        than floating to its right (#74). */
-    <NavigationMenu viewport={false} aria-label={dict.common.mainNav} className="hidden md:flex">
+    <NavigationMenu viewport={false} aria-label={dict.common.mainNav} className="hidden lg:flex">
       <NavigationMenuList className="gap-4">
         {items.map((item) => (
           <NavigationMenuItem key={item.id}>
