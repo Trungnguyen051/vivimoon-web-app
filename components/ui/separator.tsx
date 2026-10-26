@@ -1,7 +1,6 @@
 "use client"
 
-import * as React from "react"
-import { Separator as SeparatorPrimitive } from "radix-ui"
+import { Separator as SeparatorPrimitive } from "@base-ui/react/separator"
 
 import { cn } from "@/lib/utils/cn"
 
@@ -10,14 +9,21 @@ function Separator({
   orientation = "horizontal",
   decorative = true,
   ...props
-}: React.ComponentProps<typeof SeparatorPrimitive.Root>) {
+}: SeparatorPrimitive.Props & { decorative?: boolean }) {
   return (
-    <SeparatorPrimitive.Root
+    <SeparatorPrimitive
       data-slot="separator"
-      decorative={decorative}
       orientation={orientation}
+      // Base UI always exposes the separator to assistive tech; Radix took a
+      // `decorative` prop and defaulted to hiding it. Keeping the prop and its
+      // default keeps every existing separator as silent as it is today, and
+      // still lets a caller ask for a semantic one. Clearing `aria-orientation`
+      // alongside the role matches what Radix emitted exactly.
+      {...(decorative
+        ? { role: "none" as const, "aria-orientation": undefined }
+        : {})}
       className={cn(
-        "shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch",
+        "shrink-0 bg-border data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px data-[orientation=vertical]:self-stretch",
         className
       )}
       {...props}
