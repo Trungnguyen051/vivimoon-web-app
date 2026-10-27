@@ -16,10 +16,11 @@ export function ReviewSourceBadge({
   }
 
   return (
-    <Badge variant="outline" asChild>
-      <a href={sourceUrl} target="_blank" rel="noopener noreferrer">
-        {label}
-      </a>
+    <Badge
+      variant="outline"
+      render={<a href={sourceUrl} target="_blank" rel="noopener noreferrer" />}
+    >
+      {label}
     </Badge>
   );
 }
