@@ -1,6 +1,5 @@
-import * as React from "react"
+import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
-import { Slot } from "radix-ui"
 
 import { cn } from "@/lib/utils/cn"
 
@@ -41,20 +40,18 @@ const buttonVariants = cva(
   }
 )
 
+// `className` is narrowed to a string: Base UI types it as
+// `string | ((state) => string)`, and a function would stringify into the class
+// list on its way through cva.
 function Button({
   className,
   variant = "default",
   size = "default",
-  asChild = false,
   ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
-  }) {
-  const Comp = asChild ? Slot.Root : "button"
-
+}: Omit<ButtonPrimitive.Props, "className"> &
+  VariantProps<typeof buttonVariants> & { className?: string }) {
   return (
-    <Comp
+    <ButtonPrimitive
       data-slot="button"
       data-variant={variant}
       data-size={size}

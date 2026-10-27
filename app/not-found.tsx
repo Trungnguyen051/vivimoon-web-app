@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { defaultLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils/cn';
 
 /**
  * The last-resort 404: a URL with no locale prefix, or one whose prefix is not a
@@ -21,9 +22,9 @@ export default function RootNotFound() {
       <p className="text-6xl font-semibold tracking-tight">404</p>
       <h1 className="text-2xl font-semibold tracking-tight">{dict.notFound.title}</h1>
       <p className="max-w-md text-muted-foreground">{dict.notFound.body}</p>
-      <Button asChild>
-        <Link href={`/${defaultLocale}`}>{dict.notFound.back}</Link>
-      </Button>
+      <Link href={`/${defaultLocale}`} className={cn(buttonVariants())}>
+        {dict.notFound.back}
+      </Link>
     </main>
   );
 }

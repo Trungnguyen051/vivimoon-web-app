@@ -8,7 +8,8 @@ import { ProductGrid } from '@/components/commerce/product-grid';
 import { collectionListId } from '@/lib/analytics/list-id';
 import { CollectionFilters } from '@/components/commerce/collection-filters';
 import { distinctColorVariants } from '@/lib/products/variant-colors';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils/cn';
 import Link from 'next/link';
 import { Empty, EmptyContent, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { PageContainer } from '@/components/layout/page-container';
@@ -76,13 +77,13 @@ export default async function CollectionPage({
               <EmptyTitle>{dict.collection.noResults}</EmptyTitle>
             </EmptyHeader>
             {/* A real control, not an instruction (#43). Named for its outcome rather
-                than repeating the filter row's "clear" — two buttons, one accessible name,
+                than repeating the filter row's "clear" — two controls, one accessible name,
                 is what a screen reader would otherwise announce. */}
             {isFiltered ? (
               <EmptyContent>
-                <Button asChild variant="outline">
-                  <Link href={unfilteredHref}>{dict.collection.showAll}</Link>
-                </Button>
+                <Link href={unfilteredHref} className={cn(buttonVariants({ variant: 'outline' }))}>
+                  {dict.collection.showAll}
+                </Link>
               </EmptyContent>
             ) : null}
           </Empty>

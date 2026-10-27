@@ -4,7 +4,8 @@ import { usePathname } from 'next/navigation';
 import { defaultLocale, isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { PageContainer } from '@/components/layout/page-container';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils/cn';
 
 /**
  * The 404 for anything under a valid locale, rendered inside the locale layout so
@@ -29,9 +30,9 @@ export default function LocaleNotFound() {
         <p className="text-6xl font-semibold tracking-tight">404</p>
         <h1 className="text-2xl font-semibold tracking-tight">{dict.notFound.title}</h1>
         <p className="text-muted-foreground">{dict.notFound.body}</p>
-        <Button asChild>
-          <Link href={`/${locale}`}>{dict.notFound.back}</Link>
-        </Button>
+        <Link href={`/${locale}`} className={cn(buttonVariants())}>
+          {dict.notFound.back}
+        </Link>
       </div>
     </PageContainer>
   );
