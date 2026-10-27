@@ -30,12 +30,13 @@ export function MegaNav({ locale, dict }: { locale: Locale; dict: Dictionary }) 
   const items = getNavItems(dict, locale);
   const pathname = usePathname();
 
-  // Radix labels this landmark "Main" by default, which would announce in English.
+  // Radix labelled this landmark "Main" by default and the explicit name overrode it;
+  // Base UI gives it no name at all, so the same line is now the only thing naming it.
   return (
-    /* `viewport={false}` drops the shared centred viewport, so the dropdown renders
-       against its own item and opens flush with the left edge of Sản Phẩm rather
-       than floating to its right (#74). */
-    <NavigationMenu viewport={false} aria-label={dict.common.mainNav} className="hidden lg:flex">
+    /* The dropdown opens flush with the left edge of Sản Phẩm (#74), which Radix needed
+       `viewport={false}` for. Base UI anchors to the open trigger instead, and the
+       vendored wrapper defaults `align="start"` over Base UI's own `center`. */
+    <NavigationMenu aria-label={dict.common.mainNav} className="hidden lg:flex">
       <NavigationMenuList className="gap-4">
         {items.map((item) => (
           <NavigationMenuItem key={item.id}>
@@ -67,10 +68,16 @@ export function MegaNav({ locale, dict }: { locale: Locale; dict: Dictionary }) 
                   <ul className="grid w-56 gap-1 p-2">
                     {item.items.map((child) => (
                       <li key={child.id}>
-                        <NavigationMenuLink asChild className={cn(pathname === child.href && 'text-foreground')}>
-                          <Link href={child.href} aria-current={pathname === child.href ? 'page' : undefined}>
-                            {child.label}
-                          </Link>
+                        <NavigationMenuLink
+                          className={cn(pathname === child.href && 'text-foreground')}
+                          render={
+                            <Link
+                              href={child.href}
+                              aria-current={pathname === child.href ? 'page' : undefined}
+                            />
+                          }
+                        >
+                          {child.label}
                         </NavigationMenuLink>
                       </li>
                     ))}
@@ -78,10 +85,13 @@ export function MegaNav({ locale, dict }: { locale: Locale; dict: Dictionary }) 
                 </NavigationMenuContent>
               </>
             ) : (
-              <NavigationMenuLink asChild className={cn(ITEM_CLASS, pathname === item.href && CURRENT_CLASS)}>
-                <Link href={item.href} aria-current={pathname === item.href ? 'page' : undefined}>
-                  {item.label}
-                </Link>
+              <NavigationMenuLink
+                className={cn(ITEM_CLASS, pathname === item.href && CURRENT_CLASS)}
+                render={
+                  <Link href={item.href} aria-current={pathname === item.href ? 'page' : undefined} />
+                }
+              >
+                {item.label}
               </NavigationMenuLink>
             )}
           </NavigationMenuItem>
