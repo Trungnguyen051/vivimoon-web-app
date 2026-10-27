@@ -43,7 +43,7 @@ export function MobileNav({ locale, dict }: { locale: Locale; dict: Dictionary }
         <nav className="flex flex-col px-2">
           {items.map((item) =>
             item.kind === 'group' ? (
-              <Accordion key={item.id} type="single" collapsible>
+              <Accordion key={item.id}>
                 <AccordionItem value={item.id} className="border-b-0">
                   <AccordionTrigger className={`${ROW_CLASS} hover:bg-muted hover:no-underline`}>
                     {item.label}
