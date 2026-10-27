@@ -50,20 +50,24 @@ export function MobileNav({ locale, dict }: { locale: Locale; dict: Dictionary }
                   </AccordionTrigger>
                   <AccordionContent className="pb-0">
                     {item.items.map((child) => (
-                      <SheetClose asChild key={child.id}>
-                        <Link href={child.href} className={`${ROW_CLASS} pl-6 font-normal hover:bg-muted`}>
-                          {child.label}
-                        </Link>
+                      <SheetClose
+                        key={child.id}
+                        render={
+                          <Link href={child.href} className={`${ROW_CLASS} pl-6 font-normal hover:bg-muted`} />
+                        }
+                      >
+                        {child.label}
                       </SheetClose>
                     ))}
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
             ) : (
-              <SheetClose asChild key={item.id}>
-                <Link href={item.href} className={`${ROW_CLASS} hover:bg-muted`}>
-                  {item.label}
-                </Link>
+              <SheetClose
+                key={item.id}
+                render={<Link href={item.href} className={`${ROW_CLASS} hover:bg-muted`} />}
+              >
+                {item.label}
               </SheetClose>
             ),
           )}
