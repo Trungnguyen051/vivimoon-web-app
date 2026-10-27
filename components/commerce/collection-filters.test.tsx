@@ -30,6 +30,25 @@ describe('CollectionFilters', () => {
     search = '';
   });
 
+  /**
+   * Only the colour control was pinned this way, and the Base UI migration showed
+   * why that was not enough: the library reads a trigger's text from the select's
+   * `items` map rather than from the chosen option's children, so every control
+   * here silently fell back to the raw query value — `daily` in place of the
+   * shopper's own language. One control's coverage caught it; four had none.
+   */
+  it('names every active filter in words a shopper reads, not by its query value', () => {
+    search = 'productLine=trongSuot&replacement=daily&sort=newest';
+    renderFilters();
+
+    expect(screen.getByRole('combobox', { name: viDict.filters.productLine }))
+      .toHaveTextContent(viDict.filters.productLines.trongSuot);
+    expect(screen.getByRole('combobox', { name: viDict.filters.replacement }))
+      .toHaveTextContent(viDict.filters.replacements.daily);
+    expect(screen.getByRole('combobox', { name: viDict.filters.sort }))
+      .toHaveTextContent(viDict.filters.sorts.newest);
+  });
+
   it('names the active colour rather than leaving it invisible', () => {
     search = 'color=brown';
     renderFilters();
