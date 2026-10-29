@@ -7,7 +7,8 @@ import { getDictionary } from '@/lib/i18n/dictionaries';
 import { useCart } from '@/features/cart/use-cart';
 import { usePricedCart } from '@/features/cart/use-priced-cart';
 import { useSessionStore } from '@/features/session/session-store';
-import { Button } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils/cn';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Empty, EmptyContent, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { CartLineItem } from '@/components/commerce/cart-line-item';
@@ -95,9 +96,9 @@ export default function CartPage({ params }: { params: Promise<{ locale: string 
             <EmptyTitle>{dict.cart.empty}</EmptyTitle>
           </EmptyHeader>
           <EmptyContent>
-            <Button asChild className="h-11 px-6 text-base">
-              <Link href={`/${locale}`}>{dict.common.shopNow}</Link>
-            </Button>
+            <Link href={`/${locale}`} className={cn(buttonVariants(), 'h-11 px-6 text-base')}>
+              {dict.common.shopNow}
+            </Link>
           </EmptyContent>
         </Empty>
       </PageContainer>

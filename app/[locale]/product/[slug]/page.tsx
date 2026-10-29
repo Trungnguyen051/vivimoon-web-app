@@ -37,9 +37,7 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
           <Breadcrumb aria-label={dict.common.breadcrumb}>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href={`/${l}`}>Vivimoon</Link>
-                </BreadcrumbLink>
+                <BreadcrumbLink render={<Link href={`/${l}`} />}>Vivimoon</BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>

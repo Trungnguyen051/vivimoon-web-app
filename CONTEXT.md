@@ -40,7 +40,7 @@ The persistent, always-visible strip that accumulates a shopper's product select
 _Avoid_: Compare list (ambiguous with the matrix)
 
 **Comparison Matrix**:
-The side-by-side comparison view (color, diameter, eye-enlargement band, lifespan, price) for up to 4 products, opened from the Comparison Tray.
+The side-by-side comparison view (color, diameter, eye-enlargement band, expiry, price) for up to 4 products, opened from the Comparison Tray.
 _Avoid_: Compare page (it's a modal, not a route)
 
 **Eye Enlargement**:
@@ -64,9 +64,17 @@ One editorial piece behind the homepage's Kiến thức section, with a title, e
 _Avoid_: Post, blog entry, news item
 
 **Color Family**:
-A named group of catalog colors used as a merchandising entry point on the homepage — Nâu, Đen, Xám, and Màu sắc nổi bật ("standout colors", which gathers every vivid color rather than naming one). A Color Family is a browsing concept only: it has no field on a Product or Variant, which each still carry one `color`. Its homepage tile shows up to three swatches and links into the colored-lens collection filtered to that family's colors. The swatches illustrate the family rather than define it: the `colors` are the filter, and while the catalog is provisional the swatches may name shades Vivimoon intends to carry but does not yet stock.
+A named group of catalog colors used as a merchandising entry point — Nâu, Đen, Xám, and Màu sắc nổi bật ("standout colors", which gathers every vivid color rather than naming one). A Color Family is a browsing concept only: it has no field on a Product or Variant, which each still carry one `color`. Its tile shows up to three swatches and links into the colored-lens collection filtered to that family's colors. The swatches illustrate the family rather than define it: the `colors` are the filter, and while the catalog is provisional the swatches may name shades Vivimoon intends to carry but does not yet stock.
 _Avoid_: Color group, swatch group, palette
 
 **Không màu**:
-The fifth tile in the homepage's Color Family row, and deliberately not a Color Family: it selects the trong suốt Product Line by the _absence_ of color rather than by a set of colors, so it has no swatches and opens the clear lenses rather than a filtered colored-lens collection. It shares the row because a shopper choosing how their eyes should look is equally choosing not to change them.
+The fifth entry in the Color Family row, and deliberately not a Color Family: it selects the trong suốt Product Line by the _absence_ of color rather than by a set of colors, so it has no swatches and opens the clear lenses rather than a filtered colored-lens collection. It shares the row because a shopper choosing how their eyes should look is equally choosing not to change them.
 _Avoid_: Clear family, colorless family (it is a Product Line, not a Color Family)
+
+**Lens Facet**:
+One axis the Sản Phẩm menu offers for browsing the catalog — Màu sắc, Đường kính (DIA), Hạn sử dụng, or Chất liệu. A Lens Facet names the values beneath it and is itself a way in rather than a selection: opening one narrows nothing until a shopper picks a value under it.
+_Avoid_: Filter group, menu section, category, attribute
+
+**Expiry**:
+How long a lens lasts before it is replaced — 1 ngày, 1 tháng, 3 tháng, 6 tháng. Expiry is the shopper-facing name for this axis wherever it appears: the Sản Phẩm menu, the collection filter, and the Comparison Matrix. The catalog field behind it stays `replacement`, which frames the same axis as a replacement cadence because that is what Vivimoon's backend contract calls it (ADR-0017).
+_Avoid_: Lifespan, Duration, Replacement schedule, Wear duration (one concept — Expiry is the canonical shopper-facing term; `replacement` is the wire name only)

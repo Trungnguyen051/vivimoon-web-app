@@ -11,7 +11,7 @@ import { Button } from '@/components/ui/button';
 // taxonomy and silently stay unselectable here.
 const PRODUCT_LINES = productLineSchema.options;
 const REPLACEMENTS = replacementScheduleSchema.options;
-const SORTS = ['newest', 'price-asc', 'price-desc', 'bestselling'];
+const SORTS = ['newest', 'price-asc', 'price-desc', 'bestselling'] as const;
 const ALL = 'all';
 
 export function CollectionFilters({ dict, colors }: { dict: Dictionary; colors: string[] }) {
@@ -39,7 +39,23 @@ export function CollectionFilters({ dict, colors }: { dict: Dictionary; colors: 
   // filter that is plainly applied.
   const colorOptions = activeColor === ALL || colors.includes(activeColor) ? colors : [...colors, activeColor];
 
-  const setParam = (key: string, value: string) => {
+  /**
+   * Base UI's select reads the trigger's text from `items`, where Radix rendered the
+   * chosen `SelectItem`'s children. Each map is built from the same source as the
+   * options below it, so a label cannot drift from the option it names.
+   */
+  const optionLabels = <T extends string>(
+    allLabel: string,
+    values: readonly T[],
+    labelOf: (value: T) => string,
+  ): Record<string, string> => ({
+    [ALL]: allLabel,
+    ...Object.fromEntries(values.map((value) => [value, labelOf(value)])),
+  });
+
+  // Base UI's select types its value as nullable, so `null` reaches here as well as
+  // the sentinel — both mean the same thing, which is that the filter comes off.
+  const setParam = (key: string, value: string | null) => {
     const next = new URLSearchParams(params.toString());
     if (value && value !== ALL) next.set(key, value);
     else next.delete(key);
@@ -48,7 +64,11 @@ export function CollectionFilters({ dict, colors }: { dict: Dictionary; colors: 
 
   return (
     <div className="flex flex-wrap items-center gap-2.5">
-      <Select value={params.get('productLine') ?? ALL} onValueChange={(v) => setParam('productLine', v)}>
+      <Select
+        value={params.get('productLine') ?? ALL}
+        onValueChange={(v) => setParam('productLine', v)}
+        items={optionLabels(dict.filters.productLine, PRODUCT_LINES, (t) => dict.filters.productLines[t])}
+      >
         <SelectTrigger className="w-40" aria-label={dict.filters.productLine}>
           <SelectValue placeholder={dict.filters.productLine} />
         </SelectTrigger>
@@ -62,7 +82,11 @@ export function CollectionFilters({ dict, colors }: { dict: Dictionary; colors: 
         </SelectContent>
       </Select>
 
-      <Select value={params.get('replacement') ?? ALL} onValueChange={(v) => setParam('replacement', v)}>
+      <Select
+        value={params.get('replacement') ?? ALL}
+        onValueChange={(v) => setParam('replacement', v)}
+        items={optionLabels(dict.filters.replacement, REPLACEMENTS, (r) => dict.filters.replacements[r])}
+      >
         <SelectTrigger className="w-40" aria-label={dict.filters.replacement}>
           <SelectValue placeholder={dict.filters.replacement} />
         </SelectTrigger>
@@ -77,7 +101,11 @@ export function CollectionFilters({ dict, colors }: { dict: Dictionary; colors: 
       </Select>
 
       {colors.length > 0 ? (
-        <Select value={activeColor} onValueChange={(v) => setParam('color', v)}>
+        <Select
+          value={activeColor}
+          onValueChange={(v) => setParam('color', v)}
+          items={optionLabels(dict.filters.color, colorOptions, labelFor)}
+        >
           <SelectTrigger className="w-40" aria-label={dict.filters.color}>
             <SelectValue placeholder={dict.filters.color} />
           </SelectTrigger>
@@ -92,7 +120,11 @@ export function CollectionFilters({ dict, colors }: { dict: Dictionary; colors: 
         </Select>
       ) : null}
 
-      <Select value={params.get('sort') ?? ALL} onValueChange={(v) => setParam('sort', v)}>
+      <Select
+        value={params.get('sort') ?? ALL}
+        onValueChange={(v) => setParam('sort', v)}
+        items={optionLabels(dict.filters.sort, SORTS, (s) => dict.filters.sorts[s])}
+      >
         <SelectTrigger className="w-40" aria-label={dict.filters.sort}>
           <SelectValue placeholder={dict.filters.sort} />
         </SelectTrigger>
@@ -100,7 +132,7 @@ export function CollectionFilters({ dict, colors }: { dict: Dictionary; colors: 
           <SelectGroup>
             <SelectItem value={ALL}>{dict.filters.sort}</SelectItem>
             {SORTS.map((s) => (
-              <SelectItem key={s} value={s}>{dict.filters.sorts[s as keyof typeof dict.filters.sorts]}</SelectItem>
+              <SelectItem key={s} value={s}>{dict.filters.sorts[s]}</SelectItem>
             ))}
           </SelectGroup>
         </SelectContent>

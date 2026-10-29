@@ -91,7 +91,13 @@ function AddressForm({
         </Field>
         <Field>
           <FieldLabel htmlFor="label">{dict.label}</FieldLabel>
-          <Select value={form.label} onValueChange={(v) => set('label', v as FormState['label'])}>
+          <Select
+            value={form.label}
+            // Every option here carries a value, so Base UI's nullable `null` cannot
+            // arrive — but it is ignored rather than cast into a label.
+            onValueChange={(v) => { if (v) set('label', v as FormState['label']); }}
+            items={{ home: dict.labels.home, office: dict.labels.office, other: dict.labels.other }}
+          >
             <SelectTrigger id="label" className="w-full"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="home">{dict.labels.home}</SelectItem>

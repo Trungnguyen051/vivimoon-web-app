@@ -1,0 +1,9 @@
+# shadcn primitives move from Radix to Base UI across the whole of `components/ui`
+
+**Status:** accepted — migrating across #88–#95 on `feat/base-ui-primitives`. #88 installed `@base-ui/react` beside `radix-ui` and moved the leaf primitives (label, separator, aspect-ratio); both libraries are installed and `components.json` still reads `radix-nova` until #95 removes the one and flips the other.
+
+The Sản Phẩm dropdown needs a two-column master–detail panel, and Base UI's `NavigationMenu` (`@base-ui/react`) models it more directly than the vendored Radix one: `value`/`onValueChange` on the root, and a nested `Root` permitted inside `Content`. Migrating only that component was considered and rejected — shadcn serves the Radix or the Base UI variant according to `components.json`'s `style` rather than per item, so a hand-written Base UI navigation-menu would leave the registry pulling `radix-ui` on every future `shadcn add`, and would ship two headless UI libraries in a storefront bundle. The whole of `components/ui/*` therefore moves together: nine files import from `radix-ui` (navigation-menu, select, dialog, sheet, accordion, tabs, label, separator, aspect-ratio), plus `Slot` in three more, and the style token changes with them.
+
+This is not an import swap. The vendored styles read Radix-specific CSS variables — `--radix-navigation-menu-viewport-height`, `--radix-accordion-content-height` — where Base UI exposes `--popup-height` and `--anchor-width`, so each primitive's sizing and animation styling is rewritten against the new variables rather than carried over.
+
+The alternative, building the facet menu on the existing Radix primitive and deferring Base UI, remains technically sound and loses nothing about the design — Radix's `NavigationMenu` has `value`/`onValueChange` too. It was rejected only because the migration is wanted regardless, and doing it first avoids building the menu twice.
