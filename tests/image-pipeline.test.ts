@@ -1,19 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { sourceFiles } from './source-files';
 import nextConfig from '../next.config';
 
-const SKIP = new Set(['node_modules', '.next', '.git', 'graphify-out', 'public', 'docs']);
 
-/** Every .ts/.tsx in the repo, so neither a component nor a fixture escapes the checks below. */
-function sourceFiles(dir = '.'): string[] {
-  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
-    if (SKIP.has(entry.name)) return [];
-    const path = join(dir, entry.name);
-    if (entry.isDirectory()) return sourceFiles(path);
-    return /\.tsx?$/.test(entry.name) ? [path] : [];
-  });
-}
 
 /** `<Image … />` tags, and how many openings were found — they differ when a tag resists this match. */
 function imageTags(source: string) {
