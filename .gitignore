@@ -50,3 +50,8 @@ next-env.d.ts
 
 # firecrawl CLI scratch output
 /.firecrawl/
+
+# graphify generated artifacts — the live graph at graphify-out/ stays tracked,
+# but the per-run dated snapshots and the AST cache are regenerable churn.
+/graphify-out/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+/graphify-out/cache/
