@@ -1,0 +1,26 @@
+import { readdirSync } from 'node:fs';
+import { join } from 'node:path';
+
+const SKIP = new Set(['node_modules', '.next', '.git', 'graphify-out', 'public', 'docs']);
+
+/**
+ * Every `.ts`/`.tsx` in the repo, so neither a component nor a fixture escapes a guard.
+ *
+ * The guards that walk the tree disagree about two slices of it, and each says which it
+ * means at the call site rather than through a flag here: `a11y-labels` exempts the
+ * vendored primitives as regenerable, `tailwind-variants` holds them precisely because
+ * they are pasted in, and `image-pipeline` checks test files alongside the rest.
+ */
+export function sourceFiles(dir = '.'): string[] {
+  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    if (SKIP.has(entry.name)) return [];
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) return sourceFiles(path);
+    return /\.tsx?$/.test(entry.name) ? [path] : [];
+  });
+}
+
+/** The vendored shadcn primitives, which stay close to upstream so they can be regenerated. */
+export const isVendored = (path: string) => path.startsWith('components/ui');
+
+export const isTest = (path: string) => /\.test\.tsx?$/.test(path);
