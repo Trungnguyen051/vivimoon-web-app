@@ -41,7 +41,7 @@ export function TrackingRequestForm({ dict }: { dict: Dictionary['tracking'] }) 
             onChange={(e) => setIdentifier(e.target.value)} required className="h-11"
           />
         </Field>
-        <Button type="submit" disabled={busy} className="h-12 text-base">{dict.submit}</Button>
+        <Button type="submit" disabled={busy} size="xl">{dict.submit}</Button>
       </form>
 
       {ack ? (

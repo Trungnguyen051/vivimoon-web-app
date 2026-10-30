@@ -250,7 +250,8 @@ export default function CheckoutPage({ params }: { params: Promise<{ locale: str
             <Button
               type="submit"
               disabled={isSubmitting || preferenceLoading || hasUnavailableLines}
-              className="h-12 w-full text-base"
+              size="xl"
+              className="w-full"
             >
               {dict.checkout.placeOrder}
             </Button>

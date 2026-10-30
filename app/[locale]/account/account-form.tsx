@@ -117,7 +117,7 @@ export function AccountForm({ user, dict }: { user: User; dict: Dictionary['acco
         </Field>
       </FieldGroup>
 
-      <Button type="submit" disabled={busy} className="h-12 w-full text-base sm:w-auto sm:px-10">
+      <Button type="submit" disabled={busy} size="xl" className="w-full sm:w-auto sm:px-10">
         {dict.save}
       </Button>
     </form>
