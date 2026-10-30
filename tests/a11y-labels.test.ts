@@ -26,4 +26,48 @@ describe('control labels', () => {
 
     expect(literals, `hardcoded aria-label:\n${literals.join('\n')}`).toEqual([]);
   });
+
+  /**
+   * The same rule one layer in. A vendored primitive may keep an English default — the
+   * comment above says why — but only where a prop can replace it. Copy written straight
+   * into the markup has no such escape, so it reaches a Vietnamese storefront in English
+   * and no call site can do anything about it.
+   *
+   * `DialogFooter` rendered a literal "Close" this way and `BreadcrumbEllipsis` a literal
+   * "More" (#100). Both were invisible to the guard above, which only reads `aria-label`.
+   * The footer went, since nothing called it; the ellipsis took a `moreLabel` prop, since
+   * removing a breadcrumb's overflow affordance is a different decision from removing an
+   * unused footer. It is worth saying plainly that the ellipsis is unreachable too — #100
+   * chose the fate of three components, and this was not among them.
+   *
+   * Matching is anchored on the closing `</`, which is what separates a text child from
+   * type syntax: `Props<A> extends Base<B>` puts a letter after its `<`, never a slash.
+   * All four spellings of a literal are copy, as above — the bare form and the three
+   * brace-wrapped ones — and `title`, `placeholder` and `alt` carry copy just as surely.
+   */
+  it('leaves no copy written into a vendored primitive', () => {
+    const SPELLINGS = [
+      // A text child across lines: `>Close</`. Punctuation and digits are copy too, and
+      // `{` is excluded at the head so `{moreLabel}` — an expression — is not a literal.
+      />\s*([^<>{}\s][^<>{}]*?)\s*<\//g,
+      // The same child, brace-wrapped: {'Close'}, {"Close"}, {`Close`}.
+      />\s*\{\s*(?:'([^']+)'|"([^"]+)"|`([^`$]+)`)\s*\}\s*<\//g,
+      // Attributes a shopper reads, in the same four spellings the guard above accepts.
+      /\b(?:title|placeholder|alt)=(?:"([^"]+)"|\{\s*(?:'([^']+)'|"([^"]+)"|`([^`$]+)`)\s*\})/g,
+    ];
+
+    const literals = sourceFiles()
+      .filter((path) => isVendored(path) && !isTest(path))
+      .flatMap((path) => {
+        const source = readFileSync(path, 'utf8');
+        return SPELLINGS.flatMap((spelling) =>
+          [...source.matchAll(spelling)].map((match) => {
+            const copy = match.slice(1).find(Boolean) ?? match[0];
+            return `${path}: ${JSON.stringify(copy)}`;
+          })
+        );
+      });
+
+    expect(literals, `copy with no prop to replace it:\n${literals.join('\n')}`).toEqual([]);
+  });
 });
