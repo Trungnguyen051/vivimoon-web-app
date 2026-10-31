@@ -51,9 +51,17 @@ describe('tailwind variants', () => {
    *
    * The spelling compiles, which is why the bracket guard above sails past it:
    * `data-horizontal` is a shadcn `@custom-variant` for `[data-orientation="horizontal"]`,
-   * not a dead attribute. Only the `has-` is wrong. Upstream still ships it, so this holds every vendored
-   * file against a fresh registry paste. A `has-` probe for anything else — the icon in
-   * `alert.tsx` — is a real descendant query and is left alone.
+   * not a dead attribute. Only the `has-` is wrong. Upstream still ships it, so this holds
+   * every vendored file against a fresh registry paste.
+   *
+   * All three spellings of the same mistake are caught, because the registry writes the
+   * attribute every one of these ways elsewhere in this directory: the custom variant
+   * (`has-data-horizontal`), the bracketed attribute (`has-data-[orientation=horizontal]`,
+   * the form `has-data-[icon=…]` and `has-data-[slot=…]` already use eighteen times here),
+   * and the doubled-bracket selector (`has-[[data-orientation=…]]`) upstream still ships.
+   *
+   * A `has-` probe for anything else — the icon in `alert.tsx` — is a real descendant
+   * query and is left alone.
    */
   it('reads orientation off the group rather than hunting for it underneath', () => {
     const probing = sourceFiles()
@@ -61,7 +69,7 @@ describe('tailwind variants', () => {
       .flatMap((path) => {
         const found =
           withoutComments(readFileSync(path, 'utf8')).match(
-            /has-(?:data-(?:horizontal|vertical)|\[\[data-orientation)/g
+            /has-(?:data-(?:horizontal|vertical)\b|data-\[orientation=|\[\[data-orientation)/g
           ) ?? [];
         return found.map((variant) => `${path}: ${variant}`);
       });
