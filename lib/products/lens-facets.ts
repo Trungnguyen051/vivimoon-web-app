@@ -105,16 +105,23 @@ export const LENS_FACETS: LensFacet[] = [
 
 /** The catalog page this value opens, narrowed to what the value names. */
 export function facetValueHref(value: FacetValue, locale: Locale): string {
-  // A colour keeps the homepage's own link, which already knows that Không màu selects
-  // the trong suốt Product Line by absence of colour rather than by a colour set.
-  if (value.kind === 'colour') return lensEntryHref(value.entry, locale);
+  const narrowed = (query: string) => `/${locale}/collection/${FACET_COLLECTION}?${query}`;
 
-  const query =
-    value.kind === 'diameter' ? `diameter=${value.bucket.id}`
-      : value.kind === 'expiry' ? `replacement=${value.id}`
-        : `material=${encodeURIComponent(value.material)}`;
-
-  return `/${locale}/collection/${FACET_COLLECTION}?${query}`;
+  // A `switch` rather than a ternary chain so the `never` below is reachable only when a
+  // kind has no branch: a fifth kind would otherwise fall through to whichever branch
+  // happened to be last and link somewhere plausible but wrong.
+  switch (value.kind) {
+    // A colour keeps the homepage's own link, which already knows that Không màu selects
+    // the trong suốt Product Line by absence of colour rather than by a colour set.
+    case 'colour': return lensEntryHref(value.entry, locale);
+    case 'diameter': return narrowed(`diameter=${value.bucket.id}`);
+    case 'expiry': return narrowed(`replacement=${value.id}`);
+    case 'material': return narrowed(`material=${encodeURIComponent(value.material)}`);
+    default: {
+      const unhandled: never = value;
+      return unhandled;
+    }
+  }
 }
 
 /**

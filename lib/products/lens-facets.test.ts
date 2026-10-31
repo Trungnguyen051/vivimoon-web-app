@@ -158,8 +158,32 @@ describe('the Lens Facets', () => {
     }
   });
 
-  // A facet is an axis, not a selection, so it has no filtered collection of its own.
-  // It opens the whole catalog with its own filter control focused.
+  /**
+   * An empty material facet is always a bug, unlike an empty diameter bucket.
+   * `MATERIAL_VALUES` repeats the catalog's own wording and the catalog matches it with
+   * `===`, so rewording a fixture to `Hydrogel (HEMA)` would leave both values returning
+   * nothing — and every other test here would stay green, because the follow-the-link
+   * test tolerates emptiness on purpose for the buckets.
+   */
+  it('keeps every material value matched to stock that exists', async () => {
+    const material = LENS_FACETS.find((facet) => facet.id === 'material')!;
+
+    for (const value of material.values) {
+      const listed = await follow(facetValueHref(value, 'vi'));
+      expect(listed, `material ${value.id} matches nothing in the catalog`).not.toHaveLength(0);
+    }
+  });
+
+  /**
+   * A facet is an axis, not a selection, so it has no filtered collection of its own. It
+   * opens the whole catalog with its own filter control focused.
+   *
+   * This pins the shape of that destination and nothing more. It cannot tell whether the
+   * fragment resolves, and today none of them does: the collection filter row renders no
+   * `id` at all, and has no control for diameter or material to carry one. Building those
+   * is its own ticket, and #112 is blocked on it — until then the arrow beside a facet is
+   * the decoration this href exists not to be.
+   */
   it('points each facet name at the catalog with that control focused', () => {
     for (const facet of LENS_FACETS) {
       expect(facetHref(facet, 'vi')).toBe(`/vi/collection/all-lenses#filter-${facet.id}`);
