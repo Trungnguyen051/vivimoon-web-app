@@ -1,6 +1,6 @@
 # `Expiry` is the shopper-facing name for how long a lens lasts; the catalog field stays `replacement`
 
-**Status:** accepted — vocabulary settled during the facet-menu grill; `CONTEXT.md` carries `Expiry`. Not yet implemented.
+**Status:** accepted and implemented — vocabulary settled during the facet-menu grill; `CONTEXT.md` carries `Expiry`. Carried into the dictionaries, the collection filter and the Comparison Matrix by #110, and held there by `tests/expiry-vocabulary.test.ts`.
 
 One axis had accumulated five names: `replacement` (`Product.replacement`, `ReplacementSchedule`), `lifespan` (`ComparisonRow.lifespan`), "duration" (`DurationTile`, #83), `Thời gian dùng` (the shipped filter label) and `Hạn sử dụng` (the design). `Expiry` becomes the single shopper-facing term — menu, collection filter, Comparison Matrix, dictionary — and `ComparisonRow.lifespan` is renamed with it, since that shape is the app's own derived response and mirrors nothing external.
 

@@ -26,11 +26,11 @@ describe('mockDiscovery.compare', () => {
     expect(matrix.products[0].id).toBe(product.id);
   });
 
-  it('maps lifespan to the replacement schedule and price/currency to the cheapest variant', async () => {
+  it('maps expiry to the replacement schedule and price/currency to the cheapest variant', async () => {
     const product = products[0];
     const cheapest = product.variants.reduce((min, v) => (v.price < min.price ? v : min), product.variants[0]);
     const matrix = await mockDiscovery.compare([product.id]);
-    expect(matrix.products[0].lifespan).toBe(product.replacement);
+    expect(matrix.products[0].expiry).toBe(product.replacement);
     expect(matrix.products[0].price).toBe(cheapest.price);
     expect(matrix.products[0].currency).toBe(cheapest.currency);
   });

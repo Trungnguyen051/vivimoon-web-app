@@ -10,12 +10,12 @@ const matrix: ComparisonMatrix = {
     {
       id: 'p1', slug: 'aqua-blue', name: 'Aqua Blue', image: '/aqua.jpg',
       color: '#3b82f6', colorLabel: 'Blue', diameter: '14.2mm',
-      eyeEnlargement: 'subtle', lifespan: 'monthly', price: 25, currency: 'USD',
+      eyeEnlargement: 'subtle', expiry: 'monthly', price: 25, currency: 'USD',
     },
     {
       id: 'p2', slug: 'dramatic-grey', name: 'Dramatic Grey', image: '/grey.jpg',
       color: '#6b7280', colorLabel: 'Grey', diameter: '14.8mm',
-      eyeEnlargement: 'dramatic', lifespan: 'daily', price: 18, currency: 'USD',
+      eyeEnlargement: 'dramatic', expiry: 'daily', price: 18, currency: 'USD',
     },
   ],
 };

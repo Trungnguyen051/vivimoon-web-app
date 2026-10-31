@@ -162,9 +162,11 @@ export const comparisonRowSchema = z.object({
   colorLabel: z.string().optional(),
   diameter: z.string(),
   eyeEnlargement: z.enum(EYE_ENLARGEMENT_BANDS),
-  // "Lifespan" (spec §10) is the existing replacement schedule under a
-  // shopper-facing label — not a new field.
-  lifespan: replacementScheduleSchema,
+  // Expiry is the existing replacement schedule under its shopper-facing name,
+  // not a new field. This shape is the app's own derived response and mirrors
+  // nothing external, so unlike `Product.replacement` it is free to be renamed
+  // with the vocabulary (ADR-0017).
+  expiry: replacementScheduleSchema,
   price: z.number().int().nonnegative(),
   currency: currencySchema,
 });

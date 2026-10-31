@@ -28,7 +28,7 @@ function toComparisonRow(product: Product): ComparisonRow {
     diameter: product.specs.diameter,
     eyeEnlargement: eyeEnlargementBand(product.specs.graphicDiameter),
     // "Lifespan" (spec §10) is the existing replacement schedule, relabeled.
-    lifespan: product.replacement,
+    expiry: product.replacement,
     price: variant.price,
     currency: variant.currency,
   };
