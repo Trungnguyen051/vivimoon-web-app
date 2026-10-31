@@ -33,6 +33,21 @@ describe('GET /api/products', () => {
     const res = await listProducts(req('/api/products?type=&color='));
     expect(res.status).toBe(200);
   });
+
+  it('applies the material filter from search params', async () => {
+    const body = await (await listProducts(req('/api/products?material=Hydrogel'))).json();
+    expect(body.data.length).toBeGreaterThan(0);
+    expect(body.data.every((p: { specs: { material: string } }) => p.specs.material === 'Hydrogel')).toBe(true);
+  });
+
+  // A route rejects and names the field; only a page degrades per-field (#109).
+  it('rejects a malformed diameter and names the field', async () => {
+    const res = await listProducts(req('/api/products?diameter=14.2mm'));
+    const body = await res.json();
+    expect(res.status).toBe(400);
+    expect(body.error.code).toBe('validation_failed');
+    expect(body.error.field).toBe('diameter');
+  });
 });
 
 describe('GET /api/products/:slug', () => {
