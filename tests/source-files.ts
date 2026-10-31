@@ -24,3 +24,14 @@ export function sourceFiles(dir = '.'): string[] {
 export const isVendored = (path: string) => path.startsWith('components/ui');
 
 export const isTest = (path: string) => /\.test\.tsx?$/.test(path);
+
+/**
+ * A guard that quotes the spelling it bans would fire on its own prose, so the ones that
+ * scan for class strings read the source with its comments removed.
+ *
+ * Anchored to the line start: an unanchored strip would also fire on `/*` inside a string
+ * such as `'src/**' + '/*.tsx'`, blanking every class below it and passing vacuously.
+ */
+export function withoutComments(source: string): string {
+  return source.replace(/^[ \t]*\/\*[\s\S]*?\*\//gm, '').replace(/^[ \t]*\/\/.*$/gm, '');
+}

@@ -3,7 +3,6 @@ import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { CheckCircle2 } from 'lucide-react';
 import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils/cn';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { isLocale, type Locale, defaultLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
@@ -60,7 +59,7 @@ export default function SuccessPage({ params }: { params: Promise<{ locale: stri
           ) : null}
         </EmptyHeader>
         <EmptyContent>
-          <Link href={`/${locale}`} className={cn(buttonVariants(), 'h-11 px-6 text-base')}>
+          <Link href={`/${locale}`} className={buttonVariants({ size: 'xl' })}>
             {dict.common.shopNow}
           </Link>
         </EmptyContent>

@@ -4,7 +4,6 @@ import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { formatPrice } from '@/lib/utils/format';
 import { Button, buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils/cn';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 
@@ -68,11 +67,11 @@ export function OrderSummary({
         <CardFooter className="flex-col items-stretch gap-2">
           {ctaBlockedReason ? (
             <>
-              <Button disabled className="h-12 w-full text-base">{ctaLabel}</Button>
+              <Button disabled size="xl">{ctaLabel}</Button>
               <p className="text-center text-xs text-destructive">{ctaBlockedReason}</p>
             </>
           ) : (
-            <Link href={ctaHref} className={cn(buttonVariants(), 'h-12 w-full text-base')}>
+            <Link href={ctaHref} className={buttonVariants({ size: 'xl' })}>
               {ctaLabel}
             </Link>
           )}

@@ -74,7 +74,7 @@ export function SignInForm({ locale, dict }: { locale: Locale; dict: Dictionary[
         </Field>
       </FieldGroup>
 
-      <Button type="submit" disabled={isSubmitting} className="h-12 w-full text-base">
+      <Button type="submit" disabled={isSubmitting} size="xl" className="w-full">
         {dict.submitSignIn}
       </Button>
 

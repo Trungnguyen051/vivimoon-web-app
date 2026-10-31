@@ -110,8 +110,8 @@ export function AddToCart({ product, locale, dict }: { product: Product; locale:
         />
       </div>
       <div className="flex flex-col gap-3">
-        <Button onClick={onAdd} disabled={!canAdd} className="h-12 w-full text-base">{dict.common.addToCart}</Button>
-        <Button onClick={onBuyNow} disabled={!canAdd} variant="outline" className="h-12 w-full text-base">
+        <Button onClick={onAdd} disabled={!canAdd} size="xl" className="w-full">{dict.common.addToCart}</Button>
+        <Button onClick={onBuyNow} disabled={!canAdd} variant="outline" size="xl" className="w-full">
           {dict.common.buyNow}
         </Button>
       </div>

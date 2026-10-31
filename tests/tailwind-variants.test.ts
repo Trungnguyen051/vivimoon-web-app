@@ -1,16 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { sourceFiles, isTest } from './source-files';
-
-/**
- * Comments quote the broken spellings on purpose — only real class strings are a bug.
- * Anchored to the line start: an unanchored strip would also fire on `/*` inside a string
- * such as `'src/**' + '/*.tsx'`, blanking every class below it and passing vacuously.
- */
-function withoutComments(source: string): string {
-  return source.replace(/^[ \t]*\/\*[\s\S]*?\*\//gm, '').replace(/^[ \t]*\/\/.*$/gm, '');
-}
-
+import { sourceFiles, isTest, withoutComments } from './source-files';
 
 /**
  * A variant that matches nothing is worse than no variant: it reads as intent, compiles

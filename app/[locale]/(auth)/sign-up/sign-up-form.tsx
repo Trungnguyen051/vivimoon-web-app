@@ -123,10 +123,10 @@ export function SignUpForm({ locale, dict }: { locale: Locale; dict: Dictionary[
           </Alert>
         ) : null}
         <div className="flex flex-col gap-3">
-          <Button type="button" disabled={busy} onClick={startVerification} className="h-12 w-full text-base">
+          <Button type="button" disabled={busy} onClick={startVerification} size="xl" className="w-full">
             {dict.verifyNow}
           </Button>
-          <Button type="button" variant="outline" onClick={goToAccount} className="h-12 w-full text-base">
+          <Button type="button" variant="outline" onClick={goToAccount} size="xl" className="w-full">
             {dict.skipForNow}
           </Button>
         </div>
@@ -160,8 +160,8 @@ export function SignUpForm({ locale, dict }: { locale: Locale; dict: Dictionary[
           </Field>
         </FieldGroup>
         <div className="flex flex-col gap-3">
-          <Button type="submit" disabled={busy} className="h-12 w-full text-base">{dict.verify}</Button>
-          <Button type="button" variant="outline" onClick={goToAccount} className="h-12 w-full text-base">
+          <Button type="submit" disabled={busy} size="xl" className="w-full">{dict.verify}</Button>
+          <Button type="button" variant="outline" onClick={goToAccount} size="xl" className="w-full">
             {dict.skipForNow}
           </Button>
         </div>
@@ -229,7 +229,7 @@ export function SignUpForm({ locale, dict }: { locale: Locale; dict: Dictionary[
         </Field>
       </FieldGroup>
 
-      <Button type="submit" disabled={isSubmitting} className="h-12 w-full text-base">
+      <Button type="submit" disabled={isSubmitting} size="xl" className="w-full">
         {dict.submitSignUp}
       </Button>
 

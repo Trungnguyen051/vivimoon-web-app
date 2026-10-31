@@ -114,7 +114,7 @@ export function ForgotPasswordForm({ locale, dict }: { locale: Locale; dict: Dic
             {fieldError ? <FieldError id="identifier-error">{fieldError}</FieldError> : null}
           </Field>
         </FieldGroup>
-        <Button type="submit" disabled={busy} className="h-12 w-full text-base">{dict.sendCode}</Button>
+        <Button type="submit" disabled={busy} size="xl" className="w-full">{dict.sendCode}</Button>
       </form>
     );
   }
@@ -140,7 +140,7 @@ export function ForgotPasswordForm({ locale, dict }: { locale: Locale; dict: Dic
             {fieldError ? <FieldError id="code-error">{fieldError}</FieldError> : null}
           </Field>
         </FieldGroup>
-        <Button type="submit" disabled={busy} className="h-12 w-full text-base">{dict.verify}</Button>
+        <Button type="submit" disabled={busy} size="xl" className="w-full">{dict.verify}</Button>
       </form>
     );
   }
@@ -160,7 +160,7 @@ export function ForgotPasswordForm({ locale, dict }: { locale: Locale; dict: Dic
           {fieldError ? <FieldError id="new-password-error">{fieldError}</FieldError> : null}
         </Field>
       </FieldGroup>
-      <Button type="submit" disabled={busy} className="h-12 w-full text-base">{dict.updatePassword}</Button>
+      <Button type="submit" disabled={busy} size="xl" className="w-full">{dict.updatePassword}</Button>
     </form>
   );
 }
