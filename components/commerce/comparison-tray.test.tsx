@@ -14,7 +14,7 @@ function matrixFor(ids: string[]): ComparisonMatrix {
   return {
     products: ids.map((id) => ({
       id, slug: id, name: id, image: '/x.jpg', diameter: '14.2mm',
-      eyeEnlargement: 'subtle', lifespan: 'daily', price: 20, currency: 'USD',
+      eyeEnlargement: 'subtle', expiry: 'daily', price: 20, currency: 'USD',
     })),
   };
 }

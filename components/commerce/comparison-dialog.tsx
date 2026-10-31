@@ -75,7 +75,7 @@ function ProductColumn({
     ) : '—'],
     [dict.pdp.diameter, product.diameter],
     [dict.compare.eyeEnlargement, dict.compare.bands[product.eyeEnlargement]],
-    [dict.compare.lifespan, dict.filters.replacements[product.lifespan]],
+    [dict.compare.expiry, dict.filters.replacements[product.expiry]],
     [dict.compare.price, <PriceTag key="price" price={product.price} currency={product.currency} locale={locale} />],
   ];
 

@@ -79,10 +79,10 @@ export const en = {
     cta: 'About Vivimoon',
   },
   filters: {
-    productLine: 'Lens type', replacement: 'Replacement', color: 'Color', sort: 'Sort', clear: 'Clear filters',
+    productLine: 'Lens type', replacement: 'Expiry', color: 'Color', sort: 'Sort', clear: 'Clear filters',
     colors: { brown: 'Brown', black: 'Black', gray: 'Gray', violet: 'Violet' },
     productLines: { trongSuot: 'Clear', coMau: 'Colored', vanNhu: 'Glitter' },
-    replacements: { daily: 'Daily', monthly: 'Monthly', threeMonth: '3-Month', sixMonth: '6-Month' },
+    replacements: { daily: '1 day', monthly: '1 month', threeMonth: '3 months', sixMonth: '6 months' },
     sorts: { newest: 'Newest', 'price-asc': 'Price: low to high', 'price-desc': 'Price: high to low', bestselling: 'Best selling' },
   },
   pdp: {
@@ -186,7 +186,7 @@ export const en = {
     add: 'Add to compare', remove: 'Remove from compare', full: 'Compare list is full (max 4)',
     tray: 'Compare', clearAll: 'Clear all',
     title: 'Compare products', empty: 'No products selected',
-    eyeEnlargement: 'Eye enlargement', lifespan: 'Lifespan', price: 'Price',
+    eyeEnlargement: 'Eye enlargement', expiry: 'Expiry', price: 'Price',
     bands: { natural: 'Natural', subtle: 'Subtle', noticeable: 'Noticeable', dramatic: 'Dramatic' },
     error: 'Could not load the comparison. Please try again.',
   },

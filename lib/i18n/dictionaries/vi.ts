@@ -81,10 +81,10 @@ export const vi: Dictionary = {
     cta: 'Tìm hiểu về Vivimoon',
   },
   filters: {
-    productLine: 'Loại lens', replacement: 'Thời gian dùng', color: 'Màu', sort: 'Sắp xếp', clear: 'Xóa bộ lọc',
+    productLine: 'Loại lens', replacement: 'Hạn sử dụng', color: 'Màu', sort: 'Sắp xếp', clear: 'Xóa bộ lọc',
     colors: { brown: 'Nâu', black: 'Đen', gray: 'Xám', violet: 'Tím' },
     productLines: { trongSuot: 'Trong suốt', coMau: 'Có màu', vanNhu: 'Vân nhũ' },
-    replacements: { daily: 'Hằng ngày', monthly: 'Hằng tháng', threeMonth: '3 tháng', sixMonth: '6 tháng' },
+    replacements: { daily: '1 ngày', monthly: '1 tháng', threeMonth: '3 tháng', sixMonth: '6 tháng' },
     sorts: { newest: 'Mới nhất', 'price-asc': 'Giá: thấp đến cao', 'price-desc': 'Giá: cao đến thấp', bestselling: 'Bán chạy' },
   },
   pdp: {
@@ -188,7 +188,7 @@ export const vi: Dictionary = {
     add: 'Thêm vào so sánh', remove: 'Bỏ khỏi so sánh', full: 'Danh sách so sánh đã đầy (tối đa 4)',
     tray: 'So sánh', clearAll: 'Xóa tất cả',
     title: 'So sánh sản phẩm', empty: 'Chưa chọn sản phẩm nào',
-    eyeEnlargement: 'Hiệu ứng giãn tròng', lifespan: 'Thời hạn sử dụng', price: 'Giá',
+    eyeEnlargement: 'Hiệu ứng giãn tròng', expiry: 'Hạn sử dụng', price: 'Giá',
     bands: { natural: 'Tự nhiên', subtle: 'Nhẹ', noticeable: 'Rõ', dramatic: 'Mạnh' },
     error: 'Không thể tải bảng so sánh. Vui lòng thử lại.',
   },
