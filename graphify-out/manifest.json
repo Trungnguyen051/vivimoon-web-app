@@ -2394,9 +2394,9 @@
     "semantic_hash": ""
   },
   "tests/nav-destinations.test.ts": {
-    "mtime": 1792474511.12073,
-    "seen": 1792476155.167108,
-    "ast_hash": "fb81ac463069a431af13cc23dd9b6b7c",
+    "mtime": 1793457279.4639537,
+    "seen": 1793457331.471652,
+    "ast_hash": "04b38ef92326e2c169f06ccd78402215",
     "semantic_hash": ""
   },
   "docs/adr/0015-page-width-is-full-bleed-with-40px-gutters.md": {
