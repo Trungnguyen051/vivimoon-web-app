@@ -22,6 +22,24 @@ describe('collectionListId', () => {
     expect(idFor('colored-lenses', 'color=brown')).not.toBe(idFor('colored-lenses', 'color=black'));
   });
 
+  // A Lens Facet narrows by diameter and material (#109), which changes which
+  // products the list holds just as surely as a colour does. Left out of the id,
+  // every facet-filtered view would report the bare slug — the exact misreport
+  // this function exists to prevent.
+  it('tells two diameter buckets apart, and from the whole catalog', () => {
+    const narrow = idFor('all-lenses', 'diameter=13.5-13.9');
+
+    expect(narrow).not.toBe(idFor('all-lenses', 'diameter=14.0-14.0'));
+    expect(narrow).not.toBe(idFor('all-lenses', ''));
+  });
+
+  it('tells two materials apart, and from the whole catalog', () => {
+    const hydrogel = idFor('all-lenses', 'material=Hydrogel');
+
+    expect(hydrogel).not.toBe(idFor('all-lenses', 'material=Silicone Hydrogel'));
+    expect(hydrogel).not.toBe(idFor('all-lenses', ''));
+  });
+
   it('tells two duration tiles apart, and from the whole catalog', () => {
     const daily = idFor('all-lenses', 'replacement=daily');
 

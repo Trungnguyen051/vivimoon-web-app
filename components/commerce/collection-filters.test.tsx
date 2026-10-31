@@ -68,6 +68,24 @@ describe('CollectionFilters', () => {
     expect(screen.queryByRole('button', { name: viDict.filters.clear })).not.toBeInTheDocument();
   });
 
+  /**
+   * A Lens Facet lands a shopper on a filter this row has no control for — the menu
+   * offers diameter and material, the row offers neither (#109). Without a way back
+   * they are stranded exactly as #43 left them, narrowed with nothing on the page to
+   * widen again, and an empty result hides the collection's own recovery link too.
+   *
+   * Driven through the real query schema rather than a list of names, so a filter the
+   * schema gains later is covered the day it arrives.
+   */
+  it.each(['diameter=13.5-13.9', 'material=Hydrogel', 'brandId=b1'])(
+    'offers a way back when the only filter is %s',
+    (search_) => {
+      search = search_;
+      renderFilters();
+      expect(screen.getByRole('button', { name: viDict.filters.clear })).toBeInTheDocument();
+    }
+  );
+
   it('filters to a colour the shopper picks', async () => {
     renderFilters();
 

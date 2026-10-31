@@ -1,7 +1,7 @@
 'use client';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
-import { productLineSchema, replacementScheduleSchema } from '@/lib/api/schemas/catalog';
+import { productLineSchema, productQuerySchema, replacementScheduleSchema } from '@/lib/api/schemas/catalog';
 import {
   Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
@@ -12,13 +12,18 @@ import { Button } from '@/components/ui/button';
 const PRODUCT_LINES = productLineSchema.options;
 const REPLACEMENTS = replacementScheduleSchema.options;
 const SORTS = ['newest', 'price-asc', 'price-desc', 'bestselling'] as const;
+/** Every field a collection URL can carry, so the Clear control cannot fall behind one. */
+const QUERY_KEYS = Object.keys(productQuerySchema.shape);
 const ALL = 'all';
 
 export function CollectionFilters({ dict, colors }: { dict: Dictionary; colors: string[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
-  const hasFilters = ['productLine', 'replacement', 'sort', 'color'].some((k) => params.get(k));
+  // From the schema too, for the same reason the options above are: this was a
+  // parallel list, and a filter the schema gained but this line did not would
+  // leave a shopper narrowed with no control anywhere on the page to widen again.
+  const hasFilters = QUERY_KEYS.some((key) => params.get(key));
 
   /**
    * A colour is named by the dictionary, not by a variant's `colorLabel`: that label
