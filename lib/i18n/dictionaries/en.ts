@@ -2,6 +2,12 @@ export const en = {
   nav: {
     new: 'New', men: 'Men', women: 'Women', sport: 'Sport', accessories: 'Accessories', sale: 'Sale',
     about: 'About Vivimoon', products: 'Products', knowledge: 'Knowledge', support: 'Support', orderTracking: 'Track order',
+    // The four Lens Facets the Sản Phẩm menu browses by. `expiry` says the same word
+    // as `filters.replacement` on purpose — one axis, one name (ADR-0017).
+    facets: {
+      color: 'Color', diameter: 'Diameter (DIA)', expiry: 'Expiry', material: 'Material',
+      materials: { moisture: 'Moisture-lock lenses', breathable: 'Breathable lenses' },
+    },
   },
   common: { shopNow: 'Shop Now', seeMore: 'See more', addToCart: 'Add to cart', buyNow: 'Buy now', search: 'Search...', decreaseQty: 'Decrease quantity', increaseQty: 'Increase quantity', menu: 'Menu', goToSlide: 'Go to slide',
     previous: 'Previous', next: 'Next', previousSlide: 'Previous slide', nextSlide: 'Next slide',
