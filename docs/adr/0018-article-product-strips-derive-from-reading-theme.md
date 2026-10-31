@@ -1,0 +1,9 @@
+# An Article's inline products come from its Reading Theme, not from the Article
+
+The Knowledge article design (Figma A2) places a three-product strip inside the article body, which reads as though the author picked those three products. Giving `Article` a `productIds` field would say exactly that, and it is the most faithful reading of the design — but it would make `editorial` reference catalog IDs, adding `DEPENDS_ON.editorial = ['catalog']` and inverting the one reason `editorial` is its own resource key: that an Article references no Product, so editorial can migrate to a CMS without waiting for catalog. Instead the strip is composed at the page from the Article's **Reading Theme**, through a `Reading Theme → collection` table in `lib/` of the same shape as `lens-entries.ts`. `Article` stays product-free, the dependency lives in the page that renders both rather than in the resource, and the strip is still relevant to what was just read.
+
+This concept was called `Topic` in the first draft of this ADR. It was renamed during the Support-section grill, which introduced a `Topic` of its own — the six-subject taxonomy filing FAQ Entries and Guides, shown as the support hub's tiles and the FAQ page's sidebar. Both are groupings of written content, so one word across the two would have been genuinely ambiguous at every call site. `Topic` went to the Support taxonomy because it is shopper-visible — it has labels, tiles and a sidebar — while this one is an internal merchandising key a reader never sees named. See `CONTEXT.md` for both.
+
+## Consequences
+
+The products in an article are not individually chosen, so an Article cannot cite a specific lens by name in its strip the way the mock copy ("Honey Brown", "Milk Tea Latte") implies. If Vivimoon later wants per-article merchandising, this is the decision to revisit — and doing so means accepting that editorial can no longer go upstream ahead of catalog.
