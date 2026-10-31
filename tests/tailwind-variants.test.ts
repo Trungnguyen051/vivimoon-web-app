@@ -42,4 +42,41 @@ describe('tailwind variants', () => {
       `data variant missing brackets:\n${unbracketed.join('\n')}`
     ).toEqual([]);
   });
+
+  /**
+   * Orientation is not a thing a field *contains*, it is a thing a field *is*. Every
+   * primitive here puts `data-orientation` on the element that opens the group, so a
+   * variant reaching for it through `has-` searches that element's descendants and finds
+   * nothing — `field.tsx` styled a description this way and the rule never ran once (#98).
+   *
+   * The spelling compiles, which is why the bracket guard above sails past it:
+   * `data-horizontal` is a shadcn `@custom-variant` for `[data-orientation="horizontal"]`,
+   * not a dead attribute. Only the `has-` is wrong. Upstream still ships it, so this holds
+   * every vendored file against a fresh registry paste.
+   *
+   * All three spellings of the same mistake are caught, because the registry writes the
+   * attribute every one of these ways elsewhere in this directory: the custom variant
+   * (`has-data-horizontal`), the bracketed attribute (`has-data-[orientation=horizontal]`,
+   * the form `has-data-[icon=…]` and `has-data-[slot=…]` already use eighteen times here),
+   * and the doubled-bracket selector (`has-[[data-orientation=…]]`) upstream still ships.
+   *
+   * A `has-` probe for anything else — the icon in `alert.tsx` — is a real descendant
+   * query and is left alone.
+   */
+  it('reads orientation off the group rather than hunting for it underneath', () => {
+    const probing = sourceFiles()
+      .filter((path) => !isTest(path))
+      .flatMap((path) => {
+        const found =
+          withoutComments(readFileSync(path, 'utf8')).match(
+            /has-(?:data-(?:horizontal|vertical)\b|data-\[orientation=|\[\[data-orientation)/g
+          ) ?? [];
+        return found.map((variant) => `${path}: ${variant}`);
+      });
+
+    expect(
+      probing,
+      `orientation probed through has-, which never matches:\n${probing.join('\n')}`
+    ).toEqual([]);
+  });
 });
