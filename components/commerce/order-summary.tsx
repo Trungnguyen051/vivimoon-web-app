@@ -68,11 +68,11 @@ export function OrderSummary({
         <CardFooter className="flex-col items-stretch gap-2">
           {ctaBlockedReason ? (
             <>
-              <Button disabled className="h-12 w-full text-base">{ctaLabel}</Button>
+              <Button size="xl" disabled className="w-full">{ctaLabel}</Button>
               <p className="text-center text-xs text-destructive">{ctaBlockedReason}</p>
             </>
           ) : (
-            <Link href={ctaHref} className={cn(buttonVariants(), 'h-12 w-full text-base')}>
+            <Link href={ctaHref} className={cn(buttonVariants({ size: 'xl' }), 'w-full')}>
               {ctaLabel}
             </Link>
           )}
