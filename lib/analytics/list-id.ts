@@ -6,7 +6,9 @@ import type { ProductQuery } from '@/lib/api/schemas/catalog';
  * changing its membership, so including it would report one list under four ids and
  * split the engagement figures for no gain.
  */
-const MEMBERSHIP_FILTERS = ['brandId', 'color', 'productLine', 'replacement'] as const;
+const MEMBERSHIP_FILTERS = [
+  'brandId', 'color', 'diameter', 'material', 'productLine', 'replacement',
+] as const;
 
 /**
  * `color` is an unvalidated string the catalog matches as a set, so a URL can carry
@@ -39,6 +41,13 @@ export function collectionListId(slug: string, query: ProductQuery, collectionCo
   const values = {
     brandId: query.brandId,
     color: normalizeColors(query.color, collectionColors),
+    // Neither of these needs `color`'s treatment. The catalog matches both by
+    // equality rather than as a set, so junk cannot ride along with a real value
+    // and still return products — a junk id would label an empty list, where a
+    // junk colour labels a populated one. `diameter` is shape-checked by the
+    // schema besides. Unbounded in principle, as `brandId` already is.
+    diameter: query.diameter,
+    material: query.material,
     productLine: query.productLine,
     replacement: query.replacement,
   };

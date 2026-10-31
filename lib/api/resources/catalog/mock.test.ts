@@ -40,6 +40,32 @@ describe('mockCatalog', () => {
     expect(list.every((p) => p.replacement === 'daily')).toBe(true);
   });
 
+  it('filters by a diameter bucket, taking both ends', async () => {
+    const all = await mockCatalog.listProducts();
+    const widths = all.map((p) => Number.parseFloat(p.specs.diameter));
+    const [min, max] = [Math.min(...widths), Math.max(...widths)];
+
+    const whole = await mockCatalog.listProducts({ diameter: `${min}-${max}` });
+    expect(whole).toHaveLength(all.length);
+
+    const narrowed = await mockCatalog.listProducts({ diameter: `${min}-${min}` });
+    expect(narrowed.length).toBeGreaterThan(0);
+    expect(narrowed.every((p) => Number.parseFloat(p.specs.diameter) === min)).toBe(true);
+  });
+
+  // Three of the five buckets the facet menu draws match no stock against this
+  // catalog. That is the thin fixtures, not a broken filter — an empty collection
+  // is the right answer, the same one an unknown color already gets.
+  it('matches no product for a bucket nothing falls into', async () => {
+    expect(await mockCatalog.listProducts({ diameter: '1.0-2.0' })).toHaveLength(0);
+  });
+
+  it('filters by material', async () => {
+    const list = await mockCatalog.listProducts({ material: 'Hydrogel' });
+    expect(list.length).toBeGreaterThan(0);
+    expect(list.every((p) => p.specs.material === 'Hydrogel')).toBe(true);
+  });
+
   it('filters by variant color', async () => {
     const all = await mockCatalog.listProducts();
     const color = all.flatMap((p) => p.variants.map((v) => v.color)).find(Boolean)!;

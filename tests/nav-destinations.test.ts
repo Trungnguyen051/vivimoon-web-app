@@ -30,9 +30,18 @@ function navHrefs(): string[] {
   return locales.flatMap((locale) => getNavItems(getDictionary(locale), locale).flatMap(hrefsOf));
 }
 
-/** The path below the locale prefix, which is what the App Router matches on. */
+/**
+ * The path below the locale prefix, which is what the App Router matches on.
+ *
+ * A query string and a fragment are cut first, because neither is part of the route: a
+ * Lens Facet value points at `…/collection/all-lenses?color=brown` and a facet name at
+ * that collection with its filter control focused (#87), and the router matches both on
+ * the path alone. Splitting on whichever delimiter comes first is what makes a fragment
+ * containing a `?` — a legal URL — resolve the same as one without.
+ */
 function routeSegments(href: string): string[] {
-  return href.split('/').filter(Boolean).slice(1);
+  const path = href.split(/[?#]/, 1)[0];
+  return path.split('/').filter(Boolean).slice(1);
 }
 
 /**
@@ -107,5 +116,48 @@ describe('nav destinations', () => {
       expect(segment, `unguarded dynamic nav destination: ${href}`).toBe('collection');
       expect(slugs, `nav links to a collection that does not exist: ${href}`).toContain(slug);
     }
+  });
+});
+
+/**
+ * A Lens Facet value links into a filtered collection — `…/collection/all-lenses?color=brown`
+ * — and a facet name links to that collection with its filter control focused, which is a
+ * fragment (#87). Neither shape exists in the nav yet, which is why this is held here rather
+ * than discovered later.
+ *
+ * What these shapes do today is fail — all of them, and all of them loudly. The point is that
+ * every one is a *false positive* on a legitimate destination rather than a real dead link
+ * caught. `routeSegments` split a path on `/` and kept whatever it found, so `/en/about#expiry`
+ * resolved to nothing and read as dangling, while `/en/collection/all-lenses?color=brown`
+ * resolved through `[slug]` and then failed the slug comparison carrying its query. A guard
+ * that rejects the destinations the menu is being built to offer is one whoever hits it deletes.
+ *
+ * Today's nav emits no filtered href, so synthetic ones are the only inputs that exercise
+ * this. They are checked against the real route tree and the real resolver, not a stub.
+ */
+describe('a nav href carrying a query string or a fragment', () => {
+  const COLLECTION = '/en/collection/all-lenses';
+  const STATIC = '/en/about';
+
+  it('resolves to the same route as the same href without one', () => {
+    for (const plain of [COLLECTION, STATIC]) {
+      const expected = resolveRoute(SEGMENT_ROOT, routeSegments(plain));
+      expect(expected, `${plain} should resolve before anything is appended`).not.toBeNull();
+
+      for (const suffix of ['?color=brown', '#expiry', '?color=brown&sort=newest#expiry']) {
+        const href = `${plain}${suffix}`;
+        expect(resolveRoute(SEGMENT_ROOT, routeSegments(href)), href).toEqual(expected);
+      }
+    }
+  });
+
+  it('still fails when the path itself has no route', () => {
+    for (const href of ['/en/nope', '/en/nope?color=brown', '/en/nope#expiry']) {
+      expect(resolveRoute(SEGMENT_ROOT, routeSegments(href)), href).toBeNull();
+    }
+  });
+
+  it('hands the dynamic-destination check a slug with nothing appended', () => {
+    expect(routeSegments(`${COLLECTION}?color=brown#expiry`)).toEqual(['collection', 'all-lenses']);
   });
 });

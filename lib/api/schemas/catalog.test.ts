@@ -181,6 +181,21 @@ describe('productQuerySchema', () => {
   it('rejects an unknown sort', () => {
     expect(() => productQuerySchema.parse({ sort: 'cheapest' })).toThrow();
   });
+
+  it('parses a diameter bucket and a material', () => {
+    const q = productQuerySchema.parse({ diameter: '13.5-13.9', material: 'Hydrogel' });
+    expect(q).toEqual({ diameter: '13.5-13.9', material: 'Hydrogel' });
+  });
+
+  // A bucket is a range because a facet is drawn as one and a lens states a single
+  // width. Anything that isn't two millimetre figures is not a bucket, and an
+  // inverted one describes no lens at all.
+  it.each(['14.2mm', '13.5', '13.5-', '-13.9', '13.5-13.9mm', 'wide', '14.5-13.5'])(
+    'rejects %s as a diameter bucket',
+    (diameter) => {
+      expect(() => productQuerySchema.parse({ diameter })).toThrow();
+    }
+  );
 });
 
 describe('lensGallerySchema', () => {
@@ -227,5 +242,10 @@ describe('parseProductQueryLoose', () => {
   it('still drops blank-string params', () => {
     const q = parseProductQueryLoose({ productLine: 'coMau', color: '' });
     expect(q).toEqual({ productLine: 'coMau' });
+  });
+
+  it('drops a malformed diameter while its siblings survive', () => {
+    const q = parseProductQueryLoose({ diameter: '14.2mm', material: 'Hydrogel', sort: 'price-asc' });
+    expect(q).toEqual({ material: 'Hydrogel', sort: 'price-asc' });
   });
 });

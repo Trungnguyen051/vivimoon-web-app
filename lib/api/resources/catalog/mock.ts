@@ -1,4 +1,5 @@
 import { products, collections, reviews, galleries } from '@/content/mock';
+import { diameterMm, parseDiameterRange } from '@/lib/api/schemas/catalog';
 import type { Collection, LensGallery, Product, ProductQuery, Review, Variant } from '@/lib/api/schemas/catalog';
 import { cheapestVariant } from '@/lib/products/cheapest-variant';
 
@@ -23,6 +24,20 @@ export const mockCatalog = {
       const wanted = query.color.split(',');
       list = list.filter((p) => p.variants.some((v) => v.color !== undefined && wanted.includes(v.color)));
     }
+    // Both ends inclusive, which is what makes a one-value bucket like `14.0-14.0`
+    // select exactly the lenses of that width. A range the schema would have
+    // rejected can only arrive from a caller that bypassed it; matching nothing is
+    // the same answer an unknown color already gets.
+    if (query.diameter) {
+      const range = parseDiameterRange(query.diameter);
+      list = range
+        ? list.filter((p) => {
+            const mm = diameterMm(p.specs.diameter);
+            return mm !== null && mm >= range.min && mm <= range.max;
+          })
+        : [];
+    }
+    if (query.material) list = list.filter((p) => p.specs.material === query.material);
 
     switch (query.sort) {
       case 'price-asc': list.sort((a, b) => minPrice(a) - minPrice(b)); break;

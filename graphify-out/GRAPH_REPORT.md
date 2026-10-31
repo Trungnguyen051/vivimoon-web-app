@@ -1,16 +1,16 @@
 # Graph Report - vivimoon-web-app  (2026-10-31)
 
 ## Corpus Check
-- 376 files · ~187,706 words
+- 376 files · ~188,087 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1705 nodes · 4107 edges · 149 communities (97 shown, 52 thin omitted)
+- 1705 nodes · 4107 edges · 148 communities (96 shown, 52 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 32 edges (avg confidence: 0.78)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `da72f50d`
+- Built from commit: `50bfb9ca`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -121,7 +121,7 @@
 - 0009-session-tokens-signed-and-expiring.md
 - orders/route.test.ts
 - 1. Overview
-- Task 18: Cart page + line item + order summary
+- vitest
 - 3. Architecture — the proxy seam
 - payments.ts
 - page.test.tsx
@@ -151,7 +151,6 @@
 - orders-preferred-payment.test.ts
 - checkout.ts
 - @types/node
-- @types/react
 - add-to-cart.tsx
 - schemas/orders.ts
 - forgot-password.test.tsx
@@ -191,7 +190,7 @@
 - **Four swappable architecture seams (data, theming, i18n, analytics) isolating volatility** — docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productrepository, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_theming_seam, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_i18n_seam, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_analytics_seam [EXTRACTED 1.00]
 - **Coolmate apparel patterns re-modeled for Vivimoon contact-lens domain** — docs_research_coolmate_website_analysis_product_card, docs_research_coolmate_website_analysis_pdp, docs_research_coolmate_website_analysis_color_variant_url_pattern, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productcard, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant [INFERRED 0.85]
 
-## Communities (149 total, 52 thin omitted)
+## Communities (148 total, 52 thin omitted)
 
 ### Community 0 - "vi.ts"
 Cohesion: 0.17
@@ -254,8 +253,8 @@ Cohesion: 0.16
 Nodes (23): GET(), POST(), DELETE(), GET(), GET(), GET(), GET(), GET() (+15 more)
 
 ### Community 16 - "Product domain type"
-Cohesion: 0.13
-Nodes (17): Planned file structure (app/, lib/, content/, features/cart/, components/, tests/), Global constraints (Node 20+, TS strict, no hardcoded strings, no raw gtag, no data-fetching in ui/commerce components), Vivimoon Storefront Baseline Implementation Plan, Task 1: Scaffold project & tooling, Task 2: Testing setup (Vitest + RTL), Task 3: Utilities (cn, formatPrice), Task 4: Domain types, Task 5: Mock content (+9 more)
+Cohesion: 0.11
+Nodes (20): Planned file structure (app/, lib/, content/, features/cart/, components/, tests/), Global constraints (Node 20+, TS strict, no hardcoded strings, no raw gtag, no data-fetching in ui/commerce components), Vivimoon Storefront Baseline Implementation Plan, Task 1: Scaffold project & tooling, Task 2: Testing setup (Vitest + RTL), Task 3: Utilities (cn, formatPrice), Task 4: Domain types, Task 5: Mock content (+12 more)
 
 ### Community 17 - "en.ts"
 Cohesion: 0.06
@@ -290,8 +289,8 @@ Cohesion: 0.15
 Nodes (14): Task 12: Carousels & CategoryGrid, Task 13: Layout chrome (AnnouncementBar, Header, MegaNav, LocaleSwitcher, Footer), Task 14: Home page, Task 15: Collection listing page + filters, CartLineItem component, CategoryGrid component, CollectionCarousel component, Two-tier component architecture (ui/ vs commerce/) (+6 more)
 
 ### Community 25 - "Product Detail Page (PDP) structure"
-Cohesion: 0.20
-Nodes (10): Color variants as distinct URLs (?color=slug) for SEO/deep-linking, CoolClub loyalty program + CoolCash currency, Fabric-technology brand system (cross-cutting taxonomy: CoolDry, CoolSoft, CoolRib, CoolFlex, ZeroMark), Fit-feedback histogram (Tight/True-to-size/Loose) in reviews, Product Detail Page (PDP) structure, Task 16: PDP components (Gallery, VariantSelector, SpecTable, ReviewsList), Task 17: PDP page + Add-to-cart, Variant domain type (+2 more)
+Cohesion: 0.15
+Nodes (13): Color variants as distinct URLs (?color=slug) for SEO/deep-linking, CoolClub loyalty program + CoolCash currency, Fabric-technology brand system (cross-cutting taxonomy: CoolDry, CoolSoft, CoolRib, CoolFlex, ZeroMark), Fit-feedback histogram (Tight/True-to-size/Loose) in reviews, Product Detail Page (PDP) structure, Task 16: PDP components (Gallery, VariantSelector, SpecTable, ReviewsList), Task 17: PDP page + Add-to-cart, Task 18: Cart page + line item + order summary (+5 more)
 
 ### Community 26 - "pricing/mock.ts"
 Cohesion: 0.14
@@ -488,10 +487,6 @@ Nodes (4): ADDRESS, BASELINE_LINES, jar, ADR-0012
 ### Community 110 - "1. Overview"
 Cohesion: 0.50
 Nodes (4): 1. Overview, Baseline non-goals now in scope, Goals, Non-goals
-
-### Community 111 - "Task 18: Cart page + line item + order summary"
-Cohesion: 0.33
-Nodes (6): Task 18: Cart page + line item + order summary, Task 19: Checkout + success (stubbed payment), Task 20: Final verification (responsive, a11y, build, tests), OrderSummary component, Pages table (Home, Collection, PDP, Cart, Checkout, Checkout success), Testing strategy (Vitest unit + RTL component tests)
 
 ### Community 112 - "3. Architecture — the proxy seam"
 Cohesion: 0.67

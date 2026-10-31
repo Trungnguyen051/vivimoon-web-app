@@ -194,6 +194,30 @@ export const lensGallerySchema = z.object({
 const blankToUndefined = <T extends z.ZodTypeAny>(inner: T) =>
   z.preprocess((v) => (v === '' || v === null ? undefined : v), inner.optional());
 
+/**
+ * A Lens Facet offers diameter as a bucket — `13.5-13.9` — while a lens states one
+ * width. Both ends are millimetres and both are inclusive.
+ *
+ * The query carries the range rather than a bucket name so the URL says what it
+ * filters, and one parser owns the shape so the schema that accepts a query and the
+ * catalog that applies it cannot disagree about what `13.5-13.9` means. An inverted
+ * range describes no lens, so it is not a bucket.
+ */
+export function parseDiameterRange(value: string): { min: number; max: number } | null {
+  const match = /^(\d+(?:\.\d+)?)-(\d+(?:\.\d+)?)$/.exec(value);
+  if (!match) return null;
+
+  const min = Number(match[1]);
+  const max = Number(match[2]);
+  return min <= max ? { min, max } : null;
+}
+
+/** The width a lens states, as a number — `'14.2mm'` is 14.2. */
+export function diameterMm(spec: string): number | null {
+  const mm = Number.parseFloat(spec);
+  return Number.isNaN(mm) ? null : mm;
+}
+
 /** Parses raw URL search params, so pages can hand `searchParams` straight in. */
 export const productQuerySchema = z.object({
   productLine: blankToUndefined(productLineSchema),
@@ -201,6 +225,24 @@ export const productQuerySchema = z.object({
   brandId: blankToUndefined(z.string()),
   /** One color, or a comma-separated set of them — a Color Family tile sends its whole set (CONTEXT.md). */
   color: blankToUndefined(z.string()),
+  /** An inclusive millimetre range, as a Lens Facet's diameter bucket sends it. */
+  diameter: blankToUndefined(
+    z.string().refine((v) => parseDiameterRange(v) !== null, {
+      message: 'diameter must be an inclusive millimetre range, like 13.5-13.9',
+    })
+  ),
+  /**
+   * What the lens is made of, matched exactly against the catalog's own wording.
+   *
+   * A free string rather than an enum, unlike `productLine` and `replacement`. Those
+   * are taxonomies this schema owns; material is catalog data — `specs.material` is
+   * itself a `z.string()` — so an enum here would hardcode a two-value taxonomy the
+   * product never declared and would reject a third material the day Vivimoon stocks
+   * one. The cost is that `?material=hydrogel` answers 200 with no products rather
+   * than 400, which is exactly what `?color=chartreuse` already does: an unknown
+   * value is a filter nothing matches, not malformed input.
+   */
+  material: blankToUndefined(z.string()),
   sort: blankToUndefined(z.enum(['newest', 'price-asc', 'price-desc', 'bestselling'])),
 });
 
