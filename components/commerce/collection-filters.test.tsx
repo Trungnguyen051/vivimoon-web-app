@@ -3,6 +3,9 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { CollectionFilters } from './collection-filters';
 import { vi as viDict } from '@/lib/i18n/dictionaries/vi';
+import {
+  LENS_FACETS, DIAMETER_BUCKETS, MATERIAL_VALUES, facetAnchorId, diameterBucketLabel,
+} from '@/lib/products/lens-facets';
 
 const push = vi.fn();
 let search = '';
@@ -85,6 +88,76 @@ describe('CollectionFilters', () => {
       expect(screen.getByRole('button', { name: viDict.filters.clear })).toBeInTheDocument();
     }
   );
+
+  /**
+   * The Sản Phẩm menu offers four axes; this row offered two of them. A shopper following
+   * a diameter or material value landed on a narrowed grid with every control reading
+   * "all" and nothing naming what had narrowed it — the shape of #43, which is why that
+   * issue's recovery link exists (#133).
+   */
+  it.each([
+    ['diameter', `diameter=${DIAMETER_BUCKETS[4].id}`, diameterBucketLabel(DIAMETER_BUCKETS[4])],
+    ['material', `material=${MATERIAL_VALUES[0].material}`, viDict.nav.facets.materials.moisture],
+  ])('shows the %s a shopper arrived with, rather than "all"', (_axis, search_, label) => {
+    search = search_;
+    renderFilters();
+
+    expect(screen.getByRole('combobox', { name: label === viDict.nav.facets.materials.moisture
+      ? viDict.nav.facets.material
+      : viDict.nav.facets.diameter })).toHaveTextContent(label);
+  });
+
+  /**
+   * A facet name in the menu opens this page with that facet's control focused, via a
+   * fragment. The id is read from the same function the menu's href is built from, so a
+   * control and the link aiming at it cannot drift — and `expiry` is in there on purpose,
+   * since its control carries `?replacement=` and an id built from the query key would be
+   * right for three facets and silently wrong for that one.
+   */
+  it.each(LENS_FACETS.map((facet) => facet.id))('gives %s a control the menu can aim at', (facetId) => {
+    search = '';
+    const { container } = renderFilters();
+
+    const control = container.querySelector(`#${facetAnchorId(facetId)}`);
+    expect(control, `nothing answers #${facetAnchorId(facetId)}`).not.toBeNull();
+    // A fragment focuses its target only if the target can take focus.
+    expect(control!.tagName.toLowerCase()).toBe('button');
+  });
+
+  it('narrows the collection to a diameter the shopper picks', async () => {
+    const bucket = DIAMETER_BUCKETS[4];
+    renderFilters();
+
+    await userEvent.click(screen.getByRole('combobox', { name: viDict.nav.facets.diameter }));
+    await userEvent.click(await screen.findByRole('option', { name: diameterBucketLabel(bucket) }));
+
+    expect(push).toHaveBeenCalledWith(`/vi/collection/colored-lenses?diameter=${bucket.id}`);
+  });
+
+  it('narrows the collection to a material the shopper picks', async () => {
+    renderFilters();
+
+    await userEvent.click(screen.getByRole('combobox', { name: viDict.nav.facets.material }));
+    await userEvent.click(await screen.findByRole('option', { name: viDict.nav.facets.materials.breathable }));
+
+    expect(push).toHaveBeenCalledWith('/vi/collection/colored-lenses?material=Silicone+Hydrogel');
+  });
+
+  /**
+   * The row must offer exactly what the menu does. Two lists of buckets would drift the
+   * first time one was edited, and a shopper would find an option in the menu that the
+   * page it opens cannot show them.
+   */
+  it('offers the same buckets and materials the menu does', async () => {
+    renderFilters();
+
+    await userEvent.click(screen.getByRole('combobox', { name: viDict.nav.facets.diameter }));
+    const offered = (await screen.findAllByRole('option')).map((o) => o.textContent);
+
+    for (const bucket of DIAMETER_BUCKETS) {
+      expect(offered, `the row omits ${bucket.id}`).toContain(diameterBucketLabel(bucket));
+    }
+  });
 
   it('filters to a colour the shopper picks', async () => {
     renderFilters();
