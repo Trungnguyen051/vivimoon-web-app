@@ -73,6 +73,20 @@ export const vi: Dictionary = {
   },
   articles: {
     title: 'Kiến thức', publishedOn: 'Đăng ngày', backToIndex: 'Tất cả bài viết',
+    subtitle: 'Từ lần đầu đeo lens đến ngày cận thật xinh — Vivimoon kể hết cho bạn nè.',
+    /* The chip row. `allThemes` is the absence of a filter, not a seventh Reading Theme. */
+    allThemes: 'Tất cả',
+    readingThemes: {
+      beginner: 'Người mới đeo lens',
+      comfort: 'Độ êm & thoải mái',
+      natural: 'Lens tự nhiên',
+      makeup: 'Makeup look',
+      occasion: 'Lens theo dịp',
+      care: 'Chăm sóc lens',
+    },
+    filterLabel: 'Lọc bài viết theo chủ đề',
+    noResults: 'Chưa có bài viết nào ở đây',
+    showAll: 'Xem tất cả bài viết',
   },
   brandStory: {
     headingLine1: 'Sinh ra tại Hàn Quốc',

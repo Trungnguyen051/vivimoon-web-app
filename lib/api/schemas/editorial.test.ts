@@ -17,11 +17,28 @@ describe('editorial schemas', () => {
 
   it('rejects a publishedAt that is not a plain date', () => {
     const article = {
-      slug: 'x', image: '/x.png', publishedAt: '28/09/2026',
+      slug: 'x', image: '/x.png', publishedAt: '28/09/2026', readingTheme: 'beginner',
       title: { vi: 'a', en: 'a' }, excerpt: { vi: 'a', en: 'a' }, body: { vi: ['a'], en: ['a'] },
     };
 
     expect(articleSchema.safeParse(article).success).toBe(false);
     expect(articleSchema.safeParse({ ...article, publishedAt: '2026-09-28' }).success).toBe(true);
+  });
+
+  /**
+   * A Reading Theme is what the Knowledge index filters by and what every card wears
+   * as its eyebrow, so an Article without one has no place in the index and no label
+   * on its card. Required rather than optional for that reason — and a free string
+   * would let a typo file an article under a theme no chip can select.
+   */
+  it('requires a Reading Theme the taxonomy actually has', () => {
+    const article = {
+      slug: 'x', image: '/x.png', publishedAt: '2026-09-28',
+      title: { vi: 'a', en: 'a' }, excerpt: { vi: 'a', en: 'a' }, body: { vi: ['a'], en: ['a'] },
+    };
+
+    expect(articleSchema.safeParse(article).success).toBe(false);
+    expect(articleSchema.safeParse({ ...article, readingTheme: 'nonsense' }).success).toBe(false);
+    expect(articleSchema.safeParse({ ...article, readingTheme: 'care' }).success).toBe(true);
   });
 });
