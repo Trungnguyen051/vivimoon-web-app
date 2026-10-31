@@ -23,6 +23,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // The agent harness keeps its worktrees here — a second full checkout of this repo,
+    // nested inside it. Flat config walks dot-directories, so one appearing turns the
+    // lint gate red with hundreds of errors from another branch's code. #125 taught the
+    // test guards and vitest the same thing and missed this third door.
+    ".claude/**",
   ]),
 ]);
 
