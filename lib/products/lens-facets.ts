@@ -125,6 +125,20 @@ export function facetValueHref(value: FacetValue, locale: Locale): string {
 }
 
 /**
+ * The id the collection filter row puts on this facet's control, and the fragment the
+ * menu points at. One function owns the name because two files have to agree on it and
+ * a typo in either would land a shopper on the page with nothing focused.
+ *
+ * Keyed on the facet rather than the query parameter on purpose: the expiry control
+ * carries `?replacement=`, which is the wire name, while the shopper-facing axis is
+ * Expiry (ADR-0017). An id built from the query key would be right for three facets
+ * and silently wrong for that one.
+ */
+export function facetAnchorId(facet: FacetId): string {
+  return `filter-${facet}`;
+}
+
+/**
  * Where the facet's own name leads. An axis has no filtered collection of its own, so it
  * opens the whole catalog with its filter control focused — which is what keeps the
  * arrow beside it from being decoration.
@@ -133,5 +147,18 @@ export function facetValueHref(value: FacetValue, locale: Locale): string {
  * collection while one of its own values, Không màu, is explicitly not coloured.
  */
 export function facetHref(facet: LensFacet, locale: Locale): string {
-  return `/${locale}/collection/${FACET_COLLECTION}#filter-${facet.id}`;
+  return `/${locale}/collection/${FACET_COLLECTION}#${facetAnchorId(facet.id)}`;
+}
+
+/**
+ * How a bucket reads to a shopper. Derived from the range rather than stored beside it,
+ * because a label and a filter that can disagree eventually do — and these are numbers
+ * rather than copy, so there is nothing here to translate.
+ *
+ * A single-width bucket says one number, as the design draws `14.0mm`.
+ */
+export function diameterBucketLabel(bucket: DiameterBucket): string {
+  return bucket.min === bucket.max
+    ? `${bucket.min.toFixed(1)}mm`
+    : `${bucket.min} - ${bucket.max}mm`;
 }

@@ -3,6 +3,9 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { productLineSchema, productQuerySchema, replacementScheduleSchema } from '@/lib/api/schemas/catalog';
 import {
+  DIAMETER_BUCKETS, MATERIAL_VALUES, diameterBucketLabel, facetAnchorId,
+} from '@/lib/products/lens-facets';
+import {
   Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
@@ -14,6 +17,50 @@ const REPLACEMENTS = replacementScheduleSchema.options;
 const SORTS = ['newest', 'price-asc', 'price-desc', 'bestselling'] as const;
 /** Every field a collection URL can carry, so the Clear control cannot fall behind one. */
 const QUERY_KEYS = Object.keys(productQuerySchema.shape);
+// Both from the Lens Facet model rather than restated here, so the row cannot offer a
+// bucket the menu does not, or a material the catalog has never heard of.
+const DIAMETERS = DIAMETER_BUCKETS.map((bucket) => bucket.id);
+const MATERIALS = MATERIAL_VALUES.map((value) => value.material);
+
+/**
+ * One control in the row. Six of them differ only in what they list, and the two the
+ * Lens Facet menu needed made that worth collapsing — a seventh should be a line rather
+ * than another twenty-line block, and every control should carry its anchor the same way.
+ *
+ * `id` is what a facet name in the menu aims at. Only the four axes the menu offers carry
+ * one; Loại lens and Sắp xếp are not facets and have nothing pointing at them.
+ */
+function FilterSelect({ id, label, value, options, labelOf, onChange }: {
+  id?: string;
+  label: string;
+  value: string;
+  options: readonly string[];
+  labelOf: (value: string) => string;
+  onChange: (value: string | null) => void;
+}) {
+  return (
+    <Select
+      value={value}
+      onValueChange={onChange}
+      // Base UI reads the trigger's text from `items`, where Radix rendered the chosen
+      // item's children. Built from the same list as the options, so a label cannot
+      // drift from the option it names.
+      items={{ [ALL]: label, ...Object.fromEntries(options.map((v) => [v, labelOf(v)])) }}
+    >
+      <SelectTrigger id={id} className="w-40" aria-label={label}>
+        <SelectValue placeholder={label} />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          <SelectItem value={ALL}>{label}</SelectItem>
+          {options.map((v) => (
+            <SelectItem key={v} value={v}>{labelOf(v)}</SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  );
+}
 const ALL = 'all';
 
 export function CollectionFilters({ dict, colors }: { dict: Dictionary; colors: string[] }) {
@@ -44,20 +91,6 @@ export function CollectionFilters({ dict, colors }: { dict: Dictionary; colors: 
   // filter that is plainly applied.
   const colorOptions = activeColor === ALL || colors.includes(activeColor) ? colors : [...colors, activeColor];
 
-  /**
-   * Base UI's select reads the trigger's text from `items`, where Radix rendered the
-   * chosen `SelectItem`'s children. Each map is built from the same source as the
-   * options below it, so a label cannot drift from the option it names.
-   */
-  const optionLabels = <T extends string>(
-    allLabel: string,
-    values: readonly T[],
-    labelOf: (value: T) => string,
-  ): Record<string, string> => ({
-    [ALL]: allLabel,
-    ...Object.fromEntries(values.map((value) => [value, labelOf(value)])),
-  });
-
   // Base UI's select types its value as nullable, so `null` reaches here as well as
   // the sentinel — both mean the same thing, which is that the filter comes off.
   const setParam = (key: string, value: string | null) => {
@@ -69,79 +102,67 @@ export function CollectionFilters({ dict, colors }: { dict: Dictionary; colors: 
 
   return (
     <div className="flex flex-wrap items-center gap-2.5">
-      <Select
+      <FilterSelect
+        label={dict.filters.productLine}
         value={params.get('productLine') ?? ALL}
-        onValueChange={(v) => setParam('productLine', v)}
-        items={optionLabels(dict.filters.productLine, PRODUCT_LINES, (t) => dict.filters.productLines[t])}
-      >
-        <SelectTrigger className="w-40" aria-label={dict.filters.productLine}>
-          <SelectValue placeholder={dict.filters.productLine} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem value={ALL}>{dict.filters.productLine}</SelectItem>
-            {PRODUCT_LINES.map((t) => (
-              <SelectItem key={t} value={t}>{dict.filters.productLines[t]}</SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+        options={PRODUCT_LINES}
+        labelOf={(v) => dict.filters.productLines[v as (typeof PRODUCT_LINES)[number]]}
+        onChange={(v) => setParam('productLine', v)}
+      />
 
-      <Select
+      {/* Expiry's control carries `?replacement=` — the wire name — while the axis a
+          shopper reads is Expiry, so its anchor comes from the facet, not the key. */}
+      <FilterSelect
+        id={facetAnchorId('expiry')}
+        label={dict.filters.replacement}
         value={params.get('replacement') ?? ALL}
-        onValueChange={(v) => setParam('replacement', v)}
-        items={optionLabels(dict.filters.replacement, REPLACEMENTS, (r) => dict.filters.replacements[r])}
-      >
-        <SelectTrigger className="w-40" aria-label={dict.filters.replacement}>
-          <SelectValue placeholder={dict.filters.replacement} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem value={ALL}>{dict.filters.replacement}</SelectItem>
-            {REPLACEMENTS.map((r) => (
-              <SelectItem key={r} value={r}>{dict.filters.replacements[r]}</SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+        options={REPLACEMENTS}
+        labelOf={(v) => dict.filters.replacements[v as (typeof REPLACEMENTS)[number]]}
+        onChange={(v) => setParam('replacement', v)}
+      />
 
       {colors.length > 0 ? (
-        <Select
+        <FilterSelect
+          id={facetAnchorId('color')}
+          label={dict.filters.color}
           value={activeColor}
-          onValueChange={(v) => setParam('color', v)}
-          items={optionLabels(dict.filters.color, colorOptions, labelFor)}
-        >
-          <SelectTrigger className="w-40" aria-label={dict.filters.color}>
-            <SelectValue placeholder={dict.filters.color} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value={ALL}>{dict.filters.color}</SelectItem>
-              {colorOptions.map((value) => (
-                <SelectItem key={value} value={value}>{labelFor(value)}</SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+          options={colorOptions}
+          labelOf={labelFor}
+          onChange={(v) => setParam('color', v)}
+        />
       ) : null}
 
-      <Select
+      <FilterSelect
+        id={facetAnchorId('diameter')}
+        label={dict.nav.facets.diameter}
+        value={params.get('diameter') ?? ALL}
+        options={DIAMETERS}
+        labelOf={(v) => {
+          const bucket = DIAMETER_BUCKETS.find((b) => b.id === v);
+          return bucket ? diameterBucketLabel(bucket) : v;
+        }}
+        onChange={(v) => setParam('diameter', v)}
+      />
+
+      <FilterSelect
+        id={facetAnchorId('material')}
+        label={dict.nav.facets.material}
+        value={params.get('material') ?? ALL}
+        options={MATERIALS}
+        labelOf={(v) => {
+          const value = MATERIAL_VALUES.find((m) => m.material === v);
+          return value ? dict.nav.facets.materials[value.id] : v;
+        }}
+        onChange={(v) => setParam('material', v)}
+      />
+
+      <FilterSelect
+        label={dict.filters.sort}
         value={params.get('sort') ?? ALL}
-        onValueChange={(v) => setParam('sort', v)}
-        items={optionLabels(dict.filters.sort, SORTS, (s) => dict.filters.sorts[s])}
-      >
-        <SelectTrigger className="w-40" aria-label={dict.filters.sort}>
-          <SelectValue placeholder={dict.filters.sort} />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectItem value={ALL}>{dict.filters.sort}</SelectItem>
-            {SORTS.map((s) => (
-              <SelectItem key={s} value={s}>{dict.filters.sorts[s]}</SelectItem>
-            ))}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+        options={SORTS}
+        labelOf={(v) => dict.filters.sorts[v as (typeof SORTS)[number]]}
+        onChange={(v) => setParam('sort', v)}
+      />
 
       {hasFilters ? (
         <Button variant="ghost" size="sm" onClick={() => router.push(pathname)}>
