@@ -19,16 +19,20 @@ describe('MobileNav', () => {
     await userEvent.click(screen.getByRole('button', { name: viDict.common.menu }));
   }
 
-  it('keeps the collections behind Sản Phẩm', async () => {
+  /**
+   * The drawer offers the same four Lens Facets the desktop panel does, from the same
+   * data (#87). #113 turns these rows into sections carrying their values; until then
+   * each leads to the catalog with its own filter ready.
+   */
+  it('offers the four Lens Facets, each leading somewhere real', async () => {
     await openDrawer();
 
+    expect(await screen.findByRole('link', { name: viDict.nav.facets.color }))
+      .toHaveAttribute('href', '/vi/collection/all-lenses#filter-color');
+    expect(screen.getByRole('link', { name: viDict.nav.facets.material }))
+      .toHaveAttribute('href', '/vi/collection/all-lenses#filter-material');
+    // The collections it used to list keep their routes but lose this entry (#114).
     expect(screen.queryByRole('link', { name: viDict.collection.newArrivals })).not.toBeInTheDocument();
-
-    await userEvent.click(await screen.findByRole('button', { name: viDict.nav.products }));
-
-    expect(await screen.findByRole('link', { name: viDict.collection.newArrivals }))
-      .toHaveAttribute('href', '/vi/collection/new-arrivals');
-    expect(screen.getByRole('link', { name: viDict.nav.sale })).toHaveAttribute('href', '/vi/collection/sale');
   });
 
   it('renders every top-level item as a link', async () => {

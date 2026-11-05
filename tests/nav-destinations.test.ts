@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { locales } from '@/lib/i18n/config';
+import { locales, type Locale } from '@/lib/i18n/config';
+import { facetHrefs } from '@/lib/products/lens-facets';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { catalog } from '@/lib/api/resources/catalog';
 import { getNavItems, type NavItem } from '@/components/layout/nav-items';
@@ -21,13 +22,24 @@ const SEGMENT_ROOT = join('app', '[locale]');
  * that 404s. A dynamic match is therefore checked against the real data too.
  */
 
-/** Every href the nav can produce, across both kinds of entry. */
-function hrefsOf(item: NavItem): string[] {
-  return item.kind === 'group' ? item.items.map((child) => child.href) : [item.href];
+/**
+ * Every href the nav can produce, across all three kinds of entry.
+ *
+ * The facet browser is the reason this takes a locale: it carries no hrefs of its own,
+ * only the four Lens Facets, and each facet contributes its own destination plus one per
+ * value (#87). A guard that walked only what `NavItem` holds literally would wave through
+ * every link the Sản Phẩm menu actually offers.
+ */
+function hrefsOf(item: NavItem, locale: Locale): string[] {
+  if (item.kind === 'group') return item.items.map((child) => child.href);
+  if (item.kind === 'facets') return facetHrefs(locale);
+  return [item.href];
 }
 
 function navHrefs(): string[] {
-  return locales.flatMap((locale) => getNavItems(getDictionary(locale), locale).flatMap(hrefsOf));
+  return locales.flatMap((locale) =>
+    getNavItems(getDictionary(locale), locale).flatMap((item) => hrefsOf(item, locale))
+  );
 }
 
 /**
@@ -97,7 +109,7 @@ describe('nav destinations', () => {
     for (const locale of locales) {
       // Group children carry their own hrefs, and a child pointing at the wrong
       // locale would walk a Vietnamese shopper into the English storefront.
-      for (const href of getNavItems(getDictionary(locale), locale).flatMap(hrefsOf)) {
+      for (const href of getNavItems(getDictionary(locale), locale).flatMap((item) => hrefsOf(item, locale))) {
         expect(href).toMatch(new RegExp(`^/${locale}/`));
       }
     }

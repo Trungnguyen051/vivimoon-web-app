@@ -3,6 +3,15 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MegaNav } from './mega-nav';
 import { vi as viDict } from '@/lib/i18n/dictionaries/vi';
+import { DIAMETER_BUCKETS, diameterBucketLabel } from '@/lib/products/lens-facets';
+
+const FACETS = viDict.nav.facets;
+/** Opens Sản Phẩm and hands back the panel's own first value. */
+async function openProducts() {
+  render(<MegaNav locale="vi" dict={viDict} />);
+  await userEvent.click(screen.getByRole('button', { name: viDict.nav.products }));
+  return screen.findByRole('link', { name: viDict.home.shopByFilter.colors.brown });
+}
 
 const pathname = vi.hoisted(() => ({ current: '/vi' }));
 vi.mock('next/navigation', () => ({ usePathname: () => pathname.current }));
@@ -17,40 +26,70 @@ vi.mock('next/navigation', () => ({ usePathname: () => pathname.current }));
  * item pointing at a route nobody built is `tests/nav-destinations.test.ts`.
  */
 describe('MegaNav', () => {
-  it('nests every collection under Sản Phẩm rather than in the top row', async () => {
-    render(<MegaNav locale="vi" dict={viDict} />);
+  it('shows Màu sắc\'s values the moment it opens', async () => {
+    await openProducts();
 
-    const collections = [
-      [viDict.collection.newArrivals, '/vi/collection/new-arrivals'],
-      [viDict.collection.bestsellers, '/vi/collection/bestsellers'],
-      [viDict.collection.colored, '/vi/collection/colored-lenses'],
-      [viDict.collection.daily, '/vi/collection/daily-lenses'],
-      [viDict.nav.sale, '/vi/collection/sale'],
-    ];
-
-    for (const [label] of collections) {
-      expect(screen.queryByRole('link', { name: label })).not.toBeInTheDocument();
+    // Every facet is offered...
+    for (const facet of [FACETS.color, FACETS.diameter, FACETS.expiry, FACETS.material]) {
+      expect(screen.getByRole('link', { name: facet })).toBeInTheDocument();
     }
-
-    await userEvent.click(screen.getByRole('button', { name: viDict.nav.products }));
-
-    for (const [label, href] of collections) {
-      expect(await screen.findByRole('link', { name: label })).toHaveAttribute('href', href);
-    }
+    // ...and one of them is already showing, because a panel that waits to be
+    // aimed at is useless before you aim.
+    expect(screen.getByRole('link', { name: viDict.home.shopByFilter.colors.clear })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: viDict.filters.replacements.daily })).not.toBeInTheDocument();
   });
 
-  it('opens Sản Phẩm from the keyboard', async () => {
-    render(<MegaNav locale="vi" dict={viDict} />);
+  it('swaps the values beside a facet you hover', async () => {
+    await openProducts();
 
-    // Tab order is the design order, so Về Vivimoon takes focus before Sản Phẩm.
+    await userEvent.hover(screen.getByRole('link', { name: FACETS.expiry }));
+
+    expect(await screen.findByRole('link', { name: viDict.filters.replacements.daily })).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: viDict.home.shopByFilter.colors.brown })).not.toBeInTheDocument();
+  });
+
+  /**
+   * One DOM serves both input modes, so arrowing must do what hovering does. A separate
+   * flattened structure for keyboard users was rejected as two things that can drift.
+   */
+  it('moves between facets with the arrow keys, swapping as it goes', async () => {
+    await openProducts();
+
+    screen.getByRole('link', { name: FACETS.color }).focus();
+    await userEvent.keyboard('{ArrowDown}');
+
+    expect(screen.getByRole('link', { name: FACETS.diameter })).toHaveFocus();
+    expect(await screen.findByRole('link', { name: diameterBucketLabel(DIAMETER_BUCKETS[0]) })).toBeInTheDocument();
+
+    await userEvent.keyboard('{ArrowUp}');
+    expect(screen.getByRole('link', { name: FACETS.color })).toHaveFocus();
+    expect(await screen.findByRole('link', { name: viDict.home.shopByFilter.colors.brown })).toBeInTheDocument();
+  });
+
+  it('says which facet is showing rather than only colouring it', async () => {
+    await openProducts();
+
+    expect(screen.getByRole('link', { name: FACETS.color })).toHaveAttribute('aria-current', 'true');
+    expect(screen.getByRole('link', { name: FACETS.material })).not.toHaveAttribute('aria-current');
+  });
+
+  /** The arrow beside a facet leads somewhere: the catalog, with that filter ready. */
+  it('points each facet name at the catalog with its own filter focused', async () => {
+    await openProducts();
+
+    expect(screen.getByRole('link', { name: FACETS.material }))
+      .toHaveAttribute('href', '/vi/collection/all-lenses#filter-material');
+  });
+
+  it('lets the keyboard reach the values of the facet it is on', async () => {
+    await openProducts();
+
+    screen.getByRole('link', { name: FACETS.color }).focus();
+    // One stop for the whole column — Tab leaves it for the values, rather than
+    // walking the other three facets first.
     await userEvent.tab();
-    expect(screen.getByRole('link', { name: viDict.nav.about })).toHaveFocus();
 
-    await userEvent.tab();
-    expect(screen.getByRole('button', { name: viDict.nav.products })).toHaveFocus();
-
-    await userEvent.keyboard('{Enter}');
-    expect(await screen.findByRole('link', { name: viDict.collection.newArrivals })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: viDict.home.shopByFilter.colors.brown })).toHaveFocus();
   });
 
   it('renders every top-level item as a link', () => {
@@ -81,12 +120,17 @@ describe('MegaNav', () => {
       expect(screen.getByRole('link', { name: viDict.nav.about })).not.toHaveAttribute('aria-current');
     });
 
-    it('marks Sản Phẩm while you are inside any of its collections', () => {
-      pathname.current = '/vi/collection/daily-lenses';
-      render(<MegaNav locale="vi" dict={viDict} />);
+    // The collections it used to list are gone; what it leads to now is the whole
+    // catalog and the coloured-lens collection, by way of its facets (#87).
+    it.each(['/vi/collection/all-lenses', '/vi/collection/colored-lenses'])(
+      'marks Sản Phẩm while you are inside %s',
+      (path) => {
+        pathname.current = path;
+        render(<MegaNav locale="vi" dict={viDict} />);
 
-      expect(screen.getByRole('button', { name: viDict.nav.products })).toHaveAttribute('aria-current', 'true');
-    });
+        expect(screen.getByRole('button', { name: viDict.nav.products })).toHaveAttribute('aria-current', 'true');
+      }
+    );
 
     it('marks nothing on a page with no nav entry', () => {
       pathname.current = '/vi/cart';
