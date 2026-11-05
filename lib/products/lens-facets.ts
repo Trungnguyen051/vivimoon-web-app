@@ -162,3 +162,25 @@ export function diameterBucketLabel(bucket: DiameterBucket): string {
     ? `${bucket.min.toFixed(1)}mm`
     : `${bucket.min} - ${bucket.max}mm`;
 }
+
+/**
+ * Every href the Sản Phẩm menu can offer: each facet's own destination, and one per
+ * value. The nav destination guard walks this so that a facet link pointing at a route
+ * nobody built fails the build rather than 404ing in production (#87).
+ */
+export function facetHrefs(locale: Locale): string[] {
+  return LENS_FACETS.flatMap((facet) => [
+    facetHref(facet, locale),
+    ...facet.values.map((value) => facetValueHref(value, locale)),
+  ]);
+}
+
+/**
+ * The same destinations as paths, with the filter stripped off. Sản Phẩm marks itself
+ * current while a shopper is inside any of them, as it did for the collections it used
+ * to list — and a shopper is just as inside `…/all-lenses` arriving by one facet as by
+ * another, so the query is not part of the question.
+ */
+export function facetDestinations(locale: Locale): string[] {
+  return [...new Set(facetHrefs(locale).map((href) => href.split(/[?#]/, 1)[0]))];
+}

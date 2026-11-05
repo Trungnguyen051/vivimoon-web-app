@@ -4,6 +4,8 @@ import { usePathname } from 'next/navigation';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { getNavItems } from './nav-items';
+import { FacetBrowser } from './facet-browser';
+import { facetDestinations } from '@/lib/products/lens-facets';
 import {
   NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink,
   NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle,
@@ -29,6 +31,7 @@ const CURRENT_CLASS = 'border-foreground text-foreground';
 export function MegaNav({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const items = getNavItems(dict, locale);
   const pathname = usePathname();
+  const insideFacets = facetDestinations(locale).includes(pathname);
 
   // Radix labelled this landmark "Main" by default and the explicit name overrode it;
   // Base UI gives it no name at all, so the same line is now the only thing naming it.
@@ -40,7 +43,28 @@ export function MegaNav({ locale, dict }: { locale: Locale; dict: Dictionary }) 
       <NavigationMenuList className="gap-4">
         {items.map((item) => (
           <NavigationMenuItem key={item.id}>
-            {item.kind === 'group' ? (
+            {item.kind === 'facets' ? (
+              <>
+                {/* Sản Phẩm still says where you are while you browse anything it offers
+                    — a facet's own page or any value's — which is what it did for the
+                    collections it used to list. `aria-current="true"` rather than
+                    `"page"`: the trigger is the section containing the page, not the
+                    page, and it is announced rather than only underlined. */}
+                <NavigationMenuTrigger
+                  aria-current={insideFacets ? 'true' : undefined}
+                  className={cn(
+                    ITEM_CLASS,
+                    '[&>svg]:hidden',
+                    insideFacets && CURRENT_CLASS,
+                  )}
+                >
+                  {item.label}
+                </NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <FacetBrowser locale={locale} dict={dict} />
+                </NavigationMenuContent>
+              </>
+            ) : item.kind === 'group' ? (
               <>
                 {/* The collections live inside the dropdown, so the trigger carries the
                     current one's mark — otherwise nothing in the row says where you are
