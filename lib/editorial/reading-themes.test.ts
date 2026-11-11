@@ -44,7 +44,7 @@ describe('Reading Theme destinations', () => {
 
     expect(readingThemeHref(natural, 'vi')).toBe('/vi/collection/colored-lenses?color=brown,gray');
     // An unfiltered destination carries no query at all rather than a trailing "?".
-    expect(readingThemeHref(beginner, 'en')).toBe('/en/collection/daily-lenses');
+    expect(readingThemeHref(beginner, 'en')).toBe('/en/collection/beginner-friendly');
   });
 
   /**

@@ -12,3 +12,4 @@ export { loyaltyHistory } from './loyalty';
 export { articles } from './articles';
 export { makeupLooks } from './makeup-looks';
 export { faqEntries } from './support';
+export { guides } from './guides';

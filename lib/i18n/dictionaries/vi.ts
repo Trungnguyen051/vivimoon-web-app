@@ -22,6 +22,7 @@ export const vi: Dictionary = {
   collection: {
     newArrivals: 'Hàng mới về', bestsellers: 'Bán chạy', sale: 'Giảm giá',
     colored: 'Lens màu', daily: 'Lens hằng ngày', allLenses: 'Tất cả lens',
+    beginnerFriendly: 'Lens cho người mới',
     productsLabel: 'sản phẩm', noResults: 'Không có sản phẩm phù hợp với bộ lọc.', showAll: 'Xem tất cả sản phẩm',
   },
   home: {
@@ -318,6 +319,15 @@ export const vi: Dictionary = {
       'giao-hang': 'Giao hàng',
       'doi-tra-va-bao-hanh': 'Đổi trả & bảo hành',
       'tai-khoan-va-uu-dai': 'Tài khoản & ưu đãi',
+    },
+    guide: {
+      updatedOn: 'Cập nhật',
+      stepsLabel: 'Các bước',
+      beforeYouStart: 'Trước khi bắt đầu',
+      safety: 'Khi nào nên dừng lại',
+      suggested: 'Lens gợi ý',
+      viewCollection: 'Xem tất cả',
+      related: 'Đọc thêm',
     },
     faq: {
       title: 'Câu hỏi thường gặp',

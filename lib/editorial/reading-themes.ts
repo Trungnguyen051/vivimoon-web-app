@@ -36,8 +36,12 @@ export type ReadingThemeDestination = Extract<ReadingThemeEntry, { kind: 'collec
  * lenses because that is what its article is about, not because it is a large bucket.
  */
 export const READING_THEME_ENTRIES: ReadingThemeEntry[] = [
-  // First-time wearers are steered to dailies: nothing to clean, nothing to store wrong.
-  { kind: 'collection', readingTheme: 'beginner', collection: 'daily-lenses' },
+  /* First-time wearers are steered to dailies: nothing to clean, nothing to store
+     wrong. Pointed at `beginner-friendly` rather than `daily-lenses` since #123, so
+     the beginner Article and the beginner Guide recommend the same shelf — two
+     different "for beginners" destinations is a recommendation a shopper cannot act
+     on, because neither says which one it is. */
+  { kind: 'collection', readingTheme: 'beginner', collection: 'beginner-friendly' },
   { kind: 'collection', readingTheme: 'comfort', collection: 'all-lenses', material: 'Silicone Hydrogel' },
   { kind: 'collection', readingTheme: 'natural', collection: 'colored-lenses', colors: ['brown', 'gray'] },
   { kind: 'collection', readingTheme: 'makeup', collection: 'colored-lenses' },

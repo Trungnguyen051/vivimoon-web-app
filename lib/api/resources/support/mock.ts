@@ -1,5 +1,5 @@
-import { faqEntries } from '@/content/mock';
-import type { FaqEntry } from '@/lib/api/schemas/support';
+import { faqEntries, guides } from '@/content/mock';
+import type { FaqEntry, Guide } from '@/lib/api/schemas/support';
 
 /** The hub's featured row is drawn five across. */
 export const FEATURED_LIMIT = 5;
@@ -25,6 +25,14 @@ export const mockSupport = {
    */
   async listFeaturedFaqEntries(): Promise<FaqEntry[]> {
     return faqEntries.filter((entry) => entry.featured).slice(0, FEATURED_LIMIT);
+  },
+
+  async listGuides(): Promise<Guide[]> {
+    return [...guides];
+  },
+
+  async getGuideBySlug(slug: string): Promise<Guide | null> {
+    return guides.find((guide) => guide.slug === slug) ?? null;
   },
 };
 
