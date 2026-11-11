@@ -1,5 +1,5 @@
-import { articles } from '@/content/mock';
-import type { Article, ArticleQuery } from '@/lib/api/schemas/editorial';
+import { articles, makeupLooks } from '@/content/mock';
+import type { Article, ArticleQuery, MakeupLook } from '@/lib/api/schemas/editorial';
 
 /**
  * Lowercased and stripped of tone marks, so a search matches the way people actually
@@ -56,6 +56,18 @@ export const mockEditorial = {
     );
 
     return list;
+  },
+
+  /**
+   * Every Makeup Look there is, in the order they are authored.
+   *
+   * No query: the band shows the whole set, so there is nothing to filter and nothing to
+   * page. It lives on this resource rather than beside the page because a Look is
+   * editorial content with per-locale titles — the same reason Articles are here, and
+   * the same seam a CMS would replace.
+   */
+  async listMakeupLooks(): Promise<MakeupLook[]> {
+    return [...makeupLooks];
   },
 
   async getArticleBySlug(slug: string): Promise<Article | null> {

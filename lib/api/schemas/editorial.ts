@@ -62,6 +62,29 @@ export const articleSchema = z.object({
   body: localizedBodySchema,
 });
 
+/**
+ * One finished makeup look, captioned with the lens worn in it (#131).
+ *
+ * Its own schema rather than a corner of `Article`: a Makeup Look leads with the look
+ * and mentions the lens, where an Article leads with words and merchandises through its
+ * Reading Theme. It is also not VIVIMOON TV, which leads with the product — `CONTEXT.md`
+ * was changed to draw that distinction and reusing either shape would blur it back.
+ *
+ * `productSlug` is the one place editorial names a catalog thing. It is a slug rather
+ * than a product ID, and resolves to a route rather than to a Product, so this stays a
+ * link into the catalog rather than a dependency on it — `DEPENDS_ON.editorial` is
+ * still empty and ADR-0018 still holds.
+ */
+export const makeupLookSchema = z.object({
+  id: z.string().min(1),
+  /** The poster frame. A still, because no footage exists — see the type's own note. */
+  image: z.string().min(1),
+  title: localizedTextSchema,
+  /** The lens worn in the look, as a shopper reads it on the product page. */
+  lensName: z.string().min(1),
+  productSlug: z.string().min(1),
+});
+
 /** How the index orders results. Newest is the default the design shows. */
 export const articleSortSchema = z.enum(['newest', 'oldest']);
 
@@ -82,3 +105,4 @@ export type Article = z.infer<typeof articleSchema>;
 export type ReadingTheme = z.infer<typeof readingThemeSchema>;
 export type ArticleSort = z.infer<typeof articleSortSchema>;
 export type ArticleQuery = z.infer<typeof articleQuerySchema>;
+export type MakeupLook = z.infer<typeof makeupLookSchema>;

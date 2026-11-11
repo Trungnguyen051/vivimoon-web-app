@@ -101,6 +101,7 @@ export const vi: Dictionary = {
     gridTitle: 'Bài viết khác',
     showMore: 'Xem thêm bài viết',
     readingTime: '{count} phút đọc',
+    makeupLooksTitle: 'Lens lên mắt trông thế nào?',
     noResults: 'Chưa có bài viết nào ở đây',
     showAll: 'Xem tất cả bài viết',
   },

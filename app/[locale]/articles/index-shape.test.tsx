@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import ArticlesPage from './page';
-import { articles } from '@/content/mock';
+import { articles, makeupLooks } from '@/content/mock';
 import { vi as viDict } from '@/lib/i18n/dictionaries/vi';
 import { CARDS_PER_PAGE } from '@/lib/editorial/index-layout';
 import { readingMinutes } from '@/lib/editorial/reading-time';
@@ -70,6 +70,7 @@ describe('the Knowledge index', () => {
     expect(screen.getByRole('link', { name: viDict.articles.showAll })).toHaveAttribute('href', '/vi/articles');
     // The other bands still render — an empty result is not an empty page.
     expect(screen.getByRole('heading', { name: viDict.home.quiz.title })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: viDict.articles.makeupLooksTitle })).toBeInTheDocument();
     expect(screen.getByRole('searchbox', { name: viDict.articles.searchLabel })).toBeInTheDocument();
   });
 
@@ -137,5 +138,18 @@ describe('the Knowledge index', () => {
   it('offers a way out of an empty result only when something is filtering', async () => {
     await renderIndex({ q: 'khong-co-bai-nao-ten-the-nay' });
     expect(screen.getByRole('link', { name: viDict.articles.showAll })).toBeInTheDocument();
+  });
+
+  /**
+   * The band is not part of the query: it shows every Look whatever the chips and the
+   * search box are doing, which is why it survives a result set of nothing.
+   */
+  it('shows the Makeup Look band, every look opening its lens', async () => {
+    await renderIndex();
+    const band = screen.getByRole('heading', { name: viDict.articles.makeupLooksTitle }).closest('section')!;
+
+    expect(within(band).getAllByRole('link')).toHaveLength(makeupLooks.length);
+    expect(within(band).getByRole('link', { name: new RegExp(makeupLooks[0].lensName) }))
+      .toHaveAttribute('href', `/vi/product/${makeupLooks[0].productSlug}`);
   });
 });
