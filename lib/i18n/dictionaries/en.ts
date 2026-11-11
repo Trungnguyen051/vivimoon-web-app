@@ -332,6 +332,11 @@ export const en = {
       suggested: 'Suggested lenses',
       viewCollection: 'See all',
       related: 'Read next',
+      feedbackQuestion: 'Did this guide help?',
+      feedbackYes: 'YES',
+      feedbackNo: 'NOT YET',
+      feedbackThanks: 'Thanks for telling us.',
+      feedbackError: 'That did not register. Please try again.',
     },
     faq: {
       title: 'Frequently asked questions',

@@ -328,6 +328,11 @@ export const vi: Dictionary = {
       suggested: 'Lens gợi ý',
       viewCollection: 'Xem tất cả',
       related: 'Đọc thêm',
+      feedbackQuestion: 'Hướng dẫn này có giúp được bạn không?',
+      feedbackYes: 'CÓ',
+      feedbackNo: 'CHƯA',
+      feedbackThanks: 'Cảm ơn bạn đã phản hồi nha!',
+      feedbackError: 'Chưa ghi nhận được. Bạn thử lại giúp mình nhé.',
     },
     faq: {
       title: 'Câu hỏi thường gặp',
