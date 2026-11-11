@@ -1,0 +1,54 @@
+# The repo's gates, run on every push and pull request.
+#
+# Until now the only check on a PR was Vercel, which builds and deploys but does not
+# run the test suite and does not fail on a type error. Three defects this quarter
+# reached a green PR because of it:
+#
+#   - #140 passed an `openMultiple` prop Base UI does not have. jsdom forwards an
+#     unknown prop without complaint, so every test passed; `tsc` caught it.
+#   - #137's rebase produced a duplicate `exclude` key in `vitest.config.mts`. Vitest
+#     and ESLint were both happy; `tsc` caught it (TS1117).
+#   - #143 showed an envelope message that can never be empty, leaving the Vietnamese
+#     copy unreachable. Only review caught that one — but it is the same family.
+#
+# `typecheck` is therefore the gate this file exists for; lint and test ride along
+# because they are the other two commands a change is expected to pass, and a workflow
+# that ran one of the three would be a misleading green tick.
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+# A new push to a PR makes the previous run's answer irrelevant.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Matches the toolchain this repo is developed against. `package.json`
+          # declares no `engines`, so this file is where the version is stated.
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # Each gate is its own step so a red run names which one failed in the UI
+      # rather than making someone open the log to find out.
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
