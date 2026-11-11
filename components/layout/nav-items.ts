@@ -14,24 +14,23 @@ export type NavLink = { id: string; label: string; href: string };
  */
 export type NavItem =
   | ({ kind: 'link' } & NavLink)
-  | { kind: 'group'; id: string; label: string; items: NavLink[] };
-
-/** The five collections, which the design nests under Sản Phẩm rather than listing flat. */
-function getCollectionLinks(dict: Dictionary, locale: Locale): NavLink[] {
-  return [
-    { id: 'new-arrivals', label: dict.collection.newArrivals, href: `/${locale}/collection/new-arrivals` },
-    { id: 'bestsellers', label: dict.collection.bestsellers, href: `/${locale}/collection/bestsellers` },
-    { id: 'colored-lenses', label: dict.collection.colored, href: `/${locale}/collection/colored-lenses` },
-    { id: 'daily-lenses', label: dict.collection.daily, href: `/${locale}/collection/daily-lenses` },
-    { id: 'sale', label: dict.nav.sale, href: `/${locale}/collection/sale` },
-  ];
-}
+  | { kind: 'group'; id: string; label: string; items: NavLink[] }
+  /**
+   * Sản Phẩm, which browses the catalog by Lens Facet rather than listing collections
+   * (#87). It carries no items of its own: the four facets and their values are owned by
+   * `LENS_FACETS`, so the desktop panel and the mobile drawer read one source and cannot
+   * offer a shopper different things.
+   */
+  | { kind: 'facets'; id: string; label: string };
 
 /** Primary storefront navigation, shared by the desktop MegaNav and the mobile drawer. */
 export function getNavItems(dict: Dictionary, locale: Locale): NavItem[] {
   return [
     { kind: 'link', id: 'about', label: dict.nav.about, href: `/${locale}/about` },
-    { kind: 'group', id: 'products', label: dict.nav.products, items: getCollectionLinks(dict, locale) },
+    // The five collections this replaced — new-arrivals, bestsellers, colored-lenses,
+    // daily-lenses, sale — keep their routes but lose their only link from the header.
+    // Whether they get another one is a merchandising decision for Vivimoon (#114).
+    { kind: 'facets', id: 'products', label: dict.nav.products },
     { kind: 'link', id: 'knowledge', label: dict.nav.knowledge, href: `/${locale}/articles` },
     { kind: 'link', id: 'support', label: dict.nav.support, href: `/${locale}/support` },
     { kind: 'link', id: 'order-tracking', label: dict.nav.orderTracking, href: `/${locale}/orders/track` },

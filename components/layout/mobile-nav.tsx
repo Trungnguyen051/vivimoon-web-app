@@ -4,6 +4,7 @@ import { Menu, Search } from 'lucide-react';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { getNavItems } from './nav-items';
+import { LENS_FACETS, facetHref } from '@/lib/products/lens-facets';
 import { LocaleSwitcher } from './locale-switcher';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -42,7 +43,21 @@ export function MobileNav({ locale, dict }: { locale: Locale; dict: Dictionary }
             disclosure differs: an accordion here, a dropdown there. */}
         <nav className="flex flex-col px-2">
           {items.map((item) =>
-            item.kind === 'group' ? (
+            /* Sản Phẩm's four Lens Facets, each a row leading to the catalog with its own
+               filter ready. #113 turns these into expandable sections carrying their
+               values and swatches, the same four the desktop panel shows; until then a
+               row that leads somewhere real beats one that leads nowhere. Four rows
+               either way, which is what this drawer showed before. */
+            item.kind === 'facets' ? (
+              LENS_FACETS.map((facet) => (
+                <SheetClose
+                  key={facet.id}
+                  render={<Link href={facetHref(facet, locale)} className={`${ROW_CLASS} hover:bg-muted`} />}
+                >
+                  {dict.nav.facets[facet.id]}
+                </SheetClose>
+              ))
+            ) : item.kind === 'group' ? (
               <Accordion key={item.id}>
                 <AccordionItem value={item.id} className="border-b-0">
                   <AccordionTrigger className={`${ROW_CLASS} hover:bg-muted hover:no-underline`}>
