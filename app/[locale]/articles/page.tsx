@@ -12,6 +12,7 @@ import { readingMinutes } from '@/lib/editorial/reading-time';
 import { CARDS_PER_PAGE, knowledgeIndexLayout } from '@/lib/editorial/index-layout';
 import { ArticleCards } from '@/components/commerce/article-cards';
 import { MakeupLooks } from '@/components/commerce/makeup-looks';
+import { NewsletterSignup } from '@/components/commerce/newsletter-signup';
 import { LeadArticle } from '@/components/commerce/lead-article';
 import { QuizCta } from '@/components/commerce/quiz-cta';
 import { ReadingThemeChips } from '@/components/commerce/reading-theme-chips';
@@ -259,6 +260,8 @@ export default async function ArticlesPage({
           href={`/${locale}/quiz`}
           steps={dict.home.quiz.steps}
         />
+
+        <NewsletterSignup dict={dict.newsletter} />
       </div>
     </PageContainer>
   );

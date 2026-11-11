@@ -44,7 +44,7 @@ describe('resolveMode', () => {
   });
 
   it('exposes every resource name', () => {
-    expect(RESOURCES).toEqual(['catalog', 'identity', 'discovery', 'commerce', 'editorial', 'support']);
+    expect(RESOURCES).toEqual(['catalog', 'identity', 'discovery', 'commerce', 'editorial', 'support', 'newsletter']);
   });
 
   it('reads timeout with a default', () => {
@@ -59,3 +59,24 @@ describe('resolveMode', () => {
     expect(upstreamBaseUrl()).toBe('https://api.example.com');
   });
 });
+
+/**
+ * `newsletter` is the one resource key with nothing behind it: a subscription
+ * references no product and no account, so it can go upstream before anything else.
+ * A dependency added here later would quietly take that away (#132).
+ */
+describe('the newsletter resource', () => {
+  it('is registered and depends on nothing', () => {
+    expect(RESOURCES).toContain('newsletter');
+    expect(resolveMode('newsletter')).toBe('mock');
+  });
+
+  it('can go upstream while every other resource is still mocked', () => {
+    process.env.UPSTREAM_API_BASE_URL = 'https://api.example.com';
+    process.env.API_MODE_NEWSLETTER = 'upstream';
+
+    expect(resolveMode('newsletter')).toBe('upstream');
+    expect(resolveMode('catalog')).toBe('mock');
+  });
+});
+

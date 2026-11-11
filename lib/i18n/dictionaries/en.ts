@@ -75,6 +75,17 @@ export const en = {
       ],
     },
   },
+  newsletter: {
+    title: 'The weekly digest from Vivimoon',
+    subtitle: 'Wearing tips, new colours and subscriber-only offers — one email a week.',
+    emailLabel: 'Your email',
+    emailPlaceholder: 'you@email.com',
+    submit: 'Subscribe',
+    pending: 'Sending…',
+    success: "You're in. This week's digest will land in your inbox.",
+    error: 'That did not send. Please try again.',
+    invalid: 'That does not look like an email address.',
+  },
   articles: {
     title: 'Knowledge', publishedOn: 'Published', backToIndex: 'All articles',
     subtitle: 'From your very first lens to the day you graduate — Vivimoon tells you everything.',
