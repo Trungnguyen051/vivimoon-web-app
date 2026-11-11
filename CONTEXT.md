@@ -103,10 +103,6 @@ _Avoid_: Filter group, menu section, category, attribute
 How long a lens lasts before it is replaced — 1 ngày, 1 tháng, 3 tháng, 6 tháng. Expiry is the shopper-facing name for this axis wherever it appears: the Sản Phẩm menu, the collection filter, and the Comparison Matrix. The catalog field behind it stays `replacement`, which frames the same axis as a replacement cadence because that is what Vivimoon's backend contract calls it (ADR-0017).
 _Avoid_: Lifespan, Duration, Replacement schedule, Wear duration (one concept — Expiry is the canonical shopper-facing term; `replacement` is the wire name only)
 
-**Reading Theme**:
-The subject an Article is grouped under, used only to choose which Collection of lenses the article merchandises beside its body (ADR-0018). A Reading Theme is never shown to a reader by name — unlike a Topic, it has no tile, no label and no page — which is why the two are separate concepts despite both grouping written content. Articles carry a Reading Theme; FAQ Entries and Guides carry a Topic.
-_Avoid_: Topic (that is the help taxonomy, and the collision is the reason this was renamed), category, tag
-
 **Topic**:
 One of the six subjects help content is filed under — Người mới đeo lens, Chọn lens & độ cận, Đơn hàng & thanh toán, Giao hàng, Đổi trả & bảo hành, Tài khoản & ưu đãi. Every FAQ Entry and every Guide carries exactly one. There is one Topic list, not a separate set for the support hub and the FAQ page: the hub shows all six as tiles and the FAQ sidebar lists the same six beneath "Tất cả", so no Topic is reachable from one screen and invisible on the other. The design drew four hub tiles against an earlier four-item list; six is deliberate.
 _Avoid_: Category, help category, support section (one concept — Topic is canonical; `category` survives only as the FAQ page's query param)
