@@ -6,7 +6,7 @@
  * identity users, so it must not go upstream while either is still mocked —
  * fixture IDs will not match real ones and references dangle.
  */
-export const RESOURCES = ['catalog', 'identity', 'discovery', 'commerce', 'editorial', 'support'] as const;
+export const RESOURCES = ['catalog', 'identity', 'discovery', 'commerce', 'editorial', 'support', 'newsletter'] as const;
 export type ResourceName = (typeof RESOURCES)[number];
 
 export type ApiMode = 'mock' | 'upstream';
@@ -18,6 +18,9 @@ export type ApiMode = 'mock' | 'upstream';
  * product and no article *id*. Its answer links are route paths, checked against the
  * route tree by `tests/authored-links.test.ts` rather than resolved against another
  * resource's fixtures — so help content can migrate without waiting on catalog.
+ *
+ * `newsletter` is absent for a stronger reason again: a subscription references
+ * nothing at all. It is the one key that could go upstream before any other (#132).
  */
 const DEPENDS_ON: Partial<Record<ResourceName, ResourceName[]>> = {
   discovery: ['catalog'],

@@ -77,6 +77,17 @@ export const vi: Dictionary = {
       ],
     },
   },
+  newsletter: {
+    title: 'Bản tin mỗi tuần từ Vivimoon',
+    subtitle: 'Mẹo đeo lens, màu mới về và ưu đãi riêng — gọn trong một email mỗi tuần.',
+    emailLabel: 'Email của bạn',
+    emailPlaceholder: 'ten@email.com',
+    submit: 'Đăng ký',
+    pending: 'Đang gửi…',
+    success: 'Xong rồi nha! Bản tin tuần này sẽ tới hộp thư của bạn.',
+    error: 'Chưa gửi được. Bạn thử lại giúp mình nhé.',
+    invalid: 'Email này chưa đúng. Bạn kiểm tra lại giúp mình nhé.',
+  },
   articles: {
     title: 'Kiến thức', publishedOn: 'Đăng ngày', backToIndex: 'Tất cả bài viết',
     subtitle: 'Từ lần đầu đeo lens đến ngày cận thật xinh — Vivimoon kể hết cho bạn nè.',
