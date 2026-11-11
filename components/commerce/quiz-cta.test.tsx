@@ -60,6 +60,12 @@ describe('QuizCta', () => {
    * all. Should anyone state one later, in digits or words, it has to be the real
    * one, and the Quiz's question set is provisional (content/quiz.ts), so this
    * reads the count rather than hard-coding it.
+   *
+   * Two surfaces now show this banner — the homepage and the Knowledge index (#129) —
+   * and both render `dict.home.quiz.*`, so this guard covers both without being
+   * duplicated. A second copy of the words for the Knowledge page would be a second
+   * thing for it to miss; that is the reason the index reuses these keys rather than
+   * minting its own.
    */
   const NUMERALS: Record<string, number> = {
     one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,

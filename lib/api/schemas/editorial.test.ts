@@ -17,7 +17,7 @@ describe('editorial schemas', () => {
 
   it('rejects a publishedAt that is not a plain date', () => {
     const article = {
-      slug: 'x', image: '/x.png', publishedAt: '28/09/2026', readingTheme: 'beginner',
+      slug: 'x', image: '/x.png', publishedAt: '28/09/2026', readingTheme: 'beginner', author: 'A',
       title: { vi: 'a', en: 'a' }, excerpt: { vi: 'a', en: 'a' }, body: { vi: ['a'], en: ['a'] },
     };
 
@@ -33,12 +33,29 @@ describe('editorial schemas', () => {
    */
   it('requires a Reading Theme the taxonomy actually has', () => {
     const article = {
-      slug: 'x', image: '/x.png', publishedAt: '2026-09-28',
+      slug: 'x', image: '/x.png', publishedAt: '2026-09-28', author: 'A',
       title: { vi: 'a', en: 'a' }, excerpt: { vi: 'a', en: 'a' }, body: { vi: ['a'], en: ['a'] },
     };
 
     expect(articleSchema.safeParse(article).success).toBe(false);
     expect(articleSchema.safeParse({ ...article, readingTheme: 'nonsense' }).success).toBe(false);
     expect(articleSchema.safeParse({ ...article, readingTheme: 'care' }).success).toBe(true);
+  });
+
+  /**
+   * Every card and every article states a dateline of author · reading time · date
+   * (#129). Reading time is derived and the date is already required, so the byline is
+   * the only one of the three a fixture could omit — and an empty one renders as a
+   * dangling separator rather than as anything a reader can see is missing.
+   */
+  it('requires a byline with something in it', () => {
+    const article = {
+      slug: 'x', image: '/x.png', publishedAt: '2026-09-28', readingTheme: 'care',
+      title: { vi: 'a', en: 'a' }, excerpt: { vi: 'a', en: 'a' }, body: { vi: ['a'], en: ['a'] },
+    };
+
+    expect(articleSchema.safeParse(article).success).toBe(false);
+    expect(articleSchema.safeParse({ ...article, author: '' }).success).toBe(false);
+    expect(articleSchema.safeParse({ ...article, author: 'Ngọc Hân' }).success).toBe(true);
   });
 });

@@ -1,3 +1,4 @@
+import { toIntlLocale } from '@/lib/utils/format';
 import type { QuizDefinition } from '@/lib/api/schemas/discovery';
 
 /**
@@ -61,3 +62,25 @@ export const quiz: QuizDefinition = {
     },
   ],
 };
+
+/**
+ * How many shoppers the Quiz has matched — mock, pending a real source (#67).
+ *
+ * It sits beside the question set rather than in a page because two surfaces now show
+ * the banner: the homepage and the Knowledge index (#129). It stays out of the
+ * dictionary sentence so each locale keeps its own word order around `{count}` and
+ * groups the digits its own way.
+ */
+export const QUIZ_MATCHES = 12_400;
+
+/**
+ * The social-proof sentence, assembled. The words and their order come from the
+ * dictionary, the count from here, and the grouping from the locale.
+ *
+ * Shared for the same reason `QUIZ_MATCHES` is: both the homepage and the Knowledge
+ * index render this line, and the two spelling out the same `replace` was a second copy
+ * free to drift — the dictionary key being shared does not make the expression shared.
+ */
+export function quizSocialProof(template: string, locale: 'en' | 'vi'): string {
+  return template.replace('{count}', new Intl.NumberFormat(toIntlLocale(locale)).format(QUIZ_MATCHES));
+}

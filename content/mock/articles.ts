@@ -20,6 +20,7 @@ export const articles: Article[] = [
     slug: 'mau-lens-hop-tong-da-vang',
     image: '/images/moment-grad.jpg',
     publishedAt: '2026-09-28',
+    author: 'Ngọc Hân',
     readingTheme: 'natural',
     title: {
       vi: '5 màu lens phù hợp nhất với tông da vàng Việt Nam 2025',
@@ -46,6 +47,7 @@ export const articles: Article[] = [
     slug: 'cach-deo-lens-lan-dau',
     image: '/images/makeup-natural.jpg',
     publishedAt: '2026-09-20',
+    author: 'Minh Thư',
     readingTheme: 'beginner',
     title: {
       vi: 'Cách đeo lens lần đầu không bị cộm',
@@ -72,6 +74,7 @@ export const articles: Article[] = [
     slug: 'silicone-hydrogel-vs-lens-thuong',
     image: '/images/moment-wedding.jpg',
     publishedAt: '2026-09-14',
+    author: 'Bảo Trân',
     readingTheme: 'comfort',
     title: {
       vi: 'Silicone Hydrogel vs lens thường: Bác sĩ nhãn khoa nói gì?',
@@ -98,6 +101,7 @@ export const articles: Article[] = [
     slug: 'dia-va-gdia-la-gi',
     image: '/images/cat-colored.jpg',
     publishedAt: '2026-09-06',
+    author: 'Bảo Trân',
     readingTheme: 'natural',
     title: {
       vi: 'DIA và GDIA là gì? Chọn sao cho mắt tự nhiên',
@@ -124,6 +128,7 @@ export const articles: Article[] = [
     slug: 've-sinh-va-bao-quan-lens',
     image: '/images/moment-party.jpg',
     publishedAt: '2026-08-30',
+    author: 'Minh Thư',
     readingTheme: 'care',
     title: {
       vi: 'Cách vệ sinh và bảo quản lens đúng cách để dùng bền hơn',
@@ -150,6 +155,7 @@ export const articles: Article[] = [
     slug: 'lens-cho-ngay-ky-yeu',
     image: '/images/makeup-pink.jpg',
     publishedAt: '2026-08-18',
+    author: 'Ngọc Hân',
     readingTheme: 'occasion',
     title: {
       vi: 'Lens cho ngày kỷ yếu: màu nào lên hình đẹp?',
@@ -176,6 +182,7 @@ export const articles: Article[] = [
     slug: 'makeup-look-han-quoc',
     image: '/images/makeup-smoky.jpg',
     publishedAt: '2026-08-08',
+    author: 'Thuỳ Linh',
     readingTheme: 'makeup',
     title: {
       vi: 'Makeup look Hàn Quốc: chọn lens đi cùng lớp trang điểm',
@@ -202,6 +209,7 @@ export const articles: Article[] = [
     slug: 'deo-lens-bao-lau-la-du',
     image: '/images/cat-daily.jpg',
     publishedAt: '2026-07-26',
+    author: 'Bảo Trân',
     readingTheme: 'comfort',
     title: {
       vi: 'Đeo lens bao lâu là đủ?',
