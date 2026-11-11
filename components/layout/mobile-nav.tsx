@@ -41,8 +41,17 @@ export function MobileNav({ locale, dict }: { locale: Locale; dict: Dictionary }
         </div>
 
         {/* The same five items as the desktop nav, from the same source — only the
-            disclosure differs: an accordion here, a dropdown there. */}
-        <nav className="flex flex-col px-2">
+            disclosure differs: an accordion here, a dropdown there.
+
+            This scrolls because a facet section can make the drawer taller than the
+            screen: Màu sắc and Đường kính carry five values each, which is ~220px on
+            top of a drawer that already fills most of a small phone. The popup is
+            `h-full` and the dialog locks body scroll, so without a scroll region here
+            the rows below Sản Phẩm — and the locale switcher — simply cannot be
+            reached. `min-h-0` is the half that is easy to miss: a flex child will not
+            shrink below its content without it, so `overflow-y-auto` alone does
+            nothing. Four fixed rows never had this problem. */}
+        <nav className="flex min-h-0 flex-1 flex-col overflow-y-auto px-2">
           {items.map((item) =>
             /* Sản Phẩm's four Lens Facets, each an expandable section carrying its own
                values — the same four the desktop panel shows, from the same data. There
@@ -68,8 +77,9 @@ export function MobileNav({ locale, dict }: { locale: Locale; dict: Dictionary }
                           }
                         >
                           {valueLabel(value, dict)}
-                          {/* Smaller than the desktop panel's: a drawer row is tighter,
-                              and five shades plus a label have to fit a phone's width. */}
+                          {/* Smaller than the desktop panel's: a drawer row is tighter
+                              and indented, so the label keeps the width it needs. A
+                              family carries three shades, Không màu one. */}
                           {value.kind === 'colour' ? <Swatches value={value} className="size-4" /> : null}
                         </SheetClose>
                       ))}

@@ -9,15 +9,15 @@ import { valueLabel } from './facet-value';
 // The drawer also mounts LocaleSwitcher, which reaches for the router.
 vi.mock('next/navigation', () => ({ usePathname: () => '/vi', useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }) }));
 
+/** A label may carry regex metacharacters — `14.0mm`, `Giá: thấp` — so it is matched literally. */
+const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 /**
  * The drawer reads the same `getNavItems` source as the desktop nav, so the
  * structure can only diverge by someone flattening it here. That is exactly
  * what this pins on the surface a phone actually shows: the collections stay
  * behind Sản Phẩm, and every top-level item leads somewhere (#40, #72).
  */
-/** A label may carry regex metacharacters — `14.0mm`, `Giá: thấp` — so it is matched literally. */
-const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
 describe('MobileNav', () => {
   async function openDrawer() {
     render(<MobileNav locale="vi" dict={viDict} />);
