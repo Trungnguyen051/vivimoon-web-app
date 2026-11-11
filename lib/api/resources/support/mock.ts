@@ -1,5 +1,5 @@
 import { faqEntries } from '@/content/mock';
-import type { FaqEntry, Topic } from '@/lib/api/schemas/support';
+import type { FaqEntry } from '@/lib/api/schemas/support';
 
 export const mockSupport = {
   /**
@@ -9,10 +9,6 @@ export const mockSupport = {
    */
   async listFaqEntries(): Promise<FaqEntry[]> {
     return [...faqEntries];
-  },
-
-  async listFaqEntriesByTopic(topic: Topic): Promise<FaqEntry[]> {
-    return faqEntries.filter((entry) => entry.topic === topic);
   },
 
   /** The handful the support hub shows as "Người mới hay hỏi". */
