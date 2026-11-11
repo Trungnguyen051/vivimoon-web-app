@@ -10,6 +10,7 @@ import {
 } from '@/lib/api/schemas/editorial';
 import { readingMinutes } from '@/lib/editorial/reading-time';
 import { CARDS_PER_PAGE, knowledgeIndexLayout } from '@/lib/editorial/index-layout';
+import { firstParam } from '@/lib/utils/search-params';
 import { ArticleCards } from '@/components/commerce/article-cards';
 import { MakeupLooks } from '@/components/commerce/makeup-looks';
 import { NewsletterSignup } from '@/components/commerce/newsletter-signup';
@@ -26,21 +27,18 @@ import { cn } from '@/lib/utils/cn';
 /** The grid's anchor, so showing more lands on the new cards rather than at the top. */
 const GRID_ANCHOR = 'more-articles';
 
-/** A repeated param arrives as an array — one link clicked twice. The first value wins. */
-const first = (raw: string | string[] | undefined) => (Array.isArray(raw) ? raw[0] : raw);
-
 /**
  * Every control on this page reads a URL a shopper can edit, so each one degrades to its
  * default rather than taking the page down — the same loose reading
  * `parseProductQueryLoose` applies to a product filter.
  */
 function readTheme(raw: string | string[] | undefined): ReadingTheme | undefined {
-  const parsed = readingThemeSchema.safeParse(first(raw));
+  const parsed = readingThemeSchema.safeParse(firstParam(raw));
   return parsed.success ? parsed.data : undefined;
 }
 
 function readSort(raw: string | string[] | undefined): ArticleSort {
-  const parsed = articleSortSchema.safeParse(first(raw));
+  const parsed = articleSortSchema.safeParse(firstParam(raw));
   return parsed.success ? parsed.data : 'newest';
 }
 
@@ -57,9 +55,9 @@ export default async function ArticlesPage({
 
   const query = await searchParams;
   const readingTheme = readTheme(query.theme);
-  const q = first(query.q)?.trim() ?? '';
+  const q = firstParam(query.q)?.trim() ?? '';
   const sort = readSort(query.sort);
-  const shown = Number(first(query.shown)) || CARDS_PER_PAGE;
+  const shown = Number(firstParam(query.shown)) || CARDS_PER_PAGE;
 
   /* One query, three spellings. The chips, the box and the sort control all narrow the
      same list in the resource rather than each filtering what the last one left. */

@@ -291,6 +291,12 @@ export const en = {
       allTopics: 'All',
       topicNav: 'Help topics',
       answerLinks: 'Read more',
+      searchLabel: 'Search questions',
+      searchPlaceholder: 'What are you wondering about?',
+      noResults: 'No questions match that search',
+      noneInTopic: 'No questions under this topic yet',
+      clearSearch: 'See all questions',
+      resultsFor: 'Results for',
     },
   },
   notFound: {

@@ -292,6 +292,12 @@ export const vi: Dictionary = {
       allTopics: 'Tất cả',
       topicNav: 'Chủ đề hỗ trợ',
       answerLinks: 'Xem thêm',
+      searchLabel: 'Tìm câu hỏi',
+      searchPlaceholder: 'Bạn đang thắc mắc điều gì?',
+      noResults: 'Chưa có câu hỏi nào khớp với tìm kiếm này',
+      noneInTopic: 'Chủ đề này chưa có câu hỏi nào',
+      clearSearch: 'Xem tất cả câu hỏi',
+      resultsFor: 'Kết quả cho',
     },
   },
   notFound: {

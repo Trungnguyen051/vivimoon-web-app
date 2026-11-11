@@ -1,22 +1,6 @@
 import { articles, makeupLooks } from '@/content/mock';
 import type { Article, ArticleQuery, MakeupLook } from '@/lib/api/schemas/editorial';
-
-/**
- * Lowercased and stripped of tone marks, so a search matches the way people actually
- * type. Vietnamese is written without diacritics far more often than with them — on a
- * phone keyboard that is the default — and "ky yeu" has to find "kỷ yếu".
- *
- * `đ` needs saying separately: it is a letter in its own right rather than `d` carrying
- * a mark, so NFD does not decompose it and `'Đ'.toLowerCase()` yields `'đ'`, not `'d'`.
- * Both sides of the comparison are folded, so this stays symmetric.
- */
-function fold(text: string): string {
-  return text
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-    .replace(/đ/g, 'd');
-}
+import { foldedIncludes } from '@/lib/text/fold';
 
 /**
  * Everything a shopper could plausibly be searching for, in every locale.
@@ -24,8 +8,8 @@ function fold(text: string): string {
  * Title and excerpt only: a match inside a body would be invisible on the card that
  * claims it, which reads as a wrong result rather than a found one.
  */
-function haystack(article: Article): string {
-  return fold([...Object.values(article.title), ...Object.values(article.excerpt)].join(' '));
+function searchable(article: Article): string[] {
+  return [...Object.values(article.title), ...Object.values(article.excerpt)];
 }
 
 export const mockEditorial = {
@@ -44,10 +28,7 @@ export const mockEditorial = {
     // Trimmed, so a box holding only spaces is no filter at all — typing and clearing
     // must give the whole list back rather than an empty page.
     const term = query.q?.trim();
-    if (term) {
-      const needle = fold(term);
-      list = list.filter((a) => haystack(a).includes(needle));
-    }
+    if (term) list = list.filter((a) => foldedIncludes(searchable(a), term));
 
     list.sort((a, b) =>
       query.sort === 'oldest'
