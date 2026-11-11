@@ -49,6 +49,13 @@ export const articleSchema = z.object({
   image: z.string().min(1),
   /** ISO date, used for display order and the dateline. */
   publishedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'publishedAt must be YYYY-MM-DD'),
+  /**
+   * Who wrote it, as the dateline shows it beside the reading time and the date (#129).
+   *
+   * Not localized: a person's name is the same in both locales, and a `LocalizedText`
+   * here would invite a translated byline, which is a different person.
+   */
+  author: z.string().min(1),
   readingTheme: readingThemeSchema,
   title: localizedTextSchema,
   excerpt: localizedTextSchema,

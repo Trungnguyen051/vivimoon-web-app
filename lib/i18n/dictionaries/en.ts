@@ -89,6 +89,16 @@ export const en = {
       care: 'Lens care',
     },
     filterLabel: 'Filter articles by subject',
+    searchLabel: 'Search articles',
+    searchPlaceholder: 'What are you wondering about?',
+    sortLabel: 'Sort',
+    sorts: { newest: 'Newest', oldest: 'Oldest' },
+    /* Positional, not a judgement: this is whichever article the current query puts
+       first, so the design's "NỔI BẬT" would claim an editorial choice nobody made. */
+    leadEyebrow: 'Leading the list',
+    gridTitle: 'More articles',
+    showMore: 'Show more articles',
+    readingTime: '{count} min read',
     noResults: 'No articles here yet',
     showAll: 'Show all articles',
   },

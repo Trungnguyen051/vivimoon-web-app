@@ -91,6 +91,16 @@ export const vi: Dictionary = {
       care: 'Chăm sóc lens',
     },
     filterLabel: 'Lọc bài viết theo chủ đề',
+    searchLabel: 'Tìm bài viết',
+    searchPlaceholder: 'Bạn đang thắc mắc điều gì?',
+    sortLabel: 'Sắp xếp',
+    sorts: { newest: 'Mới nhất', oldest: 'Cũ nhất' },
+    /* Positional, not a judgement: this is whichever article the current query puts
+       first, so the design's "NỔI BẬT" would claim an editorial choice nobody made. */
+    leadEyebrow: 'Bài mở đầu',
+    gridTitle: 'Bài viết khác',
+    showMore: 'Xem thêm bài viết',
+    readingTime: '{count} phút đọc',
     noResults: 'Chưa có bài viết nào ở đây',
     showAll: 'Xem tất cả bài viết',
   },
