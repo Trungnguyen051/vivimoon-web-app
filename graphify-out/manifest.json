@@ -396,15 +396,15 @@
     "semantic_hash": "e337dcc7b7b3cc468e1af0f5c17aca4f"
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1794408769.8059008,
-    "seen": 1794408882.4004428,
-    "ast_hash": "fc6e44d4aaf8241cb074ad660ab6e4c7",
+    "mtime": 1794409513.558039,
+    "seen": 1794410050.147491,
+    "ast_hash": "cf567dfb51c65bf3c43e32e2915975c9",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/vi.ts": {
-    "mtime": 1794408769.8054557,
-    "seen": 1794408882.4004428,
-    "ast_hash": "7eaaf09e0ef6f56144569dc4524d53fc",
+    "mtime": 1794409513.5578372,
+    "seen": 1794410050.1474922,
+    "ast_hash": "ef7d503e7d4a91c5a75e7d53430587bd",
     "semantic_hash": ""
   },
   "lib/types/collection.ts": {
@@ -726,14 +726,14 @@
     "semantic_hash": ""
   },
   "content/mock/collections.ts": {
-    "mtime": 1794408703.6283712,
-    "seen": 1794408882.400327,
+    "mtime": 1794409010.1529305,
+    "seen": 1794410050.147377,
     "ast_hash": "3339cf90107a54c37b2efd46cf316597",
     "semantic_hash": ""
   },
   "content/mock/index.ts": {
-    "mtime": 1794408143.738769,
-    "seen": 1794408882.400331,
+    "mtime": 1794409010.153491,
+    "seen": 1794410050.147381,
     "ast_hash": "adb4570972a493321322980948bfb02b",
     "semantic_hash": ""
   },
@@ -2556,8 +2556,8 @@
     "semantic_hash": ""
   },
   "content/mock/support.ts": {
-    "mtime": 1794408722.777977,
-    "seen": 1794408882.400338,
+    "mtime": 1794409010.153827,
+    "seen": 1794410050.1473868,
     "ast_hash": "05673f34a8ca0076c1427c980d309ebb",
     "semantic_hash": ""
   },
@@ -2568,9 +2568,9 @@
     "semantic_hash": ""
   },
   "lib/api/resources/support/mock.ts": {
-    "mtime": 1794408769.808091,
-    "seen": 1794408882.4004009,
-    "ast_hash": "b3a9e5ffa20af874ab670e65b27fe36d",
+    "mtime": 1794409916.0781422,
+    "seen": 1794410050.147449,
+    "ast_hash": "3be23b75a9b9fc138e8d99be35442680",
     "semantic_hash": ""
   },
   "lib/api/schemas/support.test.ts": {
@@ -2580,20 +2580,20 @@
     "semantic_hash": ""
   },
   "lib/api/schemas/support.ts": {
-    "mtime": 1794408815.0267959,
-    "seen": 1794408882.400424,
-    "ast_hash": "b97164de1ab8d128cc0375f85003b7a6",
+    "mtime": 1794409916.1030037,
+    "seen": 1794410050.1474729,
+    "ast_hash": "db8f2c7451b773fe8725c9f78f4b6789",
     "semantic_hash": ""
   },
   "lib/editorial/reading-themes.test.ts": {
-    "mtime": 1794408713.2762184,
-    "seen": 1794408882.400436,
+    "mtime": 1794409010.1670992,
+    "seen": 1794410050.147485,
     "ast_hash": "f3a7d06061ef71554c26b2378db5a569",
     "semantic_hash": ""
   },
   "lib/editorial/reading-themes.ts": {
-    "mtime": 1794408703.628824,
-    "seen": 1794408882.4004369,
+    "mtime": 1794409010.1677003,
+    "seen": 1794410050.147485,
     "ast_hash": "a38ec092aceefd2301a7928d61b250c8",
     "semantic_hash": ""
   },
@@ -2622,8 +2622,8 @@
     "semantic_hash": ""
   },
   "tests/authored-links.test.ts": {
-    "mtime": 1794408744.837115,
-    "seen": 1794408882.40048,
+    "mtime": 1794409010.1691694,
+    "seen": 1794410050.147527,
     "ast_hash": "2533802e4a7fb2d01a7d3b56ec745e05",
     "semantic_hash": ""
   },
@@ -2808,21 +2808,45 @@
     "semantic_hash": ""
   },
   "app/[locale]/support/guides/[slug]/guide.test.tsx": {
-    "mtime": 1794408815.0494285,
-    "seen": 1794408882.40017,
+    "mtime": 1794409010.15232,
+    "seen": 1794410050.147221,
     "ast_hash": "ebfa9c29c9dee91acaaa8f91f615e2fb",
     "semantic_hash": ""
   },
   "app/[locale]/support/guides/[slug]/page.tsx": {
-    "mtime": 1794408769.7829723,
-    "seen": 1794408882.400171,
-    "ast_hash": "ec15d80ca15f0097f1a764ba5732cdfd",
+    "mtime": 1794409513.5840693,
+    "seen": 1794410050.147222,
+    "ast_hash": "c6b292e3b9e7cf695de295cb8e1a60b3",
     "semantic_hash": ""
   },
   "content/mock/guides.ts": {
-    "mtime": 1794408143.717545,
-    "seen": 1794408882.40033,
+    "mtime": 1794409010.1532223,
+    "seen": 1794410050.1473799,
     "ast_hash": "d68a5c586a7b6d86ae464de14ec87e65",
+    "semantic_hash": ""
+  },
+  "app/api/support/guide-feedback/route.test.ts": {
+    "mtime": 1794409969.0005333,
+    "seen": 1794410050.147276,
+    "ast_hash": "1d964c146dee695e05d620dcda392154",
+    "semantic_hash": ""
+  },
+  "app/api/support/guide-feedback/route.ts": {
+    "mtime": 1794409945.0347505,
+    "seen": 1794410050.147277,
+    "ast_hash": "516afb4a37c250df6d0dde440e46a4e0",
+    "semantic_hash": ""
+  },
+  "components/commerce/guide-feedback.test.tsx": {
+    "mtime": 1794409984.4086986,
+    "seen": 1794410050.1473029,
+    "ast_hash": "7d7508f2a9b20f12d060ea0d829de807",
+    "semantic_hash": ""
+  },
+  "components/commerce/guide-feedback.tsx": {
+    "mtime": 1794409945.0575988,
+    "seen": 1794410050.1473038,
+    "ast_hash": "1c023c9f7dc2223ae6002948276cd804",
     "semantic_hash": ""
   }
 }
