@@ -11,6 +11,7 @@ import {
 import { readingMinutes } from '@/lib/editorial/reading-time';
 import { CARDS_PER_PAGE, knowledgeIndexLayout } from '@/lib/editorial/index-layout';
 import { ArticleCards } from '@/components/commerce/article-cards';
+import { MakeupLooks } from '@/components/commerce/makeup-looks';
 import { LeadArticle } from '@/components/commerce/lead-article';
 import { QuizCta } from '@/components/commerce/quiz-cta';
 import { ReadingThemeChips } from '@/components/commerce/reading-theme-chips';
@@ -61,7 +62,13 @@ export default async function ArticlesPage({
 
   /* One query, three spellings. The chips, the box and the sort control all narrow the
      same list in the resource rather than each filtering what the last one left. */
-  const articles = await editorial.listArticles({ readingTheme, q, sort });
+  /* Independent reads, so they go together: the band is not part of the query, and
+     awaiting it after the articles would double this page's blocking round trips the
+     day `editorial` resolves to an upstream resource rather than the mock. */
+  const [articles, looks] = await Promise.all([
+    editorial.listArticles({ readingTheme, q, sort }),
+    editorial.listMakeupLooks(),
+  ]);
   const layout = knowledgeIndexLayout(articles, shown);
 
   /* Every other param is carried through, so changing one control never silently
@@ -221,6 +228,23 @@ export default async function ArticlesPage({
               </div>
             ) : null}
           </section>
+        ) : null}
+
+        {/* The band shows every Look there is and is not part of the query, so it
+            renders whatever the chips and the search box do — but an upstream editorial
+            resource may legitimately have none, and a heading over an empty band reads
+            as a bug here for the same reason it does over the grid. */}
+        {looks.length > 0 ? (
+          <MakeupLooks
+            title={dict.articles.makeupLooksTitle}
+            looks={looks.map((look) => ({
+              id: look.id,
+              title: look.title[locale],
+              image: look.image,
+              lensName: look.lensName,
+              href: `/${locale}/product/${look.productSlug}`,
+            }))}
+          />
         ) : null}
 
         {/* The same copy the homepage shows, from one place in the dictionary: the teaser

@@ -10,4 +10,5 @@ export { addresses } from './addresses';
 export { favorites } from './favorites';
 export { loyaltyHistory } from './loyalty';
 export { articles } from './articles';
+export { makeupLooks } from './makeup-looks';
 export { faqEntries } from './support';

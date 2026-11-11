@@ -99,6 +99,7 @@ export const en = {
     gridTitle: 'More articles',
     showMore: 'Show more articles',
     readingTime: '{count} min read',
+    makeupLooksTitle: 'How these lenses look on a face',
     noResults: 'No articles here yet',
     showAll: 'Show all articles',
   },
