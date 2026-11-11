@@ -32,9 +32,12 @@ export const faqEntries: FaqEntry[] = [
         'Pain, stinging or constant watering is not something to get used to. Take the lens out and check whether it is inside out, has caught dust, or is torn.',
       ],
     },
-    // The guide this should point at lands with #123; authoring the link now would
-    // trip the authored-link guard, which is the behaviour we want.
-    links: [],
+    links: [
+      {
+        href: '/support/guides/cach-deo-va-thao-lens',
+        label: { vi: 'Cách đeo và tháo lens cho người mới', en: 'How to put in and take out lenses' },
+      },
+    ],
   },
   {
     slug: 'lens-co-bi-com-khong',
@@ -76,7 +79,12 @@ export const faqEntries: FaqEntry[] = [
         'Do not rush it. If three attempts fail, stop for a minute and come back — a tired eye blinks more.',
       ],
     },
-    links: [],
+    links: [
+      {
+        href: '/support/guides/cach-deo-va-thao-lens',
+        label: { vi: 'Cách đeo và tháo lens cho người mới', en: 'How to put in and take out lenses' },
+      },
+    ],
   },
   {
     slug: 'mat-nhay-cam-dung-duoc-khong',

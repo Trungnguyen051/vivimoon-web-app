@@ -20,6 +20,7 @@ export const en = {
   collection: {
     newArrivals: 'New Arrivals', bestsellers: 'Bestsellers', sale: 'Sale',
     colored: 'Colored Lenses', daily: 'Daily Lenses', allLenses: 'All Lenses',
+    beginnerFriendly: 'Beginner-Friendly Lenses',
     productsLabel: 'products', noResults: 'No products match your filters.', showAll: 'Show all products',
   },
   home: {
@@ -322,6 +323,15 @@ export const en = {
       'giao-hang': 'Delivery',
       'doi-tra-va-bao-hanh': 'Returns & warranty',
       'tai-khoan-va-uu-dai': 'Account & offers',
+    },
+    guide: {
+      updatedOn: 'Updated',
+      stepsLabel: 'Steps',
+      beforeYouStart: 'Before you start',
+      safety: 'When to stop',
+      suggested: 'Suggested lenses',
+      viewCollection: 'See all',
+      related: 'Read next',
     },
     faq: {
       title: 'Frequently asked questions',

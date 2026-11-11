@@ -25,6 +25,21 @@ export const collections: Collection[] = [
     productIds: products.map((p) => p.id),
   },
   {
+    slug: 'beginner-friendly',
+    title: 'collection.beginnerFriendly',
+    /*
+     * PROVISIONAL — owner: Vivimoon. "Suited to a beginner" is a merchandising
+     * judgement, not a catalog fact, so this stands in for one: daily clear lenses,
+     * on the reasoning that a first-timer throwing the pair away each evening has
+     * nothing to clean, store or mis-time. The guide's product row *is* this
+     * Collection (#123), so it has to resolve — a row that pointed at nothing would
+     * put "Xem tất cả" on a 404.
+     */
+    productIds: products
+      .filter((p) => p.replacement === 'daily' && p.productLine === 'trongSuot')
+      .map((p) => p.id),
+  },
+  {
     slug: 'daily-lenses',
     title: 'collection.daily',
     productIds: products.filter((p) => p.replacement === 'daily').map((p) => p.id),

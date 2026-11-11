@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { catalog } from '@/lib/api/resources/catalog';
 import { editorial } from '@/lib/api/resources/editorial';
+import { support } from '@/lib/api/resources/support';
 import { faqEntries } from '@/content/mock/support';
 import { SEGMENT_ROOT, pathSegments, resolveRoute } from './route-tree';
 
@@ -41,15 +42,26 @@ describe('authored content links', () => {
     );
     const collections = new Set((await catalog.listCollections()).map((c) => c.slug));
     const articles = new Set((await editorial.listArticles()).map((a) => a.slug));
+    const guides = new Set((await support.listGuides()).map((g) => g.slug));
 
-    const backing: Record<string, Set<string>> = { collection: collections, articles };
+    /* Keyed on the path *above* the dynamic segment, not on the first segment: a
+       nested destination like `support/guides/[slug]` has three parts, and reading
+       the first two as `[segment, slug]` would have asked whether a collection named
+       "guides" exists. */
+    const backing: Record<string, Set<string>> = {
+      collection: collections,
+      articles,
+      'support/guides': guides,
+    };
 
     for (const href of dynamic) {
-      const [segment, slug] = segmentsOf(href);
+      const segments = segmentsOf(href);
+      const slug = segments[segments.length - 1];
+      const segment = segments.slice(0, -1).join('/');
 
       // A new kind of dynamic destination resolves through `[param]` and lands here
       // unguarded, so it fails loudly until someone adds its resource rather than
-      // passing by default. `support/guides/[slug]` arrives this way with #123.
+      // passing by default. `support/guides/[slug]` arrived this way with #123.
       expect(backing[segment], `unguarded dynamic authored destination: ${href}`).toBeDefined();
       expect(backing[segment], `authored link to a ${segment} that does not exist: ${href}`).toContain(slug);
     }
