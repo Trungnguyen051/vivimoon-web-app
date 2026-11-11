@@ -54,7 +54,7 @@ export default async function SupportFaqPage({
   return (
     <PageContainer>
       <div className="flex flex-col gap-8">
-        <Breadcrumb>
+        <Breadcrumb aria-label={dict.common.breadcrumb}>
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink render={<Link href={`/${locale}/support`} />}>{dict.nav.support}</BreadcrumbLink>

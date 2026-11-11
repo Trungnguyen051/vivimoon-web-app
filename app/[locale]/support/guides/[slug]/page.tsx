@@ -72,7 +72,7 @@ export default async function GuidePage({
   return (
     <PageContainer>
       <div className="flex flex-col gap-10 py-12">
-        <Breadcrumb>
+        <Breadcrumb aria-label={dict.common.breadcrumb}>
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink render={<Link href={`/${locale}/support`} />}>{dict.nav.support}</BreadcrumbLink>
