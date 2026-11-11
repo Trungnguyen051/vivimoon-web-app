@@ -63,6 +63,30 @@ _Avoid_: USP strip, trust signals, guarantees
 One editorial piece behind the homepage's Kiến thức section, with a title, excerpt and body in every supported locale. Unlike UI copy, an Article's translations live with the content in the fixtures rather than in the dictionary — an article is authored as a whole in each language, and a dictionary key per paragraph would not scale. Its body is plain paragraphs, not markup, so rendering needs no parser. Articles reference no Product, which is why `editorial` is its own resource key rather than part of `discovery`.
 _Avoid_: Post, blog entry, news item
 
+**Reading Theme**:
+The subject an Article is grouped under — người mới đeo lens, độ êm & thoải mái, lens tự nhiên, makeup look, lens theo dịp, chăm sóc lens. Every Article carries exactly one. It both files the Knowledge index (the chip row, each card's eyebrow, the breadcrumb on an article) and chooses which Collection of lenses the article merchandises beside its body (ADR-0018). "Tất cả" is the absence of a Reading Theme filter rather than a member of the set.
+
+Distinct from a Topic by what it files, not by who sees it: a Reading Theme groups Articles, a Topic groups FAQ Entries and Guides. Both are shopper-visible and both name themselves on screen, which is exactly why one word could not serve both. Not every Reading Theme has lenses behind it — chăm sóc lens is about solution, cases and hygiene, which Vivimoon does not sell — so one may legitimately lead nowhere in the catalog (ADR-0018).
+_Avoid_: Topic (that is the help taxonomy, and the collision is the reason this was renamed), category, tag
+
+**Lead Article**:
+The Article given the large treatment at the top of the Knowledge index. It is the newest Article matching whatever Reading Theme or search is currently applied — not an editorial selection, and not a field on an Article. Narrowing the index therefore changes which Article leads it, which is why it is named for its position rather than called "featured": nothing about it reflects a judgement anyone made.
+_Avoid_: Featured article, hero article, nổi bật (implies an editorial choice that does not exist)
+
+**Reading Time**:
+How long an Article takes to read, counted from its body at the point of display and never stored — the same discipline as Eye Enlargement (ADR-0005). It is computed per locale, so the same Article reads slightly longer in Vietnamese, which writes syllables as separate words.
+_Avoid_: Read length, duration
+
+**Makeup Look**:
+One finished makeup look shown on camera, captioned with the lens worn in it. Makeup Looks sit on the Knowledge index because a shopper judging a lens is judging it on a face, not on a product shot. Distinct from VIVIMOON TV: a Makeup Look leads with the look and mentions the lens, where VIVIMOON TV leads with the product.
+
+The concept is a short portrait video, but no footage exists yet, so a Makeup Look is currently represented by a still poster frame that opens the lens it wears. It carries no play affordance while that is true: a control that plays nothing misrepresents the content more than a still does.
+_Avoid_: Look video, tutorial, VIVIMOON TV (a different band — see below)
+
+**VIVIMOON TV**:
+The homepage's video strip, where each card merchandises one Product — its title is the product's name and its tags are the product's attributes. Distinct from a Makeup Look, which is organised around the look rather than around the thing being sold. The homepage's other "Makeup look" row is a third thing again: still images that open filtered collections, a browsing entry point rather than video.
+_Avoid_: Video carousel, product videos (ambiguous with Makeup Look)
+
 **Color Family**:
 A named group of catalog colors used as a merchandising entry point — Nâu, Đen, Xám, and Màu sắc nổi bật ("standout colors", which gathers every vivid color rather than naming one). A Color Family is a browsing concept only: it has no field on a Product or Variant, which each still carry one `color`. Its tile shows up to three swatches and links into the colored-lens collection filtered to that family's colors. The swatches illustrate the family rather than define it: the `colors` are the filter, and while the catalog is provisional the swatches may name shades Vivimoon intends to carry but does not yet stock.
 _Avoid_: Color group, swatch group, palette
@@ -78,10 +102,6 @@ _Avoid_: Filter group, menu section, category, attribute
 **Expiry**:
 How long a lens lasts before it is replaced — 1 ngày, 1 tháng, 3 tháng, 6 tháng. Expiry is the shopper-facing name for this axis wherever it appears: the Sản Phẩm menu, the collection filter, and the Comparison Matrix. The catalog field behind it stays `replacement`, which frames the same axis as a replacement cadence because that is what Vivimoon's backend contract calls it (ADR-0017).
 _Avoid_: Lifespan, Duration, Replacement schedule, Wear duration (one concept — Expiry is the canonical shopper-facing term; `replacement` is the wire name only)
-
-**Reading Theme**:
-The subject an Article is grouped under, used only to choose which Collection of lenses the article merchandises beside its body (ADR-0018). A Reading Theme is never shown to a reader by name — unlike a Topic, it has no tile, no label and no page — which is why the two are separate concepts despite both grouping written content. Articles carry a Reading Theme; FAQ Entries and Guides carry a Topic.
-_Avoid_: Topic (that is the help taxonomy, and the collision is the reason this was renamed), category, tag
 
 **Topic**:
 One of the six subjects help content is filed under — Người mới đeo lens, Chọn lens & độ cận, Đơn hàng & thanh toán, Giao hàng, Đổi trả & bảo hành, Tài khoản & ưu đãi. Every FAQ Entry and every Guide carries exactly one. There is one Topic list, not a separate set for the support hub and the FAQ page: the hub shows all six as tiles and the FAQ sidebar lists the same six beneath "Tất cả", so no Topic is reachable from one screen and invisible on the other. The design drew four hub tiles against an earlier four-item list; six is deliberate.

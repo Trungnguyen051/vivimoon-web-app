@@ -77,6 +77,20 @@ export const en = {
   },
   articles: {
     title: 'Knowledge', publishedOn: 'Published', backToIndex: 'All articles',
+    subtitle: 'From your very first lens to the day you graduate — Vivimoon tells you everything.',
+    /* The chip row. `allThemes` is the absence of a filter, not a seventh Reading Theme. */
+    allThemes: 'All',
+    readingThemes: {
+      beginner: 'New to lenses',
+      comfort: 'Comfort & wear',
+      natural: 'Natural lenses',
+      makeup: 'Makeup look',
+      occasion: 'Lenses by occasion',
+      care: 'Lens care',
+    },
+    filterLabel: 'Filter articles by subject',
+    noResults: 'No articles here yet',
+    showAll: 'Show all articles',
   },
   brandStory: {
     headingLine1: 'Born in Korea',
