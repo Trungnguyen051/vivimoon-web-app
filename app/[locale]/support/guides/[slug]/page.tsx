@@ -10,6 +10,7 @@ import { readingMinutes } from '@/lib/editorial/reading-time';
 import { toIntlLocale } from '@/lib/utils/format';
 import { PageContainer } from '@/components/layout/page-container';
 import { ProductGrid } from '@/components/commerce/product-grid';
+import { GuideFeedback } from '@/components/commerce/guide-feedback';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
 import {
@@ -158,6 +159,8 @@ export default async function GuidePage({
             />
           </section>
         ) : null}
+
+        <GuideFeedback guideSlug={guide.slug} dict={copy} />
 
         {related.length > 0 ? (
           <section className="flex flex-col gap-6">

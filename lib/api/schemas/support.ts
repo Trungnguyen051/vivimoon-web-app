@@ -134,3 +134,23 @@ export const guideSchema = z.object({
 
 export type GuideStep = z.infer<typeof guideStepSchema>;
 export type Guide = z.infer<typeof guideSchema>;
+
+/**
+ * Whether a Guide helped (#124).
+ *
+ * Two fields and no more. There is no dedup, because guests have no identity in this
+ * app and inventing one for a thumbs-up is disproportionate; and no tally, because
+ * what to do with the signal is a product decision nobody has made yet.
+ */
+export const guideFeedbackSchema = z.object({
+  /*
+   * Bounded, unlike most `.min(1)` strings here: this one is retained for the life of
+   * the process rather than resolved and dropped. App Router route handlers have no
+   * body-size limit of their own, so without a ceiling a single multi-megabyte slug is
+   * accepted and kept.
+   */
+  guideSlug: z.string().min(1).max(120),
+  helpful: z.boolean(),
+});
+
+export type GuideFeedback = z.infer<typeof guideFeedbackSchema>;
