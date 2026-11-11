@@ -4,7 +4,8 @@ import { Menu, Search } from 'lucide-react';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { getNavItems } from './nav-items';
-import { LENS_FACETS, facetHref } from '@/lib/products/lens-facets';
+import { LENS_FACETS, facetValueHref } from '@/lib/products/lens-facets';
+import { Swatches, valueLabel } from './facet-value';
 import { LocaleSwitcher } from './locale-switcher';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -43,20 +44,39 @@ export function MobileNav({ locale, dict }: { locale: Locale; dict: Dictionary }
             disclosure differs: an accordion here, a dropdown there. */}
         <nav className="flex flex-col px-2">
           {items.map((item) =>
-            /* Sản Phẩm's four Lens Facets, each a row leading to the catalog with its own
-               filter ready. #113 turns these into expandable sections carrying their
-               values and swatches, the same four the desktop panel shows; until then a
-               row that leads somewhere real beats one that leads nowhere. Four rows
-               either way, which is what this drawer showed before. */
+            /* Sản Phẩm's four Lens Facets, each an expandable section carrying its own
+               values — the same four the desktop panel shows, from the same data. There
+               is no hover on touch, so there is no active facet to mirror: expanding is
+               the whole interaction. One open at a time, which is what the group
+               accordion below already does — the drawer's own idiom (#113). */
             item.kind === 'facets' ? (
-              LENS_FACETS.map((facet) => (
-                <SheetClose
-                  key={facet.id}
-                  render={<Link href={facetHref(facet, locale)} className={`${ROW_CLASS} hover:bg-muted`} />}
-                >
-                  {dict.nav.facets[facet.id]}
-                </SheetClose>
-              ))
+              <Accordion key={item.id}>
+                {LENS_FACETS.map((facet) => (
+                  <AccordionItem key={facet.id} value={facet.id} className="border-b-0">
+                    <AccordionTrigger className={`${ROW_CLASS} hover:bg-muted hover:no-underline`}>
+                      {dict.nav.facets[facet.id]}
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-0">
+                      {facet.values.map((value) => (
+                        <SheetClose
+                          key={value.id}
+                          render={
+                            <Link
+                              href={facetValueHref(value, locale)}
+                              className={`${ROW_CLASS} gap-2 pl-6 font-normal hover:bg-muted`}
+                            />
+                          }
+                        >
+                          {valueLabel(value, dict)}
+                          {/* Smaller than the desktop panel's: a drawer row is tighter,
+                              and five shades plus a label have to fit a phone's width. */}
+                          {value.kind === 'colour' ? <Swatches value={value} className="size-4" /> : null}
+                        </SheetClose>
+                      ))}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             ) : item.kind === 'group' ? (
               <Accordion key={item.id}>
                 <AccordionItem value={item.id} className="border-b-0">

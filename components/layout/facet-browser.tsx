@@ -4,47 +4,9 @@ import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
-import {
-  LENS_FACETS, diameterBucketLabel, facetHref, facetValueHref,
-  type FacetValue, type LensFacet,
-} from '@/lib/products/lens-facets';
+import { LENS_FACETS, facetHref, facetValueHref, type LensFacet } from '@/lib/products/lens-facets';
+import { Swatches, valueLabel } from './facet-value';
 import { cn } from '@/lib/utils/cn';
-
-/** What a value says. Each axis already has labels; none is minted here. */
-function valueLabel(value: FacetValue, dict: Dictionary): string {
-  switch (value.kind) {
-    // The same source the homepage's colour row reads, so the two cannot drift.
-    case 'colour': return dict.home.shopByFilter.colors[value.id];
-    // A range is numbers rather than copy, so it is derived rather than translated.
-    case 'diameter': return diameterBucketLabel(value.bucket);
-    case 'expiry': return dict.filters.replacements[value.id];
-    case 'material': return dict.nav.facets.materials[value.id];
-    default: {
-      const unhandled: never = value;
-      return unhandled;
-    }
-  }
-}
-
-/**
- * Không màu is drawn as one unfilled circle: there is no colour to show, which is the
- * whole point of it. Every other value shows its family's shades.
- */
-function Swatches({ value }: { value: Extract<FacetValue, { kind: 'colour' }> }) {
-  const unfilled = value.entry.kind === 'line';
-
-  return (
-    <span className="flex items-center gap-2" aria-hidden="true">
-      {value.entry.swatches.map((swatch, i) => (
-        <span
-          key={`${swatch}-${i}`}
-          className="size-5 rounded-full border border-black/10"
-          style={unfilled ? undefined : { backgroundColor: swatch }}
-        />
-      ))}
-    </span>
-  );
-}
 
 /**
  * Sản Phẩm, as the design draws it: four Lens Facets down the left, the active facet's
