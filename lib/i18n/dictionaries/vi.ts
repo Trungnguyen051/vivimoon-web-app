@@ -4,6 +4,12 @@ export const vi: Dictionary = {
   nav: {
     new: 'Mới', men: 'Nam', women: 'Nữ', sport: 'Thể thao', accessories: 'Phụ kiện', sale: 'Giảm giá',
     about: 'Về Vivimoon', products: 'Sản Phẩm', knowledge: 'Kiến thức', support: 'Hỗ trợ', orderTracking: 'Tra cứu đơn hàng',
+    // The four Lens Facets the Sản Phẩm menu browses by. `expiry` says the same words
+    // as `filters.replacement` on purpose — one axis, one name (ADR-0017).
+    facets: {
+      color: 'Màu sắc', diameter: 'Đường kính (DIA)', expiry: 'Hạn sử dụng', material: 'Chất liệu',
+      materials: { moisture: 'Lens khoá ẩm', breathable: 'Lens cho mắt thở' },
+    },
   },
   common: { shopNow: 'Mua ngay', seeMore: 'Xem thêm', addToCart: 'Thêm vào giỏ', buyNow: 'Mua ngay', search: 'Tìm kiếm...', decreaseQty: 'Giảm số lượng', increaseQty: 'Tăng số lượng', menu: 'Menu', goToSlide: 'Chuyển tới slide',
     previous: 'Trước', next: 'Tiếp theo', previousSlide: 'Slide trước', nextSlide: 'Slide tiếp theo',

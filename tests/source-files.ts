@@ -1,7 +1,15 @@
 import { readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
-const SKIP = new Set(['node_modules', '.next', '.git', 'graphify-out', 'public', 'docs']);
+/**
+ * `.claude` holds this agent harness's own state, including the worktrees it creates for
+ * parallel work — a second full checkout of this repo, nested inside it. Walking into one
+ * makes every guard here read another branch's working copy as if it were this one, and
+ * `isVendored` cannot even exempt it: that test is a `components/ui` prefix, which a path
+ * like `.claude/worktrees/x/components/ui/button.tsx` does not have. The guards then fail
+ * on code that is not in this tree and may never be.
+ */
+const SKIP = new Set(['node_modules', '.next', '.git', '.claude', 'graphify-out', 'public', 'docs']);
 
 /**
  * Every `.ts`/`.tsx` in the repo, so neither a component nor a fixture escapes a guard.
