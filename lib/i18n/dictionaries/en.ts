@@ -275,7 +275,22 @@ export const en = {
     hotline: 'Hotline', rights: '© 2026 Vivimoon',
   },
   support: {
-    comingSoon: 'Our support centre is on its way. Until it lands, the hotline and email in the footer reach a person.',
+    hub: {
+      heroTitle: 'What can Vivimoon help you with?',
+      heroSubtitle: 'Type your question, or start from what first-time wearers ask most.',
+      searchLabel: 'Search questions',
+      searchPlaceholder: 'What are you wondering about?',
+      commonSearches: 'Commonly asked',
+      featuredTitle: 'What newcomers ask',
+      seeDetail: 'See details',
+      seeAllFaq: 'SEE ALL FREQUENTLY ASKED QUESTIONS',
+      /* Measured against the real filter, not translated from the Vietnamese list:
+         these are entry points, and one that lands on "no questions match" is worse
+         than one fewer. `returns` matched nothing and `prescription` matched the
+         account answer — both words appear only inside full answers, which the search
+         deliberately does not read. */
+      chips: ['wearing lenses', 'delivery', 'return', 'payment'],
+    },
     /* A Topic's name is chrome, so it lives here and gets the parity the `Dictionary`
        type gives UI copy; the fixtures carry only the slug. */
     topics: {

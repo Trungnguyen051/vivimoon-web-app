@@ -278,7 +278,17 @@ export const vi: Dictionary = {
     hotline: 'Đường dây nóng', rights: '© 2026 Vivimoon',
   },
   support: {
-    comingSoon: 'Trung tâm hỗ trợ đang được hoàn thiện. Trong lúc chờ, đường dây nóng và email ở chân trang luôn có người trả lời.',
+    hub: {
+      heroTitle: 'Vivimoon giúp gì được cho bạn nè?',
+      heroSubtitle: 'Gõ câu hỏi của bạn, hoặc xem những điều người mới hay băn khoăn nhất.',
+      searchLabel: 'Tìm câu hỏi',
+      searchPlaceholder: 'Bạn đang thắc mắc điều gì?',
+      commonSearches: 'Hay được hỏi',
+      featuredTitle: 'Người mới hay hỏi',
+      seeDetail: 'Xem chi tiết',
+      seeAllFaq: 'XEM TẤT CẢ CÁC CÂU HỎI THƯỜNG GẶP',
+      chips: ['đeo lens', 'độ cận', 'giao hàng', 'đổi trả'],
+    },
     topics: {
       'nguoi-moi-deo-lens': 'Người mới đeo lens',
       'chon-lens-va-do-can': 'Chọn lens & độ cận',

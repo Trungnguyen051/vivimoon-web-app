@@ -1,4 +1,5 @@
 'use client';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   Accordion, AccordionItem, AccordionTrigger, AccordionContent,
@@ -21,12 +22,49 @@ export type FaqAnswer = {
  * rather than unmounted. On a page whose entire purpose is to answer questions, a
  * collapsed answer that is absent from the HTML is an answer a search engine never
  * indexes and the reader's own Ctrl+F never finds; this way the browser expands the
- * matching row for them. It also makes `#faq-<slug>` land on a readable answer, which
- * is what #121's hub cards will link to.
+ * matching row for them.
+ *
+ * `#faq-<slug>` opens that one answer, which is how the hub's "Xem chi tiết" lands a
+ * reader on the question they clicked rather than on a page of collapsed rows to find
+ * it again in. A fragment never reaches the server, so this is read after mount — and
+ * read rather than trusted, since it arrives from the URL bar: a fragment naming no
+ * entry opens nothing instead of emptying the accordion's state.
+ *
+ * `hashchange` as well as mount, because a second card on the same page is a same-page
+ * navigation the browser answers without remounting anything.
+ *
+ * It keys on the slugs rather than on `entries`. The page builds that prop with an
+ * inline `.map`, so its identity is new on every render — depending on it meant a
+ * `router.refresh()` snapped the reader back to the fragment's row and discarded the
+ * answer they had opened by hand. The slug string only changes when the list genuinely
+ * does, which is the one time re-reading the fragment is right.
  */
 export function FaqAccordion({ entries, linksLabel }: { entries: FaqAnswer[]; linksLabel: string }) {
+  const [open, setOpen] = useState<string[]>([]);
+  const slugKey = entries.map((entry) => entry.slug).join('|');
+
+  useEffect(() => {
+    const slugs = new Set(slugKey.split('|'));
+    const openFromHash = () => {
+      const slug = window.location.hash.replace(/^#faq-/, '');
+      // Read rather than trusted: it arrives from the URL bar, and a fragment naming no
+      // entry opens nothing instead of emptying the accordion's state.
+      if (slug && slugs.has(slug)) setOpen([slug]);
+    };
+
+    openFromHash();
+    window.addEventListener('hashchange', openFromHash);
+    return () => window.removeEventListener('hashchange', openFromHash);
+  }, [slugKey]);
+
   return (
-    <Accordion multiple={false} hiddenUntilFound className="border-t">
+    <Accordion
+      value={open}
+      onValueChange={(value) => setOpen(value as string[])}
+      multiple={false}
+      hiddenUntilFound
+      className="border-t"
+    >
       {entries.map((entry) => (
         <AccordionItem key={entry.slug} value={entry.slug} id={`faq-${entry.slug}`} className="border-b">
           <AccordionTrigger className="py-5 text-base font-medium">
