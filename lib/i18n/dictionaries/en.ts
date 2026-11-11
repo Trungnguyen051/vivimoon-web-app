@@ -257,6 +257,7 @@ export const en = {
   tracking: {
     title: 'Track your order', code: 'Order code', identifier: 'Phone or email', submit: 'Get tracking link',
     devLinkNote: 'Development mode — your tracking link is',
+    error: 'That lookup did not go through. Please try again.',
   },
   addresses: {
     title: 'Saved addresses', empty: 'You have no saved addresses yet.',
@@ -290,6 +291,27 @@ export const en = {
          account answer — both words appear only inside full answers, which the search
          deliberately does not read. */
       chips: ['wearing lenses', 'delivery', 'return', 'payment'],
+    },
+    /* PROVISIONAL — owner: Vivimoon. The policy windows below (7 days, 30 days,
+       300.000₫) are plausible rather than confirmed. */
+    service: {
+      topicsTitle: 'Pick the subject you need',
+      policiesTitle: 'Policies at a glance',
+      trackingTitle: 'Track your order',
+      contactTitle: 'Still need a person?',
+      contactSubtitle: 'Vivimoon answers during business hours, Monday to Saturday.',
+      channels: {
+        hotline: 'Hotline',
+        email: 'Email',
+        messenger: 'Messenger',
+        zalo: 'Zalo',
+      },
+      policies: {
+        shipping: { title: 'Delivery & shipping fees', body: '1–2 working days in the city, 3–5 to other provinces. Free shipping on orders from 300,000₫.' },
+        returns: { title: 'Returns', body: 'Return within 7 days of delivery, with the seal unbroken.' },
+        warranty: { title: 'Warranty', body: 'Manufacturing defects are replaced within 30 days, with a photo of the seal and blister.' },
+        payment: { title: 'Payment', body: 'Bank transfer, e-wallet, domestic and international cards, or cash on delivery.' },
+      },
     },
     /* A Topic's name is chrome, so it lives here and gets the parity the `Dictionary`
        type gives UI copy; the fixtures carry only the slug. */

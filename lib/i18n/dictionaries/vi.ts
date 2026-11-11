@@ -260,6 +260,7 @@ export const vi: Dictionary = {
     title: 'Tra cứu đơn hàng', code: 'Mã đơn hàng',
     identifier: 'Số điện thoại hoặc email', submit: 'Lấy liên kết theo dõi',
     devLinkNote: 'Chế độ phát triển — liên kết theo dõi của bạn là',
+    error: 'Chưa tra cứu được. Bạn thử lại giúp mình nhé.',
   },
   addresses: {
     title: 'Địa chỉ đã lưu', empty: 'Bạn chưa lưu địa chỉ nào.',
@@ -288,6 +289,27 @@ export const vi: Dictionary = {
       seeDetail: 'Xem chi tiết',
       seeAllFaq: 'XEM TẤT CẢ CÁC CÂU HỎI THƯỜNG GẶP',
       chips: ['đeo lens', 'độ cận', 'giao hàng', 'đổi trả'],
+    },
+    /* PROVISIONAL — owner: Vivimoon. The policy windows below (7 days, 30 days,
+       300.000₫) are plausible rather than confirmed. */
+    service: {
+      topicsTitle: 'Chọn chủ đề bạn cần',
+      policiesTitle: 'Chính sách nhanh',
+      trackingTitle: 'Theo dõi đơn hàng của bạn',
+      contactTitle: 'Vẫn cần người thật?',
+      contactSubtitle: 'Vivimoon trả lời trong giờ hành chính, thứ Hai đến thứ Bảy.',
+      channels: {
+        hotline: 'Hotline',
+        email: 'Email',
+        messenger: 'Messenger',
+        zalo: 'Zalo',
+      },
+      policies: {
+        shipping: { title: 'Giao hàng & phí vận chuyển', body: 'Nội thành 1–2 ngày làm việc, tỉnh xa 3–5 ngày. Miễn phí vận chuyển cho đơn từ 300.000₫.' },
+        returns: { title: 'Đổi trả', body: 'Đổi trả trong 7 ngày kể từ khi nhận hàng, với sản phẩm còn nguyên tem niêm phong.' },
+        warranty: { title: 'Bảo hành', body: 'Lens lỗi do nhà sản xuất được đổi mới trong 30 ngày, kèm ảnh chụp tem và vỉ.' },
+        payment: { title: 'Thanh toán', body: 'Chuyển khoản, ví điện tử, thẻ nội địa và quốc tế, hoặc thanh toán khi nhận hàng.' },
+      },
     },
     topics: {
       'nguoi-moi-deo-lens': 'Người mới đeo lens',

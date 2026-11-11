@@ -42,4 +42,43 @@ describe('TrackingRequestForm', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Get tracking link' }));
     expect(await screen.findByText('/orders/track/trk-123')).toBeInTheDocument();
   });
+
+  /**
+   * Until #122 this branch did nothing at all: the button un-disabled and the page
+   * said nothing, so a shopper could not tell whether the lookup had been sent. That
+   * form now also sits on the Support hub — the page people reach *because* something
+   * has already gone wrong.
+   */
+  it('says so when the request does not go through', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockRejectedValue(new Error('offline')));
+    render(<TrackingRequestForm dict={dict} />);
+
+    await userEvent.type(screen.getByLabelText('Order code'), 'VVM-ABCD1234');
+    await userEvent.type(screen.getByLabelText('Phone or email'), '0912345678');
+    await userEvent.click(screen.getByRole('button', { name: 'Get tracking link' }));
+
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveTextContent(dict.error);
+    // The envelope's own message is English-only, so it is never the thing shown (#64).
+    expect(alert).not.toHaveTextContent('Something went wrong');
+  });
+
+  /** A retry clears the last failure, or the form reads as still broken. */
+  it('clears a failure when the next attempt succeeds', async () => {
+    const fetchMock = vi.fn()
+      .mockRejectedValueOnce(new Error('offline'))
+      .mockResolvedValueOnce(ok({ message: 'If that order exists, a tracking link has been sent.' }));
+    vi.stubGlobal('fetch', fetchMock);
+    render(<TrackingRequestForm dict={dict} />);
+
+    await userEvent.type(screen.getByLabelText('Order code'), 'VVM-ABCD1234');
+    await userEvent.type(screen.getByLabelText('Phone or email'), '0912345678');
+    await userEvent.click(screen.getByRole('button', { name: 'Get tracking link' }));
+    expect(await screen.findByRole('alert')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Get tracking link' }));
+
+    expect(await screen.findByText(/tracking link has been sent/)).toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
 });

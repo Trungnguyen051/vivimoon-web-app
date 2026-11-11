@@ -14,17 +14,35 @@ export function TrackingRequestForm({ dict }: { dict: Dictionary['tracking'] }) 
   const [identifier, setIdentifier] = useState('');
   const [busy, setBusy] = useState(false);
   const [ack, setAck] = useState<TrackingAck | null>(null);
+  const [failed, setFailed] = useState(false);
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
     setBusy(true);
+    setFailed(false);
     const result = await apiRequest<TrackingAck>('/api/orders/track', {
       method: 'POST', body: { code, identifier },
     });
     setBusy(false);
+
     // Same envelope either way (issue #11) — nothing here branches on
     // whether the order actually existed.
-    if (result.ok) setAck(result.data);
+    if (result.ok) {
+      setAck(result.data);
+      return;
+    }
+
+    /* A request that did not go through is not the same as an order that was not
+       found, and until #122 this branch did nothing at all: the button un-disabled
+       and the page said nothing, leaving a shopper unable to tell whether the lookup
+       had been sent. That now shows on the Support hub, which is the page people
+       reach *because* something has already gone wrong.
+
+       The envelope's own message is not shown — it is authored in English, by the
+       route or by `apiRequest`, and would land unchanged on the Vietnamese
+       storefront (#64). */
+    setAck(null);
+    setFailed(true);
   }
 
   return (
@@ -44,8 +62,17 @@ export function TrackingRequestForm({ dict }: { dict: Dictionary['tracking'] }) 
         <Button type="submit" disabled={busy} size="xl">{dict.submit}</Button>
       </form>
 
+      {failed ? (
+        <Alert role="alert" variant="destructive">
+          <AlertDescription>{dict.error}</AlertDescription>
+        </Alert>
+      ) : null}
+
       {ack ? (
-        <Alert>
+        /* A confirmation is polite, not assertive — and `Alert` defaults to
+           `role="alert"`, which would also make it indistinguishable from the failure
+           above it to anything querying by role. */
+        <Alert role="status">
           <AlertDescription className="flex flex-col gap-2">
             <span>{ack.message}</span>
             {ack.devLink ? (
