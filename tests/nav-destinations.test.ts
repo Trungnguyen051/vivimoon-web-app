@@ -1,13 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { existsSync, readdirSync } from 'node:fs';
-import { join } from 'node:path';
 import { locales, type Locale } from '@/lib/i18n/config';
 import { facetHrefs } from '@/lib/products/lens-facets';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { catalog } from '@/lib/api/resources/catalog';
 import { getNavItems, type NavItem } from '@/components/layout/nav-items';
-
-const SEGMENT_ROOT = join('app', '[locale]');
+import { SEGMENT_ROOT, pathSegments, resolveRoute } from './route-tree';
 
 /**
  * `NavItem` used to carry a third kind — inert `text`, for an item with nowhere to
@@ -20,6 +17,9 @@ const SEGMENT_ROOT = join('app', '[locale]');
  * slug, and the page calls `notFound()` when the catalog has no such collection —
  * so renaming a collection in the fixtures would leave a green build and a nav link
  * that 404s. A dynamic match is therefore checked against the real data too.
+ *
+ * The resolver itself lives in `route-tree.ts`, shared with the guard over authored
+ * content links (`authored-links.test.ts`).
  */
 
 /**
@@ -42,61 +42,8 @@ function navHrefs(): string[] {
   );
 }
 
-/**
- * The path below the locale prefix, which is what the App Router matches on.
- *
- * A query string and a fragment are cut first, because neither is part of the route: a
- * Lens Facet value points at `…/collection/all-lenses?color=brown` and a facet name at
- * that collection with its filter control focused (#87), and the router matches both on
- * the path alone. Splitting on whichever delimiter comes first is what makes a fragment
- * containing a `?` — a legal URL — resolve the same as one without.
- */
-function routeSegments(href: string): string[] {
-  const path = href.split(/[?#]/, 1)[0];
-  return path.split('/').filter(Boolean).slice(1);
-}
-
-/**
- * Resolve one URL path against the App Router's directory layout, reporting whether a
- * `[param]` directory did any of the matching. Three conventions matter: a segment may
- * be matched by a literal directory or a dynamic one, and a `(group)` directory is
- * transparent to the URL, so a route can live a level deeper on disk than its path.
- */
-function resolveRoute(dir: string, segments: string[], viaDynamic = false): { viaDynamic: boolean } | null {
-  if (segments.length === 0) return existsSync(join(dir, 'page.tsx')) ? { viaDynamic } : null;
-  if (!existsSync(dir)) return null;
-
-  const [head, ...rest] = segments;
-  const dirs = readdirSync(dir, { withFileTypes: true })
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name);
-
-  // Most specific first, as the router itself resolves: a literal directory beats
-  // a dynamic one. Taking whichever `readdir` happened to yield first would let
-  // `/en/about` match `[...rest]` and report the About page as dynamic.
-  if (dirs.includes(head)) {
-    const hit = resolveRoute(join(dir, head), rest, viaDynamic);
-    if (hit) return hit;
-  }
-
-  // `[slug]` but never `[...rest]`: that catch-all exists purely to throw
-  // `notFound()` (#73), so a nav href whose only match is the catch-all is
-  // precisely the dead link this file is here to catch. Resolving through it
-  // would make the whole guard vacuous.
-  for (const name of dirs.filter((n) => /^\[[^.]+\]$/.test(n))) {
-    const hit = resolveRoute(join(dir, name), rest, true);
-    if (hit) return hit;
-  }
-
-  // A route group adds a directory level but no URL segment, so the whole
-  // remaining path is retried inside it.
-  for (const name of dirs.filter((n) => /^\(.+\)$/.test(n))) {
-    const hit = resolveRoute(join(dir, name), segments, viaDynamic);
-    if (hit) return hit;
-  }
-
-  return null;
-}
+/** Nav hrefs are built under a locale prefix, which is not part of the route. */
+const routeSegments = (href: string) => pathSegments(href, { stripLocale: true });
 
 describe('nav destinations', () => {
   it('points every nav item at a route that exists', () => {

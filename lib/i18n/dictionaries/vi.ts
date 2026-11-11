@@ -257,6 +257,20 @@ export const vi: Dictionary = {
   },
   support: {
     comingSoon: 'Trung tâm hỗ trợ đang được hoàn thiện. Trong lúc chờ, đường dây nóng và email ở chân trang luôn có người trả lời.',
+    topics: {
+      'nguoi-moi-deo-lens': 'Người mới đeo lens',
+      'chon-lens-va-do-can': 'Chọn lens & độ cận',
+      'don-hang-va-thanh-toan': 'Đơn hàng & thanh toán',
+      'giao-hang': 'Giao hàng',
+      'doi-tra-va-bao-hanh': 'Đổi trả & bảo hành',
+      'tai-khoan-va-uu-dai': 'Tài khoản & ưu đãi',
+    },
+    faq: {
+      title: 'Câu hỏi thường gặp',
+      allTopics: 'Tất cả',
+      topicNav: 'Chủ đề hỗ trợ',
+      answerLinks: 'Xem thêm',
+    },
   },
   notFound: {
     title: 'Không tìm thấy trang này',

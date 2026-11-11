@@ -44,7 +44,7 @@ describe('resolveMode', () => {
   });
 
   it('exposes every resource name', () => {
-    expect(RESOURCES).toEqual(['catalog', 'identity', 'discovery', 'commerce', 'editorial']);
+    expect(RESOURCES).toEqual(['catalog', 'identity', 'discovery', 'commerce', 'editorial', 'support']);
   });
 
   it('reads timeout with a default', () => {

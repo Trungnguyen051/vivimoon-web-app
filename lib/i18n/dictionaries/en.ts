@@ -254,6 +254,22 @@ export const en = {
   },
   support: {
     comingSoon: 'Our support centre is on its way. Until it lands, the hotline and email in the footer reach a person.',
+    /* A Topic's name is chrome, so it lives here and gets the parity the `Dictionary`
+       type gives UI copy; the fixtures carry only the slug. */
+    topics: {
+      'nguoi-moi-deo-lens': 'New to lenses',
+      'chon-lens-va-do-can': 'Choosing lenses & power',
+      'don-hang-va-thanh-toan': 'Orders & payment',
+      'giao-hang': 'Delivery',
+      'doi-tra-va-bao-hanh': 'Returns & warranty',
+      'tai-khoan-va-uu-dai': 'Account & offers',
+    },
+    faq: {
+      title: 'Frequently asked questions',
+      allTopics: 'All',
+      topicNav: 'Help topics',
+      answerLinks: 'Read more',
+    },
   },
   notFound: {
     title: 'We cannot find that page',

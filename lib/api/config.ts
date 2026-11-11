@@ -6,12 +6,19 @@
  * identity users, so it must not go upstream while either is still mocked —
  * fixture IDs will not match real ones and references dangle.
  */
-export const RESOURCES = ['catalog', 'identity', 'discovery', 'commerce', 'editorial'] as const;
+export const RESOURCES = ['catalog', 'identity', 'discovery', 'commerce', 'editorial', 'support'] as const;
 export type ResourceName = (typeof RESOURCES)[number];
 
 export type ApiMode = 'mock' | 'upstream';
 
-/** Resources that must already be upstream before the key may go upstream. */
+/**
+ * Resources that must already be upstream before the key may go upstream.
+ *
+ * `support` is absent deliberately, as `editorial` is: a FAQ Entry references no
+ * product and no article *id*. Its answer links are route paths, checked against the
+ * route tree by `tests/authored-links.test.ts` rather than resolved against another
+ * resource's fixtures — so help content can migrate without waiting on catalog.
+ */
 const DEPENDS_ON: Partial<Record<ResourceName, ResourceName[]>> = {
   discovery: ['catalog'],
   commerce: ['catalog', 'identity'],
