@@ -3,6 +3,7 @@ import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { Separator } from '@/components/ui/separator';
 import { Logo } from './logo';
+import { contactEmail, contactHotline } from '@/lib/support/contact-channels';
 
 export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const policyLinks = [
@@ -40,15 +41,22 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
               <p className="text-xs font-medium tracking-wide text-background/60 uppercase">
                 {dict.footer.customerCare}
               </p>
+              {/* From `lib/support/contact-channels.ts`, not spelled here. This file
+                  and the Support design had already drifted — `hello@vivimoon.com`
+                  against `vivimoon@gmail.com`, `1900 0000` against `0909.000.000` —
+                  and neither looked wrong on its own. */}
               <a
-                href="mailto:hello@vivimoon.com"
+                href={contactEmail().href}
                 className="text-sm text-background/80 transition-colors hover:text-background"
               >
-                hello@vivimoon.com
+                {contactEmail().value}
               </a>
-              <span className="text-sm text-background/70">
-                {dict.footer.hotline}: 1900 0000
-              </span>
+              <a
+                href={contactHotline().href}
+                className="text-sm text-background/70 transition-colors hover:text-background"
+              >
+                {dict.footer.hotline}: {contactHotline().value}
+              </a>
               <Link
                 href={`/${locale}/orders/track`}
                 className="text-sm text-background/80 transition-colors hover:text-background"
