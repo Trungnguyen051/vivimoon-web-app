@@ -90,7 +90,7 @@ export const vi: Dictionary = {
     invalid: 'Email này chưa đúng. Bạn kiểm tra lại giúp mình nhé.',
   },
   articles: {
-    title: 'Kiến thức', publishedOn: 'Đăng ngày', backToIndex: 'Tất cả bài viết',
+    title: 'Kiến thức', backToIndex: 'Tất cả bài viết',
     subtitle: 'Từ lần đầu đeo lens đến ngày cận thật xinh — Vivimoon kể hết cho bạn nè.',
     /* The chip row. `allThemes` is the absence of a filter, not a seventh Reading Theme. */
     allThemes: 'Tất cả',
@@ -114,6 +114,12 @@ export const vi: Dictionary = {
     showMore: 'Xem thêm bài viết',
     readingTime: '{count} phút đọc',
     makeupLooksTitle: 'Lens lên mắt trông thế nào?',
+    inThisArticle: 'Lens cho chủ đề này',
+    collectionBannerTitle: 'Xem cả bộ sưu tập',
+    /* Vietnamese has one form; the key is still a record so both locales share a
+       shape and `Dictionary` holds the parity. */
+    collectionBannerCount: { one: '{count} sản phẩm đang có', other: '{count} sản phẩm đang có' },
+    collectionBannerCta: 'Xem bộ sưu tập',
     noResults: 'Chưa có bài viết nào ở đây',
     showAll: 'Xem tất cả bài viết',
   },

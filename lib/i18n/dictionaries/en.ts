@@ -88,7 +88,7 @@ export const en = {
     invalid: 'That does not look like an email address.',
   },
   articles: {
-    title: 'Knowledge', publishedOn: 'Published', backToIndex: 'All articles',
+    title: 'Knowledge', backToIndex: 'All articles',
     subtitle: 'From your very first lens to the day you graduate — Vivimoon tells you everything.',
     /* The chip row. `allThemes` is the absence of a filter, not a seventh Reading Theme. */
     allThemes: 'All',
@@ -112,6 +112,10 @@ export const en = {
     showMore: 'Show more articles',
     readingTime: '{count} min read',
     makeupLooksTitle: 'How these lenses look on a face',
+    inThisArticle: 'Lenses for this subject',
+    collectionBannerTitle: 'See the whole collection',
+    collectionBannerCount: { one: '{count} product available', other: '{count} products available' },
+    collectionBannerCta: 'Browse the collection',
     noResults: 'No articles here yet',
     showAll: 'Show all articles',
   },
