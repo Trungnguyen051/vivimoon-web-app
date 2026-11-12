@@ -26,7 +26,7 @@ export function SignUpForm({ locale, dict }: { locale: Locale; dict: Dict }) {
   const router = useRouter();
   const next = useSearchParams().get('next');
   const setUser = useSessionStore((s) => s.setUser);
-  const [challenge, setChallenge] = useState<(OtpChallenge & { phone: string }) | null>(null);
+  const [challenge, setChallenge] = useState<(OtpChallenge & { values: RegisterInput }) | null>(null);
   const [serverError, setServerError] = useState<string | null>(null);
   const {
     register, handleSubmit, formState: { errors, isSubmitting },
@@ -54,14 +54,14 @@ export function SignUpForm({ locale, dict }: { locale: Locale; dict: Dict }) {
       setServerError(result.error.message);
       return;
     }
-    setChallenge({ ...result.data, phone: values.phone });
+    setChallenge({ ...result.data, values });
   }
 
   if (challenge) {
     return (
       <OtpStage
         dict={dict} challenge={challenge} onVerified={done}
-        onChallenge={(c) => setChallenge({ ...c, phone: challenge.phone })}
+        onChallenge={(c) => setChallenge({ ...c, values: challenge.values })}
       />
     );
   }
@@ -137,7 +137,7 @@ export function SignUpForm({ locale, dict }: { locale: Locale; dict: Dict }) {
 
 function OtpStage({ dict, challenge, onChallenge, onVerified }: {
   dict: Dict;
-  challenge: OtpChallenge & { phone: string };
+  challenge: OtpChallenge & { values: RegisterInput };
   onChallenge: (c: OtpChallenge) => void;
   onVerified: (user: User) => void;
 }) {
@@ -164,9 +164,8 @@ function OtpStage({ dict, challenge, onChallenge, onVerified }: {
 
   async function resend() {
     setError(null);
-    const result = await apiRequest<OtpChallenge>('/api/auth/otp/request', {
-      method: 'POST', body: { identifier: challenge.phone, purpose: 'signup' },
-    });
+    // Re-register rather than request a bare OTP: the new challenge then carries this shopper's own details.
+    const result = await apiRequest<OtpChallenge>('/api/auth/register', { method: 'POST', body: challenge.values });
     if (!result.ok) {
       setError(result.error.message);
       return;
@@ -204,7 +203,7 @@ function OtpStage({ dict, challenge, onChallenge, onVerified }: {
     <form onSubmit={verify} noValidate className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-semibold uppercase tracking-tight">{dict.otpHeading}</h1>
-        <p className="text-sm text-muted-foreground">{dict.otpSent.replace('{phone}', challenge.phone)}</p>
+        <p className="text-sm text-muted-foreground">{dict.otpSent.replace('{phone}', challenge.values.phone)}</p>
       </div>
       {challenge.devCode ? (
         <Alert><AlertDescription>{dict.devCodeNotice} {challenge.devCode}</AlertDescription></Alert>

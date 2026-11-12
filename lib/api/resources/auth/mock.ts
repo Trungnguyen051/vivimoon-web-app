@@ -100,12 +100,6 @@ export const mockAuth = {
     const otpId = randomId('otp');
     const code = randomCode();
     const expiresAt = Date.now() + OTP_TTL_MS;
-    // A resend carries the latest registration held for that phone to the fresh challenge.
-    if (purpose === 'signup') {
-      const phone = normalizePhone(identifier);
-      const prior = [...otps].filter(([id, r]) => r.purpose === 'signup' && normalizePhone(r.identifier) === phone && pendingSignups.has(id)).pop();
-      if (prior) pendingSignups.set(otpId, pendingSignups.get(prior[0])!);
-    }
     otps.set(otpId, { identifier, code, purpose, expiresAt, attempts: 0 });
     return {
       otpId,

@@ -145,8 +145,8 @@ describe('SignUpForm', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Resend code' }));
 
     expect(await screen.findByText(/999999/)).toBeInTheDocument();
-    expect(fetchMock.mock.calls[1][0]).toBe('/api/auth/otp/request');
-    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ identifier: '0912345678', purpose: 'signup' });
+    expect(fetchMock.mock.calls[1][0]).toBe('/api/auth/register');
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual(JSON.parse(fetchMock.mock.calls[0][1].body));
     expect(screen.getByText('Expires in 60s')).toBeInTheDocument();
   });
 

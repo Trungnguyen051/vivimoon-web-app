@@ -46,10 +46,16 @@ describe('mockAuth', () => {
     await expect(mockAuth.login({ identifier: '0911111114', password: 'password-B1' })).rejects.toThrow(/invalid/i);
   });
 
-  it('a resent challenge verifies the same pending signup', async () => {
+  it('a resend (registering again) verifies with the same details', async () => {
     await mockAuth.register({ phone: '0911111113', name: 'Mới', password: 'abcdefgh' });
-    const again = await mockAuth.requestOtp({ identifier: '0911111113', purpose: 'signup' });
+    const again = await mockAuth.register({ phone: '0911111113', name: 'Mới', password: 'abcdefgh' });
     expect((await mockAuth.verifyOtp({ otpId: again.otpId, code: again.devCode! })).kind).toBe('session');
+  });
+
+  it('a bare signup OTP for a pending phone carries no registration and cannot create the account', async () => {
+    await mockAuth.register({ phone: '0911111115', name: 'Victim', password: 'abcdefgh' });
+    const bare = await mockAuth.requestOtp({ identifier: '0911111115', purpose: 'signup' });
+    await expect(mockAuth.verifyOtp({ otpId: bare.otpId, code: bare.devCode! })).rejects.toThrow();
   });
 
   it('refuses to register a phone already in use, in either form', async () => {

@@ -11,3 +11,5 @@ So registration does not start a session. It issues a `signup` OTP challenge, an
 ## Consequences
 
 A shopper who abandons the OTP screen has no account and must sign up again. Email is still accepted as a sign-in identifier behind a phone-labelled field so existing email accounts keep working, but the sign-up form no longer offers email. Resend is the only recovery path on the OTP screen: when the countdown ends, the expiry text becomes a "Gửi lại mã" link in the same spot.
+
+Resend re-submits the registration rather than requesting a bare `signup` OTP. A pending registration is held per challenge, never per phone, so each challenge can only ever create the account its own submitter typed: a second sign-up for the same number, or a resend, cannot swap in someone else's password before the phone's owner verifies.
