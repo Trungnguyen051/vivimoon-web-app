@@ -209,6 +209,7 @@ export const vi: Dictionary = {
     unavailableBlocksCheckout: 'Vui lòng xóa sản phẩm không còn bán để tiếp tục.',
     priceError: 'Không cập nhật được tổng tiền. Vui lòng thử lại.',
     eyes: { left: 'Mắt trái', right: 'Mắt phải' },
+    tierDiscount: 'Ưu đãi đơn từ {threshold}',
   },
   spendTier: {
     remaining: {

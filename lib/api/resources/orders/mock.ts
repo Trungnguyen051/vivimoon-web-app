@@ -130,6 +130,7 @@ export const mockOrders = {
         // least one did — an all-unavailable cart never reaches here.
         currency: priced.currency!,
       },
+      ...(priced.gifts?.length ? { gifts: priced.gifts } : {}),
       address: input.address,
       ...(priced.shippingMethod ? { shippingMethod: priced.shippingMethod } : {}),
       payment: { method: input.paymentMethod, status: 'pending' },

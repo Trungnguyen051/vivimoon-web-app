@@ -14,6 +14,8 @@ import { accessoryLine } from '@/features/cart/accessory-line';
 import { useSessionStore } from '@/features/session/session-store';
 import type { CartLine } from '@/features/cart/cart.types';
 import { formatPrice } from '@/lib/utils/format';
+import { cn } from '@/lib/utils/cn';
+import { TIER_GIFT_VARIANT_ID } from '@/lib/api/resources/pricing/spend-tiers';
 import { CartLineItem } from './cart-line-item';
 import { SpendTierProgress } from './spend-tier-progress';
 import { formatPowers } from './line-summary';
@@ -56,7 +58,8 @@ function MiniCartBody({ locale, dict, accessories, close }: {
 
   const suggestions = result?.nextSpendTier?.reward === 'freeShipping'
     ? accessories
-      .filter((a) => !a.giftOnly && !lines.some((l) => l.productId === a.id))
+      // Never suggest a Gift: the gift-only kit, or the tray the 500.000₫ tier gives free.
+      .filter((a) => !a.giftOnly && a.variants[0].id !== TIER_GIFT_VARIANT_ID && !lines.some((l) => l.productId === a.id))
       .sort((a, b) => a.variants[0].price - b.variants[0].price)
       .slice(0, SUGGESTIONS)
     : [];
@@ -84,7 +87,11 @@ function MiniCartBody({ locale, dict, accessories, close }: {
 
       <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
         {result ? (
-          <SpendTierProgress next={result.nextSpendTier} currency={result.currency ?? currency} locale={locale} dict={dict} />
+          <SpendTierProgress
+            next={result.nextSpendTier} currency={result.currency ?? currency} locale={locale} dict={dict}
+            // Full-bleed between dividers on a phone (197:431), a card from sm up (57:2).
+            className="-mx-4 -mt-4 rounded-none border-b bg-transparent sm:mx-0 sm:mt-0 sm:rounded-lg sm:border-0 sm:bg-muted/60"
+          />
         ) : null}
 
         {lines.length === 0 ? (
@@ -147,7 +154,7 @@ function MiniCartBody({ locale, dict, accessories, close }: {
             <Lock aria-hidden className="size-4.5" />
             {dict.cart.checkout}
           </Link>
-          <Link href={`/${locale}/cart`} onClick={close} className={buttonVariants({ size: 'xl', variant: 'outline', className: 'w-full' })}>
+          <Link href={`/${locale}/cart`} onClick={close} className={cn(buttonVariants({ size: 'xl', variant: 'outline' }), 'w-full border-foreground')}>
             {t.viewCart}
           </Link>
         </div>

@@ -63,6 +63,7 @@ export function AddToCart({
       productId: product.id, variantId: variant.id, name: product.name, sku: variant.sku,
       color: variant.colorLabel, unitPrice: variant.price * lenses,
       currency: variant.currency, quantity: qty, image: product.images[0],
+      productLine: product.productLine, replacement: product.replacement,
       ...(unit ? { purchaseUnit: unit, rx } : {}),
     };
   };

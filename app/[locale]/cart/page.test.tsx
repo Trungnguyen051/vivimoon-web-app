@@ -6,7 +6,9 @@ import { useCartStore } from '@/features/cart/cart-store';
 import { CartView } from './cart-view';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import type { CartLine } from '@/features/cart/cart.types';
-import type { PricedCart } from '@/lib/api/schemas/cart';
+import type { PriceCartRequest, PricedCart } from '@/lib/api/schemas/cart';
+import { mockPricing } from '@/lib/api/resources/pricing/mock';
+import { formatPrice } from '@/lib/utils/format';
 
 vi.mock('@/lib/api/client', () => ({ apiRequest: vi.fn() }));
 const mockedApiRequest = vi.mocked(apiRequest);
@@ -189,5 +191,29 @@ describe('CartPage', () => {
     useCartStore.setState({ lines: [], hydrated: false });
     await renderCartPage();
     expect(screen.queryByText('Your cart is empty')).not.toBeInTheDocument();
+  });
+});
+
+describe('CartPage — Spend Tier discount (#198)', () => {
+  it('shows the 800.000₫ tier as its own row, so the rows add up to the total', async () => {
+    // The real pricing: 7 x 125.000 = 875.000 single lenses, over the 800.000 tier.
+    mockedApiRequest.mockImplementation(async (_url, init) =>
+      ({ ok: true, data: await mockPricing.priceCart(init!.body as PriceCartRequest) }) as never);
+    useCartStore.setState({
+      lines: [makeLine({ lineKey: 'k', variantId: 'p-aqua-daily-30', quantity: 7, purchaseUnit: 'single', rx: { sph: -2.5 } })],
+      hydrated: true,
+    });
+    await renderCartPage();
+    const dict = getDictionary('en');
+    const vnd = (n: number) => formatPrice(n, 'VND', 'en');
+    const row = (label: string) => screen.getByText(label).parentElement!.lastElementChild!.textContent;
+
+    await waitFor(() => expect(screen.getByText(dict.cart.discount)).toBeInTheDocument());
+    const priced = await mockPricing.priceCart({ lines: [{ lineKey: 'k', variantId: 'p-aqua-daily-30', quantity: 7, purchaseUnit: 'single', rx: { sph: -2.5 } }] });
+    expect(row(dict.cart.subtotal)).toBe(vnd(875_000));
+    expect(row(dict.cart.discount)).toBe(`-${vnd(priced.discount)}`);
+    expect(row(dict.cart.tierDiscount.replace('{threshold}', vnd(800_000)))).toBe(`-${vnd(50_000)}`);
+    expect(row(dict.cart.shipping)).toBe(dict.cart.free);
+    expect(row(dict.cart.total)).toBe(vnd(875_000 - priced.discount - 50_000));
   });
 });

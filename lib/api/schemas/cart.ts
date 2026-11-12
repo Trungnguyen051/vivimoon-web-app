@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { currencySchema } from './catalog';
+import { currencySchema, productLineSchema, replacementScheduleSchema } from './catalog';
 import { lineRxSchema, purchaseUnitSchema, refineUnitMatchesRx } from './rx';
 
 /** The most units one line may carry — in a cart, a price request, or an order. */
@@ -39,6 +39,9 @@ export const cartLineSchema = z.object({
   purchaseUnit: purchaseUnitSchema.optional(),
   rx: lineRxSchema.optional(),
   bundle: bundleTagSchema,
+  // A lens's line and replacement, so the mini cart can title it "Sandkiss · Có màu 1 tháng" (Figma 57:2).
+  productLine: productLineSchema.optional(),
+  replacement: replacementScheduleSchema.optional(),
 }).superRefine(refineUnitMatchesRx);
 
 export const cartStateSchema = z.object({

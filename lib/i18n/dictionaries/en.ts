@@ -206,6 +206,7 @@ export const en = {
     unavailableBlocksCheckout: 'Remove unavailable items to continue.',
     priceError: 'We couldn’t update your total. Please try again.',
     eyes: { left: 'Left eye', right: 'Right eye' },
+    tierDiscount: 'Orders from {threshold}',
   },
   // Spend Tiers (CONTEXT.md): {amount}, {threshold} and {value} are formatted prices.
   spendTier: {

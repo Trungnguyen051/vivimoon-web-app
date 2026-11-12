@@ -16,7 +16,7 @@ const dict = getDictionary('vi');
 
 const sandkiss = (left: number, right: number): CartLine => ({
   lineKey: lineKey('v-sandkiss', { left: { sph: left }, right: { sph: right } }), productId: 'p-sandkiss', variantId: 'v-sandkiss', name: 'Sandkiss', sku: 'SK', unitPrice: 190_000,
-  currency: 'VND', quantity: 1, purchaseUnit: 'pair',
+  currency: 'VND', quantity: 1, purchaseUnit: 'pair', productLine: 'coMau', replacement: 'monthly',
   rx: { sameBothEyes: false, left: { sph: left }, right: { sph: right } },
 });
 
@@ -55,6 +55,7 @@ describe('MiniCart', () => {
     open([sandkiss(-2.5, -3)]);
     const drawer = screen.getByRole('dialog');
     expect(within(drawer).getByText('Đã thêm Sandkiss (L −2.50 · R −3.00) vào giỏ')).toBeTruthy();
+    expect(within(drawer).getByText('Sandkiss · Có màu 1 tháng')).toBeTruthy();
     expect(await within(drawer).findByText('Mua thêm 110.000₫ để được Freeship')).toBeTruthy();
     expect(within(drawer).getByRole('heading', { name: dict.miniCart.upsell })).toBeTruthy();
     expect(within(drawer).getByRole('link', { name: dict.cart.checkout })).toBeTruthy();
@@ -63,8 +64,10 @@ describe('MiniCart', () => {
 
   it('adds a suggested accessory in one tap', async () => {
     open([sandkiss(-2.5, -3)]);
-    fireEvent.click(await screen.findByRole('button', { name: 'Thêm Khay đựng + dụng cụ vào giỏ' }));
-    expect(useCartStore.getState().lines.map((l) => l.variantId)).toEqual(['v-sandkiss', 'a-khay-dung-set']);
+    fireEvent.click(await screen.findByRole('button', { name: 'Thêm Nước nhỏ mắt 15ml vào giỏ' }));
+    expect(useCartStore.getState().lines.map((l) => l.variantId)).toEqual(['v-sandkiss', 'a-nuoc-nho-mat-15']);
+    // The tray is the 500.000₫ tier's Gift, so it is never suggested.
+    expect(screen.queryByRole('button', { name: /Khay đựng/ })).toBeNull();
   });
 
   it('re-keys an edited line and merges it into an identical one', () => {

@@ -165,6 +165,14 @@ describe('mockOrders.place', () => {
     expect(order.totals.shipping).toBe(30_000);
   });
 
+  it('records the Gifts pricing gave at 0₫, and none when there are none', async () => {
+    const order = await mockOrders.place(req({ lines: [{ lineKey: 't', variantId: 'p-torica-biweekly-6', quantity: 1, ...SINGLE }] }), null);
+    expect(order.gifts).toEqual([
+      expect.objectContaining({ variantId: 'a-kits-yeu-mat-1', name: 'Kits Yêu Mắt', quantity: 1, lineTotal: 0 }),
+    ]);
+    expect((await mockOrders.place(req({ lines: [BASELINE_LINES[0]] }), null)).gifts).toBeUndefined();
+  });
+
   it('records the charged shipping option as the shipping method, with no carrier code yet', async () => {
     const order = await mockOrders.place(req(), null);
     expect(order.shippingMethod).toBe('standard');

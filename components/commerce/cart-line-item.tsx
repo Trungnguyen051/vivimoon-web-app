@@ -46,7 +46,11 @@ export function CartLineItem({
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <p className="font-medium leading-snug">{line.name}</p>
+            <p className="font-medium leading-snug">
+              {compact && line.productLine && line.replacement
+                ? `${line.name} · ${dict.filters.productLines[line.productLine]} ${dict.filters.replacements[line.replacement]}`
+                : line.name}
+            </p>
             {accessory ? (
               <AccessoryOptionPicker line={line} accessory={accessory} dict={dict} disabled={unavailable} onVariant={onVariant} />
             ) : compact ? null : (
