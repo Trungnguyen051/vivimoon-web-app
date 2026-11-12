@@ -1,5 +1,6 @@
 import { describe, it, expect, vi as vitest } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ProductCard } from './product-card';
 import type { Product } from '@/lib/types';
 import { en } from '@/lib/i18n/dictionaries/en';
@@ -55,10 +56,11 @@ describe('ProductCard', () => {
     expect(screen.getByText('+2 màu')).toBeInTheDocument();
   });
 
-  it('has a favourite heart and an add-to-cart that opens the PDP until Quick add lands', () => {
+  it('has a favourite heart and an add-to-cart that opens Quick add for the product', async () => {
     render(<ProductCard product={product} locale="vi" dict={vi} />);
     expect(screen.getByRole('button', { name: 'Thêm Aqua Daily vào yêu thích' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Thêm vào giỏ Aqua Daily' })).toHaveAttribute('href', '/vi/product/aqua');
+    await userEvent.click(screen.getByRole('button', { name: 'Thêm vào giỏ Aqua Daily' }));
+    expect(screen.getByRole('dialog', { name: 'Aqua Daily' })).toBeInTheDocument();
   });
 
   it("shows the chosen view's image", () => {

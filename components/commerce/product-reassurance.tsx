@@ -3,6 +3,9 @@ import { Check, RefreshCw, ShieldCheck } from 'lucide-react';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
+/** The FAQ category holding the return policy, under `/{locale}/support/`. */
+export const RETURNS_FAQ = 'faq?category=doi-tra-va-bao-hanh';
+
 /**
  * Under the buy buttons: the trust row and the return policy, open by default because
  * most shoppers don't know the policy exists (spec #190). The period and the lenses it

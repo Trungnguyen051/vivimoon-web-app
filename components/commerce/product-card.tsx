@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShoppingBag } from 'lucide-react';
 import type { Product } from '@/lib/types';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
@@ -8,8 +7,7 @@ import { PriceTag } from './price-tag';
 import { CompareToggle } from './compare-toggle';
 import { FavoriteButton } from './favorite-button';
 import { RatingStars } from './rating-stars';
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils/cn';
+import { QuickAdd } from './quick-add';
 import { formatCount } from '@/lib/utils/format';
 import { distinctColorVariants } from '@/lib/products/variant-colors';
 import { cheapestVariant } from '@/lib/products/cheapest-variant';
@@ -129,16 +127,13 @@ export function ProductCard({
         </div>
       </div>
 
-      {/* Links to the PDP until Quick add (#197) lands. */}
-      <Link
-        href={href}
-        onClick={onSelect}
-        aria-label={`${dict.common.addToCart} ${product.name}`}
-        className={cn(buttonVariants({ variant: 'outline' }), 'mt-auto h-10 w-full gap-2 rounded-none border-foreground text-sm')}
-      >
-        <ShoppingBag className="size-4 md:size-5" aria-hidden />
-        {dict.common.addToCart}
-      </Link>
+      <QuickAdd
+        product={product}
+        locale={locale}
+        dict={dict}
+        onSelect={onSelect}
+        className="mt-auto h-10 w-full gap-2 rounded-none border-foreground text-sm"
+      />
     </div>
   );
 }
