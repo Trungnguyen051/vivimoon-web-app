@@ -6,7 +6,7 @@ import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { Truck } from 'lucide-react';
 import { VariantSelector } from './variant-selector';
-import { RxSelector, emptyRxDraft, type RxDraft } from './rx-selector';
+import { RxSelector, defaultRxDraft, draftToRx, type RxDraft } from './rx-selector';
 import { PriceTag } from './price-tag';
 import { QuantityStepper } from './quantity-stepper';
 import { Button } from '@/components/ui/button';
@@ -14,10 +14,13 @@ import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/features/cart/use-cart';
 import { useBuyNow } from '@/features/cart/use-buy-now';
 import { lineKey } from '@/lib/cart/line-key';
-import { RX_LENS_TYPE, rxSchemaForLensType } from '@/lib/api/schemas/rx';
+import { LENSES_PER_UNIT } from '@/lib/api/schemas/rx';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
 import { toGa4Items } from '@/lib/analytics/events';
 import type { CartLine } from '@/features/cart/cart.types';
+
+/** The support guide behind "Hướng dẫn chọn độ" (content/mock/support.ts). */
+const POWER_GUIDE_SLUG = 'chon-do-can-the-nao';
 
 export function AddToCart({ product, locale, dict }: { product: Product; locale: Locale; dict: Dictionary }) {
   const { add } = useCart();
@@ -26,33 +29,29 @@ export function AddToCart({ product, locale, dict }: { product: Product; locale:
   const { track } = useAnalytics();
   const [variant, setVariant] = useState<Variant>(product.variants[0]);
   const [qty, setQty] = useState(1);
-  const [rxDraft, setRxDraft] = useState<RxDraft>(emptyRxDraft);
-  // Tracks whether the shopper has touched the Rx controls at all. The button
-  // is `disabled` while invalid, which blocks its own click handler, so a
-  // "did they try to submit" flag can never fire from onAdd — the validation
-  // hint has to key off interaction with RxSelector instead.
-  const [touchedRx, setTouchedRx] = useState(false);
+  // Every power defaults to 0.00, so the draft is always a valid Rx and the
+  // buttons are never gated on it (designer note "Dev: default độ cận").
+  const [rxDraft, setRxDraft] = useState<RxDraft>(defaultRxDraft);
 
   useEffect(() => {
     track({ name: 'view_item', params: { items: toGa4Items([{ product, variant: product.variants[0] }]) } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product.id]);
 
-  // Only meaningful (and only parsed) when the product requires a prescription;
-  // a cosmetic product that doesn't collect one is never gated by this.
-  // RX_LENS_TYPE, not a product field: the product taxonomy carries no
-  // correction-complexity signal (ADR-0010), so no product can reach the
-  // toric/multifocal Rx branches.
-  const parsedRx = product.requiresRx ? rxSchemaForLensType(RX_LENS_TYPE).safeParse(rxDraft) : undefined;
-  const canAdd = !product.requiresRx || parsedRx?.success === true;
+  // A product that collects no Rx has no Purchase Unit either (ADR-0023).
+  const unit = product.requiresRx ? rxDraft.unit : undefined;
+  // Display only: the listed price is per lens and the buy box shows it per
+  // unit. Every amount the shopper pays comes from POST /api/cart/price.
+  const lenses = unit ? LENSES_PER_UNIT[unit] : 1;
 
   const buildLine = (): CartLine => {
-    const rx = product.requiresRx && parsedRx?.success ? parsedRx.data : undefined;
+    const rx = product.requiresRx ? draftToRx(rxDraft) : undefined;
     return {
       lineKey: lineKey(variant.id, rx),
       productId: product.id, variantId: variant.id, name: product.name, sku: variant.sku,
-      color: variant.colorLabel, unitPrice: variant.price,
-      currency: variant.currency, quantity: qty, image: product.images[0], rx,
+      color: variant.colorLabel, unitPrice: variant.price * lenses,
+      currency: variant.currency, quantity: qty, image: product.images[0],
+      ...(unit ? { purchaseUnit: unit, rx } : {}),
     };
   };
 
@@ -64,24 +63,22 @@ export function AddToCart({ product, locale, dict }: { product: Product; locale:
         // Sanctioned analytics snapshot (Global Constraint): GA4 requires a
         // `value` at add time, before any server price exists. Not a figure
         // shown to the shopper.
-        value: variant.price * qty,
+        value: variant.price * lenses * qty,
         items: toGa4Items([{ product, variant, quantity: qty }]),
       },
     });
   };
 
   const onAdd = () => {
-    if (product.requiresRx && !parsedRx?.success) return;
     add(buildLine());
     trackAddToCart();
   };
 
-  // Buy Now (spec §10): same Rx selection and validation as Add to Cart, but
-  // the line goes into the store's short-lived `buyNowLine` slice instead of
-  // `lines` — the real cart is never touched, so it survives an abandoned or
-  // completed buy-now checkout unchanged (app/[locale]/checkout/page.tsx).
+  // Buy Now (spec §10): same line as Add to Cart, but it goes into the store's
+  // short-lived `buyNowLine` slice instead of `lines` — the real cart is never
+  // touched, so it survives an abandoned or completed buy-now checkout
+  // unchanged (app/[locale]/checkout/page.tsx).
   const onBuyNow = () => {
-    if (product.requiresRx && !parsedRx?.success) return;
     setBuyNowLine(buildLine());
     trackAddToCart();
     router.push(`/${locale}/checkout`);
@@ -89,35 +86,42 @@ export function AddToCart({ product, locale, dict }: { product: Product; locale:
 
   return (
     <div className="flex flex-col gap-6">
-      <PriceTag price={variant.price} compareAtPrice={variant.compareAtPrice} currency={variant.currency} locale={locale} className="text-3xl" />
+      <div className="flex items-baseline gap-2">
+        <PriceTag
+          price={variant.price * lenses}
+          compareAtPrice={variant.compareAtPrice === undefined ? undefined : variant.compareAtPrice * lenses}
+          currency={variant.currency}
+          locale={locale}
+          className="text-3xl"
+        />
+        {unit ? <span className="text-base text-muted-foreground">{dict.pdp.perUnit[unit]}</span> : null}
+      </div>
       <Separator />
       <VariantSelector product={product} dict={dict} onVariantChange={setVariant} />
       {product.requiresRx ? (
-        <RxSelector
-          value={rxDraft}
-          onChange={(next) => { setRxDraft(next); setTouchedRx(true); }}
-          lensType={RX_LENS_TYPE}
-          dict={dict}
-        />
+        <RxSelector value={rxDraft} onChange={setRxDraft} guideHref={`/${locale}/support/guides/${POWER_GUIDE_SLUG}`} dict={dict} />
       ) : null}
-      <div className="flex items-center gap-4">
-        <span className="text-sm font-medium">{dict.pdp.quantity}</span>
+      <div className="flex flex-wrap items-center gap-4">
+        <span className="text-sm text-muted-foreground">{dict.pdp.quantity}</span>
         <QuantityStepper
           value={qty}
           onChange={(next) => setQty(Math.max(1, next))}
           decreaseLabel={dict.common.decreaseQty}
           increaseLabel={dict.common.increaseQty}
         />
+        {unit ? (
+          // Stock counts lenses; a pair takes two.
+          <span className="text-sm text-muted-foreground/80">
+            {dict.pdp.stockLeft[unit].replace('{count}', String(Math.floor(variant.stock / lenses)))}
+          </span>
+        ) : null}
       </div>
       <div className="flex flex-col gap-3">
-        <Button onClick={onAdd} disabled={!canAdd} size="xl" className="w-full">{dict.common.addToCart}</Button>
-        <Button onClick={onBuyNow} disabled={!canAdd} variant="outline" size="xl" className="w-full">
+        <Button onClick={onAdd} size="xl" className="w-full">{dict.common.addToCart}</Button>
+        <Button onClick={onBuyNow} variant="outline" size="xl" className="w-full">
           {dict.common.buyNow}
         </Button>
       </div>
-      {product.requiresRx && touchedRx && !canAdd ? (
-        <p role="alert" className="-mt-4 text-sm text-destructive">{dict.rx.required}</p>
-      ) : null}
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <Truck className="size-4" />
         {dict.pdp.freeship}

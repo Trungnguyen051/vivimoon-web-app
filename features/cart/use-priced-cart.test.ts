@@ -87,7 +87,7 @@ describe('usePricedCart', () => {
     expect(result.current.isPending).toBe(false);
   });
 
-  it('sends only lineKey/variantId/rx/quantity — never a client-supplied price', async () => {
+  it('sends only lineKey/variantId/purchaseUnit/rx/quantity — never a client-supplied price', async () => {
     const line = makeLine();
     mockedApiRequest.mockResolvedValue({ ok: true, data: pricedCartFor(line, 25) });
     renderHook(() => usePricedCart([line], true));
@@ -96,7 +96,7 @@ describe('usePricedCart', () => {
     const [path, init] = mockedApiRequest.mock.calls[0];
     expect(path).toBe('/api/cart/price');
     const body = init?.body as { lines: unknown[] };
-    expect(body.lines).toEqual([{ lineKey: line.lineKey, variantId: line.variantId, rx: undefined, quantity: line.quantity }]);
+    expect(body.lines).toEqual([{ lineKey: line.lineKey, variantId: line.variantId, purchaseUnit: undefined, rx: undefined, quantity: line.quantity }]);
   });
 
   it('clears to null (not the previous result) the instant the cart becomes empty', async () => {

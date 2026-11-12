@@ -2,6 +2,7 @@ import { catalog } from '@/lib/api/resources/catalog';
 import { shipping } from '@/lib/api/resources/shipping';
 import { vouchers as voucherFixtures } from '@/content/mock';
 import type { Currency } from '@/lib/api/schemas/catalog';
+import { LENSES_PER_UNIT, purchaseUnitOf } from '@/lib/api/schemas/rx';
 import type {
   PriceCartRequest, PricedCart, PricedLine, UnavailableLine, Voucher,
 } from '@/lib/api/schemas/cart';
@@ -110,12 +111,16 @@ export const mockPricing = {
         throw new PricingError(`line "${line.lineKey}" requires a prescription`, 'validation_failed');
       }
 
+      // The listed price is per single lens; a pair costs two (ADR-0023).
+      // A unit-less line with an Rx predates units and is read as a pair.
+      const unit = purchaseUnitOf(line);
+      const unitPrice = found.variant.price * (unit ? LENSES_PER_UNIT[unit] : 1);
       lines.push({
         lineKey: line.lineKey,
         variantId: line.variantId,
         quantity: line.quantity,
-        unitPrice: found.variant.price,
-        lineTotal: found.variant.price * line.quantity,
+        unitPrice,
+        lineTotal: unitPrice * line.quantity,
         currency: found.variant.currency,
       });
     }

@@ -5,6 +5,14 @@ import type { RxInput } from '@/lib/api/schemas/rx';
 const V = 'v-aqua-daily-3';
 const W = 'v-aqua-daily-6';
 
+describe('lineKey — Purchase Unit (ADR-0023)', () => {
+  it('keys a single apart from a pair at the same power, and keeps a pair on its pre-unit format', () => {
+    const pair = lineKey(V, { sameBothEyes: true, right: { sph: -2.5 } });
+    expect(lineKey(V, { sph: -2.5 })).not.toBe(pair);
+    expect(pair).toBe(`${V}~sph.-2.50~sph.-2.50`);
+  });
+});
+
 describe('lineKey — identity', () => {
   it('is equal for the same variant with no prescription', () => {
     expect(lineKey(V)).toBe(lineKey(V));

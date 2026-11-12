@@ -4,7 +4,8 @@ import type { PriceCartRequest } from '@/lib/api/schemas/cart';
 
 // Every catalogue product is `requiresRx`, and pricing refuses a line for one
 // without a prescription — so every real-variant fixture line carries this.
-const RX = { sameBothEyes: true, right: { sph: -2.5 }, left: { sph: -2.5 } };
+// Single lenses, so each line costs its listed per-lens price (ADR-0023).
+const SINGLE = { purchaseUnit: 'single', rx: { sph: -2.5 } } as const;
 
 // Two known variants from content/mock/products.ts:
 //   p-aqua-daily-30        price 25, USD
@@ -13,8 +14,8 @@ const RX = { sameBothEyes: true, right: { sph: -2.5 }, left: { sph: -2.5 } };
 // broken implementation (e.g. one that prices everything at 0, or at the
 // posted `unitPrice`) cannot pass by accident.
 const BASELINE_LINES = [
-  { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, rx: RX },
-  { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1, rx: RX },
+  { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, ...SINGLE },
+  { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1, ...SINGLE },
 ];
 
 function req(lines: PriceCartRequest['lines']): PriceCartRequest {
@@ -88,7 +89,7 @@ describe('mockPricing.priceCart', () => {
     // but its discount against shipping=0 is 0 — a zero-discount candidate
     // is excluded from selection, so it does not "apply" for nothing either.
     const result = await mockPricing.priceCart(
-      req([{ lineKey: 'l1', variantId: 'p-breeze-daily-30', quantity: 1, rx: RX }]),
+      req([{ lineKey: 'l1', variantId: 'p-breeze-daily-30', quantity: 1, ...SINGLE }]),
     );
     expect(result.subtotal).toBe(22);
     expect(result.discount).toBe(0);
@@ -119,7 +120,7 @@ describe('mockPricing.priceCart', () => {
   it('still prices every known line when one line is unavailable', async () => {
     const result = await mockPricing.priceCart(
       req([
-        { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, rx: RX },
+        { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, ...SINGLE },
         { lineKey: 'l2', variantId: 'nope-does-not-exist', quantity: 1 },
       ]),
     );
@@ -141,9 +142,9 @@ describe('mockPricing.priceCart', () => {
 
   it('every requested line comes back in exactly one of lines/unavailableLines', async () => {
     const requested = [
-      { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1, rx: RX },
+      { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1, ...SINGLE },
       { lineKey: 'l2', variantId: 'ghost', quantity: 1 },
-      { lineKey: 'l3', variantId: 'p-breeze-daily-30', quantity: 1, rx: RX },
+      { lineKey: 'l3', variantId: 'p-breeze-daily-30', quantity: 1, ...SINGLE },
     ];
     const result = await mockPricing.priceCart(req(requested));
     const returned = [...result.lines, ...result.unavailableLines].map((l) => l.lineKey).sort();
@@ -158,13 +159,13 @@ describe('mockPricing.priceCart', () => {
 
   it('rejects a zero or negative quantity', async () => {
     await expect(
-      mockPricing.priceCart(req([{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 0, rx: RX }])),
+      mockPricing.priceCart(req([{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 0, ...SINGLE }])),
     ).rejects.toBeInstanceOf(PricingError);
     await expect(
-      mockPricing.priceCart(req([{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 0, rx: RX }])),
+      mockPricing.priceCart(req([{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 0, ...SINGLE }])),
     ).rejects.toMatchObject({ code: 'validation_failed' });
     await expect(
-      mockPricing.priceCart(req([{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: -1, rx: RX }])),
+      mockPricing.priceCart(req([{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: -1, ...SINGLE }])),
     ).rejects.toMatchObject({ code: 'validation_failed' });
   });
 
@@ -262,7 +263,7 @@ describe('mockPricing.priceCart', () => {
 
     it('does not apply a memberOnly voucher below its minSpend even when signed in', async () => {
       const result = await mockPricing.priceCart(
-        req([{ lineKey: 'l1', variantId: 'p-breeze-daily-30', quantity: 1, rx: RX }]),
+        req([{ lineKey: 'l1', variantId: 'p-breeze-daily-30', quantity: 1, ...SINGLE }]),
         'user-1',
       );
       expect(result.subtotal).toBe(22);

@@ -1,8 +1,7 @@
 'use client';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import { cartReducer, cartCount } from './cart-reducer';
-import { cartLineSchema } from '@/lib/api/schemas/cart';
+import { cartReducer, cartCount, readPersistedLine } from './cart-reducer';
 import type { CartLine, CartState } from './cart.types';
 
 /**
@@ -87,10 +86,8 @@ export const useCartStore = create<CartStore>()(
        */
       merge: (persisted, current) => {
         const stored = (persisted as Partial<CartState> | undefined)?.lines;
-        // Per line, not all-or-nothing: one corrupt line must not cost the
-        // shopper the rest of their cart.
         const persistedLines = Array.isArray(stored)
-          ? stored.filter((line) => cartLineSchema.safeParse(line).success)
+          ? stored.map(readPersistedLine).filter((line) => line !== null)
           : [];
         if (current.hydrated) return { ...current, lines: persistedLines };
         return { ...current, lines: mergeLines(persistedLines, current.lines) };

@@ -2,126 +2,89 @@ import { useState } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { RxSelector, emptyRxDraft, type RxDraft } from './rx-selector';
+import { RxSelector, defaultRxDraft, draftToRx, type RxDraft } from './rx-selector';
 import { getDictionary } from '@/lib/i18n/dictionaries';
-import type { LensType } from '@/lib/api/schemas/rx';
 
 const dict = getDictionary('en');
 
-function Controlled({
-  lensType,
-  initial = emptyRxDraft,
-  ranges,
-  onChange,
-}: {
-  lensType: LensType;
-  initial?: RxDraft;
-  ranges?: { sph: readonly number[]; add: readonly ('LOW' | 'MID' | 'HIGH')[] };
-  onChange?: (next: RxDraft) => void;
-}) {
-  // A tiny uncontrolled-from-the-outside wrapper so the test can drive value/onChange
-  // like the real PDP does, without re-implementing state management per test.
-  const [value, setValue] = useState(initial);
+function Controlled({ onChange }: { onChange?: (next: RxDraft) => void }) {
+  const [value, setValue] = useState(defaultRxDraft);
   return (
     <RxSelector
       value={value}
-      onChange={(next: RxDraft) => {
-        setValue(next);
-        onChange?.(next);
-      }}
-      lensType={lensType}
-      ranges={ranges}
+      onChange={(next) => { setValue(next); onChange?.(next); }}
+      guideHref="/en/support/guides/chon-do-can-the-nao"
       dict={dict}
     />
   );
 }
 
-function allCylAndAxisControls() {
-  return [
-    ...screen.queryAllByRole('combobox', { name: /cyl/i }),
-    ...screen.queryAllByRole('combobox', { name: /axis/i }),
-    ...screen.queryAllByRole('spinbutton', { name: /cyl/i }),
-    ...screen.queryAllByRole('spinbutton', { name: /axis/i }),
-  ];
-}
+const unitButton = (unit: 'single' | 'pair') => screen.getByRole('button', { name: dict.pdp.unitOptions[unit] });
+const singleField = () => screen.getByRole('combobox', { name: dict.rx.power });
+const optionValues = (select: HTMLElement) =>
+  within(select).getAllByRole('option').map((o) => (o as HTMLOptionElement).value);
 
 describe('RxSelector', () => {
-  it('renders an sph control per eye and no ADD control for a clear product', () => {
-    render(<Controlled lensType="clear" />);
-    expect(screen.getByLabelText(`${dict.rx.rightEye} ${dict.rx.sph}`)).toBeInTheDocument();
-    expect(screen.getByLabelText(`${dict.rx.leftEye} ${dict.rx.sph}`)).toBeInTheDocument();
-    expect(screen.queryByLabelText(`${dict.rx.rightEye} ${dict.rx.add}`)).not.toBeInTheDocument();
-    expect(screen.queryByLabelText(`${dict.rx.leftEye} ${dict.rx.add}`)).not.toBeInTheDocument();
+  it('starts as 1 chiếc at 0.00, with the no-power hint and the guide link', () => {
+    render(<Controlled />);
+    expect(unitButton('single')).toHaveAttribute('aria-pressed', 'true');
+    expect(singleField()).toHaveValue('0');
+    expect(screen.getByText(dict.rx.zeroHint)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: dict.rx.guide })).toHaveAttribute('href', '/en/support/guides/chon-do-can-the-nao');
   });
 
-  it('renders ADD with exactly LOW/MID/HIGH for a multifocal product', () => {
-    render(<Controlled lensType="multifocal" />);
-    const addSelect = screen.getByLabelText(`${dict.rx.rightEye} ${dict.rx.add}`) as HTMLSelectElement;
-    const optionValues = within(addSelect)
-      .getAllByRole('option')
-      .map((o) => (o as HTMLOptionElement).value)
-      .filter((v) => v !== '');
-    expect(optionValues).toEqual(['LOW', 'MID', 'HIGH']);
+  it('hides the hint once a power is chosen', async () => {
+    render(<Controlled />);
+    await userEvent.selectOptions(singleField(), '-2.5');
+    expect(screen.queryByText(dict.rx.zeroHint)).not.toBeInTheDocument();
   });
 
-  it.each([
-    ['clear', 2],
-    ['colored', 2],
-    ['toric', 2],
-    ['multifocal', 4],
-  ] as const)(
-    'renders no CYL or AXIS control for lens type %s (and exactly %i controls total)',
-    (lensType, expectedControlCount) => {
-      render(<Controlled lensType={lensType} />);
-      expect(allCylAndAxisControls()).toHaveLength(0);
-      // Belt-and-suspenders on top of the name-matching check above: pin the
-      // total control count too, so a future toric control that dodges the
-      // /cyl|axis/i name match (a bare text input, an unlabelled control)
-      // still fails this test instead of leaking through silently.
-      expect(screen.getAllByRole('combobox')).toHaveLength(expectedControlCount);
-    },
-  );
-
-  it('offers 0.00 (plano) and does not offer -7.25 in the sph options', () => {
-    render(<Controlled lensType="clear" />);
-    const sphSelect = screen.getByLabelText(`${dict.rx.rightEye} ${dict.rx.sph}`) as HTMLSelectElement;
-    const optionValues = within(sphSelect)
-      .getAllByRole('option')
-      .map((o) => (o as HTMLOptionElement).value)
-      .filter((v) => v !== '');
-    expect(optionValues).toContain('0');
-    expect(optionValues).not.toContain('-7.25');
-  });
-
-  it('mirrors right to left and hides the left control when "same for both eyes" is toggled', async () => {
+  it('shows Mắt trái (L) and Mắt phải (R) for a pair, keeping the chosen power both ways', async () => {
     const onChange = vi.fn();
-    render(<Controlled lensType="clear" onChange={onChange} />);
+    render(<Controlled onChange={onChange} />);
+    await userEvent.selectOptions(singleField(), '-2.5');
+    await userEvent.click(unitButton('pair'));
 
-    const rightSph = screen.getByLabelText(`${dict.rx.rightEye} ${dict.rx.sph}`);
-    await userEvent.selectOptions(rightSph, '-2.5');
+    expect(screen.queryByRole('combobox', { name: dict.rx.power })).not.toBeInTheDocument();
+    expect(screen.getByLabelText(dict.rx.leftEye)).toHaveValue('-2.5');
+    expect(screen.getByLabelText(dict.rx.rightEye)).toHaveValue('-2.5');
 
-    const sameCheckbox = screen.getByLabelText(dict.rx.sameBothEyes);
-    await userEvent.click(sameCheckbox);
-
-    expect(screen.queryByLabelText(`${dict.rx.leftEye} ${dict.rx.sph}`)).not.toBeInTheDocument();
-    const lastCall = onChange.mock.calls[onChange.mock.calls.length - 1][0] as RxDraft;
-    expect(lastCall.sameBothEyes).toBe(true);
-    expect(lastCall.left).toEqual(lastCall.right);
-    expect(lastCall.left.sph).toBe(-2.5);
+    await userEvent.selectOptions(screen.getByLabelText(dict.rx.rightEye), '-3');
+    await userEvent.click(unitButton('single'));
+    expect(singleField()).toHaveValue('-2.5');
   });
 
-  it('renders only the stocked subset when given a narrower ranges prop', () => {
-    render(
-      <Controlled
-        lensType="clear"
-        ranges={{ sph: [-1, -2, 0], add: ['LOW', 'MID', 'HIGH'] }}
-      />,
-    );
-    const sphSelect = screen.getByLabelText(`${dict.rx.rightEye} ${dict.rx.sph}`) as HTMLSelectElement;
-    const optionValues = within(sphSelect)
-      .getAllByRole('option')
-      .map((o) => (o as HTMLOptionElement).value)
-      .filter((v) => v !== '');
-    expect(optionValues.sort()).toEqual(['-1', '-2', '0'].sort());
+  it('lets the right eye follow the left with "Same as left eye"', async () => {
+    const onChange = vi.fn();
+    render(<Controlled onChange={onChange} />);
+    await userEvent.click(unitButton('pair'));
+    await userEvent.selectOptions(screen.getByLabelText(dict.rx.rightEye), 'same');
+    await userEvent.selectOptions(screen.getByLabelText(dict.rx.leftEye), '-4');
+    const last = onChange.mock.lastCall![0] as RxDraft;
+    expect(draftToRx(last)).toEqual({ sameBothEyes: true, left: { sph: -4 }, right: { sph: -4 } });
+  });
+
+  it('offers myopia powers only, plano first, and no unstocked -7.25', () => {
+    render(<Controlled />);
+    const values = optionValues(singleField());
+    expect(values[0]).toBe('0');
+    expect(values).toContain('-10');
+    expect(values).not.toContain('-7.25');
+    expect(values.every((v) => Number(v) <= 0)).toBe(true);
+  });
+
+  it('renders no CYL, AXIS or ADD control (toric and multifocal are deferred, ADR-0010)', async () => {
+    render(<Controlled />);
+    await userEvent.click(unitButton('pair'));
+    // Pinned count, so a control that dodges a name match still fails here.
+    expect(screen.getAllByRole('combobox')).toHaveLength(2);
+  });
+});
+
+describe('draftToRx', () => {
+  it('gives a single one sph and a pair its left and right', () => {
+    expect(draftToRx({ unit: 'single', left: -2.5, right: -2.5, rightSameAsLeft: false })).toEqual({ sph: -2.5 });
+    expect(draftToRx({ unit: 'pair', left: -2.5, right: -3, rightSameAsLeft: false }))
+      .toEqual({ sameBothEyes: false, left: { sph: -2.5 }, right: { sph: -3 } });
   });
 });

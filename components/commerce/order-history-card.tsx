@@ -7,7 +7,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useBuyAgain } from './use-buy-again';
-import { RxSummary } from './rx-summary';
+import { LineSummary } from './line-summary';
 import { PriceTag } from './price-tag';
 import { formatPrice } from '@/lib/utils/format';
 import { cn } from '@/lib/utils/cn';
@@ -72,7 +72,7 @@ export function OrderHistoryCard({
               <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                 <span className="font-medium leading-snug">{l.product?.name ?? l.variantId}</span>
                 {l.product?.color ? <span className="text-sm text-muted-foreground">{l.product.color}</span> : null}
-                {l.rx ? <RxSummary rx={l.rx} dict={dict} /> : null}
+                <LineSummary line={l} dict={dict} />
                 <PriceTag price={l.unitPrice} compareAtPrice={l.product?.compareAtPrice} currency={l.currency} locale={locale} className="text-sm" />
               </div>
               <span className="text-sm text-muted-foreground">×{l.quantity}</span>

@@ -40,14 +40,14 @@ describe('CartLineItem', () => {
     expect(onQty).toHaveBeenCalledWith(line.lineKey, 3);
   });
 
-  it('renders an Rx summary when the line has a prescription, so two lines of the same variant are distinguishable', () => {
+  it('renders the line summary when the line has a prescription, so two lines of the same variant are distinguishable', () => {
     render(<CartLineItem line={lineWithRx} locale="en" dict={dict} onQty={vi.fn()} onRemove={vi.fn()} />);
-    expect(screen.getByText(`${dict.rx.summaryLabel}:`, { exact: false })).toBeInTheDocument();
+    expect(screen.getByText("1 pair · −2.50")).toBeInTheDocument();
   });
 
-  it('renders no Rx summary for a line without a prescription', () => {
+  it('renders no line summary for a line without a prescription', () => {
     render(<CartLineItem line={line} locale="en" dict={dict} onQty={vi.fn()} onRemove={vi.fn()} />);
-    expect(screen.queryByText(`${dict.rx.summaryLabel}:`, { exact: false })).not.toBeInTheDocument();
+    expect(screen.queryByText(/1 (pair|lens)/)).not.toBeInTheDocument();
   });
 
   it('falls back to the SKU for a colorless line, so two same-named lines stay distinguishable', () => {

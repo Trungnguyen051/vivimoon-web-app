@@ -1,4 +1,4 @@
-import type { RxInput } from '@/lib/api/schemas/rx';
+import { isSingleRx, type LineRxInput } from '@/lib/api/schemas/rx';
 
 /**
  * Derives the stable identity of a cart line from its variant and prescription
@@ -17,7 +17,7 @@ import type { RxInput } from '@/lib/api/schemas/rx';
  *     of the same prescription hash alike.
  *   - Numbers are emitted at a fixed 2 decimals, so -2.5 and -2.50 agree.
  *
- * Takes `RxInput`, not `Rx`, because it sits on BOTH sides of the parse
+ * Takes the pre-parse `LineRxInput`, because it sits on BOTH sides of the parse
  * boundary: the selector hands it an unparsed prescription, the store hands it
  * one rehydrated from JSON.
  *
@@ -43,8 +43,12 @@ function eyeToken(eye: LooseEye | null | undefined): string {
   return parts.join('_');
 }
 
-export function lineKey(variantId: string, rx?: RxInput | null): string {
+export function lineKey(variantId: string, rx?: LineRxInput | null): string {
   if (!rx) return variantId;
+  // A single line's Rx shape is its Purchase Unit (ADR-0023), so the unit is
+  // part of the key here; a pair keeps the pre-ADR-0023 format, so lines
+  // persisted before units existed (read as pairs) keep their keys.
+  if (isSingleRx(rx)) return `${variantId}~single~${eyeToken(rx)}`;
 
   const right = rx.right as LooseEye | undefined;
   // An expanded `left` makes sameBothEyes itself redundant, so it is not hashed:

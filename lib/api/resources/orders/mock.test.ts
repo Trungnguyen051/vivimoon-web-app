@@ -4,13 +4,14 @@ import type { PlaceOrderRequest } from '@/lib/api/schemas/orders';
 
 // Every catalogue product is `requiresRx`, and pricing refuses a line for one
 // without a prescription — so every real-variant fixture line carries this.
-const RX = { sameBothEyes: true, right: { sph: -2.5 }, left: { sph: -2.5 } };
+// Single lenses, so each line costs its listed per-lens price (ADR-0023).
+const SINGLE = { purchaseUnit: 'single', rx: { sph: -2.5 } } as const;
 
 // Same two known variants as lib/api/resources/pricing/mock.test.ts:
 //   p-aqua-daily-30 (price 25 USD) x2 + p-hazel-monthly-brown-30 (price 20 USD) x1
 const BASELINE_LINES = [
-  { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, rx: RX },
-  { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1, rx: RX },
+  { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, ...SINGLE },
+  { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1, ...SINGLE },
 ];
 
 // Known district (content/mock/shipping-rates.ts).
@@ -118,7 +119,7 @@ describe('mockOrders.place', () => {
       mockOrders.place(
         req({
           lines: [
-            { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1, rx: RX },
+            { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1, ...SINGLE },
             { lineKey: 'l2', variantId: 'ghost', quantity: 1 },
           ],
         }),
@@ -130,12 +131,31 @@ describe('mockOrders.place', () => {
   it("captures a discounted variant's original price on its line, at placement", async () => {
     // p-mystic-daily-violet-30: price 18, compareAtPrice 24 (content/mock/products.ts).
     const order = await mockOrders.place(
-      req({ lines: [...BASELINE_LINES, { lineKey: 'l3', variantId: 'p-mystic-daily-violet-30', quantity: 1, rx: RX }] }),
+      req({ lines: [...BASELINE_LINES, { lineKey: 'l3', variantId: 'p-mystic-daily-violet-30', quantity: 1, ...SINGLE }] }),
       null,
     );
     const byKey = Object.fromEntries(order.lines.map((l) => [l.lineKey, l]));
     expect(byKey.l3.compareAtUnitPrice).toBe(24);
     expect(byKey.l1.compareAtUnitPrice).toBeUndefined();
+  });
+
+  it('records the Purchase Unit on each line, reading a unit-less Rx line as a pair (ADR-0023)', async () => {
+    const pairRx = { sameBothEyes: true, right: { sph: -3 }, left: { sph: -3 } };
+    const order = await mockOrders.place(
+      req({
+        lines: [
+          { lineKey: 'single', variantId: 'p-mystic-daily-violet-30', quantity: 1, ...SINGLE },
+          { lineKey: 'pair', variantId: 'p-mystic-daily-violet-30', quantity: 1, purchaseUnit: 'pair', rx: pairRx },
+          { lineKey: 'legacy', variantId: 'p-mystic-daily-violet-30', quantity: 1, rx: pairRx },
+        ],
+      }),
+      null,
+    );
+    const byKey = Object.fromEntries(order.lines.map((l) => [l.lineKey, l]));
+    expect(byKey.single).toMatchObject({ purchaseUnit: 'single', rx: { sph: -2.5 }, unitPrice: 18, compareAtUnitPrice: 24 });
+    // A pair's compare-at price is per pair too, like its unit price.
+    expect(byKey.pair).toMatchObject({ purchaseUnit: 'pair', unitPrice: 36, compareAtUnitPrice: 48 });
+    expect(byKey.legacy.purchaseUnit).toBe('pair');
   });
 
   it('charges the cheapest quoted shipping option for the address, with no picker to choose one (M5.4, issue #21)', async () => {
