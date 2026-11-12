@@ -102,7 +102,7 @@ export const vi: Dictionary = {
       occasion: 'Lens theo dịp',
       care: 'Chăm sóc lens',
     },
-    filterLabel: 'Lọc bài viết theo chủ đề',
+    filterLabel: 'Lọc bài viết theo chủ đề đọc',
     searchLabel: 'Tìm bài viết',
     searchPlaceholder: 'Bạn đang thắc mắc điều gì?',
     sortLabel: 'Sắp xếp',
@@ -114,7 +114,7 @@ export const vi: Dictionary = {
     showMore: 'Xem thêm bài viết',
     readingTime: '{count} phút đọc',
     makeupLooksTitle: 'Lens lên mắt trông thế nào?',
-    inThisArticle: 'Lens cho chủ đề này',
+    inThisArticle: 'Lens cho chủ đề đọc này',
     collectionBannerTitle: 'Xem cả bộ sưu tập',
     /* Vietnamese has one form; the key is still a record so both locales share a
        shape and `Dictionary` holds the parity. */

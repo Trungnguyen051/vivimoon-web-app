@@ -300,7 +300,7 @@ export const en = {
     /* PROVISIONAL — owner: Vivimoon. The policy windows below (7 days, 30 days,
        300.000₫) are plausible rather than confirmed. */
     service: {
-      topicsTitle: 'Pick the subject you need',
+      topicsTitle: 'Pick the topic you need',
       policiesTitle: 'Policies at a glance',
       trackingTitle: 'Track your order',
       contactTitle: 'Still need a person?',

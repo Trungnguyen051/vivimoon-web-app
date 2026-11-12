@@ -12,8 +12,43 @@ import { catalog } from '@/lib/api/resources/catalog';
  * in a row of six, with the typecheck and every other test green.
  *
  * It is also the taxonomy that collided with the Support section's Topic, which is why
- * the labels are held here rather than left to the component that happens to show them.
+ * the labels are held here rather than left to the component that happens to show them —
+ * and why the axis words themselves are held here too (#151).
  */
+
+/**
+ * The word each taxonomy answers to on screen (`CONTEXT.md` → Reading Theme, Topic).
+ *
+ * Vietnamese is the awkward one: `chủ đề đọc` *contains* `chủ đề`, so "does this string
+ * name the other taxonomy" cannot be asked with a bare substring test. It is asked as
+ * "names the axis, but not as this axis" below.
+ */
+const AXIS_WORDS = {
+  vi: { readingTheme: 'chủ đề đọc', topic: 'chủ đề' },
+  en: { readingTheme: 'subject', topic: 'topic' },
+} as const;
+
+const names = (text: string, word: string) => text.toLowerCase().includes(word.toLowerCase());
+
+/** Copy that names the axis Articles are filed under. */
+const readingThemeCopy = (locale: 'vi' | 'en') => {
+  const dict = getDictionary(locale);
+  return [
+    ['articles.filterLabel', dict.articles.filterLabel],
+    ['articles.inThisArticle', dict.articles.inThisArticle],
+  ] as const;
+};
+
+/** Copy that names the axis FAQ Entries and Guides are filed under. */
+const topicCopy = (locale: 'vi' | 'en') => {
+  const dict = getDictionary(locale);
+  return [
+    ['support.service.topicsTitle', dict.support.service.topicsTitle],
+    ['support.faq.topicNav', dict.support.faq.topicNav],
+    ['support.faq.noneInTopic', dict.support.faq.noneInTopic],
+  ] as const;
+};
+
 describe('the Reading Theme vocabulary', () => {
   it.each(locales.map((locale) => [locale]))('%s names every Reading Theme', (locale) => {
     const labels = getDictionary(locale).articles.readingThemes;
@@ -42,6 +77,40 @@ describe('the Reading Theme vocabulary', () => {
 
     expect(dict.articles.allThemes.trim()).not.toBe('');
     expect(labels).not.toContain(dict.articles.allThemes);
+  });
+
+  /**
+   * The collision this taxonomy was renamed to avoid, held against the copy rather than
+   * against the code — `CONTEXT.md` is explicit that both are shopper-visible and both
+   * name themselves on screen, "which is exactly why one word could not serve both".
+   *
+   * It shipped anyway: every Vietnamese surface said `chủ đề` for both, and one English
+   * Topic tile borrowed "subject" from the Reading Theme. A reader who moved from the
+   * Knowledge index to the Support hub met one word naming two taxonomies.
+   */
+  it.each(locales.map((locale) => [locale]))('%s names a Reading Theme as its own axis', (locale) => {
+    const words = AXIS_WORDS[locale];
+
+    for (const [key, text] of readingThemeCopy(locale)) {
+      // Copy that does not name the axis at all has nothing to collide with.
+      if (!names(text, words.topic)) continue;
+
+      expect(
+        names(text, words.readingTheme),
+        `${locale} ${key} names the axis with Topic's word: "${text}"`,
+      ).toBe(true);
+    }
+  });
+
+  it.each(locales.map((locale) => [locale]))('%s keeps Topic copy out of the Reading Theme word', (locale) => {
+    const words = AXIS_WORDS[locale];
+
+    for (const [key, text] of topicCopy(locale)) {
+      expect(
+        names(text, words.readingTheme),
+        `${locale} ${key} names a Topic with the Reading Theme's word: "${text}"`,
+      ).toBe(false);
+    }
   });
 
   /**
