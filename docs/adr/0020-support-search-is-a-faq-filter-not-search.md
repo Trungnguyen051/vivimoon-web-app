@@ -1,6 +1,6 @@
 # The Support search box filters FAQ Entries; it is not storefront search
 
-**Status:** accepted — settled during the Support-section grill. Not yet implemented.
+**Status:** accepted and implemented — settled during the Support-section grill. The FAQ page's `?q=` filter landed in #120 and the hub's box in #121, both filtering FAQ Entries server-side rather than searching the storefront; held by `lib/support/faq-filter.test.ts` and `app/[locale]/support/faq/faq-search.test.tsx`.
 
 This storefront has no search. The header draws a search affordance that opens an input with, in its own words, "no form and no submit handler, deliberately: there is no search" (`components/layout/header.tsx`). The Support design puts a second search box on the hub — "Tìm: cách tháo lens, đổi trả, chọn DIA…" — and a third on the FAQ page.
 

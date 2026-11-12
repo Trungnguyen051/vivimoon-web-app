@@ -1,6 +1,6 @@
 # A Guide is a fixed-layout document, and not an Article
 
-**Status:** accepted — vocabulary settled during the Support-section grill; `CONTEXT.md` carries `Guide`, `Topic` and `FAQ Entry`. Not yet implemented.
+**Status:** accepted and implemented — vocabulary settled during the Support-section grill; `CONTEXT.md` carries `Guide`, `Topic` and `FAQ Entry`. `Guide` ships as its own shape with its own fixed-layout route by #123, and records whether it helped by #124; held by `app/[locale]/support/guides/[slug]/guide.test.tsx`.
 
 The Support design (file `9bTKBHv3tf3aJy1EhnJc4i`, frame `164:487` "B4. Hướng dẫn đeo & tháo lens") draws a help document with a subtitled video, an opening note, five numbered steps each carrying its own illustration, a closing safety note, a row of suggested lenses and a rail of related reading. `Article` cannot hold that. Its body is `string[]` — plain paragraphs, deliberately, so that rendering needs no parser and a fixture cannot inject markup into the page.
 
