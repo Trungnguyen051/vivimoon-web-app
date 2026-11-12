@@ -7,7 +7,7 @@ import { topicSchema, type Topic } from '@/lib/api/schemas/support';
 import { filterFaqEntries } from '@/lib/support/faq-filter';
 import { firstParam } from '@/lib/utils/search-params';
 import { cn } from '@/lib/utils/cn';
-import { Search } from 'lucide-react';
+import { SearchForm } from '@/components/commerce/search-form';
 import { PageContainer } from '@/components/layout/page-container';
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
@@ -66,20 +66,14 @@ export default async function SupportFaqPage({
 
         <h1 className="font-heading text-3xl md:text-4xl">{dict.support.faq.title}</h1>
 
-        {/* A GET form, so searching works with JavaScript disabled — the same
-            URL-as-state the collection filters use. No hidden `category`: submitting a
-            query deliberately drops the active Topic. */}
-        <form action={`/${locale}/support/faq`} className="flex items-center gap-2 rounded-md border px-3 md:max-w-md">
-          <Search className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-          <input
-            type="search"
-            name="q"
-            defaultValue={q}
-            aria-label={dict.support.faq.searchLabel}
-            placeholder={dict.support.faq.searchPlaceholder}
-            className="h-11 flex-1 bg-transparent text-sm outline-none"
-          />
-        </form>
+        {/* No hidden `category`: submitting a query deliberately drops the active Topic. */}
+        <SearchForm
+          action={`/${locale}/support/faq`}
+          label={dict.support.faq.searchLabel}
+          placeholder={dict.support.faq.searchPlaceholder}
+          defaultValue={q}
+          className="md:max-w-md"
+        />
 
         <div className="flex flex-col gap-8 md:flex-row md:gap-12">
           {/*
@@ -101,6 +95,10 @@ export default async function SupportFaqPage({
                 <Link
                   key={topic ?? 'all'}
                   href={topicHref(topic)}
+                  /* `page`, where the Reading Theme chips mark `true`: this is a nav
+                     landmark listing Topics a reader moves between, each its own URL,
+                     and the active one is the page they are on. A chip row filtering a
+                     list in place is a set of options, not a set of pages. */
                   aria-current={current ? 'page' : undefined}
                   className={cn(
                     'shrink-0 rounded-full border px-4 py-2 text-sm whitespace-nowrap transition-colors md:rounded-none md:border-0 md:border-l-2 md:px-4 md:py-2.5',

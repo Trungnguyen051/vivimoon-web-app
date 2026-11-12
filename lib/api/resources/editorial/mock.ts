@@ -1,6 +1,6 @@
 import { articles, makeupLooks } from '@/content/mock';
 import type { Article, ArticleQuery, MakeupLook } from '@/lib/api/schemas/editorial';
-import { foldedIncludes } from '@/lib/text/fold';
+import { foldedIncludes, localizedValues, searchTerm } from '@/lib/text/fold';
 
 /**
  * Everything a shopper could plausibly be searching for, in every locale.
@@ -9,7 +9,7 @@ import { foldedIncludes } from '@/lib/text/fold';
  * claims it, which reads as a wrong result rather than a found one.
  */
 function searchable(article: Article): string[] {
-  return [...Object.values(article.title), ...Object.values(article.excerpt)];
+  return localizedValues(article.title, article.excerpt);
 }
 
 export const mockEditorial = {
@@ -25,9 +25,7 @@ export const mockEditorial = {
 
     if (query.readingTheme) list = list.filter((a) => a.readingTheme === query.readingTheme);
 
-    // Trimmed, so a box holding only spaces is no filter at all — typing and clearing
-    // must give the whole list back rather than an empty page.
-    const term = query.q?.trim();
+    const term = searchTerm(query.q);
     if (term) list = list.filter((a) => foldedIncludes(searchable(a), term));
 
     list.sort((a, b) =>

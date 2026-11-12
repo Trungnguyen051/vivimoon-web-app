@@ -7,7 +7,7 @@ import { support } from '@/lib/api/resources/support';
 import { editorial } from '@/lib/api/resources/editorial';
 import { catalog } from '@/lib/api/resources/catalog';
 import { readingMinutes } from '@/lib/editorial/reading-time';
-import { toIntlLocale } from '@/lib/utils/format';
+import { formatPublishedDate } from '@/lib/utils/format';
 import { PageContainer } from '@/components/layout/page-container';
 import { ProductGrid } from '@/components/commerce/product-grid';
 import { GuideFeedback } from '@/components/commerce/guide-feedback';
@@ -16,6 +16,9 @@ import { cn } from '@/lib/utils/cn';
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+
+/** How many lenses a Guide's row shows, as the design draws it. */
+const STRIP_SIZE = 3;
 
 /**
  * A Guide: a fixed-layout help document, rendered in one order (ADR-0019).
@@ -49,7 +52,9 @@ export default async function GuidePage({
   ];
 
   const collection = await catalog.getCollection(guide.collection);
-  const products = collection ? await catalog.getProductsByIds(collection.productIds.slice(0, 3)) : [];
+  const products = collection
+    ? await catalog.getProductsByIds(collection.productIds.slice(0, STRIP_SIZE))
+    : [];
 
   /* The rail points at either kind — a Guide and an Article differ by shape, never by
      subject. Resolved rather than trusted: a renamed slug drops the card instead of
@@ -66,8 +71,6 @@ export default async function GuidePage({
       }),
     )
   ).filter((card): card is { href: string; title: string } => card !== null && card !== undefined);
-
-  const dateFormat = new Intl.DateTimeFormat(toIntlLocale(locale), { dateStyle: 'long', timeZone: 'UTC' });
 
   return (
     <PageContainer>
@@ -90,7 +93,7 @@ export default async function GuidePage({
           <p className="text-sm text-muted-foreground">
             {dict.articles.readingTime.replace('{count}', String(readingMinutes(body)))}
             {' · '}
-            {copy.updatedOn} {dateFormat.format(new Date(guide.updatedAt))}
+            {copy.updatedOn} {formatPublishedDate(guide.updatedAt, locale)}
           </p>
         </header>
 

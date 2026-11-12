@@ -32,3 +32,26 @@ export function foldedIncludes(values: string[], term: string): boolean {
   const needle = fold(term);
   return values.some((value) => fold(value).includes(needle));
 }
+
+/**
+ * Every locale's text across these fields, which is what a search looks in.
+ *
+ * Every locale rather than the one being rendered, so a search never depends on which
+ * storefront is open — and shared, because the Knowledge index and the FAQ page both
+ * flatten `LocalizedText` this way. *Which* fields to flatten stays with each caller:
+ * that choice is a judgement about what a reader can see on the row claiming the
+ * match, and the two have different answers.
+ */
+export function localizedValues(...fields: Record<string, string>[]): string[] {
+  return fields.flatMap((field) => Object.values(field));
+}
+
+/**
+ * A search term, or `null` when there is nothing to filter by.
+ *
+ * Trimmed, so a box holding only spaces is no filter at all — typing and clearing has
+ * to give the whole list back rather than an empty page.
+ */
+export function searchTerm(raw: string | undefined): string | null {
+  return raw?.trim() || null;
+}

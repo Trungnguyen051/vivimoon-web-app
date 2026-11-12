@@ -1,5 +1,5 @@
 import type { FaqEntry, Topic } from '@/lib/api/schemas/support';
-import { foldedIncludes } from '@/lib/text/fold';
+import { foldedIncludes, localizedValues, searchTerm } from '@/lib/text/fold';
 
 /**
  * What the FAQ page's two controls add up to (#120).
@@ -21,13 +21,11 @@ export type FaqQuery = { q?: string; category?: Topic | null };
  * shows (ADR-0020). Every locale, so a search never depends on which one is open.
  */
 function searchable(entry: FaqEntry): string[] {
-  return [...Object.values(entry.question), ...Object.values(entry.shortAnswer)];
+  return localizedValues(entry.question, entry.shortAnswer);
 }
 
 export function filterFaqEntries(entries: FaqEntry[], { q, category }: FaqQuery): FaqEntry[] {
-  // Trimmed, so a box holding only spaces is no query at all — typing and clearing has
-  // to give the whole list back rather than an empty page.
-  const term = q?.trim();
+  const term = searchTerm(q);
 
   /* A query *replaces* the active Topic rather than narrowing within it. Searching and
      browsing are different modes: narrowing inside a Topic would hide answers a reader

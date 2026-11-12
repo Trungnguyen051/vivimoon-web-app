@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   READING_THEME_ENTRIES,
-  readingThemeEntry,
+  readingThemeDestination,
   readingThemeHref,
   readingThemeIncludes,
   countReadingTheme,
@@ -30,17 +30,16 @@ describe('Reading Theme destinations', () => {
    * would merchandise lenses beneath an article about cleaning solution.
    */
   it('gives chăm sóc lens no destination, and every other theme one', () => {
-    expect(readingThemeEntry('care').kind).toBe('none');
+    expect(readingThemeDestination('care')).toBeNull();
 
     for (const theme of readingThemeSchema.options.filter((t) => t !== 'care')) {
-      expect(readingThemeEntry(theme).kind, theme).toBe('collection');
+      expect(readingThemeDestination(theme), theme).not.toBeNull();
     }
   });
 
   it('carries its filter in the href, so one link opens a narrowed collection', () => {
-    const natural = readingThemeEntry('natural');
-    const beginner = readingThemeEntry('beginner');
-    if (natural.kind !== 'collection' || beginner.kind !== 'collection') throw new Error('expected destinations');
+    const natural = readingThemeDestination('natural')!;
+    const beginner = readingThemeDestination('beginner')!;
 
     expect(readingThemeHref(natural, 'vi')).toBe('/vi/collection/colored-lenses?color=brown,gray');
     // An unfiltered destination carries no query at all rather than a trailing "?".
@@ -53,8 +52,7 @@ describe('Reading Theme destinations', () => {
    * it as a live delimiter, opening the collection with a filter nobody chose.
    */
   it('escapes a free-form filter value without touching the delimiters', () => {
-    const comfort = readingThemeEntry('comfort');
-    if (comfort.kind !== 'collection') throw new Error('expected a destination');
+    const comfort = readingThemeDestination('comfort')!;
 
     expect(readingThemeHref(comfort, 'vi')).toBe('/vi/collection/all-lenses?material=Silicone%20Hydrogel');
     expect(new URL(readingThemeHref(comfort, 'vi'), 'https://x').searchParams.get('material'))
@@ -89,8 +87,7 @@ describe('Reading Theme destinations', () => {
    * Six of the ten catalog products are Silicone Hydrogel, counted from the fixtures.
    */
   it('counts within its own filter, not across the whole collection', async () => {
-    const comfort = readingThemeEntry('comfort');
-    if (comfort.kind !== 'collection') throw new Error('expected a destination');
+    const comfort = readingThemeDestination('comfort')!;
 
     const all = await productsBehind(comfort.collection);
 
@@ -100,8 +97,7 @@ describe('Reading Theme destinations', () => {
 
   /** The predicate and the href must agree, or the count describes a different page than the link opens. */
   it('includes exactly the products its filter selects', async () => {
-    const natural = readingThemeEntry('natural');
-    if (natural.kind !== 'collection') throw new Error('expected a destination');
+    const natural = readingThemeDestination('natural')!;
 
     const all = await productsBehind(natural.collection);
     const matched = all.filter((p) => readingThemeIncludes(natural, p));

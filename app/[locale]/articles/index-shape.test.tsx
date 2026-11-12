@@ -63,6 +63,18 @@ describe('the Knowledge index', () => {
     expect(screen.getAllByText(viDict.articles.readingThemes[newest.readingTheme]).length).toBeGreaterThan(0);
   });
 
+  it('draws no excerpt on an index card', async () => {
+    await renderIndex();
+
+    /* Spec #126: "The index's card is bordered, carries an eyebrow and a dateline and
+       no excerpt; the homepage's is borderless with an excerpt." One component renders
+       both, so the excerpt is the kind of thing that reappears the next time somebody
+       passes it in — which is how it shipped the first time. */
+    for (const article of articles) {
+      expect(within(grid()).queryByText(article.excerpt.vi)).not.toBeInTheDocument();
+    }
+  });
+
   it('searches, and says so when nothing matches without taking the rest of the page down', async () => {
     await renderIndex({ q: 'khong-co-bai-nao-ten-the-nay' });
 

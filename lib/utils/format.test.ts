@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { formatPrice } from './format';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
+import { formatPrice, formatPublishedDate } from './format';
 
 describe('formatPrice', () => {
   it('formats VND with no decimals and đ suffix', () => {
@@ -7,5 +7,33 @@ describe('formatPrice', () => {
   });
   it('formats USD with dollar sign for en', () => {
     expect(formatPrice(25, 'USD', 'en')).toBe('$25.00');
+  });
+});
+
+describe('formatPublishedDate', () => {
+  /* Stubbed for the whole file, not inside the one test that needs it.
+     `formatPublishedDate` caches a formatter per locale on first use, so a zone set
+     after some other test had already formatted an `en` date would arrive too late and
+     this guard would pass without checking anything. Set here, it holds whatever the
+     call order turns out to be. */
+  const original = process.env.TZ;
+  beforeAll(() => {
+    process.env.TZ = 'America/Los_Angeles';
+  });
+  afterAll(() => {
+    process.env.TZ = original;
+  });
+
+  it('dates a plain date in UTC, so it never slips to the day before', () => {
+    /* A `publishedAt` is a plain date, which parses as UTC midnight. Formatted in a
+       zone west of UTC it would read as the previous day, and an article would appear
+       to predate itself — which is what this zone reproduces. */
+    expect(formatPublishedDate('2026-03-01', 'en')).toContain('March 1');
+  });
+
+  it("formats in the reader's own locale", () => {
+    expect(formatPublishedDate('2026-03-01', 'vi')).toContain('2026');
+    expect(formatPublishedDate('2026-03-01', 'en')).toContain('2026');
+    expect(formatPublishedDate('2026-03-01', 'vi')).not.toBe(formatPublishedDate('2026-03-01', 'en'));
   });
 });
