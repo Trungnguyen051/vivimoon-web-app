@@ -33,6 +33,13 @@ describe('RxSelector', () => {
     expect(screen.getByRole('link', { name: dict.rx.guide })).toHaveAttribute('href', '/en/support/guides/chon-do-can-the-nao');
   });
 
+  it('says lenses are sold singly only while 1 chiếc is chosen', async () => {
+    render(<Controlled />);
+    expect(screen.getByText(dict.rx.singleNote)).toBeInTheDocument();
+    await userEvent.click(unitButton('pair'));
+    expect(screen.queryByText(dict.rx.singleNote)).not.toBeInTheDocument();
+  });
+
   it('hides the hint once a power is chosen', async () => {
     render(<Controlled />);
     await userEvent.selectOptions(singleField(), '-2.5');

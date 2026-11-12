@@ -208,6 +208,7 @@ export const vi: Dictionary = {
     noPower: 'Không độ',
     zeroHint: 'Đang chọn lens không độ. Nếu bạn bị cận, hãy chọn đúng độ của mình.',
     unsureHint: 'Chưa biết độ? Chọn "Không độ" hoặc chat với Vivimoon để được tư vấn.',
+    singleNote: 'Sản phẩm được bán lẻ từng chiếc, bạn vui lòng mua 2 chiếc để thành 1 đôi nhé!',
     pairHint: 'Chọn riêng độ từng mắt. Hai mắt cùng độ: chọn “Giống mắt trái” trong ô Mắt phải.',
     units: { single: '1 chiếc', pair: '1 đôi' },
     left: 'L', right: 'R',

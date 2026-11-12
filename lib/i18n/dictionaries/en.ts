@@ -205,6 +205,7 @@ export const en = {
     noPower: 'No power',
     zeroHint: "You've picked lenses with no power. If you're short-sighted, choose your own power.",
     unsureHint: 'Not sure of your power? Choose "No power" or chat with Vivimoon for advice.',
+    singleNote: 'Lenses are sold one at a time — buy 2 to make a pair.',
     pairHint: 'Pick a power for each eye. Same power in both? Choose "Same as left eye" in the Right eye box.',
     // The shared line summary (ADR-0023): "1 pair · L −2.50 · R −3.00".
     units: { single: '1 lens', pair: '1 pair' },
