@@ -56,7 +56,10 @@ export default async function ArticlesPage({
   const readingTheme = readTheme(query.theme);
   const q = firstParam(query.q)?.trim() ?? '';
   const sort = readSort(query.sort);
-  const shown = Number(firstParam(query.shown)) || CARDS_PER_PAGE;
+  /* Passed raw. `knowledgeIndexLayout` owns the clamp — it has to, because a negative
+     would slice from the end of the list — and defaulting here as well would be the
+     same rule written in two places, where only one of them is tested. */
+  const shown = Number(firstParam(query.shown));
 
   /* One query, three spellings. The chips, the box and the sort control all narrow the
      same list in the resource rather than each filtering what the last one left. */

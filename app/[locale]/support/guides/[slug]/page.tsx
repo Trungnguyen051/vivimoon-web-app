@@ -17,6 +17,9 @@ import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 
+/** How many lenses a Guide's row shows, as the design draws it. */
+const STRIP_SIZE = 3;
+
 /**
  * A Guide: a fixed-layout help document, rendered in one order (ADR-0019).
  *
@@ -49,7 +52,9 @@ export default async function GuidePage({
   ];
 
   const collection = await catalog.getCollection(guide.collection);
-  const products = collection ? await catalog.getProductsByIds(collection.productIds.slice(0, 3)) : [];
+  const products = collection
+    ? await catalog.getProductsByIds(collection.productIds.slice(0, STRIP_SIZE))
+    : [];
 
   /* The rail points at either kind — a Guide and an Article differ by shape, never by
      subject. Resolved rather than trusted: a renamed slug drops the card instead of

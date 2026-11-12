@@ -101,6 +101,10 @@ export default async function SupportFaqPage({
                 <Link
                   key={topic ?? 'all'}
                   href={topicHref(topic)}
+                  /* `page`, where the Reading Theme chips mark `true`: this is a nav
+                     landmark listing Topics a reader moves between, each its own URL,
+                     and the active one is the page they are on. A chip row filtering a
+                     list in place is a set of options, not a set of pages. */
                   aria-current={current ? 'page' : undefined}
                   className={cn(
                     'shrink-0 rounded-full border px-4 py-2 text-sm whitespace-nowrap transition-colors md:rounded-none md:border-0 md:border-l-2 md:px-4 md:py-2.5',
