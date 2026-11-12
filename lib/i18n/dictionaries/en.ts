@@ -144,7 +144,7 @@ export const en = {
     specs: 'Specifications', related: 'You might also like', reviews: 'Reviews',
     material: 'Material', waterContent: 'Water content', baseCurve: 'Base curve',
     diameter: 'Diameter', graphicDiameter: 'Graphic diameter', origin: 'Origin',
-    color: 'Color', quantity: 'Quantity', freeship: 'Freeship',
+    color: 'Color', quantity: 'Quantity',
     noReviews: 'No reviews yet.',
     reviewSource: { shopee: 'Shopee', tiktok: 'TikTok', vivimoon: 'Vivimoon' },
     badges: { new: 'New', bestseller: 'Bestseller', sale: 'Sale' },
@@ -152,6 +152,19 @@ export const en = {
     unitOptions: { single: '1 lens (one eye)', pair: '1 pair (both eyes)' },
     perUnit: { single: '/ lens', pair: '/ pair' },
     stockLeft: { single: 'lens · {count} left', pair: 'pair · {count} left' },
+    sold: '{n} sold', allLenses: 'Lenses', lensesOf: '{r} lenses',
+    promos: { firstOrder: '30K off your first order', gift: 'Free Kits Yêu Mắt with any 6-month lens', freeship: 'Free shipping from 300K' },
+    comfort: {
+      title: 'Comfort when worn', why: 'Why does it feel soft?',
+      waterContent: 'Water content', wearHours: 'Wear up to', wearHoursValue: '{n} hrs/day',
+      sensitiveEyes: 'Sensitive eyes', suitable: 'Suitable', notSuitable: 'Not ideal',
+    },
+    trust: { authentic: 'Genuine Korean lenses', license: 'Licensed by the Ministry of Health', refund: 'Refund if it is not comfortable' },
+    faq: { title: 'Quick answers for first-timers', guide: 'See the put-in, take-out and care guide' },
+    videos: {
+      title: 'Lenses on real eyes', subtitle: 'Makeup and review videos from customers', more: 'See Vivimoon TV',
+      views: '@vivimoon.official · {n} views', play: 'Play video: {title}',
+    },
   },
   rx: {
     power: 'Power', guide: 'How to choose your power',
@@ -277,8 +290,21 @@ export const en = {
     error: 'Could not load the comparison. Please try again.',
   },
   viewer: {
-    eye: 'Eye', face: 'Face', withMakeup: 'With makeup', withoutMakeup: 'Without makeup',
-    byEyeColor: 'By eye color',
+    tabs: { eye: 'Lens pattern', face: 'On a model', closeUp: 'Close-up', sunlight: 'In sunlight', video: 'Video' },
+    captions: {
+      eye: 'Lens pattern', face: 'Model photo', closeUp: 'Real close-up · no filter',
+      sunlight: 'In natural sunlight', video: 'Customer video',
+    },
+    views: 'Photo views', tones: 'See the lens with suggested makeup tones',
+    toneLabels: { peach: 'Peach', terracotta: 'Terracotta', warmNude: 'Warm nude', sunlight: 'In sunlight', indoor: 'Indoors' },
+  },
+  /** The return policy. `terms` is the one string that states the period and the lenses it covers — every surface that mentions the policy reuses it. */
+  returnPolicy: {
+    title: 'Exchange if you don’t love it · Refund if it isn’t comfortable',
+    terms: 'Free 1-for-1 exchange within 15 days of delivery, for moisture-lock and breathable lenses',
+    refund: 'Gritty, itchy or uncomfortable → 100% refund',
+    swap: 'Not happy with the colour or style → swap for another',
+    details: 'See the full policy', howTo: 'How to request a return',
   },
   quiz: {
     title: 'Lens-Matching Quiz', next: 'Next', back: 'Back', submit: 'See my results',

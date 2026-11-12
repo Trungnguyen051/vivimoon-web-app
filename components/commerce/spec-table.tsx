@@ -12,11 +12,11 @@ export function SpecTable({ specs, dict }: { specs: ProductSpecs; dict: Dictiona
     [dict.pdp.origin, specs.origin],
   ];
   return (
-    <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border bg-border md:grid-cols-3">
+    <dl className="flex flex-col">
       {rows.map(([k, v]) => (
-        <div key={k} className="flex flex-col gap-1.5 bg-background p-5">
-          <dt className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{k}</dt>
-          <dd className="text-sm font-medium text-foreground">{v}</dd>
+        <div key={k} className="grid grid-cols-2 gap-3 border-b py-2.5 text-sm last:border-b-0 md:flex md:justify-between md:py-3">
+          <dt className="text-muted-foreground">{k}</dt>
+          <dd className="font-medium text-foreground md:text-right">{v}</dd>
         </div>
       ))}
     </dl>

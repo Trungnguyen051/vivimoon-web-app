@@ -145,10 +145,10 @@ export const vi: Dictionary = {
     noMatch: 'Chưa có đánh giá nào ở mục này.', photo: 'Ảnh đánh giá {n}', video: 'Video đánh giá',
   },
   pdp: {
-    specs: 'Thông số', related: 'Gợi ý cho bạn', reviews: 'Đánh giá',
+    specs: 'Thông số', related: 'Có thể bạn cũng thích', reviews: 'Đánh giá',
     material: 'Chất liệu', waterContent: 'Độ ẩm', baseCurve: 'Độ cong',
     diameter: 'Đường kính', graphicDiameter: 'Đường kính vùng màu', origin: 'Xuất xứ',
-    color: 'Màu', quantity: 'Số lượng', freeship: 'Miễn phí ship',
+    color: 'Màu', quantity: 'Số lượng',
     noReviews: 'Chưa có đánh giá.',
     reviewSource: { shopee: 'Shopee', tiktok: 'TikTok', vivimoon: 'Vivimoon' },
     badges: { new: 'Mới', bestseller: 'Bán chạy', sale: 'Giảm giá' },
@@ -156,6 +156,19 @@ export const vi: Dictionary = {
     unitOptions: { single: '1 chiếc (1 bên mắt)', pair: '1 đôi (2 bên mắt)' },
     perUnit: { single: '/ chiếc', pair: '/ đôi' },
     stockLeft: { single: 'chiếc · còn {count} chiếc', pair: 'đôi · còn {count} đôi' },
+    sold: 'Đã bán {n}', allLenses: 'Mẫu lens', lensesOf: 'Lens {r}',
+    promos: { firstOrder: 'Giảm 30K đơn đầu tiên', gift: 'Mua lens 6 tháng tặng Kits Yêu Mắt', freeship: 'Freeship từ 300K' },
+    comfort: {
+      title: 'Độ thoải mái khi đeo', why: 'Vì sao lens êm?',
+      waterContent: 'Độ ngậm nước', wearHours: 'Đeo tới', wearHoursValue: '{n} giờ/ngày',
+      sensitiveEyes: 'Mắt nhạy cảm', suitable: 'Phù hợp', notSuitable: 'Hạn chế',
+    },
+    trust: { authentic: 'Chính hãng Hàn Quốc', license: 'Giấy phép Bộ Y tế', refund: 'Không êm hoàn tiền' },
+    faq: { title: 'Trả lời nhanh cho người mới', guide: 'Xem hướng dẫn đeo – tháo – bảo quản' },
+    videos: {
+      title: 'Lens trên mắt thật', subtitle: 'Video makeup & review từ khách', more: 'Xem Vivimoon TV',
+      views: '@vivimoon.official · {n} lượt xem', play: 'Xem video: {title}',
+    },
   },
   rx: {
     power: 'Độ cận', guide: 'Hướng dẫn chọn độ',
@@ -280,8 +293,21 @@ export const vi: Dictionary = {
     error: 'Không thể tải bảng so sánh. Vui lòng thử lại.',
   },
   viewer: {
-    eye: 'Mắt', face: 'Khuôn mặt', withMakeup: 'Có trang điểm', withoutMakeup: 'Không trang điểm',
-    byEyeColor: 'Theo màu mắt',
+    tabs: { eye: 'Vân lens', face: 'Người mẫu', closeUp: 'Cận mắt', sunlight: 'Dưới nắng', video: 'Video' },
+    captions: {
+      eye: 'Ảnh vân lens', face: 'Ảnh người mẫu', closeUp: 'Ảnh cận mắt thật · không filter',
+      sunlight: 'Dưới nắng tự nhiên', video: 'Video từ khách',
+    },
+    views: 'Kiểu ảnh', tones: 'Xem lens với tone makeup gợi ý',
+    toneLabels: { peach: 'Hồng đào', terracotta: 'Cam đất', warmNude: 'Nude ấm', sunlight: 'Dưới nắng', indoor: 'Trong nhà' },
+  },
+  /** Chính sách đổi trả. `terms` là chuỗi duy nhất nêu thời hạn và dòng lens áp dụng — mọi nơi nhắc tới chính sách đều dùng lại nó. */
+  returnPolicy: {
+    title: 'Không thích đổi luôn · Không êm hoàn tiền',
+    terms: 'Đổi 1–1 miễn phí trong 15 ngày kể từ khi nhận hàng, áp dụng lens khoá ẩm & lens cho mắt thở',
+    refund: 'Đeo cộm, ngứa, không êm → hoàn tiền 100%',
+    swap: 'Không ưng màu/mẫu → đổi sang mẫu khác',
+    details: 'Xem chi tiết chính sách', howTo: 'Cách gửi yêu cầu đổi trả',
   },
   quiz: {
     title: 'Trắc nghiệm chọn lens', next: 'Tiếp theo', back: 'Quay lại', submit: 'Xem kết quả',

@@ -22,6 +22,8 @@ export const galleries: LensGallery[] = [
         blue: ['/images/products/aqua-daily-2.jpg'],
         green: ['/images/products/aqua-daily-1.jpg', '/images/products/aqua-daily-2.jpg'],
       },
+      closeUp: ['/images/products/aqua-daily-1.jpg', '/images/products/aqua-daily-2.jpg'],
+      sunlight: ['/images/products/aqua-daily-2.jpg'],
     },
   },
   {
@@ -35,6 +37,8 @@ export const galleries: LensGallery[] = [
         brown: ['/images/products/mystic-daily-1.jpg'],
         hazel: ['/images/products/mystic-daily-2.jpg'],
       },
+      closeUp: ['/images/products/mystic-daily-2.jpg', '/images/products/mystic-daily-1.jpg'],
+      sunlight: ['/images/products/mystic-daily-1.jpg'],
     },
   },
 ];

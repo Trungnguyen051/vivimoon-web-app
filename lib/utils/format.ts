@@ -14,6 +14,15 @@ export function formatPrice(
   }).format(amount);
 }
 
+/**
+ * A count as the storefront writes it — "Đã bán 3,2k", "128k lượt xem". Not
+ * `Intl`'s compact notation, which spells Vietnamese thousands "3,2 N".
+ */
+export function formatCount(n: number, locale: 'en' | 'vi'): string {
+  if (n < 1000) return String(n);
+  return `${(n / 1000).toLocaleString(toIntlLocale(locale), { maximumFractionDigits: 1, useGrouping: false })}k`;
+}
+
 /*
  * One formatter per locale, built on first use.
  *
