@@ -13,6 +13,16 @@ export const replacementScheduleSchema = z.enum(['daily', 'monthly', 'threeMonth
 export const productBadgeSchema = z.enum(['new', 'bestseller', 'sale']);
 export const currencySchema = z.enum(['VND', 'USD']);
 export const reviewSourceSchema = z.enum(['shopee', 'tiktok', 'vivimoon']);
+/** Phong cách makeup a lens suits — the sidebar's chips (Figma PLP 55:2). */
+export const makeupStyleSchema = z.enum(['natural', 'pink', 'orange', 'smoky']);
+/**
+ * Vivimoon's named product series — the sidebar's "Bộ sưu tập". Called a series in code
+ * because a Collection is already the curated product list a `/collection/<slug>` shows.
+ */
+export const lensSeriesSchema = z.enum(['lenspresso', 'eyeconic', 'clear']);
+/** Dịp sử dụng — occasions a lens is merchandised for. */
+export const occasionSchema = z.enum(['graduation', 'wedding', 'party', 'date', 'travel', 'photoshoot']);
+
 /** The "Xem lens với tone makeup gợi ý" chips — labels live in the dictionary. */
 export const makeupToneSchema = z.enum(['peach', 'terracotta', 'warmNude', 'sunlight', 'indoor']);
 
@@ -96,9 +106,13 @@ export const productSchema = z.object({
   variants: z.array(variantSchema).min(1),
   rating: z.number().min(0).max(5),
   reviewCount: z.number().int().nonnegative(),
-  // PDP merchandising (#199). All optional: a section hides when its data is missing.
+  // Merchandising data the collection sidebar filters and the cards show (#194), and the PDP (#199).
+  // All optional: a lens without them is simply never matched by that facet.
   subtitle: z.string().optional(),
   soldCount: z.number().int().nonnegative().optional(),
+  makeupStyles: z.array(makeupStyleSchema).optional(),
+  series: z.array(lensSeriesSchema).optional(),
+  occasions: z.array(occasionSchema).optional(),
   comfort: comfortSchema.optional(),
   videos: z.array(productVideoSchema).optional(),
   makeupTones: z.array(z.object({ tone: makeupToneSchema, image: z.string() })).optional(),
@@ -316,19 +330,48 @@ export function diameterMm(spec: string): number | null {
   return Number.isNaN(mm) ? null : mm;
 }
 
+/**
+ * A comma-separated set whose every member passes `isValid`. The sidebar's checkboxes and
+ * chips select several values of one facet at once, and a lens matches when it has any.
+ */
+const csvOf = (isValid: (part: string) => boolean, message: string) =>
+  z.string().refine((v) => v.split(',').every(isValid), { message });
+const csvOfEnum = (schema: z.ZodEnum<[string, ...string[]]>) =>
+  csvOf((part) => schema.safeParse(part).success, `must be a comma-separated set of ${schema.options.join(', ')}`);
+const price = z.coerce.number().int().nonnegative();
+
+/**
+ * The sidebar's Khoảng giá presets, in VND as the design draws them. Both ends inclusive,
+ * matched against a lens's cheapest variant. `id` is what the facet counts are keyed by.
+ */
+export const PRICE_PRESETS = [
+  { id: 'under-200k', min: undefined, max: 199_999 },
+  { id: '200k-300k', min: 200_000, max: 300_000 },
+  { id: 'over-300k', min: 300_001, max: undefined },
+] as const;
+
+/** The collection listing's default order, so its URL only carries a sort the shopper changed. */
+export const DEFAULT_SORT = 'bestselling';
+/** One page of the collection grid; "Xem thêm" asks for this many more through `?show=`. */
+export const COLLECTION_PAGE_SIZE = 8;
+
 /** Parses raw URL search params, so pages can hand `searchParams` straight in. */
 export const productQuerySchema = z.object({
   productLine: blankToUndefined(productLineSchema),
-  replacement: blankToUndefined(replacementScheduleSchema),
+  replacement: blankToUndefined(csvOfEnum(replacementScheduleSchema)),
   brandId: blankToUndefined(z.string()),
   /** One color, or a comma-separated set of them — a Color Family tile sends its whole set (CONTEXT.md). */
   color: blankToUndefined(z.string()),
-  /** An inclusive millimetre range, as a Lens Facet's diameter bucket sends it. */
+  /** Inclusive millimetre ranges, as a Lens Facet's diameter bucket or the sidebar's width chips send them. */
   diameter: blankToUndefined(
-    z.string().refine((v) => parseDiameterRange(v) !== null, {
-      message: 'diameter must be an inclusive millimetre range, like 13.5-13.9',
-    })
+    csvOf((part) => parseDiameterRange(part) !== null, 'diameter must be inclusive millimetre ranges, like 13.5-13.9')
   ),
+  makeupStyle: blankToUndefined(csvOfEnum(makeupStyleSchema)),
+  series: blankToUndefined(csvOfEnum(lensSeriesSchema)),
+  occasion: blankToUndefined(csvOfEnum(occasionSchema)),
+  /** Inclusive bounds on a lens's cheapest variant, in the catalog's currency. */
+  minPrice: blankToUndefined(price),
+  maxPrice: blankToUndefined(price),
   /**
    * What the lens is made of, matched exactly against the catalog's own wording.
    *
@@ -369,6 +412,9 @@ export type ReplacementSchedule = z.infer<typeof replacementScheduleSchema>;
 export type ProductBadge = z.infer<typeof productBadgeSchema>;
 export type Currency = z.infer<typeof currencySchema>;
 export type ReviewSource = z.infer<typeof reviewSourceSchema>;
+export type MakeupStyle = z.infer<typeof makeupStyleSchema>;
+export type LensSeries = z.infer<typeof lensSeriesSchema>;
+export type Occasion = z.infer<typeof occasionSchema>;
 export type ProductSpecs = z.infer<typeof productSpecsSchema>;
 export type Variant = z.infer<typeof variantSchema>;
 export type Product = z.infer<typeof productSchema>;

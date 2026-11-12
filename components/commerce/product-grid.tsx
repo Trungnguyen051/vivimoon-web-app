@@ -6,11 +6,12 @@ import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { ProductCard } from './product-card';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
 import { toGa4Items } from '@/lib/analytics/events';
+import { cn } from '@/lib/utils/cn';
 
 export function ProductGrid({
-  products, locale, dict, listId,
+  products, locale, dict, listId, className,
 }: {
-  products: Product[]; locale: Locale; dict: Dictionary; listId: string;
+  products: Product[]; locale: Locale; dict: Dictionary; listId: string; className?: string;
 }) {
   const { track } = useAnalytics();
   useEffect(() => {
@@ -18,7 +19,7 @@ export function ProductGrid({
   }, [listId, products, track]);
 
   return (
-    <div className="grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
+    <div className={cn('grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6', className)}>
       {products.map((p) => (
         <ProductCard
           key={p.id}

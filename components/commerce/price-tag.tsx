@@ -13,7 +13,7 @@ export function PriceTag({
   const onSale = Boolean(compareAtPrice);
   const discount = compareAtPrice ? Math.round((1 - price / compareAtPrice) * 100) : 0;
   return (
-    <div className={cn('flex items-baseline gap-2', className)}>
+    <div className={cn('flex flex-wrap items-baseline gap-x-2', className)}>
       <span className={cn('font-semibold tabular-nums', onSale && 'text-primary')}>
         {formatPrice(price, currency, locale)}
       </span>
