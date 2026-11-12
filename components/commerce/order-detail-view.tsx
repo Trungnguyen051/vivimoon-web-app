@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { withProducts } from './history-lines';
+import { shippingMethodName } from '@/lib/orders/shipping-method-name';
 import { RxSummary } from './rx-summary';
 import { OrderStatusTimeline } from './order-status-timeline';
 import { OrderActions } from './order-actions';
@@ -42,8 +43,7 @@ export async function OrderDetailView({ order, locale, dict, signedIn }: {
     [dict.orderDetail.recipient, address.recipient],
     [dict.orderDetail.phone, address.phone],
     [dict.orderDetail.address, [address.line1, address.ward, address.district, address.province].join(', ')],
-    // Stored as the option id; an id this dictionary does not know shows as-is.
-    [dict.orderDetail.shippingMethod, order.shippingMethod && (dict.orderDetail.shippingMethods[order.shippingMethod as keyof typeof dict.orderDetail.shippingMethods] ?? order.shippingMethod)],
+    [dict.orderDetail.shippingMethod, order.shippingMethod && shippingMethodName(order.shippingMethod, dict)],
     [dict.orderDetail.carrierTrackingCode, order.carrierTrackingCode],
   ];
 

@@ -38,7 +38,7 @@ export const orderSchema = z.object({
   // always-empty array, and `currency` is narrowed back to required: an
   // order that priced nothing cannot exist.
   totals: pricedCartSchema
-    .omit({ lines: true, unavailableLines: true, shippingMethod: true })
+    .omit({ lines: true, unavailableLines: true, shippingMethod: true, shippingEtaDays: true })
     .extend({ currency: currencySchema }),
   address: addressSchema,
   // Id of the shipping option charged at placement (localized for display);

@@ -138,6 +138,7 @@ export const mockPricing = {
     // quoted option, same selection order placement already made itself.
     let shippingFee = 0;
     let shippingMethod: string | undefined;
+    let shippingEtaDays: number | undefined;
     if (input.shipping) {
       const options = await shipping.quote({
         province: input.shipping.province,
@@ -151,6 +152,7 @@ export const mockPricing = {
       }
       shippingFee = match.fee;
       shippingMethod = match.id;
+      shippingEtaDays = match.etaDays;
     }
 
     const { discount, applied } = bestVoucher(subtotal, shippingFee, userId !== null);
@@ -163,7 +165,7 @@ export const mockPricing = {
       discount,
       appliedVouchers: applied,
       shipping: shippingFee,
-      ...(shippingMethod ? { shippingMethod } : {}),
+      ...(shippingMethod ? { shippingMethod, shippingEtaDays } : {}),
       total,
       currency,
     };

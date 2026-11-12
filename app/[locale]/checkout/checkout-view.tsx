@@ -16,6 +16,7 @@ import { apiRequest } from '@/lib/api/client';
 import type { Order } from '@/lib/api/schemas/orders';
 import { isPhone, type User } from '@/lib/api/schemas/auth';
 import type { SavedAddress } from '@/lib/api/schemas/account';
+import { ShippingBlock } from '@/components/commerce/shipping-block';
 import { OrderSummary } from '@/components/commerce/order-summary';
 import { PaymentMethodPicker } from '@/components/commerce/payment-method-picker';
 import { Button } from '@/components/ui/button';
@@ -127,7 +128,14 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
   const shippingAddress = watchedProvince && watchedDistrict
     ? { province: watchedProvince, district: watchedDistrict }
     : null;
-  const { result: priced } = usePricedCart(lines, hydrated || isBuyNow, sessionStatus, shippingAddress);
+  const { result: priced, isPending: pricePending, isError: priceFailed } = usePricedCart(lines, hydrated || isBuyNow, sessionStatus, shippingAddress);
+  // The delivery promise is withheld while a re-quote is in flight or failed — the hook keeps the last
+  // good result for the summary, but an old option must not read as current.
+  // shortcut: the hook's 300ms debounce isn't reported as pending, so an address edit can show the
+  // previous option for that long; upgrade by having usePricedCart flag pending when it schedules.
+  const shippingQuote = !pricePending && !priceFailed && priced?.shippingMethod && priced.shippingEtaDays
+    ? { method: priced.shippingMethod, etaDays: priced.shippingEtaDays, fee: priced.shipping }
+    : null;
   // Order placement refuses a cart with an unavailable line (ADR-0012), so
   // the button is blocked here rather than letting the shopper fill the whole
   // form and fail at submit. The cart page is where the line can be removed.
@@ -233,6 +241,8 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
                 );
               })}
             </FieldGroup>
+
+            <ShippingBlock quote={shippingQuote} failed={priceFailed} currency={currency} locale={locale} dict={dict} />
 
             <PaymentMethodPicker
               value={paymentMethod}
