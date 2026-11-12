@@ -226,6 +226,12 @@ export const en = {
   orders: {
     title: 'Order history', empty: 'You have no orders yet.',
     code: 'Order', date: 'Date', status: 'Status', total: 'Total',
+    cancelOrder: 'Cancel order', cancelTitle: 'Cancel this order?',
+    cancelBody: 'The order will be cancelled and cannot be restored.', cancelConfirm: 'Yes, cancel order',
+    cancelKeep: 'Keep order', cancelFailed: 'This order can no longer be cancelled.',
+    returnItems: 'Return', review: 'Review', buyAgain: 'Buy again',
+    showMore: 'Show {n} more items', showLess: 'Show less', totalItems: 'Total ({n} items)',
+    unavailable: '{n} item(s) are no longer available and were not added to your cart.', viewCart: 'View cart',
     statuses: {
       placed: 'Placed', confirmed: 'Confirmed', packed: 'Packed', shipped: 'Shipped',
       out_for_delivery: 'Out for delivery', delivered: 'Delivered', cancelled: 'Cancelled', returned: 'Returned',

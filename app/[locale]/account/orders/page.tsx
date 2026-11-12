@@ -1,14 +1,13 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { PackageOpen } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+import { OrderHistoryCard, type HistoryLine } from '@/components/commerce/order-history-card';
+import { catalog } from '@/lib/api/resources/catalog';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { readSessionUserId } from '@/lib/auth/cookie';
 import { fetchViaSelf } from '@/lib/api/server-fetch';
-import { formatPrice, toIntlLocale } from '@/lib/utils/format';
 import type { ApiResult } from '@/lib/api/client';
 import type { Order } from '@/lib/api/schemas/orders';
 
@@ -26,19 +25,20 @@ async function fetchOrders(locale: string): Promise<Order[]> {
   return result.data;
 }
 
-const STATUS_VARIANT: Record<Order['status'], 'default' | 'secondary' | 'destructive'> = {
-  placed: 'secondary',
-  confirmed: 'secondary',
-  packed: 'secondary',
-  shipped: 'secondary',
-  out_for_delivery: 'secondary',
-  delivered: 'default',
-  cancelled: 'destructive',
-  returned: 'destructive',
-};
-
-function formatDate(iso: string, locale: Locale): string {
-  return new Intl.DateTimeFormat(toIntlLocale(locale), { dateStyle: 'medium' }).format(new Date(iso));
+/** Catalogue facts per line, looked up server-side (same as the detail view); money stays the order's own. */
+async function withProducts(order: Order): Promise<HistoryLine[]> {
+  return Promise.all(
+    order.lines.map(async (line) => {
+      const found = await catalog.getVariantById(line.variantId);
+      return {
+        ...line,
+        product: found && {
+          id: found.product.id, slug: found.product.slug, name: found.product.name, image: found.product.images[0],
+          sku: found.variant.sku, color: found.variant.colorLabel, compareAtPrice: found.variant.compareAtPrice,
+        },
+      };
+    }),
+  );
 }
 
 export default async function OrderHistoryPage({ params }: { params: Promise<{ locale: string }> }) {
@@ -54,6 +54,7 @@ export default async function OrderHistoryPage({ params }: { params: Promise<{ l
   if (!userId) redirect(`/${locale}/sign-in?next=${encodeURIComponent(`/${locale}/account/orders`)}`);
 
   const orders = await fetchOrders(locale);
+  const cards = await Promise.all(orders.map(async (order) => ({ order, lines: await withProducts(order) })));
 
   return (
     <>
@@ -71,22 +72,9 @@ export default async function OrderHistoryPage({ params }: { params: Promise<{ l
           </Empty>
         ) : (
           <ul className="flex flex-col gap-3">
-            {orders.map((order) => (
+            {cards.map(({ order, lines }) => (
               <li key={order.id}>
-                <Link href={`/${locale}/account/orders/${order.id}`} className="block">
-                  <Card className="transition-colors hover:bg-muted/50">
-                    <CardContent className="flex items-center justify-between gap-4 py-4">
-                      <div className="flex flex-col gap-1">
-                        <span className="font-medium">{order.code}</span>
-                        <span className="text-sm text-muted-foreground">{formatDate(order.placedAt, locale)}</span>
-                      </div>
-                      <div className="flex flex-col items-end gap-1">
-                        <Badge variant={STATUS_VARIANT[order.status]}>{dict.orders.statuses[order.status]}</Badge>
-                        <span className="font-medium">{formatPrice(order.totals.total, order.totals.currency, locale)}</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
+                <OrderHistoryCard order={order} lines={lines} locale={locale} dict={dict} />
               </li>
             ))}
           </ul>

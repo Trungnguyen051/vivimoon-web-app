@@ -6,7 +6,7 @@ import { normalizePhone } from '@/lib/api/schemas/auth';
 
 /** Thrown by the mock so the route handler can map it to an envelope. */
 export class OrderError extends Error {
-  constructor(message: string, readonly code: 'validation_failed') {
+  constructor(message: string, readonly code: 'validation_failed' | 'conflict') {
     super(message);
     this.name = 'OrderError';
   }
@@ -135,6 +135,17 @@ export const mockOrders = {
   /** Looked up by id alone — the route handler is what enforces ownership (issue #11). */
   async get(id: string): Promise<Order | null> {
     return store.get(id) ?? null;
+  },
+
+  /** Only a not-yet-packed order can be cancelled; ownership is the route's check. */
+  async cancel(id: string): Promise<Order> {
+    const order = store.get(id);
+    if (!order) throw new OrderError('order not found', 'validation_failed');
+    if (order.status !== 'placed' && order.status !== 'confirmed') {
+      throw new OrderError(`a ${order.status} order cannot be cancelled`, 'conflict');
+    }
+    order.status = 'cancelled';
+    return order;
   },
 
   /**
