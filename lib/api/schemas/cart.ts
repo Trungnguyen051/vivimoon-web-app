@@ -28,6 +28,8 @@ export const cartLineSchema = z.object({
   currency: currencySchema,
   quantity: z.number().int().positive().max(MAX_LINE_QUANTITY),
   image: z.string().optional(),
+  // An accessory's variant option, e.g. '120ml' — what its line summary shows.
+  variantLabel: z.string().optional(),
   purchaseUnit: purchaseUnitSchema.optional(),
   rx: lineRxSchema.optional(),
 }).superRefine(refineUnitMatchesRx);

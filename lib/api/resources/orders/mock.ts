@@ -99,13 +99,15 @@ export const mockOrders = {
         const requested = inputByLineKey.get(line.lineKey);
         const rx = requested?.rx;
         const purchaseUnit = requested && purchaseUnitOf(requested);
-        const perLens = (await catalog.getVariantById(line.variantId))?.variant.compareAtPrice;
+        const variant = (await catalog.getVariantById(line.variantId))?.variant;
+        const perLens = variant?.compareAtPrice;
         // Per unit, like `unitPrice`: a pair's compare-at is two lenses' (ADR-0023).
         const compareAt = perLens === undefined ? undefined : perLens * lensesIn(purchaseUnit);
         return {
           ...line,
           rx,
           ...(purchaseUnit ? { purchaseUnit } : {}),
+          ...(variant?.label ? { variantLabel: variant.label } : {}),
           ...(compareAt !== undefined && compareAt > line.unitPrice ? { compareAtUnitPrice: compareAt } : {}),
         };
       }),

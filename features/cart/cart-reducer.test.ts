@@ -117,6 +117,29 @@ describe('cartReducer — addressing lines by lineKey', () => {
   });
 });
 
+describe('cartReducer — editing an accessory line (Product Kind)', () => {
+  const ml120 = makeLine({ productId: 'a1', variantId: 'a1-120', sku: 'A-120', variantLabel: '120ml', unitPrice: 4 });
+  const ml360 = makeLine({ productId: 'a1', variantId: 'a1-360', sku: 'A-360', variantLabel: '360ml', unitPrice: 8 });
+
+  it('adds an accessory line with no Rx, keyed by its variant', () => {
+    const s = cartReducer(empty, { type: 'ADD', line: ml120 });
+    expect(s.lines).toEqual([ml120]);
+    expect(s.lines[0].lineKey).toBe('a1-120');
+  });
+
+  it('EDIT swaps the variant in place and re-keys the line', () => {
+    const start = cartReducer(cartReducer(empty, { type: 'ADD', line: { ...ml120, quantity: 2 } }), { type: 'ADD', line: plain });
+    const s = cartReducer(start, { type: 'EDIT', lineKey: ml120.lineKey, line: { ...ml360, lineKey: ml120.lineKey, quantity: 2 } });
+    expect(s.lines.map((l) => [l.lineKey, l.variantLabel, l.quantity])).toEqual([['a1-360', '360ml', 2], [plain.lineKey, undefined, 1]]);
+  });
+
+  it('EDIT merges into a line that becomes identical', () => {
+    const start = cartReducer(cartReducer(empty, { type: 'ADD', line: ml120 }), { type: 'ADD', line: { ...ml360, quantity: 2 } });
+    const s = cartReducer(start, { type: 'EDIT', lineKey: ml120.lineKey, line: { ...ml360, quantity: 1 } });
+    expect(s.lines.map((l) => [l.lineKey, l.quantity])).toEqual([['a1-360', 3]]);
+  });
+});
+
 describe('cartCount', () => {
   it('sums quantities across lines', () => {
     const s = cartReducer(cartReducer(empty, { type: 'ADD', line: { ...atA, quantity: 2 } }), {

@@ -17,4 +17,9 @@ describe('formatLineSummary (ADR-0023)', () => {
     expect(formatLineSummary({ rx: pair(-1, -1) }, vi)).toBe('1 đôi · L −1.00 · R −1.00');
     expect(formatLineSummary({}, vi)).toBeNull();
   });
+
+  it('formats an accessory as its variant and quantity', () => {
+    expect(formatLineSummary({ variantLabel: '120ml', quantity: 1 }, vi)).toBe('120ml · x1');
+    expect(formatLineSummary({ variantLabel: '120ml', quantity: 3 }, vi)).toBe('120ml · x3');
+  });
 });

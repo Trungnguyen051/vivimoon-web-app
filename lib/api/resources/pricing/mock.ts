@@ -115,6 +115,11 @@ export const mockPricing = {
         throw new PricingError(`line "${line.lineKey}" is not a lens: it takes no unit or prescription`, 'validation_failed');
       }
 
+      // A Gift is never a Cart Line (CONTEXT.md "Gift"): a gift-only item is not for sale.
+      if ('giftOnly' in found.product && found.product.giftOnly) {
+        throw new PricingError(`line "${line.lineKey}" is a gift and cannot be bought`, 'validation_failed');
+      }
+
       // The listed price is per single lens; a pair costs two (ADR-0023).
       // A unit-less line with an Rx predates units and is read as a pair.
       const unitPrice = found.variant.price * lensesIn(purchaseUnitOf(line));

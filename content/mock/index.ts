@@ -1,4 +1,5 @@
 export { products } from './products';
+export { accessories } from './accessories';
 export { galleries } from './galleries';
 export { collections } from './collections';
 export { reviews } from './reviews';

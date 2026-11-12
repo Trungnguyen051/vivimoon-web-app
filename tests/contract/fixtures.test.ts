@@ -7,9 +7,9 @@
  */
 import { describe, it, expect } from 'vitest';
 import { z } from 'zod';
-import { products, collections, reviews, users, vouchers, orders, galleries, articles } from '@/content/mock';
+import { products, accessories, collections, reviews, users, vouchers, orders, galleries, articles } from '@/content/mock';
 import { quiz } from '@/content/quiz';
-import { productSchema, collectionSchema, reviewSchema, lensGallerySchema, productLineSchema } from '@/lib/api/schemas/catalog';
+import { productSchema, accessorySchema, collectionSchema, reviewSchema, lensGallerySchema, productLineSchema } from '@/lib/api/schemas/catalog';
 import { quizDefinitionSchema } from '@/lib/api/schemas/discovery';
 import { articleSchema } from '@/lib/api/schemas/editorial';
 import { userSchema } from '@/lib/api/schemas/auth';
@@ -38,6 +38,11 @@ describe('fixture conformance', () => {
 
   it('every product satisfies productSchema', () => {
     expectAllValid(productSchema, products, 'product');
+  });
+
+  it('every accessory satisfies accessorySchema', () => {
+    expect(accessories.length).toBeGreaterThan(0);
+    expectAllValid(accessorySchema, accessories, 'accessory');
   });
 
   it('every article satisfies articleSchema', () => {
@@ -77,7 +82,8 @@ describe('fixture conformance', () => {
   });
 
   it('variant ids are globally unique', () => {
-    const all = products.flatMap((p) => p.variants.map((v) => v.id));
+    // Across lenses AND accessories: pricing looks a variant up by id alone.
+    const all = [...products, ...accessories].flatMap((p) => p.variants.map((v) => v.id));
     expect(all.length).toBe(new Set(all).size);
   });
 

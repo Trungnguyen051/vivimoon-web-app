@@ -24,6 +24,7 @@ export interface CartStore extends CartState {
   add: (line: CartLine) => void;
   updateQty: (lineKey: string, quantity: number) => void;
   remove: (lineKey: string) => void;
+  edit: (lineKey: string, line: CartLine) => void;
   clear: () => void;
   /**
    * Buy Now (spec §10): a single line held outside `lines`, so checkout can
@@ -52,6 +53,7 @@ export const useCartStore = create<CartStore>()(
       add: (line) => set((s) => cartReducer(s, { type: 'ADD', line })),
       updateQty: (lineKey, quantity) => set((s) => cartReducer(s, { type: 'UPDATE_QTY', lineKey, quantity })),
       remove: (lineKey) => set((s) => cartReducer(s, { type: 'REMOVE', lineKey })),
+      edit: (lineKey, line) => set((s) => cartReducer(s, { type: 'EDIT', lineKey, line })),
       clear: () => set((s) => cartReducer(s, { type: 'CLEAR' })),
       buyNowLine: null,
       setBuyNowLine: (line) => set({ buyNowLine: line }),
