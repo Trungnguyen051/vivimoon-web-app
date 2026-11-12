@@ -8,6 +8,9 @@ import TrackOrderPage from './page';
 vi.mock('@/lib/api/server-fetch', () => ({ fetchViaSelf: vi.fn() }));
 const mockedFetchViaSelf = vi.mocked(fetchViaSelf);
 
+const session = vi.hoisted(() => ({ userId: null as string | null }));
+vi.mock('@/lib/auth/cookie', () => ({ readSessionUserId: async () => session.userId }));
+
 vi.mock('next/navigation', () => ({
   notFound: () => {
     throw new Error('NEXT_NOT_FOUND');
@@ -35,7 +38,7 @@ async function renderPage(code?: string) {
 }
 
 describe('Track Order page (Order Lookup)', () => {
-  beforeEach(() => { mockedFetchViaSelf.mockReset(); });
+  beforeEach(() => { mockedFetchViaSelf.mockReset(); session.userId = null; });
 
   it('shows the lookup form and the idle prompt when no code is given', async () => {
     await renderPage();
@@ -67,5 +70,13 @@ describe('Track Order page (Order Lookup)', () => {
     await renderPage('   ');
     expect(screen.getByText(dict.idle)).toBeInTheDocument();
     expect(mockedFetchViaSelf).not.toHaveBeenCalled();
+  });
+
+  it('links back to the account only for a signed-in member', async () => {
+    await renderPage();
+    expect(screen.queryByRole('link', { name: dict.backToAccount })).not.toBeInTheDocument();
+    session.userId = 'u-001';
+    await renderPage();
+    expect(screen.getByRole('link', { name: dict.backToAccount })).toHaveAttribute('href', '/vi/account');
   });
 });

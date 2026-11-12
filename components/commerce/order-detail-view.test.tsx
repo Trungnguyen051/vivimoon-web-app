@@ -1,11 +1,22 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { useCartStore } from '@/features/cart/cart-store';
 import type { Order } from '@/lib/api/schemas/orders';
 import type { OrderStatus } from '@/lib/orders/statuses';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { OrderDetailView } from './order-detail-view';
 
+const push = vi.fn();
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push, refresh: vi.fn() }) }));
+
 const dict = getDictionary('vi');
+
+beforeEach(() => {
+  localStorage.clear();
+  useCartStore.setState({ lines: [], hydrated: true });
+  push.mockClear();
+});
 
 function order(overrides: Partial<Order> = {}): Order {
   return {
@@ -21,8 +32,8 @@ function order(overrides: Partial<Order> = {}): Order {
   };
 }
 
-async function renderView(o: Order) {
-  render(await OrderDetailView({ order: o, locale: 'vi', dict }));
+async function renderView(o: Order, signedIn = false) {
+  render(await OrderDetailView({ order: o, locale: 'vi', dict, signedIn }));
 }
 
 const currentStep = () => screen.getByRole('listitem', { current: 'step' });
@@ -124,5 +135,21 @@ describe('OrderDetailView delivery info', () => {
     expect(field(dict.orderDetail.shippingMethod)).toHaveTextContent('—');
     expect(field(dict.orderDetail.carrierTrackingCode)).toHaveTextContent('—');
     expect(screen.queryByText('Thanh toán')).not.toBeInTheDocument(); // the wireframe drops payment method
+  });
+});
+
+describe('OrderDetailView actions', () => {
+  it('lets a guest buy again, with no account-only link', async () => {
+    await renderView(order());
+    expect(screen.queryByRole('link', { name: dict.orderDetail.backToOrders })).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: dict.orders.buyAgain }));
+    expect(useCartStore.getState().lines.map((l) => l.variantId)).toEqual(['p-aqua-daily-30']);
+    expect(push).toHaveBeenCalledWith('/vi/cart');
+  });
+
+  it('adds a link back to order history for a signed-in member', async () => {
+    await renderView(order(), true);
+    expect(screen.getByRole('link', { name: dict.orderDetail.backToOrders })).toHaveAttribute('href', '/vi/account/orders');
+    expect(screen.getByRole('button', { name: dict.orders.buyAgain })).toBeInTheDocument();
   });
 });

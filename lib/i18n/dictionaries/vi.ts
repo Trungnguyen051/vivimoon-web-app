@@ -286,7 +286,7 @@ export const vi: Dictionary = {
     lineItems: 'Sản phẩm', totalLabel: 'Tổng số tiền', items: 'sản phẩm',
     delivery: 'Thông tin giao hàng', recipient: 'Người nhận', phone: 'Số điện thoại', address: 'Địa chỉ',
     shippingMethod: 'Phương thức vận chuyển', carrierTrackingCode: 'Mã vận đơn của bên giao hàng',
-    backToOrders: 'Quay lại lịch sử đơn hàng',
+    backToOrders: 'Về lịch sử đơn hàng',
   },
   tracking: {
     title: 'Tra cứu đơn hàng', subtitle: 'Nhập mã đơn hàng của bạn để xem trạng thái giao hàng và thông tin chi tiết.',
@@ -294,7 +294,7 @@ export const vi: Dictionary = {
     idle: 'Nhập mã đơn hàng để xem kết quả tra cứu.',
     notFoundTitle: 'Không tìm thấy đơn hàng', notFoundBefore: 'Mã đơn hàng ',
     notFoundAfter: ' không tồn tại. Vui lòng kiểm tra lại hoặc liên hệ Vivimoon để được hỗ trợ.',
-    contactSupport: 'Liên hệ hỗ trợ →',
+    contactSupport: 'Liên hệ hỗ trợ →', backToAccount: '← Quay lại tài khoản',
   },
   addresses: {
     title: 'Địa chỉ đã lưu', empty: 'Bạn chưa lưu địa chỉ nào.',

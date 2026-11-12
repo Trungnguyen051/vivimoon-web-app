@@ -5,6 +5,7 @@ import { Search, X } from 'lucide-react';
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { fetchViaSelf } from '@/lib/api/server-fetch';
+import { readSessionUserId } from '@/lib/auth/cookie';
 import type { ApiResult } from '@/lib/api/client';
 import { normalizeOrderCode, type Order } from '@/lib/api/schemas/orders';
 import { OrderDetailView } from '@/components/commerce/order-detail-view';
@@ -38,7 +39,10 @@ export default async function TrackOrderPage({ params, searchParams }: {
 
   const query = (await searchParams).code;
   const typed = (Array.isArray(query) ? query[0] : query)?.trim() ?? '';
-  const order = normalizeOrderCode(typed) ? await lookUpOrder(typed) : undefined;
+  const [order, signedIn] = await Promise.all([
+    normalizeOrderCode(typed) ? lookUpOrder(typed) : undefined,
+    readSessionUserId().then(Boolean),
+  ]);
 
   return (
     <div className="flex w-full flex-col">
@@ -48,6 +52,11 @@ export default async function TrackOrderPage({ params, searchParams }: {
           <p className="text-sm leading-6 text-muted-foreground">{dict.tracking.subtitle}</p>
         </div>
         <OrderLookupForm locale={locale} dict={dict.tracking} defaultCode={typed || undefined} />
+        {signedIn ? (
+          <Link href={`/${locale}/account`} className="text-xs text-muted-foreground underline underline-offset-4">
+            {dict.tracking.backToAccount}
+          </Link>
+        ) : null}
       </section>
 
       {order === undefined ? (
@@ -76,7 +85,7 @@ export default async function TrackOrderPage({ params, searchParams }: {
         </div>
       ) : (
         <div className="mx-auto w-full max-w-[720px] px-4 py-10">
-          <OrderDetailView order={order} locale={locale} dict={dict} />
+          <OrderDetailView order={order} locale={locale} dict={dict} signedIn={signedIn} />
         </div>
       )}
     </div>

@@ -290,7 +290,7 @@ export const en = {
     idle: 'Enter an order code to see the result.',
     notFoundTitle: 'Order not found', notFoundBefore: 'Order code ',
     notFoundAfter: ' does not exist. Please check it again or contact Vivimoon for help.',
-    contactSupport: 'Contact support →',
+    contactSupport: 'Contact support →', backToAccount: '← Back to account',
   },
   addresses: {
     title: 'Saved addresses', empty: 'You have no saved addresses yet.',

@@ -2,6 +2,8 @@ import Image from 'next/image';
 import { catalog } from '@/lib/api/resources/catalog';
 import { RxSummary } from './rx-summary';
 import { OrderStatusTimeline } from './order-status-timeline';
+import { OrderActions } from './order-actions';
+import type { HistoryLine } from './order-history-card';
 import { formatPrice, toIntlLocale } from '@/lib/utils/format';
 import type { Order } from '@/lib/api/schemas/orders';
 import type { Locale } from '@/lib/i18n/config';
@@ -31,10 +33,20 @@ const TONE_CLASS: Record<Tone, string> = {
  * the exact same detail for the exact same `Order`, which is what makes
  * "one tracking view" true rather than two pages that merely look alike.
  */
-export async function OrderDetailView({ order, locale, dict }: { order: Order; locale: Locale; dict: Dictionary }) {
+export async function OrderDetailView({ order, locale, dict, signedIn }: {
+  order: Order; locale: Locale; dict: Dictionary; signedIn: boolean;
+}) {
   const enrichedLines = await Promise.all(
     order.lines.map(async (line) => ({ line, found: await catalog.getVariantById(line.variantId) })),
   );
+  // The same line shape the history card's buy-again reads — today's catalogue price, not the order's.
+  const historyLines: HistoryLine[] = enrichedLines.map(({ line, found }) => ({
+    ...line,
+    product: found && {
+      id: found.product.id, slug: found.product.slug, name: found.product.name, image: found.product.images[0],
+      sku: found.variant.sku, color: found.variant.colorLabel, compareAtPrice: found.variant.compareAtPrice, price: found.variant.price,
+    },
+  }));
   const itemCount = order.lines.reduce((sum, l) => sum + l.quantity, 0);
   const { address } = order;
   const delivery: [string, string | undefined][] = [
@@ -114,6 +126,8 @@ export async function OrderDetailView({ order, locale, dict }: { order: Order; l
           ))}
         </dl>
       </section>
+
+      <OrderActions lines={historyLines} locale={locale} dict={dict} signedIn={signedIn} />
     </div>
   );
 }
