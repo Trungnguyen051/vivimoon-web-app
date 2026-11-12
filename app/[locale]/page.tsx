@@ -128,7 +128,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         />
       </HomeSection>
 
-      <HomeSection tinted>
+      <HomeSection tinted id="vivimoon-tv">
         <ContentCarousel
           title={dict.home.tv.title}
           avatar="/images/tv-avatar.png"

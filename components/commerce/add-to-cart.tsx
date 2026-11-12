@@ -1,10 +1,10 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Product, Variant } from '@/lib/types';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
-import { Truck } from 'lucide-react';
+import { ShoppingBag } from 'lucide-react';
 import { VariantSelector } from './variant-selector';
 import { RxSelector, defaultRxDraft, draftToRx, type RxDraft } from './rx-selector';
 import { PriceTag } from './price-tag';
@@ -22,7 +22,15 @@ import type { CartLine } from '@/features/cart/cart.types';
 /** The support guide behind "Hướng dẫn chọn độ" (content/mock/support.ts). */
 const POWER_GUIDE_SLUG = 'chon-do-can-the-nao';
 
-export function AddToCart({ product, locale, dict }: { product: Product; locale: Locale; dict: Dictionary }) {
+export function AddToCart({
+  product, locale, dict, children, favorite,
+}: {
+  product: Product; locale: Locale; dict: Dictionary;
+  /** The PDP's promo chips and comfort block, which the frame draws between the price and the options. */
+  children?: ReactNode;
+  /** The favourite toggle, beside the buttons from md up. */
+  favorite?: ReactNode;
+}) {
   const { add } = useCart();
   const { setBuyNowLine } = useBuyNow();
   const router = useRouter();
@@ -97,6 +105,7 @@ export function AddToCart({ product, locale, dict }: { product: Product; locale:
         />
         {unit ? <span className="text-base text-muted-foreground">{dict.pdp.perUnit[unit]}</span> : null}
       </div>
+      {children}
       <Separator />
       <VariantSelector product={product} dict={dict} onVariantChange={setVariant} />
       {product.requiresRx ? (
@@ -117,15 +126,15 @@ export function AddToCart({ product, locale, dict }: { product: Product; locale:
           </span>
         ) : null}
       </div>
-      <div className="flex flex-col gap-3">
-        <Button onClick={onAdd} size="xl" className="w-full">{dict.common.addToCart}</Button>
-        <Button onClick={onBuyNow} variant="outline" size="xl" className="w-full">
+      <div className="flex flex-col gap-2 md:flex-row md:gap-3">
+        <Button onClick={onAdd} size="xl" className="w-full md:flex-1">
+          <ShoppingBag className="size-4.5" aria-hidden />
+          {dict.common.addToCart}
+        </Button>
+        <Button onClick={onBuyNow} variant="outline" size="xl" className="w-full md:flex-1">
           {dict.common.buyNow}
         </Button>
-      </div>
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <Truck className="size-4" />
-        {dict.pdp.freeship}
+        {favorite ? <div className="hidden md:flex">{favorite}</div> : null}
       </div>
     </div>
   );
