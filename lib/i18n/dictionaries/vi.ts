@@ -207,6 +207,7 @@ export const vi: Dictionary = {
     },
   },
   account: {
+    accountInfo: 'Thông tin tài khoản', memberSince: 'Thành viên từ {date}', backToAccount: 'Tài khoản',
     title: 'Tài khoản của tôi', infoTitle: 'Thông tin tài khoản',
     phone: 'Số điện thoại', phoneLocked: 'Không thể thay đổi số điện thoại.',
     email: 'Email', name: 'Họ và tên', dob: 'Ngày sinh',

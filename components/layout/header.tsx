@@ -87,7 +87,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
           <Link
             href={`/${locale}/account`}
             aria-label={dict.account.title}
-            className={cn(ACTION_CLASS, 'hidden md:flex')}
+            className={ACTION_CLASS}
           >
             <User className="size-6" />
           </Link>

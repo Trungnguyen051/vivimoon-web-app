@@ -11,7 +11,6 @@ import { fetchViaSelf } from '@/lib/api/server-fetch';
 import { formatPrice, toIntlLocale } from '@/lib/utils/format';
 import type { ApiResult } from '@/lib/api/client';
 import type { Order } from '@/lib/api/schemas/orders';
-import { PageContainer } from '@/components/layout/page-container';
 
 /**
  * Goes through the same-origin route handler rather than importing the
@@ -57,7 +56,7 @@ export default async function OrderHistoryPage({ params }: { params: Promise<{ l
   const orders = await fetchOrders(locale);
 
   return (
-    <PageContainer>
+    <>
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
         <h1 className="text-3xl font-semibold tracking-tight">{dict.orders.title}</h1>
 
@@ -97,6 +96,6 @@ export default async function OrderHistoryPage({ params }: { params: Promise<{ l
           {dict.account.title}
         </Link>
       </div>
-    </PageContainer>
+    </>
   );
 }
