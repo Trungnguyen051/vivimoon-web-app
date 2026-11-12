@@ -5,6 +5,7 @@ import { AddToCart } from './add-to-cart';
 import { useCartStore } from '@/features/cart/cart-store';
 import { useSessionStore } from '@/features/session/session-store';
 import { GUEST_RX_KEY, useGuestRxStore } from '@/features/session/default-rx';
+import { useMiniCartStore } from '@/features/cart/mini-cart-store';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import type { Product } from '@/lib/types';
 
@@ -38,6 +39,7 @@ beforeEach(() => {
   // The store is a module singleton (spec §8); reset it between tests so a
   // line added in one test can't bleed into the next.
   useCartStore.setState({ lines: [], hydrated: false, buyNowLine: null });
+  useMiniCartStore.setState({ open: false, added: [] });
 });
 
 describe('AddToCart — Purchase Unit (ADR-0023)', () => {
@@ -158,5 +160,21 @@ describe('AddToCart — Default Rx pre-fill (#196)', () => {
     await userEvent.selectOptions(screen.getByRole('combobox', { name: dict.rx.power }), '-4');
     act(() => useSessionStore.getState().setUser({ id: 'u1', name: 'Mai', phone: '0900000000', defaultRx: { left: -1, right: -1 } }));
     expect(screen.getByRole('combobox', { name: dict.rx.power })).toHaveValue('-4');
+  });
+});
+
+describe('AddToCart — mini cart signal (#198)', () => {
+  it('opens the mini cart with the added line on Thêm vào giỏ', async () => {
+    render(<AddToCart product={makeProduct()} locale="en" dict={dict} />);
+    await userEvent.click(addButton());
+    const { open, added } = useMiniCartStore.getState();
+    expect(open).toBe(true);
+    expect(added).toEqual([useCartStore.getState().lines[0]]);
+  });
+
+  it('does not open it on Mua ngay', async () => {
+    render(<AddToCart product={makeProduct()} locale="en" dict={dict} />);
+    await userEvent.click(screen.getByRole('button', { name: dict.common.buyNow }));
+    expect(useMiniCartStore.getState().open).toBe(false);
   });
 });

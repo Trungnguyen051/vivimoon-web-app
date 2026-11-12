@@ -15,6 +15,7 @@ import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/features/cart/use-cart';
 import { useBuyNow } from '@/features/cart/use-buy-now';
 import { useBuyBoxStore } from '@/features/cart/buy-box-store';
+import { useMiniCartStore } from '@/features/cart/mini-cart-store';
 import { lineKey } from '@/lib/cart/line-key';
 import { lensesIn } from '@/lib/api/schemas/rx';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
@@ -33,6 +34,7 @@ export function AddToCart({
 }) {
   const { add } = useCart();
   const { setBuyNowLine } = useBuyNow();
+  const showMiniCart = useMiniCartStore((s) => s.show);
   const router = useRouter();
   const { track } = useAnalytics();
   const [variant, setVariant] = useState<Variant>(product.variants[0]);
@@ -71,6 +73,7 @@ export function AddToCart({
       productId: product.id, variantId: variant.id, name: product.name, sku: variant.sku,
       color: variant.colorLabel, unitPrice: variant.price * lenses,
       currency: variant.currency, quantity: qty, image: product.images[0],
+      productLine: product.productLine, replacement: product.replacement,
       ...(unit ? { purchaseUnit: unit, rx } : {}),
     };
   };
@@ -97,14 +100,16 @@ export function AddToCart({
   };
 
   const onAdd = () => {
-    add(buildLine());
+    const line = buildLine();
+    add(line);
     trackAddToCart();
+    showMiniCart([line]);
   };
 
   // Buy Now (spec §10): same line as Add to Cart, but it goes into the store's
   // short-lived `buyNowLine` slice instead of `lines` — the real cart is never
   // touched, so it survives an abandoned or completed buy-now checkout
-  // unchanged (app/[locale]/checkout/page.tsx).
+  // unchanged (app/[locale]/checkout/page.tsx). It opens no mini cart.
   const onBuyNow = () => {
     setBuyNowLine(buildLine());
     trackAddToCart();

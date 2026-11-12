@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Currency } from '@/lib/types';
+import type { SpendTier } from '@/lib/api/schemas/cart';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { formatPrice } from '@/lib/utils/format';
@@ -8,9 +9,13 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Separator } from '@/components/ui/separator';
 
 export function OrderSummary({
-  subtotal, bundleSaving, discount, shipping, total, currency, locale, dict, ctaHref, ctaLabel,
+  subtotal, bundleSaving, discount, tierDiscount, spendTiers, shipping, total, currency, locale, dict, ctaHref, ctaLabel,
   note, ctaBlockedReason, children,
 }: {
+  /** The reached `discount` Spend Tiers' amount off, already subtracted server-side. A row renders only when > 0. */
+  tierDiscount?: number | null;
+  /** The priced Spend Tiers, which name the threshold on the tier-discount row. */
+  spendTiers?: SpendTier[];
   /** What is being bought, above the totals (checkout's line list). */
   children?: React.ReactNode;
   /** Null until POST /api/cart/price answers. Money is server-owned (spec §7). */
@@ -61,6 +66,17 @@ export function OrderSummary({
           <div className="flex justify-between">
             <span className="text-muted-foreground">{dict.cart.discount}</span>
             <span className="tabular-nums">-{formatPrice(discount, currency, locale)}</span>
+          </div>
+        ) : null}
+        {tierDiscount ? (
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">
+              {dict.cart.tierDiscount.replace('{threshold}', formatPrice(
+                // The highest reached discount tier names the row.
+                spendTiers?.findLast((t) => t.reward === 'discount' && t.reached)?.threshold ?? 0, currency, locale,
+              ))}
+            </span>
+            <span className="tabular-nums">-{formatPrice(tierDiscount, currency, locale)}</span>
           </div>
         ) : null}
         <div className="flex justify-between">

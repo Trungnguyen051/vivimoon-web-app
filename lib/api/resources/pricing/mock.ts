@@ -4,8 +4,27 @@ import { vouchers as voucherFixtures } from '@/content/mock';
 import type { Currency } from '@/lib/api/schemas/catalog';
 import { lensesIn, purchaseUnitOf } from '@/lib/api/schemas/rx';
 import type {
-  PriceCartRequest, PricedCart, PricedLine, UnavailableLine, Voucher,
+  GiftLine, PriceCartRequest, PricedCart, PricedLine, UnavailableLine, Voucher,
 } from '@/lib/api/schemas/cart';
+import { spendTiersFor, TIER_GIFT_VARIANT_ID } from './spend-tiers';
+
+/** PROVISIONAL: a 6-month lens comes with this Gift (CONTEXT.md "Gift"). */
+const SIX_MONTH_GIFT_VARIANT_ID = 'a-kits-yeu-mat-1';
+
+async function giftLine(variantId: string, reason: GiftLine['reason'], forProductId?: string): Promise<GiftLine | null> {
+  const found = await catalog.getVariantById(variantId);
+  if (!found) return null;
+  return {
+    productId: found.product.id,
+    variantId,
+    name: found.product.name,
+    image: found.product.images[0],
+    quantity: 1,
+    lineTotal: 0,
+    reason,
+    ...(forProductId ? { forProductId } : {}),
+  };
+}
 
 /** Thrown by the mock so the route handler can map it to an envelope. */
 export class PricingError extends Error {
@@ -91,6 +110,8 @@ export const mockPricing = {
     // that product's listed price (per lens for a lens) and its units.
     const bundled = new Map<string, Map<string, { price: number; units: number }>>();
     const bundleDefs = new Map<string, { accessoryIds: string[]; price: number }>();
+    // The first 6-month lens in the cart, which earns the Kits Yêu Mắt Gift.
+    let sixMonthLensId: string | undefined;
     for (const line of input.lines) {
       if (!Number.isInteger(line.quantity) || line.quantity <= 0) {
         throw new PricingError(
@@ -136,6 +157,8 @@ export const mockPricing = {
         currency: found.variant.currency,
       });
 
+      if ('replacement' in found.product && found.product.replacement === 'sixMonth') sixMonthLensId ??= found.product.id;
+
       if (line.bundle) {
         if (found.product.id === line.bundle && 'bundle' in found.product && found.product.bundle) {
           bundleDefs.set(line.bundle, found.product.bundle);
@@ -170,6 +193,15 @@ export const mockPricing = {
       bundleSaving += sets * Math.max(0, apart - def.price);
     }
     const payable = subtotal - bundleSaving;
+    // DECISION: Spend Tiers count from the subtotal after the Bundle saving and
+    // before vouchers — what the shopper's goods cost — so a voucher never
+    // takes back the free shipping it was applied next to.
+    const tiers = spendTiersFor(payable);
+    // shortcut: one Gift per order whatever the quantity; revisit when Vivimoon confirms its Gift rules.
+    const gifts = (await Promise.all([
+      sixMonthLensId ? giftLine(SIX_MONTH_GIFT_VARIANT_ID, 'product', sixMonthLensId) : null,
+      tiers.gift ? giftLine(TIER_GIFT_VARIANT_ID, 'spendTier') : null,
+    ])).filter((g) => g !== null);
 
     // Stays 0 when `shipping` is omitted (Task 7's cart page — no address
     // exists there). When present, the fee is never the client's number:
@@ -192,13 +224,14 @@ export const mockPricing = {
       if (!match) {
         throw new PricingError(`Unknown shipping option "${input.shipping.optionId}"`, 'not_found');
       }
-      shippingFee = match.fee;
+      // The free-shipping Spend Tier zeroes the fee of whichever option was chosen.
+      shippingFee = tiers.freeShipping ? 0 : match.fee;
       shippingMethod = match.id;
       shippingEtaDays = match.etaDays;
     }
 
     const { discount, applied } = bestVoucher(payable, shippingFee, userId !== null);
-    const total = Math.max(0, payable + shippingFee - discount);
+    const total = Math.max(0, payable + shippingFee - discount - tiers.discount);
 
     return {
       lines,
@@ -208,6 +241,10 @@ export const mockPricing = {
       bundledSubtotal: payable,
       discount,
       appliedVouchers: applied,
+      spendTiers: tiers.tiers,
+      ...(tiers.next ? { nextSpendTier: tiers.next } : {}),
+      tierDiscount: tiers.discount,
+      gifts,
       shipping: shippingFee,
       ...(shippingMethod ? { shippingMethod, shippingEtaDays } : {}),
       total,

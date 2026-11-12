@@ -31,8 +31,8 @@ export function draftToRx(d: RxDraft): LineRx {
   return { sameBothEyes: d.rightSameAsLeft, left: { sph: d.left }, right: { sph: right } };
 }
 
-// "Độ cận": myopia only, plano first.
-const STEPS = sphSteps().filter((v) => v <= 0).reverse();
+// "Độ cận": myopia only, plano first. The mini cart's power chips offer the same.
+export const STEPS = sphSteps().filter((v) => v <= 0).reverse();
 const SAME = 'same';
 
 function PowerField({

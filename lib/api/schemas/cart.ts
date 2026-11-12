@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { currencySchema } from './catalog';
+import { currencySchema, productLineSchema, replacementScheduleSchema } from './catalog';
 import { lineRxSchema, purchaseUnitSchema, refineUnitMatchesRx } from './rx';
 
 /** The most units one line may carry — in a cart, a price request, or an order. */
@@ -39,6 +39,9 @@ export const cartLineSchema = z.object({
   purchaseUnit: purchaseUnitSchema.optional(),
   rx: lineRxSchema.optional(),
   bundle: bundleTagSchema,
+  // A lens's line and replacement, so the mini cart can title it "Sandkiss · Có màu 1 tháng" (Figma 57:2).
+  productLine: productLineSchema.optional(),
+  replacement: replacementScheduleSchema.optional(),
 }).superRefine(refineUnitMatchesRx);
 
 export const cartStateSchema = z.object({
@@ -141,6 +144,35 @@ export const unavailableLineSchema = z.object({
   variantId: z.string(),
 });
 
+/** A Spend Tier (CONTEXT.md): a threshold in the cart's currency and what reaching it unlocks. */
+export const spendTierSchema = z.object({
+  threshold: z.number().int().positive(),
+  reward: z.enum(['freeShipping', 'gift', 'discount']),
+  // The amount off, for a `discount` tier.
+  value: z.number().int().positive().optional(),
+  reached: z.boolean(),
+});
+
+export const nextSpendTierSchema = spendTierSchema.omit({ reached: true }).extend({
+  // What the cart still needs to reach it.
+  remaining: z.number().int().positive(),
+});
+
+/**
+ * A Gift (CONTEXT.md): an item the order gets at 0₫, by a Spend Tier or by
+ * containing a particular Product (`forProductId`). Never a Cart Line.
+ */
+export const giftLineSchema = z.object({
+  productId: z.string(),
+  variantId: z.string(),
+  name: z.string(),
+  image: z.string().optional(),
+  quantity: z.number().int().positive(),
+  lineTotal: z.literal(0),
+  reason: z.enum(['spendTier', 'product']),
+  forProductId: z.string().optional(),
+});
+
 /**
  * Response of POST /api/cart/price. `shipping` is always `0` until Task 8
  * quotes it against a real address — no address exists yet in M2. The field
@@ -163,6 +195,13 @@ export const pricedCartSchema = z.object({
   bundledSubtotal: z.number().int().nonnegative().optional(),
   discount: z.number().int().nonnegative(),
   appliedVouchers: z.array(voucherSchema),
+  // Spend Tiers, counted from `bundledSubtotal`. All absent read as "no tiers".
+  spendTiers: z.array(spendTierSchema).optional(),
+  // Absent once every tier is reached.
+  nextSpendTier: nextSpendTierSchema.optional(),
+  // The `discount` tiers' amount off, already taken off `total`.
+  tierDiscount: z.number().int().nonnegative().optional(),
+  gifts: z.array(giftLineSchema).optional(),
   shipping: z.number().int().nonnegative(),
   // Id of the shipping option `shipping` was charged for; absent when no
   // address was given to quote against.
@@ -186,3 +225,6 @@ export type PriceCartRequest = z.infer<typeof priceCartRequestSchema>;
 export type PricedLine = z.infer<typeof pricedLineSchema>;
 export type UnavailableLine = z.infer<typeof unavailableLineSchema>;
 export type PricedCart = z.infer<typeof pricedCartSchema>;
+export type SpendTier = z.infer<typeof spendTierSchema>;
+export type NextSpendTier = z.infer<typeof nextSpendTierSchema>;
+export type GiftLine = z.infer<typeof giftLineSchema>;

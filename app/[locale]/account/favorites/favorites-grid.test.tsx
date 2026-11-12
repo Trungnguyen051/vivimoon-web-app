@@ -9,6 +9,7 @@ const push = vi.fn();
 const add = vi.fn();
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push }) }));
 vi.mock('@/features/cart/use-cart', () => ({ useCart: () => ({ add }) }));
+import { useMiniCartStore } from '@/features/cart/mini-cart-store';
 
 const dict = getDictionary('en').favorites;
 const mk = (id: string, requiresRx: boolean) => ({
@@ -35,6 +36,7 @@ describe('FavoritesGrid', () => {
     expect(add).toHaveBeenCalledWith(expect.objectContaining({ productId: '1', variantId: 'v-1' }));
     expect(push).not.toHaveBeenCalled();
     expect(free).toHaveTextContent(dict.added);
+    expect(useMiniCartStore.getState()).toMatchObject({ open: true, added: [expect.objectContaining({ productId: '1' })] });
     await userEvent.click(rx);
     expect(add).toHaveBeenCalledTimes(1);
     expect(push).toHaveBeenCalledWith('/en/product/s-2');

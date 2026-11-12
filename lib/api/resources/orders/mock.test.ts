@@ -160,8 +160,17 @@ describe('mockOrders.place', () => {
 
   it('charges the cheapest quoted shipping option for the address, with no picker to choose one (M5.4, issue #21)', async () => {
     // District 1 (content/mock/shipping-rates.ts): standard = 30.000, express = 50.000.
-    const order = await mockOrders.place(req(), null);
+    // One 125.000 lens: under the 300.000 free-shipping Spend Tier.
+    const order = await mockOrders.place(req({ lines: [BASELINE_LINES[0]] }), null);
     expect(order.totals.shipping).toBe(30_000);
+  });
+
+  it('records the Gifts pricing gave at 0₫, and none when there are none', async () => {
+    const order = await mockOrders.place(req({ lines: [{ lineKey: 't', variantId: 'p-torica-biweekly-6', quantity: 1, ...SINGLE }] }), null);
+    expect(order.gifts).toEqual([
+      expect.objectContaining({ variantId: 'a-kits-yeu-mat-1', name: 'Kits Yêu Mắt', quantity: 1, lineTotal: 0 }),
+    ]);
+    expect((await mockOrders.place(req({ lines: [BASELINE_LINES[0]] }), null)).gifts).toBeUndefined();
   });
 
   it('records the charged shipping option as the shipping method, with no carrier code yet', async () => {
