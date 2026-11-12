@@ -120,6 +120,14 @@ describe('fixture conformance', () => {
     expect(phones.length).toBe(new Set(phones).size);
   });
 
+  it('prices every fixture in VND (#210)', () => {
+    const currencies = [
+      ...[...products, ...accessories].flatMap((p) => p.variants.map((v) => v.currency)),
+      ...orders.flatMap((o) => [o.totals.currency, ...o.lines.map((l) => l.currency)]),
+    ];
+    expect(new Set(currencies)).toEqual(new Set(['VND']));
+  });
+
   it('every voucher satisfies voucherSchema', () => {
     expectAllValid(voucherSchema, vouchers, 'voucher');
   });

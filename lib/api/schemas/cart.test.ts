@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { cartLineSchema, priceLineInputSchema, pricedLineSchema, MAX_LINE_QUANTITY } from './cart';
 
-const cartLine = { lineKey: 'k1', productId: 'p1', variantId: 'v1', name: 'Aqua', sku: 'S1', unitPrice: 25, currency: 'USD' };
+const cartLine = { lineKey: 'k1', productId: 'p1', variantId: 'v1', name: 'Aqua', sku: 'S1', unitPrice: 125_000, currency: 'VND' };
 const priceLine = { lineKey: 'k1', variantId: 'v1' };
-const pricedLine = { lineKey: 'k1', variantId: 'v1', unitPrice: 25, lineTotal: 25, currency: 'USD' };
+const pricedLine = { lineKey: 'k1', variantId: 'v1', unitPrice: 125_000, lineTotal: 125_000, currency: 'VND' };
 
 describe('line quantity cap', () => {
   it('is 99', () => {

@@ -22,14 +22,14 @@ async function renderSuccessPage() {
 function makeLine(overrides: Partial<CartLine> = {}): CartLine {
   return {
     lineKey: 'existing', productId: 'p0', variantId: 'v0', name: 'Existing',
-    sku: 'SKU0', unitPrice: 25, currency: 'USD', quantity: 1,
+    sku: 'SKU0', unitPrice: 125_000, currency: 'VND', quantity: 1,
     ...overrides,
   };
 }
 
 function seedLastOrder(overrides: Record<string, unknown> = {}) {
   sessionStorage.setItem('vivimoon-last-order', JSON.stringify({
-    orderId: 'VVM-TEST1', currency: 'USD', value: 25,
+    orderId: 'VVM-TEST1', currency: 'VND', value: 125_000,
     lines: [makeLine()],
     ...overrides,
   }));

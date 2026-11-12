@@ -27,7 +27,7 @@ describe('GET /api/loyalty', () => {
   it('renders seeded balance and history for a demo user', async () => {
     signIn('u-001');
     const body = await (await GET()).json();
-    expect(body.data.balance).toBe(28 + 47);
+    expect(body.data.balance).toBe(155_000 + 250_000);
     expect(body.data.history).toHaveLength(2);
     // Most recent first.
     expect(body.data.history[0].orderId).toBe('order-seed-1');

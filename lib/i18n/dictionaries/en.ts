@@ -13,7 +13,7 @@ export const en = {
     previous: 'Previous', next: 'Next', previousSlide: 'Previous slide', nextSlide: 'Next slide',
     language: 'Language', mainNav: 'Main navigation', breadcrumb: 'Breadcrumb', rating: 'Rating', outOf: 'of', image: 'Image', close: 'Close' },
   announcement: {
-    freeShipping: 'FREE SHIPPING ON ORDERS FROM 300,000₫',
+    freeShipping: 'FREE SHIPPING ON ORDERS FROM 300.000₫',
     authentic: 'AUTHENTIC KOREAN LENSES',
     licensed: 'LICENSED BY THE MINISTRY OF HEALTH',
   },
@@ -410,7 +410,7 @@ export const en = {
         instagram: 'Instagram',
       },
       policies: {
-        shipping: { title: 'Delivery & shipping fees', body: '1–2 working days in the city, 3–5 to other provinces. Free shipping on orders from 300,000₫.' },
+        shipping: { title: 'Delivery & shipping fees', body: '1–2 working days in the city, 3–5 to other provinces. Free shipping on orders from 300.000₫.' },
         returns: { title: 'Returns', body: 'Free 1-for-1 exchange within 15 days of delivery, for moisture-lock and breathable lenses.' },
         warranty: { title: 'Warranty', body: 'Manufacturing defects are replaced within 30 days, with a photo of the seal and blister.' },
         payment: { title: 'Payment', body: 'Bank transfer, e-wallet, domestic and international cards, or cash on delivery.' },

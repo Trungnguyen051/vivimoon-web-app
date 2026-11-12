@@ -22,7 +22,7 @@ export function useCart() {
     lines,
     hydrated,
     count,
-    currency: lines[0]?.currency ?? 'USD',
+    currency: lines[0]?.currency ?? 'VND',
     add,
     updateQty,
     remove,

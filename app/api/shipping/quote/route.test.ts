@@ -14,7 +14,7 @@ const ADDRESS = {
 };
 
 const LINES = [
-  { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, unitPrice: 25, lineTotal: 50, currency: 'USD' as const },
+  { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, unitPrice: 125_000, lineTotal: 250_000, currency: 'VND' as const },
 ];
 
 function req(body: unknown): Request {
@@ -33,8 +33,8 @@ describe('POST /api/shipping/quote', () => {
     const result = envelopeSchema(shippingQuoteResponseSchema).safeParse(body);
     expect(result.success, JSON.stringify(result.success ? null : result.error.issues)).toBe(true);
     expect(body.data).toEqual([
-      { id: 'standard', label: 'Standard', fee: 3, etaDays: 2 },
-      { id: 'express', label: 'Express', fee: 8, etaDays: 1 },
+      { id: 'standard', label: 'Standard', fee: 30_000, etaDays: 2 },
+      { id: 'express', label: 'Express', fee: 50_000, etaDays: 1 },
     ]);
   });
 

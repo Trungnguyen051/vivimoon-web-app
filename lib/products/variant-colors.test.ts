@@ -3,7 +3,7 @@ import { distinctColorVariants } from './variant-colors';
 import type { Variant } from '@/lib/api/schemas/catalog';
 
 const variant = (overrides: Partial<Variant>): Variant => ({
-  id: 'v', sku: 'S', price: 10, currency: 'USD', stock: 1, ...overrides,
+  id: 'v', sku: 'S', price: 50_000, currency: 'VND', stock: 1, ...overrides,
 });
 
 describe('distinctColorVariants', () => {

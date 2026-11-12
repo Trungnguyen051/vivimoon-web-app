@@ -31,14 +31,14 @@ function json(body: unknown, status = 200) {
 function makeLine(overrides: Partial<CartLine> = {}): CartLine {
   return {
     lineKey: 'existing', productId: 'p0', variantId: 'p-aqua-daily-30', name: 'Existing',
-    sku: 'SKU0', unitPrice: 25, currency: 'USD', quantity: 1,
+    sku: 'SKU0', unitPrice: 125_000, currency: 'VND', quantity: 1,
     ...overrides,
   };
 }
 
 const ORDER_RESPONSE = {
   id: 'order-1', code: 'VVM-TEST1', status: 'placed', userId: undefined,
-  totals: { subtotal: 22, discount: 0, shipping: 0, total: 22, currency: 'USD' },
+  totals: { subtotal: 110_000, discount: 0, shipping: 0, total: 110_000, currency: 'VND' },
 };
 
 async function fillRequiredFields() {
