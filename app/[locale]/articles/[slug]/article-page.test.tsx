@@ -56,13 +56,36 @@ describe('an article page', () => {
   });
 
   it('renders the body as plain paragraphs, with no markup reaching the page', async () => {
-    const { container } = await renderArticle(merchandised.slug);
+    await renderArticle(merchandised.slug);
 
     for (const paragraph of merchandised.body.vi) {
-      expect(screen.getByText(paragraph)).toBeInTheDocument();
+      const rendered = screen.getByText(paragraph);
+      expect(rendered).toBeInTheDocument();
+      /* The Article shape is unchanged: nothing here parses anything.
+
+         Asserted on the paragraphs rather than on the `<article>` landmark, which
+         stopped being a proxy for "the prose" when the lens strip moved inside the
+         body (#154). The strip's product links are markup the landmark is *supposed*
+         to contain; a paragraph is not. */
+      expect(rendered.querySelector('strong, em, a')).toBeNull();
     }
-    // The Article shape is unchanged: nothing here parses anything.
-    expect(container.querySelector('article')?.querySelector('strong, em, a')).toBeNull();
+  });
+
+  it('sets the lens strip inside the body, with prose on both sides of it', async () => {
+    const { container } = await renderArticle(merchandised.slug);
+    const article = container.querySelector('article')!;
+    const strip = screen.getByRole('heading', { name: viDict.articles.inThisArticle }).closest('section')!;
+
+    // "Partway down", per #130 — not bolted to the end of the piece.
+    expect(article.contains(strip)).toBe(true);
+
+    const paragraphs = merchandised.body.vi.map((text) => screen.getByText(text));
+    const above = paragraphs.filter(
+      (p) => strip.compareDocumentPosition(p) & Node.DOCUMENT_POSITION_PRECEDING,
+    );
+
+    expect(above.length).toBeGreaterThan(0);
+    expect(above.length).toBeLessThan(paragraphs.length);
   });
 
   it('shows three real lenses with their real prices', async () => {

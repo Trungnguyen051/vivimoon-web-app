@@ -78,6 +78,12 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
   const count = matching.length;
   const strip = matching.slice(0, STRIP_SIZE);
 
+  /* "Partway down", per #130 — the strip reads as part of the article rather than as
+     something bolted to the end of it. Split at the midpoint, rounded up, so a short
+     article keeps more prose above the strip than below and never opens on it. */
+  const paragraphs = article.body[locale];
+  const breakAt = Math.ceil(paragraphs.length / 2);
+
   return (
     <PageContainer>
       <div className="flex flex-col gap-10 py-12">
@@ -105,40 +111,53 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
         </Breadcrumb>
 
         <article className="flex flex-col gap-10">
-        <header className="flex max-w-3xl flex-col gap-3">
-          <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{article.title[locale]}</h1>
-          <p className="text-sm text-muted-foreground">{dateline}</p>
-        </header>
+          <header className="flex max-w-3xl flex-col gap-3">
+            <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{article.title[locale]}</h1>
+            <p className="text-sm text-muted-foreground">{dateline}</p>
+          </header>
 
-        {/* Wide, above the column — the body reads narrow, the image does not. */}
-        <div className="relative aspect-[21/9] overflow-hidden rounded-xl">
-          <Image src={article.image} alt="" fill className="object-cover" sizes="100vw" />
-        </div>
+          {/* Wide, above the column — the body reads narrow, the image does not. */}
+          <div className="relative aspect-[21/9] overflow-hidden rounded-xl">
+            <Image src={article.image} alt="" fill className="object-cover" sizes="100vw" />
+          </div>
 
-        {/* The column is a div inside the landmark, not the landmark itself: an
-            `<article>` wrapping only the prose leaves a screen-reader user who jumps to
-            it in a region with no title and no byline. */}
-        <div className="flex w-full max-w-2xl flex-col gap-6">
-          {/* Paragraphs, not markup: the fixtures cannot inject markup into the page. */}
-          {article.body[locale].map((paragraph, i) => (
-            <p key={i} className="text-muted-foreground">{paragraph}</p>
-          ))}
-        </div>
+          {/* The column is a div inside the landmark, not the landmark itself: an
+              `<article>` wrapping only the prose leaves a screen-reader user who jumps to
+              it in a region with no title and no byline. */}
+          <div className="flex w-full max-w-2xl flex-col gap-6">
+            {/* Paragraphs, not markup: the fixtures cannot inject markup into the page. */}
+            {paragraphs.slice(0, breakAt).map((paragraph, i) => (
+              <p key={i} className="text-muted-foreground">{paragraph}</p>
+            ))}
+          </div>
+
+          {/* Inside the landmark and between the prose, not after it: the lenses are part
+              of what is being read. Wide, like the hero — the column reads narrow, the
+              merchandising does not. */}
+          {strip.length > 0 ? (
+            <section className="flex flex-col gap-6">
+              <h2 className="text-2xl font-semibold tracking-tight">{dict.articles.inThisArticle}</h2>
+              {/* Through `ProductGrid`, so the strip reports `view_item_list` and wires
+                  `select_item` — a merchandising row GA4 cannot see cannot be judged. */}
+              <ProductGrid
+                products={strip}
+                locale={locale}
+                dict={dict}
+                listId={`article:${article.slug}`}
+              />
+            </section>
+          ) : null}
+
+          {paragraphs.length > breakAt ? (
+            <div className="flex w-full max-w-2xl flex-col gap-6">
+              {/* Keyed on the index in the whole body, not in this half, so a paragraph
+                  keeps one identity across the split. */}
+              {paragraphs.slice(breakAt).map((paragraph, i) => (
+                <p key={breakAt + i} className="text-muted-foreground">{paragraph}</p>
+              ))}
+            </div>
+          ) : null}
         </article>
-
-        {strip.length > 0 ? (
-          <section className="flex flex-col gap-6">
-            <h2 className="text-2xl font-semibold tracking-tight">{dict.articles.inThisArticle}</h2>
-            {/* Through `ProductGrid`, so the strip reports `view_item_list` and wires
-                `select_item` — a merchandising row GA4 cannot see cannot be judged. */}
-            <ProductGrid
-              products={strip}
-              locale={locale}
-              dict={dict}
-              listId={`article:${article.slug}`}
-            />
-          </section>
-        ) : null}
 
         {/* Only when it leads somewhere the strip has not already shown. With a theme
             matching three lenses or fewer, the strip *is* the collection, and inviting a
