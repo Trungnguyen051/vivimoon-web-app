@@ -20,6 +20,10 @@ _Avoid_: Shipping address, delivery address (same concept — Address)
 A shopper's per-eye contact-lens prescription, captured at add-to-cart as line metadata rather than a purchasable product variant. `sph` is always present; `cyl`/`axis` apply only to toric lenses (deferred past M2 — no selector collects them yet, see ADR-0004) and `add` (banded low/mid/high, not a numeric power) only to multifocal lenses. Rx is fully decoupled from the product taxonomy (ADR-0010): the Rx rules branch on their own `rxLensTypeSchema`, and every call site passes the fixed `RX_LENS_TYPE`, so no Product can reach the toric/multifocal branches until a real line for them exists.
 _Avoid_: Prescription, power
 
+**Default Rx**:
+A per-eye `sph` saved on the account itself — collected once by the welcome step after an account is created and editable from Account info. It is a shopper's standing answer, not an Rx: it never travels with a Cart Line on its own, and an Rx is still captured at add-to-cart. Myopia only, in 0.25 steps; no `cyl`/`axis`/`add`.
+_Avoid_: Eye power, độ cận (in code), saved prescription
+
 **Product Line**:
 Vivimoon's own lens technology/marketing category for a Product — trong suốt (clear), có màu (colored), or vân nhũ (glitter-textured colored) — matching the real storefront's own 3-way split. The `productLine` field, which replaced the old `type` field (`clear/colored/toric/multifocal`). Orthogonal to Rx: a Product Line never implies anything about prescription complexity (ADR-0010).
 _Avoid_: Lens type, category
