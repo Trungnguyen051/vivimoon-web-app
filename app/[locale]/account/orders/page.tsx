@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import { PackageOpen } from 'lucide-react';
-import { OrderHistoryCard, type HistoryLine } from '@/components/commerce/order-history-card';
+import { OrderHistoryCard } from '@/components/commerce/order-history-card';
 import { withProducts } from '@/components/commerce/history-lines';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { isLocale, type Locale } from '@/lib/i18n/config';
