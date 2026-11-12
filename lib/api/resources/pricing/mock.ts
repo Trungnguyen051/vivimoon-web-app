@@ -87,6 +87,10 @@ export const mockPricing = {
 
     const lines: PricedLine[] = [];
     const unavailableLines: UnavailableLine[] = [];
+    // Bundle-tagged lines, by the lens they were bundled with, then by product:
+    // that product's listed price (per lens for a lens) and its units.
+    const bundled = new Map<string, Map<string, { price: number; units: number }>>();
+    const bundleDefs = new Map<string, { accessoryIds: string[]; price: number }>();
     for (const line of input.lines) {
       if (!Number.isInteger(line.quantity) || line.quantity <= 0) {
         throw new PricingError(
@@ -131,6 +135,17 @@ export const mockPricing = {
         lineTotal: unitPrice * line.quantity,
         currency: found.variant.currency,
       });
+
+      if (line.bundle) {
+        if (found.product.id === line.bundle && 'bundle' in found.product && found.product.bundle) {
+          bundleDefs.set(line.bundle, found.product.bundle);
+        }
+        const items = bundled.get(line.bundle) ?? new Map();
+        const item = items.get(found.product.id);
+        // shortcut: two variants of one product in a set price the set at the first one's; fine while Bundles add one variant each.
+        items.set(found.product.id, { price: item?.price ?? found.variant.price, units: (item?.units ?? 0) + line.quantity });
+        bundled.set(line.bundle, items);
+      }
     }
 
     // Undefined only when nothing priced — there is then no catalogue variant
@@ -141,6 +156,20 @@ export const mockPricing = {
     }
 
     const subtotal = lines.reduce((sum, l) => sum + l.lineTotal, 0);
+
+    // The Bundle price applies once per complete set added through the Bundle
+    // (CONTEXT.md "Bundle"). Its price counts the lens as a pair; a single lens
+    // buys the combo less one lens, so either way the set saves the same.
+    let bundleSaving = 0;
+    for (const [lensId, def] of bundleDefs) {
+      const items = bundled.get(lensId)!;
+      const ids = [lensId, ...def.accessoryIds];
+      if (!ids.every((id) => items.has(id))) continue;
+      const sets = Math.min(...ids.map((id) => items.get(id)!.units));
+      const apart = items.get(lensId)!.price * 2 + def.accessoryIds.reduce((sum, id) => sum + items.get(id)!.price, 0);
+      bundleSaving += sets * Math.max(0, apart - def.price);
+    }
+    const payable = subtotal - bundleSaving;
 
     // Stays 0 when `shipping` is omitted (Task 7's cart page — no address
     // exists there). When present, the fee is never the client's number:
@@ -168,13 +197,15 @@ export const mockPricing = {
       shippingEtaDays = match.etaDays;
     }
 
-    const { discount, applied } = bestVoucher(subtotal, shippingFee, userId !== null);
-    const total = Math.max(0, subtotal + shippingFee - discount);
+    const { discount, applied } = bestVoucher(payable, shippingFee, userId !== null);
+    const total = Math.max(0, payable + shippingFee - discount);
 
     return {
       lines,
       unavailableLines,
       subtotal,
+      bundleSaving,
+      bundledSubtotal: payable,
       discount,
       appliedVouchers: applied,
       shipping: shippingFee,

@@ -43,7 +43,9 @@ function eyeToken(eye: LooseEye | null | undefined): string {
   return parts.join('_');
 }
 
-export function lineKey(variantId: string, rx?: LineRxInput | null): string {
+export function lineKey(variantId: string, rx?: LineRxInput | null, bundle?: string): string {
+  // A line added through a Bundle stays apart from the same item bought on its own.
+  if (bundle) return `${lineKey(variantId, rx)}~bundle~${bundle}`;
   if (!rx) return variantId;
   // A single line's Rx shape is its Purchase Unit (ADR-0023), so the unit is
   // part of the key here; a pair keeps the pre-ADR-0023 format, so lines

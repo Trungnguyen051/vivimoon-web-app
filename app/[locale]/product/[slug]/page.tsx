@@ -15,6 +15,7 @@ import { ProductReassurance } from '@/components/commerce/product-reassurance';
 import { BeginnerFaq } from '@/components/commerce/beginner-faq';
 import { SpecTable } from '@/components/commerce/spec-table';
 import { ProductVideos } from '@/components/commerce/product-videos';
+import { BundleOffer } from '@/components/commerce/bundle-offer';
 import { ReviewsList, ReviewsSummary } from '@/components/commerce/reviews-list';
 import { CollectionCarousel } from '@/components/commerce/collection-carousel';
 import {
@@ -44,6 +45,11 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
   const related = await catalog.getRelatedProducts(product, 8);
   const reviews = await catalog.getReviews(product.id);
   const gallery = await catalog.getGallery(product.id);
+  const bundleIds = product.bundle?.accessoryIds ?? [];
+  // In the Bundle's own order; the block hides unless every accessory still exists.
+  const allAccessories = bundleIds.length ? await catalog.listAccessories() : [];
+  const found = bundleIds.map((id) => allAccessories.find((a) => a.id === id));
+  const bundleAccessories = found.every(Boolean) ? found.filter((a) => a !== undefined) : [];
 
   const t = dict.pdp;
   const cheapest = cheapestVariant(product);
@@ -178,7 +184,9 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
           dict={t.videos}
         />
 
-        {/* Bundle — "Mua kèm tiết kiệm hơn" (#201) goes here, between the videos and the reviews. */}
+        {bundleAccessories.length > 0 ? (
+          <BundleOffer product={product} accessories={bundleAccessories} locale={l} dict={dict} />
+        ) : null}
 
         <ReviewsList reviews={reviews} dict={dict} locale={l} />
 

@@ -118,6 +118,14 @@ export const productSchema = z.object({
   makeupTones: z.array(z.object({ tone: makeupToneSchema, image: z.string() })).optional(),
   /** "Trả lời nhanh cho người mới". */
   faq: z.array(z.object({ question: localizedTextSchema, answer: localizedTextSchema })).optional(),
+  /**
+   * "Mua kèm tiết kiệm hơn" (CONTEXT.md "Bundle"): accessory product ids and the
+   * combo price, which counts the lens as a pair (1 đôi). Provisional numbers.
+   */
+  bundle: z.object({
+    accessoryIds: z.array(z.string()).min(1),
+    price: z.number().int().nonnegative(),
+  }).optional(),
 }).superRefine((p, ctx) => {
   // Now that packSize is gone, color is the only thing VariantSelector uses to
   // pick a variant — enforcing these here (construction/validation boundary)
