@@ -26,7 +26,7 @@ export function ReviewsSummary({ reviews, dict }: { reviews: Review[]; dict: Dic
 
 export function ReviewsList({ reviews, dict }: { reviews: Review[]; dict: Dictionary }) {
   return (
-    <section className="space-y-6">
+    <section id="reviews" className="scroll-mt-24 space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-2xl font-semibold tracking-tight">{dict.pdp.reviews}</h2>
         <ReviewsSummary reviews={reviews} dict={dict} />

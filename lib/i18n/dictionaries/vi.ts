@@ -237,6 +237,12 @@ export const vi: Dictionary = {
   orders: {
     title: 'Lịch sử đơn hàng', empty: 'Bạn chưa có đơn hàng nào.',
     code: 'Đơn hàng', date: 'Ngày đặt', status: 'Trạng thái', total: 'Tổng cộng',
+    cancelOrder: 'Hủy đơn hàng', cancelTitle: 'Hủy đơn hàng này?',
+    cancelBody: 'Đơn hàng sẽ bị hủy và không thể khôi phục.', cancelConfirm: 'Đồng ý hủy đơn',
+    cancelKeep: 'Giữ đơn hàng', cancelFailed: 'Đơn hàng này không thể hủy được nữa.',
+    returnItems: 'Trả hàng', review: 'Đánh giá', buyAgain: 'Mua lại',
+    showMore: 'Xem thêm {n} sản phẩm', showLess: 'Thu gọn', totalItems: 'Tổng ({n} sản phẩm)',
+    unavailable: '{n} sản phẩm không còn bán nên chưa được thêm vào giỏ hàng.', viewCart: 'Xem giỏ hàng',
     statuses: {
       placed: 'Đã đặt', confirmed: 'Đã xác nhận', packed: 'Đã đóng gói', shipped: 'Đang vận chuyển',
       out_for_delivery: 'Đang giao hàng', delivered: 'Đã giao', cancelled: 'Đã hủy', returned: 'Đã hoàn trả',
