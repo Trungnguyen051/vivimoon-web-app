@@ -33,7 +33,12 @@ export function GuideFeedback({ guideSlug, dict }: { guideSlug: string; dict: Di
     });
     setBusy(false);
 
-    // Only a recorded vote closes the question.
+    /* Only a recorded vote closes the question.
+
+       Spec #118 said to disable both buttons after a vote; this disables them only once
+       one is stored (ratified in #159). Locking the buttons on a failure would throw the
+       vote away and leave the reader no way to try again — the spec's rule written for
+       the path where everything works. */
     if (result.ok) setDone(true);
     else setFailed(true);
   }

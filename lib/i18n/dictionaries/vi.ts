@@ -308,8 +308,8 @@ export const vi: Dictionary = {
       channels: {
         hotline: 'Hotline',
         email: 'Email',
-        messenger: 'Messenger',
-        zalo: 'Zalo',
+        facebook: 'Facebook',
+        instagram: 'Instagram',
       },
       policies: {
         shipping: { title: 'Giao hàng & phí vận chuyển', body: 'Nội thành 1–2 ngày làm việc, tỉnh xa 3–5 ngày. Miễn phí vận chuyển cho đơn từ 300.000₫.' },

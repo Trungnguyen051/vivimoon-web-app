@@ -24,10 +24,13 @@ function matchCount(readingTheme: (typeof articles)[number]['readingTheme']): nu
 
 /** One with a destination, and the one without — `care` is the partial half of the table. */
 const merchandised = articles.find((a) => matchCount(a.readingTheme) > 0)!;
-/* The banner only appears when it leads somewhere the strip has not already shown, so
-   its test needs a theme that genuinely exceeds the strip rather than the first one
-   with a destination. */
+/* A theme with more lenses than the strip shows, so the count in the banner is visibly
+   not just "what you can already see". */
 const bannered = articles.find((a) => matchCount(a.readingTheme) > STRIP_SIZE)!;
+/* And one whose collection holds exactly one lens — `natural` and `occasion` do. These
+   had no banner at all until #160, which is also what made the singular copy below
+   unreachable (#153). */
+const singular = articles.find((a) => matchCount(a.readingTheme) === 1)!;
 const careArticle = articles.find((a) => a.readingTheme === 'care')!;
 
 async function renderArticle(slug: string) {
@@ -127,6 +130,21 @@ describe('an article page', () => {
   });
 
   /**
+   * The banner is not gated on size (#160): the only condition #130 states is that the
+   * theme leads somewhere. A collection holding one lens still gets its route in, and
+   * the singular string — dead copy in both locales until this landed — finally renders.
+   */
+  it('banners a collection holding a single lens, in the singular', async () => {
+    await renderArticle(singular.slug);
+    const entry = readingThemeDestination(singular.readingTheme)!;
+
+    const line = viDict.articles.collectionBannerCount.one.replace('{count}', '1');
+    expect(screen.getByText(line)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: viDict.articles.collectionBannerCta }))
+      .toHaveAttribute('href', expect.stringContaining(`/vi/collection/${entry.collection}`));
+  });
+
+  /**
    * The partial half of the table, and the point of it: `care` covers solution, cases
    * and hygiene, and a lens strip beneath an article about cleaning solution would be
    * merchandising at a shopper dishonestly.
@@ -147,11 +165,12 @@ describe('an article page', () => {
   });
 
   /**
-   * With a theme matching three lenses or fewer, the strip *is* the collection — and
-   * inviting a shopper to "see the whole collection" they have just scrolled past is
-   * an invitation to nothing.
+   * The reverse of the rule that used to live here. A banner was hidden whenever the
+   * collection held no more than the strip, on the reasoning that the strip *is* the
+   * collection at that size — plausible, but nobody asked for it, and #160 reversed it.
+   * A theme that leads somewhere says so, whatever the size of where it leads.
    */
-  it('offers no banner when the strip already showed everything', async () => {
+  it('banners a collection the strip already showed in full', async () => {
     const whole = articles.find((a) => {
       const n = matchCount(a.readingTheme);
       return n > 0 && n <= STRIP_SIZE;
@@ -161,7 +180,7 @@ describe('an article page', () => {
     await renderArticle(whole.slug);
 
     expect(screen.getByRole('heading', { name: viDict.articles.inThisArticle })).toBeInTheDocument();
-    expect(screen.queryByText(viDict.articles.collectionBannerTitle)).not.toBeInTheDocument();
+    expect(screen.getByText(viDict.articles.collectionBannerTitle)).toBeInTheDocument();
   });
 
   /** Every article offers a way onward, banner or not. */
