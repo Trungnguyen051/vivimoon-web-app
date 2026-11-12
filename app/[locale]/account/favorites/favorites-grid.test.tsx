@@ -34,6 +34,7 @@ describe('FavoritesGrid', () => {
     await userEvent.click(free);
     expect(add).toHaveBeenCalledWith(expect.objectContaining({ productId: '1', variantId: 'v-1' }));
     expect(push).not.toHaveBeenCalled();
+    expect(free).toHaveTextContent(dict.added);
     await userEvent.click(rx);
     expect(add).toHaveBeenCalledTimes(1);
     expect(push).toHaveBeenCalledWith('/en/product/s-2');

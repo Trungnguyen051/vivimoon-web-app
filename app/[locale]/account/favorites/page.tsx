@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { Heart } from 'lucide-react';
 import { isLocale, type Locale } from '@/lib/i18n/config';
@@ -34,7 +33,7 @@ export default async function FavoritesPage({ params }: { params: Promise<{ loca
 
   return (
     <>
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-12">
+      <div className="flex flex-col gap-8">
         <h1 className="text-3xl font-semibold tracking-tight">{dict.favorites.title}</h1>
 
         {products.length === 0 ? (
@@ -49,10 +48,6 @@ export default async function FavoritesPage({ params }: { params: Promise<{ loca
         ) : (
           <FavoritesGrid initialProducts={products} locale={locale} dict={dict.favorites} />
         )}
-
-        <Link href={`/${locale}/account`} className="text-sm text-muted-foreground underline underline-offset-4">
-          {dict.account.title}
-        </Link>
       </div>
     </>
   );

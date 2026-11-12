@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -9,6 +9,8 @@ import { useCart } from '@/features/cart/use-cart';
 import { lineKey } from '@/lib/cart/line-key';
 import { PriceTag } from '@/components/commerce/price-tag';
 import { Button } from '@/components/ui/button';
+import { useAnalytics } from '@/lib/analytics/use-analytics';
+import { toGa4Items } from '@/lib/analytics/events';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import type { Product } from '@/lib/api/schemas/catalog';
@@ -21,6 +23,12 @@ export function FavoritesGrid({
   const router = useRouter();
   const { add } = useCart();
   const [products, setProducts] = useState(initialProducts);
+  const [addedId, setAddedId] = useState<string | null>(null);
+  const { track } = useAnalytics();
+  useEffect(() => {
+    track({ name: 'view_item_list', params: { item_list_id: 'favorites', items: toGa4Items(initialProducts.map((p) => ({ product: p }))) } });
+  }, [initialProducts, track]);
+  const select = (p: Product) => track({ name: 'select_item', params: { item_list_id: 'favorites', items: toGa4Items([{ product: p }]) } });
 
   async function remove(id: string) {
     const result = await apiRequest(`/api/account/favorites/${id}`, { method: 'DELETE' });
@@ -28,13 +36,20 @@ export function FavoritesGrid({
   }
 
   function addToCart(p: Product) {
-    if (p.requiresRx) return router.push(`/${locale}/product/${p.slug}`);
+    if (p.requiresRx) {
+      select(p);
+      return router.push(`/${locale}/product/${p.slug}`);
+    }
     const v = p.variants[0];
     add({
       lineKey: lineKey(v.id, undefined),
       productId: p.id, variantId: v.id, name: p.name, sku: v.sku,
       color: v.colorLabel, unitPrice: v.price, currency: v.currency, quantity: 1, image: p.images[0],
     });
+    // Analytics snapshot only, as in AddToCart; never shown to the shopper.
+    track({ name: 'add_to_cart', params: { currency: v.currency, value: v.price, items: toGa4Items([{ product: p, variant: v, quantity: 1 }]) } });
+    setAddedId(p.id);
+    setTimeout(() => setAddedId((id) => (id === p.id ? null : id)), 2000);
   }
 
   return (
@@ -56,14 +71,14 @@ export function FavoritesGrid({
                 </Button>
               </div>
               <div className="flex min-w-0 flex-col gap-1">
-                <Link href={href} className="font-medium">{p.name}</Link>
+                <Link href={href} onClick={() => select(p)} className="font-medium">{p.name}</Link>
                 {v.colorLabel ? <span className="text-sm text-muted-foreground">{v.colorLabel}</span> : null}
                 <PriceTag price={v.price} currency={v.currency} compareAtPrice={v.compareAtPrice} locale={locale} />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2">
-              <Button type="button" variant="outline" onClick={() => addToCart(p)}>{dict.addToCart}</Button>
-              <Button type="button" onClick={() => router.push(href)}>{dict.buyNow}</Button>
+              <Button type="button" variant="outline" onClick={() => addToCart(p)} aria-live="polite">{addedId === p.id ? dict.added : dict.addToCart}</Button>
+              <Button type="button" onClick={() => { select(p); router.push(href); }}>{dict.buyNow}</Button>
             </div>
           </li>
         );
