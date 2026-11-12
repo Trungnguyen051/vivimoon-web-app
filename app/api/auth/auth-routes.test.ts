@@ -18,6 +18,7 @@ process.env.AUTH_COOKIE_SECRET = 'test-secret';
 const { POST: login } = await import('./login/route');
 const { POST: register } = await import('./register/route');
 const { POST: google } = await import('./google/route');
+const { POST: apple } = await import('./apple/route');
 const { GET: session } = await import('./session/route');
 const { POST: logout } = await import('./logout/route');
 const { POST: otpRequest } = await import('./otp/request/route');
@@ -114,6 +115,23 @@ describe('auth routes', () => {
     const res = await google(post({ idToken: 'mai@example.vn' }));
     expect((await res.json()).data.user.id).toBe('u-001');
     expect(jar.get(SESSION_COOKIE)).toBeTruthy();
+  });
+
+  it('signs in with Apple and starts a session', async () => {
+    const res = await apple(post({ idToken: 'mai@example.vn' }));
+    expect((await res.json()).data.user.id).toBe('u-001');
+    expect(jar.get(SESSION_COOKIE)).toBeTruthy();
+  });
+
+  it('refuses Apple sign-in in a production build', async () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    try {
+      const res = await apple(post({ idToken: 'mai@example.vn' }));
+      expect(res.status).toBe(401);
+      expect(jar.has(SESSION_COOKIE)).toBe(false);
+    } finally {
+      vi.unstubAllEnvs();
+    }
   });
 
   it('refuses Google sign-in in a production build, where the mock cannot verify a token', async () => {

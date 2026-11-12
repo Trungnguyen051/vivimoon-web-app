@@ -10,7 +10,7 @@ export default async function ForgotPasswordPage({ params }: { params: Promise<{
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-3xl font-semibold tracking-tight">{dict.auth.resetTitle}</h1>
+      <h1 className="text-3xl font-semibold uppercase tracking-tight">{dict.auth.resetTitle}</h1>
       <ForgotPasswordForm locale={locale} dict={dict.auth} />
     </div>
   );

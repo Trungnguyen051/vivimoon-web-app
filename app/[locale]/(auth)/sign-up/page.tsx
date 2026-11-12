@@ -10,7 +10,7 @@ export default async function SignUpPage({ params }: { params: Promise<{ locale:
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-3xl font-semibold tracking-tight">{dict.auth.signUpTitle}</h1>
+      <h1 className="text-3xl font-semibold uppercase tracking-tight">{dict.auth.signUpTitle}</h1>
       <SignUpForm locale={locale} dict={dict.auth} />
     </div>
   );
