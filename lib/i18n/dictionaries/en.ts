@@ -205,6 +205,7 @@ export const en = {
     },
   },
   account: {
+    accountInfo: 'Account info', memberSince: 'Member since {date}', backToAccount: 'Account',
     title: 'My account', infoTitle: 'Account information',
     phone: 'Phone', phoneLocked: 'Your phone number cannot be changed.',
     email: 'Email', name: 'Full name', dob: 'Date of birth',
