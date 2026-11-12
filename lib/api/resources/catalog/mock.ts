@@ -1,5 +1,5 @@
 import { products, collections, reviews, galleries } from '@/content/mock';
-import { diameterMm, parseDiameterRange } from '@/lib/api/schemas/catalog';
+import { diameterMm, parseDiameterRange, PRICE_PRESETS } from '@/lib/api/schemas/catalog';
 import type { Collection, LensGallery, Product, ProductQuery, Review, Variant } from '@/lib/api/schemas/catalog';
 import { cheapestVariant } from '@/lib/products/cheapest-variant';
 
@@ -8,47 +8,118 @@ export function minPrice(product: Product): number {
   return cheapestVariant(product).price;
 }
 
+type FacetDef = { stated: (p: Product) => string[]; matches?: (p: Product, value: string) => boolean };
+
+/**
+ * Every facet a query carries as a value set, with the values a lens states for it. A lens
+ * passes a facet when it matches any value in the set: a Color Family sends a set
+ * (CONTEXT.md), and the sidebar's checkboxes and chips do the same for every other facet.
+ */
+const SET_FACETS = {
+  productLine: { stated: (p) => [p.productLine] },
+  replacement: { stated: (p) => [p.replacement] },
+  brandId: { stated: (p) => [p.brandId] },
+  color: { stated: (p) => p.variants.flatMap((v) => (v.color ? [v.color] : [])) },
+  diameter: {
+    // A lens states its one width as a one-value range, which is what the sidebar's chips send.
+    stated: (p) => {
+      const mm = diameterMm(p.specs.diameter);
+      return mm === null ? [] : [`${mm}-${mm}`];
+    },
+    // Both ends inclusive, which is what makes `14.0-14.0` select exactly the lenses of that
+    // width. A range the schema would have rejected can only arrive from a caller that
+    // bypassed it; matching nothing is the same answer an unknown color already gets.
+    matches: (p, value) => {
+      const range = parseDiameterRange(value);
+      const mm = diameterMm(p.specs.diameter);
+      return range !== null && mm !== null && mm >= range.min && mm <= range.max;
+    },
+  },
+  material: { stated: (p) => [p.specs.material] },
+  makeupStyle: { stated: (p) => p.makeupStyles ?? [] },
+  series: { stated: (p) => p.series ?? [] },
+  occasion: { stated: (p) => p.occasions ?? [] },
+} satisfies Record<string, FacetDef>;
+
+type SetFacet = keyof typeof SET_FACETS;
+export type FacetKey = SetFacet | 'price';
+/** Per facet, per option value: how many lenses picking that option would show. */
+export type FacetCounts = Record<FacetKey, Record<string, number>>;
+
+const SET_FACET_KEYS = Object.keys(SET_FACETS) as SetFacet[];
+
+function matchesValue(facet: SetFacet, p: Product, value: string): boolean {
+  const def: FacetDef = SET_FACETS[facet];
+  return def.matches ? def.matches(p, value) : def.stated(p).includes(value);
+}
+
+function inPriceRange(p: Product, min: number | undefined, max: number | undefined): boolean {
+  const price = minPrice(p);
+  return (min === undefined || price >= min) && (max === undefined || price <= max);
+}
+
+/** Whether a lens passes every active facet of the query, except `skip`. */
+function applies(p: Product, query: ProductQuery, skip?: FacetKey): boolean {
+  for (const facet of SET_FACET_KEYS) {
+    const value = query[facet];
+    if (facet === skip || value === undefined) continue;
+    if (!value.split(',').some((v) => matchesValue(facet, p, v))) return false;
+  }
+  return skip === 'price' || inPriceRange(p, query.minPrice, query.maxPrice);
+}
+
+function sortProducts(list: Product[], sort: ProductQuery['sort']): Product[] {
+  switch (sort) {
+    case 'price-asc': return list.sort((a, b) => minPrice(a) - minPrice(b));
+    case 'price-desc': return list.sort((a, b) => minPrice(b) - minPrice(a));
+    case 'bestselling': return list.sort((a, b) => (b.soldCount ?? 0) - (a.soldCount ?? 0));
+    case 'newest':
+      return list.sort((a, b) => Number(b.badges.includes('new')) - Number(a.badges.includes('new')));
+    default: return list;
+  }
+}
+
+/**
+ * Each option counted against every *other* active facet, so within a facet an option says
+ * how many lenses picking it would show, rather than dropping to zero once a sibling is
+ * picked. An active value no lens states (a menu's diameter bucket) is counted too.
+ */
+function facetCounts(scope: Product[], query: ProductQuery): FacetCounts {
+  const counts = {} as FacetCounts;
+  for (const facet of SET_FACET_KEYS) {
+    const base = scope.filter((p) => applies(p, query, facet));
+    const options = new Set([...scope.flatMap(SET_FACETS[facet].stated), ...(query[facet]?.split(',') ?? [])]);
+    counts[facet] = Object.fromEntries(
+      [...options].map((value) => [value, base.filter((p) => matchesValue(facet, p, value)).length]),
+    );
+  }
+  const base = scope.filter((p) => applies(p, query, 'price'));
+  counts.price = Object.fromEntries(
+    PRICE_PRESETS.map(({ id, min, max }) => [id, base.filter((p) => inPriceRange(p, min, max)).length]),
+  );
+  return counts;
+}
+
 export const mockCatalog = {
   async getProductBySlug(slug: string): Promise<Product | null> {
     return products.find((p) => p.slug === slug) ?? null;
   },
 
   async listProducts(query: ProductQuery = {}): Promise<Product[]> {
-    let list = [...products];
-    if (query.productLine) list = list.filter((p) => p.productLine === query.productLine);
-    if (query.replacement) list = list.filter((p) => p.replacement === query.replacement);
-    if (query.brandId) list = list.filter((p) => p.brandId === query.brandId);
-    // A comma-separated set, so one link can carry a whole Color Family (CONTEXT.md);
-    // a single color is just a set of one, which is what every other caller sends.
-    if (query.color) {
-      const wanted = query.color.split(',');
-      list = list.filter((p) => p.variants.some((v) => v.color !== undefined && wanted.includes(v.color)));
-    }
-    // Both ends inclusive, which is what makes a one-value bucket like `14.0-14.0`
-    // select exactly the lenses of that width. A range the schema would have
-    // rejected can only arrive from a caller that bypassed it; matching nothing is
-    // the same answer an unknown color already gets.
-    if (query.diameter) {
-      const range = parseDiameterRange(query.diameter);
-      list = range
-        ? list.filter((p) => {
-            const mm = diameterMm(p.specs.diameter);
-            return mm !== null && mm >= range.min && mm <= range.max;
-          })
-        : [];
-    }
-    if (query.material) list = list.filter((p) => p.specs.material === query.material);
+    return sortProducts(products.filter((p) => applies(p, query)), query.sort);
+  },
 
-    switch (query.sort) {
-      case 'price-asc': list.sort((a, b) => minPrice(a) - minPrice(b)); break;
-      case 'price-desc': list.sort((a, b) => minPrice(b) - minPrice(a)); break;
-      case 'bestselling': list.sort((a, b) => b.reviewCount - a.reviewCount); break;
-      case 'newest':
-        list.sort((a, b) => Number(b.badges.includes('new')) - Number(a.badges.includes('new')));
-        break;
-      default: break;
-    }
-    return list;
+  /**
+   * The collection page's query: the filtered, sorted result paged by offset and limit,
+   * its total, and the per-option counts the sidebar shows. `ids` scopes it to a Collection.
+   */
+  async searchProducts(
+    query: ProductQuery,
+    { ids, offset = 0, limit = Infinity }: { ids?: string[]; offset?: number; limit?: number } = {},
+  ): Promise<{ products: Product[]; total: number; counts: FacetCounts }> {
+    const scope = ids ? products.filter((p) => ids.includes(p.id)) : products;
+    const result = sortProducts(scope.filter((p) => applies(p, query)), query.sort);
+    return { products: result.slice(offset, offset + limit), total: result.length, counts: facetCounts(scope, query) };
   },
 
   async getCollection(slug: string): Promise<Collection | null> {

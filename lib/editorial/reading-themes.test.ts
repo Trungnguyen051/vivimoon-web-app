@@ -84,14 +84,14 @@ describe('Reading Theme destinations', () => {
    * narrowed the same way — the lesson `lens-entries` records, where counting a tile
    * against the wrong collection reported zero for a tile holding two.
    *
-   * Six of the ten catalog products are Silicone Hydrogel, counted from the fixtures.
+   * Fourteen of the twenty-four catalog products are Silicone Hydrogel, counted from the fixtures.
    */
   it('counts within its own filter, not across the whole collection', async () => {
     const comfort = readingThemeDestination('comfort')!;
 
     const all = await productsBehind(comfort.collection);
 
-    expect(countReadingTheme(comfort, all)).toBe(6);
+    expect(countReadingTheme(comfort, all)).toBe(14);
     expect(countReadingTheme(comfort, all)).toBeLessThan(all.length);
   });
 

@@ -1,188 +1,213 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { CollectionFilters } from './collection-filters';
+import { CollectionFilters, CollectionFiltersSheet, CollectionLoadMore, CollectionSort } from './collection-filters';
 import { vi as viDict } from '@/lib/i18n/dictionaries/vi';
-import {
-  LENS_FACETS, DIAMETER_BUCKETS, MATERIAL_VALUES, facetAnchorId, diameterBucketLabel,
-} from '@/lib/products/lens-facets';
+import { LENS_FACETS, facetAnchorId } from '@/lib/products/lens-facets';
+import type { FacetCounts } from '@/lib/api/resources/catalog';
 
 const push = vi.fn();
 let search = '';
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push }),
-  usePathname: () => '/vi/collection/colored-lenses',
+  usePathname: () => '/vi/collection/all-lenses',
   useSearchParams: () => new URLSearchParams(search),
 }));
 
-const colors = ['brown', 'gray'];
+const t = viDict.filters.sidebar;
 
-function renderFilters() {
-  return render(<CollectionFilters dict={viDict} colors={colors} />);
-}
+const counts: FacetCounts = {
+  productLine: { trongSuot: 6, coMau: 14, vanNhu: 2 },
+  replacement: { daily: 4, monthly: 12, threeMonth: 3, sixMonth: 5 },
+  brandId: { vivimoon: 24 },
+  color: { brown: 9, gray: 7, black: 0 },
+  diameter: { '14.2-14.2': 12, '14-14': 4, '14.5-14.5': 6 },
+  material: { Hydrogel: 10, 'Silicone Hydrogel': 14 },
+  makeupStyle: { natural: 15, pink: 6, orange: 5, smoky: 7 },
+  series: { lenspresso: 8, eyeconic: 7, clear: 6 },
+  occasion: { graduation: 5, wedding: 4, party: 7, date: 7, travel: 9, photoshoot: 6 },
+  price: { 'under-200k': 24, '200k-300k': 0, 'over-300k': 0 },
+};
 
-/**
- * A Color Family tile drops a shopper straight onto `?color=…`. Until the colour
- * had a control, that page showed a filtered — often empty — grid with nothing
- * naming the filter and nothing to undo it; the only way out was editing the URL (#43).
- */
-describe('CollectionFilters', () => {
+const renderFilters = () => render(<CollectionFilters dict={viDict} counts={counts} />);
+const lastUrl = () => decodeURIComponent(push.mock.lastCall![0] as string);
+
+describe('CollectionFilters (#194)', () => {
   beforeEach(() => {
     push.mockClear();
     search = '';
   });
 
-  /**
-   * Only the colour control was pinned this way, and the Base UI migration showed
-   * why that was not enough: the library reads a trigger's text from the select's
-   * `items` map rather than from the chosen option's children, so every control
-   * here silently fell back to the raw query value — `daily` in place of the
-   * shopper's own language. One control's coverage caught it; four had none.
-   */
-  it('names every active filter in words a shopper reads, not by its query value', () => {
-    search = 'productLine=trongSuot&replacement=daily&sort=newest';
+  it('renders every group in the frame’s order', () => {
     renderFilters();
-
-    expect(screen.getByRole('combobox', { name: viDict.filters.productLine }))
-      .toHaveTextContent(viDict.filters.productLines.trongSuot);
-    expect(screen.getByRole('combobox', { name: viDict.filters.replacement }))
-      .toHaveTextContent(viDict.filters.replacements.daily);
-    expect(screen.getByRole('combobox', { name: viDict.filters.sort }))
-      .toHaveTextContent(viDict.filters.sorts.newest);
+    const groups = screen.getAllByRole('button', { expanded: true }).map((b) => b.textContent);
+    expect(groups).toEqual([
+      t.lensLine, viDict.nav.facets.color, viDict.nav.facets.expiry, viDict.nav.facets.diameter,
+      t.makeupStyle, t.series, t.occasion, t.price,
+    ]);
   });
 
-  it('names the active colour rather than leaving it invisible', () => {
-    search = 'color=brown';
+  it('shows every option with its count', () => {
     renderFilters();
-
-    // The dictionary's name for the colour, not a variant's English shade name.
-    expect(screen.getByRole('combobox', { name: viDict.filters.color })).toHaveTextContent(viDict.filters.colors.brown);
+    expect(screen.getByRole('checkbox', { name: `${viDict.filters.replacements.monthly} (12)` })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: `${t.makeupStyles.pink} (6)` })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '14.2mm (12)' })).toBeInTheDocument();
+    expect(screen.getByRole('checkbox', { name: new RegExp(viDict.nav.facets.materials.breathable) })).toHaveAccessibleName(
+      expect.stringContaining('(14)'),
+    );
   });
 
-  it('offers a way back whenever a colour filter is active', () => {
-    search = 'color=brown';
-    const { unmount } = renderFilters();
-    expect(screen.getByRole('button', { name: viDict.filters.clear })).toBeInTheDocument();
+  it('keeps a dead-end option out of reach unless it is already picked', () => {
+    renderFilters();
+    expect(screen.getByRole('button', { name: `${viDict.filters.colors.black} (0)` })).toBeDisabled();
+  });
+
+  it('adds a pick to the facet’s set, shares it through the URL and keeps the scroll', async () => {
+    search = 'replacement=daily&show=16';
+    renderFilters();
+
+    await userEvent.click(screen.getByRole('checkbox', { name: /^1 tháng/ }));
+
+    // Paging restarts, since the result it counted is gone.
+    expect(lastUrl()).toBe('/vi/collection/all-lenses?replacement=daily,monthly');
+    expect(push.mock.lastCall![1]).toEqual({ scroll: false });
+  });
+
+  it('removes a pick that is clicked again', async () => {
+    search = 'makeupStyle=pink,orange';
+    renderFilters();
+
+    const pink = screen.getByRole('button', { name: /^Tone hồng/ });
+    expect(pink).toHaveAttribute('aria-pressed', 'true');
+    await userEvent.click(pink);
+
+    expect(lastUrl()).toBe('/vi/collection/all-lenses?makeupStyle=orange');
+  });
+
+  it('offers Trong suốt among the colours, as the clear Product Line', async () => {
+    renderFilters();
+    await userEvent.click(screen.getByRole('button', { name: `${viDict.filters.productLines.trongSuot} (6)` }));
+    expect(lastUrl()).toBe('/vi/collection/all-lenses?productLine=trongSuot');
+  });
+
+  it('applies a price preset as a min/max pair, and clears it when picked again', async () => {
+    const withMid = { ...counts, price: { ...counts.price, '200k-300k': 3 } };
+    const { unmount } = render(<CollectionFilters dict={viDict} counts={withMid} />);
+    await userEvent.click(screen.getByRole('button', { name: `${t.pricePresets['200k-300k']} (3)` }));
+    expect(lastUrl()).toBe('/vi/collection/all-lenses?minPrice=200000&maxPrice=300000');
     unmount();
 
-    search = '';
+    search = 'minPrice=200000&maxPrice=300000';
+    render(<CollectionFilters dict={viDict} counts={withMid} />);
+    await userEvent.click(screen.getByRole('button', { name: /^200K – 300K/ }));
+    expect(lastUrl()).toBe('/vi/collection/all-lenses');
+  });
+
+  it('applies a typed price range on Enter', async () => {
     renderFilters();
-    expect(screen.queryByRole('button', { name: viDict.filters.clear })).not.toBeInTheDocument();
+    await userEvent.type(screen.getByRole('textbox', { name: t.priceFrom }), '150000');
+    await userEvent.type(screen.getByRole('textbox', { name: t.priceTo }), '250000{Enter}');
+    expect(lastUrl()).toBe('/vi/collection/all-lenses?minPrice=150000&maxPrice=250000');
+  });
+
+  it('collapses a group as drawn', async () => {
+    renderFilters();
+    const trigger = screen.getByRole('button', { name: t.occasion });
+    await userEvent.click(trigger);
+    expect(trigger).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('clears every filter but keeps the sort', async () => {
+    search = 'color=brown&series=eyeconic&sort=price-asc&show=16';
+    renderFilters();
+    await userEvent.click(screen.getByRole('button', { name: t.clearAll }));
+    expect(lastUrl()).toBe('/vi/collection/all-lenses?sort=price-asc');
+  });
+
+  it('offers no clear link when nothing is filtered', () => {
+    search = 'sort=newest';
+    renderFilters();
+    expect(screen.queryByRole('button', { name: t.clearAll })).not.toBeInTheDocument();
   });
 
   /**
-   * A Lens Facet lands a shopper on a filter this row has no control for — the menu
-   * offers diameter and material, the row offers neither (#109). Without a way back
-   * they are stranded exactly as #43 left them, narrowed with nothing on the page to
-   * widen again, and an empty result hides the collection's own recovery link too.
-   *
-   * Driven through the real query schema rather than a list of names, so a filter the
-   * schema gains later is covered the day it arrives.
+   * The Sản Phẩm menu links a diameter bucket (`14.3-14.5`) the width chips don't list.
+   * It must still show, picked, so the shopper can see and undo what narrowed the grid.
    */
-  it.each(['diameter=13.5-13.9', 'material=Hydrogel', 'brandId=b1'])(
-    'offers a way back when the only filter is %s',
-    (search_) => {
-      search = search_;
-      renderFilters();
-      expect(screen.getByRole('button', { name: viDict.filters.clear })).toBeInTheDocument();
-    }
-  );
-
-  /**
-   * The Sản Phẩm menu offers four axes; this row offered two of them. A shopper following
-   * a diameter or material value landed on a narrowed grid with every control reading
-   * "all" and nothing naming what had narrowed it — the shape of #43, which is why that
-   * issue's recovery link exists (#133).
-   */
-  it.each([
-    ['diameter', `diameter=${DIAMETER_BUCKETS[4].id}`, diameterBucketLabel(DIAMETER_BUCKETS[4])],
-    ['material', `material=${MATERIAL_VALUES[0].material}`, viDict.nav.facets.materials.moisture],
-  ])('shows the %s a shopper arrived with, rather than "all"', (_axis, search_, label) => {
-    search = search_;
-    renderFilters();
-
-    expect(screen.getByRole('combobox', { name: label === viDict.nav.facets.materials.moisture
-      ? viDict.nav.facets.material
-      : viDict.nav.facets.diameter })).toHaveTextContent(label);
+  it('shows a menu bucket the shopper arrived with as a picked chip', () => {
+    search = 'diameter=14.3-14.5';
+    render(<CollectionFilters dict={viDict} counts={{ ...counts, diameter: { ...counts.diameter, '14.3-14.5': 3 } }} />);
+    expect(screen.getByRole('button', { name: '14.3 - 14.5mm (3)' })).toHaveAttribute('aria-pressed', 'true');
   });
 
   /**
-   * A facet name in the menu opens this page with that facet's control focused, via a
-   * fragment. The id is read from the same function the menu's href is built from, so a
-   * control and the link aiming at it cannot drift — and `expiry` is in there on purpose,
-   * since its control carries `?replacement=` and an id built from the query key would be
-   * right for three facets and silently wrong for that one.
+   * A facet name in the menu opens this page aimed at that facet's group, via a fragment.
+   * The id comes from the same function the menu's href is built from, so they can't drift.
    */
   it.each(LENS_FACETS.map((facet) => facet.id))('gives %s a control the menu can aim at', (facetId) => {
-    search = '';
     const { container } = renderFilters();
-
     const control = container.querySelector(`#${facetAnchorId(facetId)}`);
     expect(control, `nothing answers #${facetAnchorId(facetId)}`).not.toBeNull();
-    // A fragment focuses its target only if the target can take focus.
     expect(control!.tagName.toLowerCase()).toBe('button');
   });
 
-  it('narrows the collection to a diameter the shopper picks', async () => {
-    const bucket = DIAMETER_BUCKETS[4];
+  it('links the lens-line comparison', () => {
     renderFilters();
+    expect(screen.getByRole('link', { name: t.compareLines })).toHaveAttribute(
+      'href', '/vi/articles/silicone-hydrogel-vs-lens-thuong',
+    );
+  });
+});
 
-    await userEvent.click(screen.getByRole('combobox', { name: viDict.nav.facets.diameter }));
-    await userEvent.click(await screen.findByRole('option', { name: diameterBucketLabel(bucket) }));
+describe('CollectionFiltersSheet (#194)', () => {
+  it('opens the same groups from the mobile "Bộ lọc" button', async () => {
+    render(<CollectionFiltersSheet dict={viDict} counts={counts} />);
+    await userEvent.click(screen.getByRole('button', { name: t.title }));
+    const sheet = await screen.findByRole('dialog');
+    expect(within(sheet).getByRole('button', { name: t.price })).toBeInTheDocument();
+    expect(within(sheet).getByRole('button', { name: t.lensLine })).toBeInTheDocument();
+  });
+});
 
-    expect(push).toHaveBeenCalledWith(`/vi/collection/colored-lenses?diameter=${bucket.id}`);
+describe('CollectionSort (#194)', () => {
+  beforeEach(() => {
+    push.mockClear();
+    search = '';
   });
 
-  it('narrows the collection to a material the shopper picks', async () => {
-    renderFilters();
-
-    await userEvent.click(screen.getByRole('combobox', { name: viDict.nav.facets.material }));
-    await userEvent.click(await screen.findByRole('option', { name: viDict.nav.facets.materials.breathable }));
-
-    expect(push).toHaveBeenCalledWith('/vi/collection/colored-lenses?material=Silicone+Hydrogel');
+  it('reads best-selling by default', () => {
+    render(<CollectionSort dict={viDict} />);
+    expect(screen.getByRole('combobox', { name: viDict.filters.sort })).toHaveTextContent('Sắp xếp: Bán chạy');
   });
 
-  /**
-   * The row must offer exactly what the menu does. Two lists of buckets would drift the
-   * first time one was edited, and a shopper would find an option in the menu that the
-   * page it opens cannot show them.
-   */
-  it('offers the same buckets and materials the menu does', async () => {
-    renderFilters();
+  it.each(['newest', 'price-asc', 'price-desc'] as const)('sorts by %s through the URL, restarting the paging', async (sort) => {
+    search = 'color=brown&show=16';
+    render(<CollectionSort dict={viDict} />);
+    await userEvent.click(screen.getByRole('combobox', { name: viDict.filters.sort }));
+    await userEvent.click(await screen.findByRole('option', { name: viDict.filters.sorts[sort] }));
+    expect(lastUrl()).toBe(`/vi/collection/all-lenses?color=brown&sort=${sort}`);
+  });
+});
 
-    await userEvent.click(screen.getByRole('combobox', { name: viDict.nav.facets.diameter }));
-    const offered = (await screen.findAllByRole('option')).map((o) => o.textContent);
-
-    for (const bucket of DIAMETER_BUCKETS) {
-      expect(offered, `the row omits ${bucket.id}`).toContain(diameterBucketLabel(bucket));
-    }
+describe('CollectionLoadMore (#194)', () => {
+  beforeEach(() => {
+    push.mockClear();
+    search = 'color=brown';
   });
 
-  it('filters to a colour the shopper picks', async () => {
-    renderFilters();
+  it('says how many are showing and loads the next eight without scrolling', async () => {
+    render(<CollectionLoadMore dict={viDict} shown={8} total={20} />);
+    expect(screen.getByText('Đang xem 8 / 20 sản phẩm')).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole('combobox', { name: viDict.filters.color }));
-    await userEvent.click(await screen.findByRole('option', { name: viDict.filters.colors.gray }));
-
-    expect(push).toHaveBeenCalledWith('/vi/collection/colored-lenses?color=gray');
+    await userEvent.click(screen.getByRole('button', { name: t.loadMore }));
+    expect(lastUrl()).toBe('/vi/collection/all-lenses?color=brown&show=16');
+    expect(push.mock.lastCall![1]).toEqual({ scroll: false });
   });
 
-  it('treats a blank colour param as no filter', () => {
-    search = 'color=';
-    renderFilters();
-
-    // `?color=` filters nothing server-side, so it must not add a blank row to the menu.
-    expect(screen.queryByRole('button', { name: viDict.filters.clear })).not.toBeInTheDocument();
-    expect(screen.getByRole('combobox', { name: viDict.filters.color })).toHaveTextContent(viDict.filters.color);
-  });
-
-  /** A family tile can send a set of colours; the control must still say what is applied. */
-  it('names a multi-colour filter it has no single option for', () => {
-    search = 'color=brown,gray';
-    renderFilters();
-
-    expect(screen.getByRole('combobox', { name: viDict.filters.color }))
-      .toHaveTextContent(`${viDict.filters.colors.brown} + ${viDict.filters.colors.gray}`);
+  it('offers no button once everything is showing', () => {
+    render(<CollectionLoadMore dict={viDict} shown={20} total={20} />);
+    expect(within(document.body).getByText('Đang xem 20 / 20 sản phẩm')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: t.loadMore })).not.toBeInTheDocument();
   });
 });

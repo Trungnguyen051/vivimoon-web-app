@@ -135,6 +135,20 @@ export const vi: Dictionary = {
     productLines: { trongSuot: 'Trong suốt', coMau: 'Có màu', vanNhu: 'Vân nhũ' },
     replacements: { daily: '1 ngày', monthly: '1 tháng', threeMonth: '3 tháng', sixMonth: '6 tháng' },
     sorts: { newest: 'Mới nhất', 'price-asc': 'Giá: thấp đến cao', 'price-desc': 'Giá: cao đến thấp', bestselling: 'Bán chạy' },
+    sidebar: {
+      title: 'Bộ lọc', clearAll: 'Xoá tất cả', lensLine: 'Dòng lens', makeupStyle: 'Phong cách makeup',
+      series: 'Bộ sưu tập', occasion: 'Dịp sử dụng', price: 'Khoảng giá', priceFrom: 'Từ ₫', priceTo: 'Đến ₫',
+      compareLines: 'So sánh 2 dòng lens',
+      materialNotes: {
+        moisture: 'Water Grip giữ ẩm · hợp mắt nhạy cảm, dễ khô · 1 ngày / 1 tháng / 6 tháng',
+        breathable: '100% Silicone Hydrogel · oxy gấp 5 lần · hợp đeo nhiều giờ · 3 / 6 tháng',
+      },
+      makeupStyles: { natural: 'Tự nhiên trong trẻo', pink: 'Tone hồng', orange: 'Tone cam', smoky: 'Tây / Mắt khói' },
+      seriesNames: { lenspresso: 'Lenspresso - mắt thở phun màu', eyeconic: 'Eyeconic - giãn to baby', clear: 'Lens trong suốt' },
+      occasions: { graduation: 'Kỷ yếu', wedding: 'Đám cưới', party: 'Tiệc', date: 'Hẹn hò', travel: 'Du lịch', photoshoot: 'Chụp ảnh' },
+      pricePresets: { 'under-200k': 'Dưới 200K', '200k-300k': '200K – 300K', 'over-300k': 'Trên 300K' },
+      sortBy: 'Sắp xếp: {sort}', showing: 'Đang xem {shown} / {total} sản phẩm', loadMore: 'Xem thêm sản phẩm',
+    },
   },
   pdp: {
     specs: 'Thông số', related: 'Gợi ý cho bạn', reviews: 'Đánh giá',

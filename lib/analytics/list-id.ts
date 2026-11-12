@@ -8,6 +8,7 @@ import type { ProductQuery } from '@/lib/api/schemas/catalog';
  */
 const MEMBERSHIP_FILTERS = [
   'brandId', 'color', 'diameter', 'material', 'productLine', 'replacement',
+  'makeupStyle', 'series', 'occasion', 'minPrice', 'maxPrice',
 ] as const;
 
 /**
@@ -50,6 +51,12 @@ export function collectionListId(slug: string, query: ProductQuery, collectionCo
     material: query.material,
     productLine: query.productLine,
     replacement: query.replacement,
+    // Schema-validated sets and numbers, so bounded the way `replacement` is.
+    makeupStyle: query.makeupStyle,
+    series: query.series,
+    occasion: query.occasion,
+    minPrice: query.minPrice,
+    maxPrice: query.maxPrice,
   };
 
   const applied = MEMBERSHIP_FILTERS

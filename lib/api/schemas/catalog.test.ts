@@ -198,6 +198,27 @@ describe('productQuerySchema', () => {
   );
 });
 
+describe('productQuerySchema — sidebar facets (#194)', () => {
+  it('parses the new facets as comma-separated sets and the price bounds as numbers', () => {
+    const q = productQuerySchema.parse({
+      makeupStyle: 'natural,pink', series: 'eyeconic', occasion: 'wedding', minPrice: '200000', maxPrice: '300000',
+    });
+    expect(q).toEqual({ makeupStyle: 'natural,pink', series: 'eyeconic', occasion: 'wedding', minPrice: 200000, maxPrice: 300000 });
+  });
+
+  it('accepts a set of expiries and a set of diameter ranges, as the sidebar checkboxes send them', () => {
+    const q = productQuerySchema.parse({ replacement: 'daily,monthly', diameter: '14.2-14.2,14.5-14.5' });
+    expect(q).toEqual({ replacement: 'daily,monthly', diameter: '14.2-14.2,14.5-14.5' });
+  });
+
+  it.each([
+    { makeupStyle: 'natural,goth' }, { series: 'nope' }, { occasion: 'funeral' },
+    { replacement: 'daily,weekly' }, { diameter: '14.2-14.2,wide' }, { minPrice: '-1' }, { maxPrice: 'cheap' },
+  ])('rejects %o', (input) => {
+    expect(() => productQuerySchema.parse(input)).toThrow();
+  });
+});
+
 describe('lensGallerySchema', () => {
   const validGallery = {
     productId: 'p1',
