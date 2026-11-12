@@ -67,7 +67,9 @@ _Avoid_: Post, blog entry, news item
 The subject an Article is grouped under — người mới đeo lens, độ êm & thoải mái, lens tự nhiên, makeup look, lens theo dịp, chăm sóc lens. Every Article carries exactly one. It both files the Knowledge index (the chip row, each card's eyebrow, the breadcrumb on an article) and chooses which Collection of lenses the article merchandises beside its body (ADR-0018). "Tất cả" is the absence of a Reading Theme filter rather than a member of the set.
 
 Distinct from a Topic by what it files, not by who sees it: a Reading Theme groups Articles, a Topic groups FAQ Entries and Guides. Both are shopper-visible and both name themselves on screen, which is exactly why one word could not serve both. Not every Reading Theme has lenses behind it — chăm sóc lens is about solution, cases and hygiene, which Vivimoon does not sell — so one may legitimately lead nowhere in the catalog (ADR-0018).
-_Avoid_: Topic (that is the help taxonomy, and the collision is the reason this was renamed), category, tag
+
+On screen it is **chủ đề đọc** in Vietnamese and **subject** in English, against a Topic's **chủ đề** and **topic**. Saying so here because the rename alone did not settle it: the code split cleanly and the copy did not, and every Vietnamese surface called both taxonomies `chủ đề` until #151. `tests/reading-theme-vocabulary.test.ts` holds both words now.
+_Avoid_: Topic (that is the help taxonomy, and the collision is the reason this was renamed), category, tag; in Vietnamese, a bare `chủ đề` — that is a Topic
 
 **Lead Article**:
 The Article given the large treatment at the top of the Knowledge index. It is the newest Article matching whatever Reading Theme or search is currently applied — not an editorial selection, and not a field on an Article. Narrowing the index therefore changes which Article leads it, which is why it is named for its position rather than called "featured": nothing about it reflects a judgement anyone made.
@@ -105,7 +107,7 @@ _Avoid_: Lifespan, Duration, Replacement schedule, Wear duration (one concept �
 
 **Topic**:
 One of the six subjects help content is filed under — Người mới đeo lens, Chọn lens & độ cận, Đơn hàng & thanh toán, Giao hàng, Đổi trả & bảo hành, Tài khoản & ưu đãi. Every FAQ Entry and every Guide carries exactly one. There is one Topic list, not a separate set for the support hub and the FAQ page: the hub shows all six as tiles and the FAQ sidebar lists the same six beneath "Tất cả", so no Topic is reachable from one screen and invisible on the other. The design drew four hub tiles against an earlier four-item list; six is deliberate.
-_Avoid_: Category, help category, support section (one concept — Topic is canonical; `category` survives only as the FAQ page's query param)
+_Avoid_: Category, help category, support section (one concept — Topic is canonical; `category` survives only as the FAQ page's query param); `chủ đề đọc` — that is a Reading Theme
 
 **FAQ Entry**:
 One question Vivimoon answers, filed under a Topic, with a short answer and a full answer in every supported locale. The short answer is authored rather than truncated from the full one — it is the line that appears on a hub card, where a cut-off sentence would read as a bug. A full answer may carry links to Guides, Articles or elsewhere in the storefront; those links are a field beside the prose rather than markup inside it, so an answer still needs no parser. A handful are marked featured, which is what the hub's "Người mới hay hỏi" row shows.
