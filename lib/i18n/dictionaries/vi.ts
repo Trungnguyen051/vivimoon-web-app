@@ -136,6 +136,14 @@ export const vi: Dictionary = {
     replacements: { daily: '1 ngày', monthly: '1 tháng', threeMonth: '3 tháng', sixMonth: '6 tháng' },
     sorts: { newest: 'Mới nhất', 'price-asc': 'Giá: thấp đến cao', 'price-desc': 'Giá: cao đến thấp', bestselling: 'Bán chạy' },
   },
+  reviews: {
+    title: 'Đánh giá từ khách hàng', summary: '{n} đánh giá · {p}% có ảnh thật', outOf5: 'trên 5',
+    subRatings: { comfort: 'Độ êm', colorMatch: 'Màu giống ảnh', easeOfWear: 'Dễ đeo' },
+    write: 'Viết đánh giá', filters: 'Lọc đánh giá', all: 'Tất cả', withMedia: 'Có ảnh/video ({n})',
+    tags: { sensitiveEyes: 'Mắt nhạy cảm', allDay: 'Đeo cả ngày', beginner: 'Người mới đeo', myopic: 'Người cận' },
+    bought: 'Đã mua {variant}', helpful: 'Hữu ích ({n})', seeAll: 'Xem tất cả {n} đánh giá',
+    noMatch: 'Chưa có đánh giá nào ở mục này.', photo: 'Ảnh đánh giá {n}', video: 'Video đánh giá',
+  },
   pdp: {
     specs: 'Thông số', related: 'Gợi ý cho bạn', reviews: 'Đánh giá',
     material: 'Chất liệu', waterContent: 'Độ ẩm', baseCurve: 'Độ cong',
