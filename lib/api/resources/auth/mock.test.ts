@@ -4,6 +4,16 @@ import { mockAuth, resetMockAuthState } from './mock';
 describe('mockAuth', () => {
   beforeEach(() => { resetMockAuthState(); });
 
+  // The welcome dialog opens for any user without `onboardedAt`. The mock's state is
+  // in memory and resets on every dev reload or serverless cold start, so a seeded
+  // member without it would be "welcomed" again and again.
+  it('treats the seeded members as long since onboarded', async () => {
+    for (const identifier of ['0912345678', '0987654321']) {
+      const user = await mockAuth.login({ identifier, password: 'vivimoon123' });
+      expect(user.onboardedAt, identifier).toBeTruthy();
+    }
+  });
+
   it('logs in with a known phone and password', async () => {
     const user = await mockAuth.login({ identifier: '0912345678', password: 'vivimoon123' });
     expect(user.name).toBe('Nguyễn Thị Mai');

@@ -13,6 +13,8 @@ export const users: MockUser[] = [
     name: 'Nguyễn Thị Mai',
     dob: '1998-04-12',
     createdAt: '2026-01-15T09:00:00.000Z',
+    // Established members: past the welcome step, so a mock reset never re-opens it.
+    onboardedAt: '2026-01-15T09:05:00.000Z',
     password: 'vivimoon123',
   },
   {
@@ -21,6 +23,7 @@ export const users: MockUser[] = [
     email: 'linh@example.vn',
     name: 'Trần Khánh Linh',
     createdAt: '2026-03-02T14:30:00.000Z',
+    onboardedAt: '2026-03-02T14:35:00.000Z',
     password: 'vivimoon123',
   },
 ];
