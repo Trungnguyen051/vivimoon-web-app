@@ -149,6 +149,8 @@ export const pricedCartSchema = z.object({
   // Id of the shipping option `shipping` was charged for; absent when no
   // address was given to quote against.
   shippingMethod: z.string().optional(),
+  // That option's quoted delivery time, in days.
+  shippingEtaDays: z.number().int().positive().optional(),
   total: z.number().int().nonnegative(),
   // Absent only when NO line could be priced: currency is read off the
   // catalogue variants, so a cart with nothing priceable has no currency to

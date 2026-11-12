@@ -184,6 +184,15 @@ describe('mockPricing.priceCart', () => {
     expect(result.total).toBe(70 + 3 - 15);
   });
 
+  it('names the charged shipping option and its delivery days, from the same selection as the fee', async () => {
+    // District 1: cheapest is standard (fee 3, etaDays 2).
+    const result = await mockPricing.priceCart(
+      reqWithShipping(BASELINE_LINES, { province: 'Ho Chi Minh City', district: 'District 1' }),
+    );
+    expect(result.shippingMethod).toBe('standard');
+    expect(result.shippingEtaDays).toBe(2);
+  });
+
   it('rejects a shipping optionId that does not match any option in the real quote', async () => {
     await expect(
       mockPricing.priceCart(

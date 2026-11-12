@@ -166,6 +166,10 @@ export const vi: Dictionary = {
     priceError: 'Không cập nhật được tổng tiền. Vui lòng thử lại.',
   },
   checkout: {
+    shipping: {
+      title: 'Vận chuyển', pending: 'Nhập địa chỉ để xem phương thức vận chuyển.',
+      days: '{n} ngày', arrivesBy: 'Dự kiến nhận {date}', free: 'Miễn phí',
+    },
     title: 'Thanh toán', recipient: 'Tên người nhận', email: 'Email', line1: 'Địa chỉ',
     ward: 'Phường/Xã', district: 'Quận/Huyện', province: 'Tỉnh/Thành phố',
     phone: 'Số điện thoại', paymentMethod: 'Phương thức thanh toán', placeOrder: 'Đặt hàng', payNote: 'Thanh toán được mô phỏng trong bản demo.',

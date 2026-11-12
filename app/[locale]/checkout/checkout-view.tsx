@@ -16,6 +16,7 @@ import { apiRequest } from '@/lib/api/client';
 import type { Order } from '@/lib/api/schemas/orders';
 import { isPhone, type User } from '@/lib/api/schemas/auth';
 import type { SavedAddress } from '@/lib/api/schemas/account';
+import { ShippingBlock } from '@/components/commerce/shipping-block';
 import { OrderSummary } from '@/components/commerce/order-summary';
 import { PaymentMethodPicker } from '@/components/commerce/payment-method-picker';
 import { Button } from '@/components/ui/button';
@@ -233,6 +234,11 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
                 );
               })}
             </FieldGroup>
+
+            <ShippingBlock
+              method={priced?.shippingMethod} etaDays={priced?.shippingEtaDays} fee={priced?.shipping ?? null}
+              currency={currency} locale={locale} dict={dict}
+            />
 
             <PaymentMethodPicker
               value={paymentMethod}

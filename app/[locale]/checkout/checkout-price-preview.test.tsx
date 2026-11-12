@@ -39,7 +39,7 @@ const PRICED_RESPONSE = {
   lines: [{ lineKey: 'existing', variantId: 'p-aqua-daily-30', quantity: 1, unitPrice: 25, lineTotal: 25, currency: 'USD' }],
   unavailableLines: [],
   subtotal: 25, discount: 5, appliedVouchers: [{ code: 'SAVE5', title: 'x', description: 'x', type: 'fixed', value: 5, expiresAt: '2099-01-01', status: 'active' }],
-  shipping: 3, total: 23, currency: 'USD',
+  shipping: 3, shippingMethod: 'standard', shippingEtaDays: 2, total: 23, currency: 'USD',
 };
 
 function fetchRoutingTo(pricePreview: unknown) {
@@ -86,6 +86,19 @@ describe('CheckoutPage — live price preview (M5.4, issue #21)', () => {
     expect(screen.getByText('Shipping').nextElementSibling).toHaveTextContent('$3.00');
     expect(screen.getByText('Discount').nextElementSibling).toHaveTextContent('$5.00');
     expect(screen.getByText('Total').nextElementSibling).toHaveTextContent('$23.00');
+  });
+
+  it('names the delivery option the order will be charged for, once the address can be quoted', async () => {
+    vi.stubGlobal('fetch', fetchRoutingTo(PRICED_RESPONSE));
+    await renderCheckoutPage();
+    const block = screen.getByRole('region', { name: 'Delivery' });
+    expect(block).toHaveTextContent('Enter your address to see the delivery option.');
+
+    await userEvent.type(screen.getByLabelText('District'), 'District 1');
+    await userEvent.type(screen.getByLabelText('Province'), 'Ho Chi Minh City');
+
+    await waitFor(() => expect(block).toHaveTextContent('Standard delivery · 2 days'));
+    expect(block).toHaveTextContent('$3.00');
   });
 
   it('adds no delivery-method picker — only the existing payment method picker\'s three buttons render', async () => {
