@@ -3,7 +3,9 @@ import type { LoyaltyEntry } from '@/lib/api/schemas/loyalty';
 /**
  * Seeded loyalty history (M3.6, issue #10), keyed by userId — points equal
  * the totals of the matching seed orders in content/mock/orders.ts, so the
- * demo balance is consistent with a shopper's actual order history.
+ * demo balance is consistent with a shopper's actual order history. At VND scale
+ * that is one point per đồng (the current award rule); #204 moves earning to
+ * 1 point per 10.000₫ and should rescale these seeds with it.
  */
 export const loyaltyHistory: Record<string, LoyaltyEntry[]> = {
   'u-001': [

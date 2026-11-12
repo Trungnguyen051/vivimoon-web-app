@@ -13,7 +13,7 @@ const validProduct = {
     diameter: '14.2mm', origin: 'M',
   },
   variants: [{
-    id: 'v1', sku: 'S1', price: 1_250_000_000,
+    id: 'v1', sku: 'S1', price: 250000,
     currency: 'VND', stock: 5,
   }],
   rating: 4.5, reviewCount: 10,
@@ -38,7 +38,7 @@ describe('productSchema', () => {
   });
 
   it('rejects a non-integer price, since VND has no minor unit', () => {
-    const bad = { ...validProduct, variants: [{ ...validProduct.variants[0], price: 5_000.5 }] };
+    const bad = { ...validProduct, variants: [{ ...validProduct.variants[0], price: 1.5 }] };
     expect(() => productSchema.parse(bad)).toThrow();
   });
 

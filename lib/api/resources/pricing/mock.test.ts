@@ -10,7 +10,7 @@ const SINGLE = { purchaseUnit: 'single', rx: { sph: -2.5 } } as const;
 // Two known variants from content/mock/products.ts:
 //   p-aqua-daily-30        price 125.000, VND
 //   p-hazel-monthly-brown-30  price 100.000, VND
-// 2 x 125.000 + 1 x 100.000 = 350.000 — a non-trivial baseline, not a round number, so a
+// 2 x 125.000 + 1 x 100.000 = 350.000 — a non-trivial baseline, not a single variant's price, so a
 // broken implementation (e.g. one that prices everything at 0, or at the
 // posted `unitPrice`) cannot pass by accident.
 const BASELINE_LINES = [
@@ -210,7 +210,7 @@ describe('mockPricing.priceCart', () => {
   it('folds the quoted shipping fee into shipping and total when a valid selection is given', async () => {
     // Known district (content/mock/shipping-rates.ts): standard = 30.000.
     // Voucher stays SAVE15 (fixed 75.000) — FREESHIP's discount against 30.000 is
-    // still smaller (min(30.000, 30.000) = 30.000), so the winner doesn't change.
+    // still smaller (min(50.000, 30.000) = 30.000), so the winner doesn't change.
     const result = await mockPricing.priceCart(
       reqWithShipping(BASELINE_LINES, {
         province: 'Ho Chi Minh City',

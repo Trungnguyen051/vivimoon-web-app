@@ -79,7 +79,7 @@ export const vouchers: Voucher[] = [
     title: 'Free shipping',
     description: 'No minimum. Worth 0₫ until shipping is quoted (Task 8).',
     type: 'shipping',
-    value: 30_000,
+    value: 50_000,
     expiresAt: '2099-01-01T00:00:00.000Z',
     status: 'active',
   },

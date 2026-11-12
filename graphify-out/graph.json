@@ -270,6 +270,32 @@
       "source_location": "L39"
     },
     {
+      "id": "lib_api_resources_vouchers_mock_vouchers",
+      "label": "Vouchers",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 114,
+      "community_name": "vouchers/mock.ts",
+      "file_type": "code",
+      "norm_label": "vouchers",
+      "source_file": "lib/api/resources/vouchers/mock.ts",
+      "source_location": "L23"
+    },
+    {
+      "id": "lib_api_schemas_cart_voucher",
+      "label": "Voucher",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 114,
+      "community_name": "vouchers/mock.ts",
+      "file_type": "code",
+      "norm_label": "voucher",
+      "source_file": "lib/api/schemas/cart.ts",
+      "source_location": "L170"
+    },
+    {
       "id": "components_commerce_order_status_timeline_step",
       "label": "Step",
       "_callable": true,
@@ -861,7 +887,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "linerxinput",
       "source_file": "lib/api/schemas/rx.ts",
@@ -874,7 +900,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "rxinput",
       "source_file": "lib/api/schemas/rx.ts",
@@ -887,7 +913,7 @@
       "_callable_class": true,
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "looseeye",
       "source_file": "lib/cart/line-key.ts",
@@ -1061,6 +1087,19 @@
       "norm_label": "navitem",
       "source_file": "components/layout/nav-items.ts",
       "source_location": "L15"
+    },
+    {
+      "id": "lib_api_resources_editorial_mock_editorial",
+      "label": "Editorial",
+      "_callable": true,
+      "_callable_class": true,
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "guide.test.tsx",
+      "file_type": "code",
+      "norm_label": "editorial",
+      "source_file": "lib/api/resources/editorial/mock.ts",
+      "source_location": "L57"
     },
     {
       "id": "lib_editorial_reading_themes_readingthemedestination",
@@ -1986,19 +2025,6 @@
       "source_location": "L73"
     },
     {
-      "id": "lib_api_resources_editorial_mock_editorial",
-      "label": "Editorial",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 80,
-      "community_name": "editorial/mock.ts",
-      "file_type": "code",
-      "norm_label": "editorial",
-      "source_file": "lib/api/resources/editorial/mock.ts",
-      "source_location": "L57"
-    },
-    {
       "id": "lib_api_schemas_editorial_articlequery",
       "label": "ArticleQuery",
       "_callable": true,
@@ -2361,32 +2387,6 @@
       "norm_label": "shipping",
       "source_file": "lib/api/resources/shipping/mock.ts",
       "source_location": "L24"
-    },
-    {
-      "id": "lib_api_resources_vouchers_mock_vouchers",
-      "label": "Vouchers",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "mock/index.ts",
-      "file_type": "code",
-      "norm_label": "vouchers",
-      "source_file": "lib/api/resources/vouchers/mock.ts",
-      "source_location": "L23"
-    },
-    {
-      "id": "lib_api_schemas_cart_voucher",
-      "label": "Voucher",
-      "_callable": true,
-      "_callable_class": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "mock/index.ts",
-      "file_type": "code",
-      "norm_label": "voucher",
-      "source_file": "lib/api/schemas/cart.ts",
-      "source_location": "L170"
     },
     {
       "id": "lib_api_schemas_catalog_lensgallery",
@@ -3122,51 +3122,15 @@
       "source_location": "L18"
     },
     {
-      "id": "app_locale_checkout_checkout_address_prefill_test_fetchroutingto",
-      "label": "fetchRoutingTo()",
+      "id": "lib_api_resources_vouchers_mock_iscurrentlyvalid",
+      "label": "isCurrentlyValid()",
       "_callable": true,
       "_origin": "ast",
       "community": 114,
-      "community_name": "checkout-address-prefill.test.tsx",
+      "community_name": "vouchers/mock.ts",
       "file_type": "code",
-      "norm_label": "fetchroutingto()",
-      "source_file": "app/[locale]/checkout/checkout-address-prefill.test.tsx",
-      "source_location": "L50"
-    },
-    {
-      "id": "app_locale_checkout_checkout_address_prefill_test_json",
-      "label": "json()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "checkout-address-prefill.test.tsx",
-      "file_type": "code",
-      "norm_label": "json()",
-      "source_file": "app/[locale]/checkout/checkout-address-prefill.test.tsx",
-      "source_location": "L26"
-    },
-    {
-      "id": "app_locale_checkout_checkout_address_prefill_test_makeline",
-      "label": "makeLine()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "checkout-address-prefill.test.tsx",
-      "file_type": "code",
-      "norm_label": "makeline()",
-      "source_file": "app/[locale]/checkout/checkout-address-prefill.test.tsx",
-      "source_location": "L30"
-    },
-    {
-      "id": "app_locale_checkout_checkout_address_prefill_test_rendercheckoutpage",
-      "label": "renderCheckoutPage()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 114,
-      "community_name": "checkout-address-prefill.test.tsx",
-      "file_type": "code",
-      "norm_label": "rendercheckoutpage()",
-      "source_file": "app/[locale]/checkout/checkout-address-prefill.test.tsx",
+      "norm_label": "iscurrentlyvalid()",
+      "source_file": "lib/api/resources/vouchers/mock.ts",
       "source_location": "L13"
     },
     {
@@ -5491,7 +5455,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "makeline()",
       "source_file": "features/cart/cart-reducer.test.ts",
@@ -5503,7 +5467,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "freshstore()",
       "source_file": "features/cart/cart-store.test.ts",
@@ -5515,7 +5479,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "makeline()",
       "source_file": "features/cart/cart-store.test.ts",
@@ -5527,7 +5491,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "seed()",
       "source_file": "features/cart/cart-store.test.ts",
@@ -5539,7 +5503,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "eyetoken()",
       "source_file": "lib/cart/line-key.ts",
@@ -5551,7 +5515,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "linekey()",
       "source_file": "lib/cart/line-key.ts",
@@ -6443,7 +6407,7 @@
       "file_type": "code",
       "norm_label": "formatpublisheddate()",
       "source_file": "lib/utils/format.ts",
-      "source_location": "L44"
+      "source_location": "L42"
     },
     {
       "id": "lib_utils_search_params_firstparam",
@@ -7790,6 +7754,54 @@
       "source_location": "L6"
     },
     {
+      "id": "app_locale_checkout_checkout_address_prefill_test_fetchroutingto",
+      "label": "fetchRoutingTo()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 65,
+      "community_name": "cart-store.ts",
+      "file_type": "code",
+      "norm_label": "fetchroutingto()",
+      "source_file": "app/[locale]/checkout/checkout-address-prefill.test.tsx",
+      "source_location": "L50"
+    },
+    {
+      "id": "app_locale_checkout_checkout_address_prefill_test_json",
+      "label": "json()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 65,
+      "community_name": "cart-store.ts",
+      "file_type": "code",
+      "norm_label": "json()",
+      "source_file": "app/[locale]/checkout/checkout-address-prefill.test.tsx",
+      "source_location": "L26"
+    },
+    {
+      "id": "app_locale_checkout_checkout_address_prefill_test_makeline",
+      "label": "makeLine()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 65,
+      "community_name": "cart-store.ts",
+      "file_type": "code",
+      "norm_label": "makeline()",
+      "source_file": "app/[locale]/checkout/checkout-address-prefill.test.tsx",
+      "source_location": "L30"
+    },
+    {
+      "id": "app_locale_checkout_checkout_address_prefill_test_rendercheckoutpage",
+      "label": "renderCheckoutPage()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 65,
+      "community_name": "cart-store.ts",
+      "file_type": "code",
+      "norm_label": "rendercheckoutpage()",
+      "source_file": "app/[locale]/checkout/checkout-address-prefill.test.tsx",
+      "source_location": "L13"
+    },
+    {
       "id": "app_locale_checkout_checkout_buy_now_test_fillrequiredfields",
       "label": "fillRequiredFields()",
       "_callable": true,
@@ -8318,6 +8330,18 @@
       "source_location": "L25"
     },
     {
+      "id": "components_commerce_order_summary_ordersummary",
+      "label": "OrderSummary()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 70,
+      "community_name": "button.tsx",
+      "file_type": "code",
+      "norm_label": "ordersummary()",
+      "source_file": "components/commerce/order-summary.tsx",
+      "source_location": "L10"
+    },
+    {
       "id": "components_commerce_use_buy_again_usebuyagain",
       "label": "useBuyAgain()",
       "_callable": true,
@@ -8340,6 +8364,30 @@
       "norm_label": "useboundarystrings()",
       "source_file": "components/layout/boundary-strings.tsx",
       "source_location": "L30"
+    },
+    {
+      "id": "components_ui_card_card",
+      "label": "Card()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 70,
+      "community_name": "button.tsx",
+      "file_type": "code",
+      "norm_label": "card()",
+      "source_file": "components/ui/card.tsx",
+      "source_location": "L5"
+    },
+    {
+      "id": "components_ui_card_cardcontent",
+      "label": "CardContent()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 70,
+      "community_name": "button.tsx",
+      "file_type": "code",
+      "norm_label": "cardcontent()",
+      "source_file": "components/ui/card.tsx",
+      "source_location": "L72"
     },
     {
       "id": "app_api_orders_orders_preferred_payment_test_req",
@@ -9338,18 +9386,6 @@
       "source_location": "L18"
     },
     {
-      "id": "components_commerce_order_summary_ordersummary",
-      "label": "OrderSummary()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 82,
-      "community_name": "vouchers/page.tsx",
-      "file_type": "code",
-      "norm_label": "ordersummary()",
-      "source_file": "components/commerce/order-summary.tsx",
-      "source_location": "L10"
-    },
-    {
       "id": "components_commerce_shipping_block_shippingblock",
       "label": "ShippingBlock()",
       "_callable": true,
@@ -9360,30 +9396,6 @@
       "norm_label": "shippingblock()",
       "source_file": "components/commerce/shipping-block.tsx",
       "source_location": "L21"
-    },
-    {
-      "id": "components_ui_card_card",
-      "label": "Card()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 82,
-      "community_name": "vouchers/page.tsx",
-      "file_type": "code",
-      "norm_label": "card()",
-      "source_file": "components/ui/card.tsx",
-      "source_location": "L5"
-    },
-    {
-      "id": "components_ui_card_cardcontent",
-      "label": "CardContent()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 82,
-      "community_name": "vouchers/page.tsx",
-      "file_type": "code",
-      "norm_label": "cardcontent()",
-      "source_file": "components/ui/card.tsx",
-      "source_location": "L72"
     },
     {
       "id": "lib_orders_shipping_method_name_shippingmethodname",
@@ -9407,7 +9419,7 @@
       "file_type": "code",
       "norm_label": "formatcount()",
       "source_file": "lib/utils/format.ts",
-      "source_location": "L21"
+      "source_location": "L19"
     },
     {
       "id": "lib_utils_format_formatprice",
@@ -9576,18 +9588,6 @@
       "norm_label": "bybadge()",
       "source_file": "content/mock/collections.ts",
       "source_location": "L4"
-    },
-    {
-      "id": "lib_api_resources_vouchers_mock_iscurrentlyvalid",
-      "label": "isCurrentlyValid()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "mock/index.ts",
-      "file_type": "code",
-      "norm_label": "iscurrentlyvalid()",
-      "source_file": "lib/api/resources/vouchers/mock.ts",
-      "source_location": "L13"
     },
     {
       "id": "lib_editorial_reading_time_test_bodyof",
@@ -12078,37 +12078,70 @@
       "source_location": "L11"
     },
     {
-      "id": "app_locale_checkout_checkout_address_prefill_test",
-      "label": "checkout-address-prefill.test.tsx",
+      "id": "content_mock_vouchers",
+      "label": "vouchers.ts",
       "_origin": "ast",
       "community": 114,
-      "community_name": "checkout-address-prefill.test.tsx",
+      "community_name": "vouchers/mock.ts",
       "file_type": "code",
-      "norm_label": "checkout-address-prefill.test.tsx",
-      "source_file": "app/[locale]/checkout/checkout-address-prefill.test.tsx",
+      "norm_label": "vouchers.ts",
+      "source_file": "content/mock/vouchers.ts",
       "source_location": "L1"
     },
     {
-      "id": "app_locale_checkout_checkout_address_prefill_test_default_address",
-      "label": "DEFAULT_ADDRESS",
+      "id": "content_mock_vouchers_vouchers",
+      "label": "vouchers",
       "_origin": "ast",
       "community": 114,
-      "community_name": "checkout-address-prefill.test.tsx",
+      "community_name": "vouchers/mock.ts",
       "file_type": "code",
-      "norm_label": "default_address",
-      "source_file": "app/[locale]/checkout/checkout-address-prefill.test.tsx",
-      "source_location": "L38"
+      "norm_label": "vouchers",
+      "source_file": "content/mock/vouchers.ts",
+      "source_location": "L18"
     },
     {
-      "id": "app_locale_checkout_checkout_address_prefill_test_priced_response",
-      "label": "PRICED_RESPONSE",
+      "id": "lib_api_resources_vouchers_index",
+      "label": "vouchers/index.ts",
       "_origin": "ast",
       "community": 114,
-      "community_name": "checkout-address-prefill.test.tsx",
+      "community_name": "vouchers/mock.ts",
       "file_type": "code",
-      "norm_label": "priced_response",
-      "source_file": "app/[locale]/checkout/checkout-address-prefill.test.tsx",
-      "source_location": "L44"
+      "norm_label": "vouchers/index.ts",
+      "source_file": "lib/api/resources/vouchers/index.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib_api_resources_vouchers_index_vouchers",
+      "label": "vouchers",
+      "_origin": "ast",
+      "community": 114,
+      "community_name": "vouchers/mock.ts",
+      "file_type": "code",
+      "norm_label": "vouchers",
+      "source_file": "lib/api/resources/vouchers/index.ts",
+      "source_location": "L12"
+    },
+    {
+      "id": "lib_api_resources_vouchers_mock",
+      "label": "vouchers/mock.ts",
+      "_origin": "ast",
+      "community": 114,
+      "community_name": "vouchers/mock.ts",
+      "file_type": "code",
+      "norm_label": "vouchers/mock.ts",
+      "source_file": "lib/api/resources/vouchers/mock.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib_api_resources_vouchers_mock_mockvouchers",
+      "label": "mockVouchers",
+      "_origin": "ast",
+      "community": 114,
+      "community_name": "vouchers/mock.ts",
+      "file_type": "code",
+      "norm_label": "mockvouchers",
+      "source_file": "lib/api/resources/vouchers/mock.ts",
+      "source_location": "L17"
     },
     {
       "id": "components_commerce_order_status_timeline",
@@ -13180,7 +13213,7 @@
       "file_type": "code",
       "norm_label": "loyaltyhistory",
       "source_file": "content/mock/loyalty.ts",
-      "source_location": "L8"
+      "source_location": "L10"
     },
     {
       "id": "lib_api_resources_loyalty_mock",
@@ -15402,7 +15435,7 @@
       "label": "cart-line-item.test.tsx",
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "cart-line-item.test.tsx",
       "source_file": "components/commerce/cart-line-item.test.tsx",
@@ -15413,7 +15446,7 @@
       "label": "dict",
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "dict",
       "source_file": "components/commerce/cart-line-item.test.tsx",
@@ -15424,7 +15457,7 @@
       "label": "line",
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "line",
       "source_file": "components/commerce/cart-line-item.test.tsx",
@@ -15435,7 +15468,7 @@
       "label": "lineWithRx",
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "linewithrx",
       "source_file": "components/commerce/cart-line-item.test.tsx",
@@ -15446,18 +15479,95 @@
       "label": "rx",
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "rx",
       "source_file": "components/commerce/cart-line-item.test.tsx",
       "source_location": "L17"
     },
     {
+      "id": "features_cart_cart_reducer_test",
+      "label": "cart-reducer.test.ts",
+      "_origin": "ast",
+      "community": 162,
+      "community_name": "cart-reducer.test.ts",
+      "file_type": "code",
+      "norm_label": "cart-reducer.test.ts",
+      "source_file": "features/cart/cart-reducer.test.ts",
+      "source_location": "L1"
+    },
+    {
+      "id": "features_cart_cart_reducer_test_ata",
+      "label": "atA",
+      "_origin": "ast",
+      "community": 162,
+      "community_name": "cart-reducer.test.ts",
+      "file_type": "code",
+      "norm_label": "ata",
+      "source_file": "features/cart/cart-reducer.test.ts",
+      "source_location": "L29"
+    },
+    {
+      "id": "features_cart_cart_reducer_test_atb",
+      "label": "atB",
+      "_origin": "ast",
+      "community": 162,
+      "community_name": "cart-reducer.test.ts",
+      "file_type": "code",
+      "norm_label": "atb",
+      "source_file": "features/cart/cart-reducer.test.ts",
+      "source_location": "L30"
+    },
+    {
+      "id": "features_cart_cart_reducer_test_empty",
+      "label": "empty",
+      "_origin": "ast",
+      "community": 162,
+      "community_name": "cart-reducer.test.ts",
+      "file_type": "code",
+      "norm_label": "empty",
+      "source_file": "features/cart/cart-reducer.test.ts",
+      "source_location": "L27"
+    },
+    {
+      "id": "features_cart_cart_reducer_test_plain",
+      "label": "plain",
+      "_origin": "ast",
+      "community": 162,
+      "community_name": "cart-reducer.test.ts",
+      "file_type": "code",
+      "norm_label": "plain",
+      "source_file": "features/cart/cart-reducer.test.ts",
+      "source_location": "L28"
+    },
+    {
+      "id": "features_cart_cart_reducer_test_rxa",
+      "label": "rxA",
+      "_origin": "ast",
+      "community": 162,
+      "community_name": "cart-reducer.test.ts",
+      "file_type": "code",
+      "norm_label": "rxa",
+      "source_file": "features/cart/cart-reducer.test.ts",
+      "source_location": "L8"
+    },
+    {
+      "id": "features_cart_cart_reducer_test_rxb",
+      "label": "rxB",
+      "_origin": "ast",
+      "community": 162,
+      "community_name": "cart-reducer.test.ts",
+      "file_type": "code",
+      "norm_label": "rxb",
+      "source_file": "features/cart/cart-reducer.test.ts",
+      "source_location": "L9"
+    },
+    {
       "id": "features_cart_cart_store_test",
       "label": "cart-store.test.ts",
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "cart-store.test.ts",
       "source_file": "features/cart/cart-store.test.ts",
@@ -15468,7 +15578,7 @@
       "label": "rxA",
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "rxa",
       "source_file": "features/cart/cart-store.test.ts",
@@ -15479,7 +15589,7 @@
       "label": "rxB",
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "rxb",
       "source_file": "features/cart/cart-store.test.ts",
@@ -15490,7 +15600,7 @@
       "label": "line-key.ts",
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "line-key.ts",
       "source_file": "lib/cart/line-key.ts",
@@ -15501,7 +15611,7 @@
       "label": "EYE_FIELDS",
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "eye_fields",
       "source_file": "lib/cart/line-key.ts",
@@ -15512,7 +15622,7 @@
       "label": "line-key.test.ts",
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "code",
       "norm_label": "line-key.test.ts",
       "source_file": "lib/cart/line-key.test.ts",
@@ -15523,7 +15633,7 @@
       "label": "ADR-0023",
       "_origin": "ast",
       "community": 162,
-      "community_name": "cart-line-item.test.tsx",
+      "community_name": "cart-reducer.test.ts",
       "file_type": "concept",
       "norm_label": "adr-0023",
       "source_file": "lib/cart/line-key.ts",
@@ -16088,6 +16198,17 @@
       "file_type": "code",
       "norm_label": "footer.test.tsx",
       "source_file": "components/layout/footer.test.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "lib_api_resources_editorial_index",
+      "label": "editorial/index.ts",
+      "_origin": "ast",
+      "community": 21,
+      "community_name": "guide.test.tsx",
+      "file_type": "code",
+      "norm_label": "editorial/index.ts",
+      "source_file": "lib/api/resources/editorial/index.ts",
       "source_location": "L1"
     },
     {
@@ -19105,6 +19226,39 @@
       "source_location": "L41"
     },
     {
+      "id": "app_locale_checkout_checkout_address_prefill_test",
+      "label": "checkout-address-prefill.test.tsx",
+      "_origin": "ast",
+      "community": 65,
+      "community_name": "cart-store.ts",
+      "file_type": "code",
+      "norm_label": "checkout-address-prefill.test.tsx",
+      "source_file": "app/[locale]/checkout/checkout-address-prefill.test.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "app_locale_checkout_checkout_address_prefill_test_default_address",
+      "label": "DEFAULT_ADDRESS",
+      "_origin": "ast",
+      "community": 65,
+      "community_name": "cart-store.ts",
+      "file_type": "code",
+      "norm_label": "default_address",
+      "source_file": "app/[locale]/checkout/checkout-address-prefill.test.tsx",
+      "source_location": "L38"
+    },
+    {
+      "id": "app_locale_checkout_checkout_address_prefill_test_priced_response",
+      "label": "PRICED_RESPONSE",
+      "_origin": "ast",
+      "community": 65,
+      "community_name": "cart-store.ts",
+      "file_type": "code",
+      "norm_label": "priced_response",
+      "source_file": "app/[locale]/checkout/checkout-address-prefill.test.tsx",
+      "source_location": "L44"
+    },
+    {
       "id": "app_locale_checkout_checkout_buy_now_test",
       "label": "checkout-buy-now.test.tsx",
       "_origin": "ast",
@@ -19169,83 +19323,6 @@
       "norm_label": "cart-reducer.ts",
       "source_file": "features/cart/cart-reducer.ts",
       "source_location": "L1"
-    },
-    {
-      "id": "features_cart_cart_reducer_test",
-      "label": "cart-reducer.test.ts",
-      "_origin": "ast",
-      "community": 65,
-      "community_name": "cart-store.ts",
-      "file_type": "code",
-      "norm_label": "cart-reducer.test.ts",
-      "source_file": "features/cart/cart-reducer.test.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "features_cart_cart_reducer_test_ata",
-      "label": "atA",
-      "_origin": "ast",
-      "community": 65,
-      "community_name": "cart-store.ts",
-      "file_type": "code",
-      "norm_label": "ata",
-      "source_file": "features/cart/cart-reducer.test.ts",
-      "source_location": "L29"
-    },
-    {
-      "id": "features_cart_cart_reducer_test_atb",
-      "label": "atB",
-      "_origin": "ast",
-      "community": 65,
-      "community_name": "cart-store.ts",
-      "file_type": "code",
-      "norm_label": "atb",
-      "source_file": "features/cart/cart-reducer.test.ts",
-      "source_location": "L30"
-    },
-    {
-      "id": "features_cart_cart_reducer_test_empty",
-      "label": "empty",
-      "_origin": "ast",
-      "community": 65,
-      "community_name": "cart-store.ts",
-      "file_type": "code",
-      "norm_label": "empty",
-      "source_file": "features/cart/cart-reducer.test.ts",
-      "source_location": "L27"
-    },
-    {
-      "id": "features_cart_cart_reducer_test_plain",
-      "label": "plain",
-      "_origin": "ast",
-      "community": 65,
-      "community_name": "cart-store.ts",
-      "file_type": "code",
-      "norm_label": "plain",
-      "source_file": "features/cart/cart-reducer.test.ts",
-      "source_location": "L28"
-    },
-    {
-      "id": "features_cart_cart_reducer_test_rxa",
-      "label": "rxA",
-      "_origin": "ast",
-      "community": 65,
-      "community_name": "cart-store.ts",
-      "file_type": "code",
-      "norm_label": "rxa",
-      "source_file": "features/cart/cart-reducer.test.ts",
-      "source_location": "L8"
-    },
-    {
-      "id": "features_cart_cart_reducer_test_rxb",
-      "label": "rxB",
-      "_origin": "ast",
-      "community": 65,
-      "community_name": "cart-store.ts",
-      "file_type": "code",
-      "norm_label": "rxb",
-      "source_file": "features/cart/cart-reducer.test.ts",
-      "source_location": "L9"
     },
     {
       "id": "features_cart_cart_store",
@@ -19880,6 +19957,39 @@
       "source_location": "L1"
     },
     {
+      "id": "components_commerce_order_summary",
+      "label": "order-summary.tsx",
+      "_origin": "ast",
+      "community": 70,
+      "community_name": "button.tsx",
+      "file_type": "code",
+      "norm_label": "order-summary.tsx",
+      "source_file": "components/commerce/order-summary.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_commerce_order_summary_test",
+      "label": "order-summary.test.tsx",
+      "_origin": "ast",
+      "community": 70,
+      "community_name": "button.tsx",
+      "file_type": "code",
+      "norm_label": "order-summary.test.tsx",
+      "source_file": "components/commerce/order-summary.test.tsx",
+      "source_location": "L1"
+    },
+    {
+      "id": "components_commerce_order_summary_test_dict",
+      "label": "dict",
+      "_origin": "ast",
+      "community": 70,
+      "community_name": "button.tsx",
+      "file_type": "code",
+      "norm_label": "dict",
+      "source_file": "components/commerce/order-summary.test.tsx",
+      "source_location": "L6"
+    },
+    {
       "id": "components_commerce_use_buy_again",
       "label": "use-buy-again.ts",
       "_origin": "ast",
@@ -19933,6 +20043,17 @@
       "norm_label": "adr-0012",
       "source_file": "components/commerce/order-history-card.tsx",
       "source_location": "L18"
+    },
+    {
+      "id": "components_commerce_order_summary_tsx_docref_adr_0012",
+      "label": "ADR-0012",
+      "_origin": "ast",
+      "community": 70,
+      "community_name": "button.tsx",
+      "file_type": "concept",
+      "norm_label": "adr-0012",
+      "source_file": "components/commerce/order-summary.tsx",
+      "source_location": "L32"
     },
     {
       "id": "components_commerce_use_buy_again_ts_docref_adr_0012",
@@ -21364,17 +21485,6 @@
       "source_location": "L843"
     },
     {
-      "id": "lib_api_resources_editorial_index",
-      "label": "editorial/index.ts",
-      "_origin": "ast",
-      "community": 80,
-      "community_name": "editorial/mock.ts",
-      "file_type": "code",
-      "norm_label": "editorial/index.ts",
-      "source_file": "lib/api/resources/editorial/index.ts",
-      "source_location": "L1"
-    },
-    {
       "id": "lib_api_resources_editorial_mock",
       "label": "editorial/mock.ts",
       "_origin": "ast",
@@ -21760,39 +21870,6 @@
       "source_location": "L24"
     },
     {
-      "id": "components_commerce_order_summary",
-      "label": "order-summary.tsx",
-      "_origin": "ast",
-      "community": 82,
-      "community_name": "vouchers/page.tsx",
-      "file_type": "code",
-      "norm_label": "order-summary.tsx",
-      "source_file": "components/commerce/order-summary.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "components_commerce_order_summary_test",
-      "label": "order-summary.test.tsx",
-      "_origin": "ast",
-      "community": 82,
-      "community_name": "vouchers/page.tsx",
-      "file_type": "code",
-      "norm_label": "order-summary.test.tsx",
-      "source_file": "components/commerce/order-summary.test.tsx",
-      "source_location": "L1"
-    },
-    {
-      "id": "components_commerce_order_summary_test_dict",
-      "label": "dict",
-      "_origin": "ast",
-      "community": 82,
-      "community_name": "vouchers/page.tsx",
-      "file_type": "code",
-      "norm_label": "dict",
-      "source_file": "components/commerce/order-summary.test.tsx",
-      "source_location": "L6"
-    },
-    {
       "id": "components_commerce_shipping_block",
       "label": "shipping-block.tsx",
       "_origin": "ast",
@@ -21856,7 +21933,7 @@
       "file_type": "code",
       "norm_label": "publisheddateformats",
       "source_file": "lib/utils/format.ts",
-      "source_location": "L35"
+      "source_location": "L33"
     },
     {
       "id": "lib_utils_format_test",
@@ -21878,17 +21955,6 @@
       "file_type": "concept",
       "norm_label": "adr-0022",
       "source_file": "components/commerce/order-detail-view.tsx",
-      "source_location": "L32"
-    },
-    {
-      "id": "components_commerce_order_summary_tsx_docref_adr_0012",
-      "label": "ADR-0012",
-      "_origin": "ast",
-      "community": 82,
-      "community_name": "vouchers/page.tsx",
-      "file_type": "concept",
-      "norm_label": "adr-0012",
-      "source_file": "components/commerce/order-summary.tsx",
       "source_location": "L32"
     },
     {
@@ -22849,7 +22915,7 @@
       "file_type": "code",
       "norm_label": "defaultshippingoptions",
       "source_file": "content/mock/shipping-rates.ts",
-      "source_location": "L23"
+      "source_location": "L21"
     },
     {
       "id": "content_mock_shipping_rates_shippingrates",
@@ -22860,7 +22926,7 @@
       "file_type": "code",
       "norm_label": "shippingrates",
       "source_file": "content/mock/shipping-rates.ts",
-      "source_location": "L11"
+      "source_location": "L9"
     },
     {
       "id": "content_mock_users",
@@ -22883,28 +22949,6 @@
       "norm_label": "users",
       "source_file": "content/mock/users.ts",
       "source_location": "L8"
-    },
-    {
-      "id": "content_mock_vouchers",
-      "label": "vouchers.ts",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "mock/index.ts",
-      "file_type": "code",
-      "norm_label": "vouchers.ts",
-      "source_file": "content/mock/vouchers.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "content_mock_vouchers_vouchers",
-      "label": "vouchers",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "mock/index.ts",
-      "file_type": "code",
-      "norm_label": "vouchers",
-      "source_file": "content/mock/vouchers.ts",
-      "source_location": "L18"
     },
     {
       "id": "lib_api_resources_shipping_mock",
@@ -22938,50 +22982,6 @@
       "norm_label": "shipping/mock.test.ts",
       "source_file": "lib/api/resources/shipping/mock.test.ts",
       "source_location": "L1"
-    },
-    {
-      "id": "lib_api_resources_vouchers_index",
-      "label": "vouchers/index.ts",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "mock/index.ts",
-      "file_type": "code",
-      "norm_label": "vouchers/index.ts",
-      "source_file": "lib/api/resources/vouchers/index.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "lib_api_resources_vouchers_index_vouchers",
-      "label": "vouchers",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "mock/index.ts",
-      "file_type": "code",
-      "norm_label": "vouchers",
-      "source_file": "lib/api/resources/vouchers/index.ts",
-      "source_location": "L12"
-    },
-    {
-      "id": "lib_api_resources_vouchers_mock",
-      "label": "vouchers/mock.ts",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "mock/index.ts",
-      "file_type": "code",
-      "norm_label": "vouchers/mock.ts",
-      "source_file": "lib/api/resources/vouchers/mock.ts",
-      "source_location": "L1"
-    },
-    {
-      "id": "lib_api_resources_vouchers_mock_mockvouchers",
-      "label": "mockVouchers",
-      "_origin": "ast",
-      "community": 9,
-      "community_name": "mock/index.ts",
-      "file_type": "code",
-      "norm_label": "mockvouchers",
-      "source_file": "lib/api/resources/vouchers/mock.ts",
-      "source_location": "L17"
     },
     {
       "id": "lib_api_schemas_auth_userschema",
@@ -23993,6 +23993,96 @@
       "source_location": "L1"
     },
     {
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_ordersummary",
+      "label": "OrderSummary component",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 141,
+      "community_name": "Task 18: Cart page + line item + order summary",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "ordersummary component",
+      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task18_cart_page",
+      "label": "Task 18: Cart page + line item + order summary",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 141,
+      "community_name": "Task 18: Cart page + line item + order summary",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "task 18: cart page + line item + order summary",
+      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task19_checkout_success",
+      "label": "Task 19: Checkout + success (stubbed payment)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 141,
+      "community_name": "Task 18: Cart page + line item + order summary",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "task 19: checkout + success (stubbed payment)",
+      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task20_final_verification",
+      "label": "Task 20: Final verification (responsive, a11y, build, tests)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 141,
+      "community_name": "Task 18: Cart page + line item + order summary",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "task 20: final verification (responsive, a11y, build, tests)",
+      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_pages",
+      "label": "Pages table (Home, Collection, PDP, Cart, Checkout, Checkout success)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 141,
+      "community_name": "Task 18: Cart page + line item + order summary",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "pages table (home, collection, pdp, cart, checkout, checkout success)",
+      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_testing_strategy",
+      "label": "Testing strategy (Vitest unit + RTL component tests)",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 141,
+      "community_name": "Task 18: Cart page + line item + order summary",
+      "contributor": null,
+      "file_type": "concept",
+      "norm_label": "testing strategy (vitest unit + rtl component tests)",
+      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
       "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_collection",
       "label": "Collection domain type",
       "_origin": "semantic",
@@ -24078,36 +24168,6 @@
       "contributor": null,
       "file_type": "code",
       "norm_label": "productspecs domain type",
-      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant",
-      "label": "Variant domain type",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 16,
-      "community_name": "Product domain type",
-      "contributor": null,
-      "file_type": "code",
-      "norm_label": "variant domain type",
-      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variantselector",
-      "label": "VariantSelector component",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 16,
-      "community_name": "Product domain type",
-      "contributor": null,
-      "file_type": "code",
-      "norm_label": "variantselector component",
       "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
       "source_location": null,
       "source_url": null
@@ -24273,21 +24333,6 @@
       "contributor": null,
       "file_type": "rationale",
       "norm_label": "data layer swap seam: single named concrete impl in lib/data/index.ts",
-      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant_axes_rationale",
-      "label": "Variant axes baseline: color x packSize, power deferred to future Rx axis",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 16,
-      "community_name": "Product domain type",
-      "contributor": null,
-      "file_type": "rationale",
-      "norm_label": "variant axes baseline: color x packsize, power deferred to future rx axis",
       "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
       "source_location": null,
       "source_url": null
@@ -25028,8 +25073,8 @@
       "source_url": null
     },
     {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_ordersummary",
-      "label": "OrderSummary component",
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant",
+      "label": "Variant domain type",
       "_origin": "semantic",
       "author": null,
       "captured_at": null,
@@ -25037,7 +25082,22 @@
       "community_name": "Product Detail Page (PDP) structure",
       "contributor": null,
       "file_type": "code",
-      "norm_label": "ordersummary component",
+      "norm_label": "variant domain type",
+      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variantselector",
+      "label": "VariantSelector component",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 25,
+      "community_name": "Product Detail Page (PDP) structure",
+      "contributor": null,
+      "file_type": "code",
+      "norm_label": "variantselector component",
       "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
       "source_location": null,
       "source_url": null
@@ -25133,81 +25193,6 @@
       "source_url": null
     },
     {
-      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task18_cart_page",
-      "label": "Task 18: Cart page + line item + order summary",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 25,
-      "community_name": "Product Detail Page (PDP) structure",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "task 18: cart page + line item + order summary",
-      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task19_checkout_success",
-      "label": "Task 19: Checkout + success (stubbed payment)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 25,
-      "community_name": "Product Detail Page (PDP) structure",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "task 19: checkout + success (stubbed payment)",
-      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_plans_2026_08_16_vivimoon_storefront_baseline_task20_final_verification",
-      "label": "Task 20: Final verification (responsive, a11y, build, tests)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 25,
-      "community_name": "Product Detail Page (PDP) structure",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "task 20: final verification (responsive, a11y, build, tests)",
-      "source_file": "docs/superpowers/plans/2026-08-16-vivimoon-storefront-baseline.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_pages",
-      "label": "Pages table (Home, Collection, PDP, Cart, Checkout, Checkout success)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 25,
-      "community_name": "Product Detail Page (PDP) structure",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "pages table (home, collection, pdp, cart, checkout, checkout success)",
-      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
-      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_testing_strategy",
-      "label": "Testing strategy (Vitest unit + RTL component tests)",
-      "_origin": "semantic",
-      "author": null,
-      "captured_at": null,
-      "community": 25,
-      "community_name": "Product Detail Page (PDP) structure",
-      "contributor": null,
-      "file_type": "concept",
-      "norm_label": "testing strategy (vitest unit + rtl component tests)",
-      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
-      "source_location": null,
-      "source_url": null
-    },
-    {
       "id": "docs_research_coolmate_website_analysis_color_variant_url_pattern",
       "label": "Color variants as distinct URLs (?color=slug) for SEO/deep-linking",
       "_origin": "semantic",
@@ -25219,6 +25204,21 @@
       "file_type": "rationale",
       "norm_label": "color variants as distinct urls (?color=slug) for seo/deep-linking",
       "source_file": "docs/research/coolmate-website-analysis.md",
+      "source_location": null,
+      "source_url": null
+    },
+    {
+      "id": "docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant_axes_rationale",
+      "label": "Variant axes baseline: color x packSize, power deferred to future Rx axis",
+      "_origin": "semantic",
+      "author": null,
+      "captured_at": null,
+      "community": 25,
+      "community_name": "Product Detail Page (PDP) structure",
+      "contributor": null,
+      "file_type": "rationale",
+      "norm_label": "variant axes baseline: color x packsize, power deferred to future rx axis",
+      "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md",
       "source_location": null,
       "source_url": null
     },
@@ -33537,7 +33537,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "lib/utils/format.ts",
-      "source_location": "L23",
+      "source_location": "L21",
       "weight": 1.0
     },
     {
@@ -33549,7 +33549,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "lib/utils/format.ts",
-      "source_location": "L10",
+      "source_location": "L12",
       "weight": 1.0
     },
     {
@@ -33561,7 +33561,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "lib/utils/format.ts",
-      "source_location": "L47",
+      "source_location": "L45",
       "weight": 1.0
     },
     {
@@ -80199,7 +80199,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "content/mock/loyalty.ts",
-      "source_location": "L8",
+      "source_location": "L10",
       "weight": 1.0
     },
     {
@@ -80270,24 +80270,24 @@
     },
     {
       "source": "content_mock_shipping_rates",
-      "target": "content_mock_shipping_rates_shippingrates",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "content/mock/shipping-rates.ts",
-      "source_location": "L11",
-      "weight": 1.0
-    },
-    {
-      "source": "content_mock_shipping_rates",
       "target": "content_mock_shipping_rates_defaultshippingoptions",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "content/mock/shipping-rates.ts",
-      "source_location": "L23",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "content_mock_shipping_rates",
+      "target": "content_mock_shipping_rates_shippingrates",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "content/mock/shipping-rates.ts",
+      "source_location": "L9",
       "weight": 1.0
     },
     {
@@ -88075,7 +88075,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/utils/format.ts",
-      "source_location": "L21",
+      "source_location": "L19",
       "weight": 1.0
     },
     {
@@ -88086,7 +88086,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/utils/format.ts",
-      "source_location": "L35",
+      "source_location": "L33",
       "weight": 1.0
     },
     {
@@ -88097,7 +88097,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "lib/utils/format.ts",
-      "source_location": "L44",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -91889,5 +91889,5 @@
       "source_file": "docs/superpowers/specs/2026-08-16-vivimoon-storefront-baseline-design.md"
     }
   ],
-  "built_at_commit": "72032ae9f88536a91a135a2b61e7f21f2f0df9e7"
+  "built_at_commit": "f93387de26155190c811d8008f756f0b68b809d6"
 }
