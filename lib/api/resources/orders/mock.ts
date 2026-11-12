@@ -4,7 +4,7 @@ import { pricing } from '@/lib/api/resources/pricing';
 import { catalog } from '@/lib/api/resources/catalog';
 import type { Order, PlaceOrderRequest } from '@/lib/api/schemas/orders';
 import { normalizeOrderCode } from '@/lib/api/schemas/orders';
-import { LENSES_PER_UNIT, purchaseUnitOf } from '@/lib/api/schemas/rx';
+import { lensesIn, purchaseUnitOf } from '@/lib/api/schemas/rx';
 
 /** Thrown by the mock so the route handler can map it to an envelope. */
 export class OrderError extends Error {
@@ -96,11 +96,12 @@ export const mockOrders = {
     const inputByLineKey = new Map(input.lines.map((l) => [l.lineKey, l]));
     const lines = await Promise.all(
       priced.lines.map(async (line) => {
-        const rx = inputByLineKey.get(line.lineKey)?.rx;
-        const purchaseUnit = purchaseUnitOf({ purchaseUnit: inputByLineKey.get(line.lineKey)?.purchaseUnit, rx });
+        const requested = inputByLineKey.get(line.lineKey);
+        const rx = requested?.rx;
+        const purchaseUnit = requested && purchaseUnitOf(requested);
         const perLens = (await catalog.getVariantById(line.variantId))?.variant.compareAtPrice;
         // Per unit, like `unitPrice`: a pair's compare-at is two lenses' (ADR-0023).
-        const compareAt = perLens === undefined ? undefined : perLens * (purchaseUnit ? LENSES_PER_UNIT[purchaseUnit] : 1);
+        const compareAt = perLens === undefined ? undefined : perLens * lensesIn(purchaseUnit);
         return {
           ...line,
           rx,

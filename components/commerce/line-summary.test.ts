@@ -14,7 +14,7 @@ describe('formatLineSummary (ADR-0023)', () => {
   });
 
   it('reads a unit-less line with an Rx as a pair, and gives nothing for a line with no Rx', () => {
-    expect(formatLineSummary({ rx: pair(-1, -1) }, vi)).toBe('1 đôi · −1.00');
+    expect(formatLineSummary({ rx: pair(-1, -1) }, vi)).toBe('1 đôi · L −1.00 · R −1.00');
     expect(formatLineSummary({}, vi)).toBeNull();
   });
 });

@@ -14,7 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/features/cart/use-cart';
 import { useBuyNow } from '@/features/cart/use-buy-now';
 import { lineKey } from '@/lib/cart/line-key';
-import { LENSES_PER_UNIT } from '@/lib/api/schemas/rx';
+import { lensesIn } from '@/lib/api/schemas/rx';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
 import { toGa4Items } from '@/lib/analytics/events';
 import type { CartLine } from '@/features/cart/cart.types';
@@ -40,9 +40,10 @@ export function AddToCart({ product, locale, dict }: { product: Product; locale:
 
   // A product that collects no Rx has no Purchase Unit either (ADR-0023).
   const unit = product.requiresRx ? rxDraft.unit : undefined;
-  // Display only: the listed price is per lens and the buy box shows it per
-  // unit. Every amount the shopper pays comes from POST /api/cart/price.
-  const lenses = unit ? LENSES_PER_UNIT[unit] : 1;
+  // Display only (the ticket asks for the per-pair price in pair mode): the
+  // listed price is per lens and the buy box shows it per unit. Every amount
+  // the shopper pays comes from POST /api/cart/price.
+  const lenses = lensesIn(unit);
 
   const buildLine = (): CartLine => {
     const rx = product.requiresRx ? draftToRx(rxDraft) : undefined;

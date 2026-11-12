@@ -14,7 +14,7 @@ export function formatLineSummary(line: { purchaseUnit?: PurchaseUnit; rx?: Line
   if (!rx) return null;
   const unit = dict.rx.units[purchaseUnitOf(line) ?? 'pair'];
   if (isSingleRx(rx)) return `${unit} · ${rx.sph === 0 ? dict.rx.noPower : power(rx.sph)}`;
-  if (rx.left.sph === rx.right.sph) return `${unit} · ${rx.left.sph === 0 ? dict.rx.noPower : power(rx.left.sph)}`;
+  if (rx.left.sph === 0 && rx.right.sph === 0) return `${unit} · ${dict.rx.noPower}`;
   return `${unit} · ${dict.rx.left} ${power(rx.left.sph)} · ${dict.rx.right} ${power(rx.right.sph)}`;
 }
 

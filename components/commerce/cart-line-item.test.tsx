@@ -42,7 +42,7 @@ describe('CartLineItem', () => {
 
   it('renders the line summary when the line has a prescription, so two lines of the same variant are distinguishable', () => {
     render(<CartLineItem line={lineWithRx} locale="en" dict={dict} onQty={vi.fn()} onRemove={vi.fn()} />);
-    expect(screen.getByText("1 pair · −2.50")).toBeInTheDocument();
+    expect(screen.getByText("1 pair · L −2.50 · R −2.50")).toBeInTheDocument();
   });
 
   it('renders no line summary for a line without a prescription', () => {

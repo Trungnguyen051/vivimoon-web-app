@@ -17,7 +17,7 @@ A shopper's saved Vietnamese shipping address (province/district/ward). Exactly 
 _Avoid_: Shipping address, delivery address (same concept — Address)
 
 **Rx**:
-A shopper's per-eye contact-lens prescription, captured at add-to-cart as line metadata rather than a purchasable product variant. `sph` is always present; `cyl`/`axis` apply only to toric lenses (deferred past M2 — no selector collects them yet, see ADR-0004) and `add` (banded low/mid/high, not a numeric power) only to multifocal lenses. Rx is fully decoupled from the product taxonomy (ADR-0010): the Rx rules branch on their own `rxLensTypeSchema`, and every call site passes the fixed `RX_LENS_TYPE`, so no Product can reach the toric/multifocal branches until a real line for them exists.
+A shopper's per-eye contact-lens prescription, captured at add-to-cart as line metadata rather than a purchasable product variant. A `single` Cart Line's Rx is one `sph` with no eye (ADR-0023). `sph` is always present; `cyl`/`axis` apply only to toric lenses (deferred past M2 — no selector collects them yet, see ADR-0004) and `add` (banded low/mid/high, not a numeric power) only to multifocal lenses. Rx is fully decoupled from the product taxonomy (ADR-0010): the Rx rules branch on their own `rxLensTypeSchema`, and the buy box collects `sph` alone, so no Product can reach the toric/multifocal branches until a real line for them exists.
 _Avoid_: Prescription, power
 
 **Default Rx**:

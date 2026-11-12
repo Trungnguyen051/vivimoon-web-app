@@ -13,8 +13,9 @@ export const MAX_LINE_QUANTITY = 99;
  * singly versus as a pair, is two lines, so `variantId` alone is NOT the
  * identity. `quantity` counts Purchase Units (ADR-0023).
  *
- * `unitPrice` is a display snapshot only. Money is server-owned: totals come
- * from POST /api/cart/price, and nothing on the client multiplies this field.
+ * `unitPrice` is a per-unit display/analytics snapshot only. Money is
+ * server-owned: totals come from POST /api/cart/price, and nothing on the
+ * client multiplies this field by quantity.
  */
 export const cartLineSchema = z.object({
   lineKey: z.string().min(1),
@@ -76,8 +77,8 @@ export const voucherSchema = z
 
 /**
  * One line of the pricing request body. Deliberately narrow: `variantId`,
- * `purchaseUnit` and `quantity` are all that determine money, and both are resolved
- * server-side against the catalogue — nothing here lets a client name its
+ * `purchaseUnit` and `quantity` are all that determine money, and the price
+ * is resolved server-side against the catalogue — nothing here lets a client name its
  * own price. `lineKey` is an opaque passthrough so the response can be
  * matched back to the shopper's cart lines.
  */

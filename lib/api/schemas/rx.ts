@@ -94,8 +94,8 @@ export function purchaseUnitOf(line: { purchaseUnit?: PurchaseUnit; rx?: unknown
   return line.purchaseUnit ?? (line.rx ? 'pair' : undefined);
 }
 
-/** Lenses in one unit — what the server multiplies the per-lens price by. */
-export const LENSES_PER_UNIT: Record<PurchaseUnit, number> = { single: 1, pair: 2 };
+/** Lenses in one unit — what the per-lens price is multiplied by. No unit (a non-Rx product) is one item. */
+export const lensesIn = (unit: PurchaseUnit | undefined): number => (unit === 'pair' ? 2 : 1);
 
 /**
  * Shared by every schema carrying a line's unit + Rx: a `single` must carry a
