@@ -58,6 +58,18 @@ describe('mockAuth', () => {
     await expect(mockAuth.verifyOtp({ otpId: bare.otpId, code: bare.devCode! })).rejects.toThrow();
   });
 
+  it('a signup code never signs in to an existing account', async () => {
+    const bare = await mockAuth.requestOtp({ identifier: '0912345678', purpose: 'signup' });
+    await expect(mockAuth.verifyOtp({ otpId: bare.otpId, code: bare.devCode! })).rejects.toThrow();
+  });
+
+  it('a second pending signup for a phone that got verified meanwhile cannot create a duplicate', async () => {
+    const first = await mockAuth.register({ phone: '0911111116', name: 'A', password: 'password-A1' });
+    const second = await mockAuth.register({ phone: '0911111116', name: 'B', password: 'password-B1' });
+    await mockAuth.verifyOtp({ otpId: first.otpId, code: first.devCode! });
+    await expect(mockAuth.verifyOtp({ otpId: second.otpId, code: second.devCode! })).rejects.toThrow();
+  });
+
   it('refuses to register a phone already in use, in either form', async () => {
     await expect(mockAuth.register({ phone: '0912345678', name: 'Dup', password: 'abcdefgh' })).rejects.toThrow(/already/i);
     await expect(mockAuth.register({ phone: '+84912345678', name: 'Dup', password: 'abcdefgh' })).rejects.toThrow(/already/i);

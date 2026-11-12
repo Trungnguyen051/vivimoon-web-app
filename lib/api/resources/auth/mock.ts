@@ -118,9 +118,13 @@ export const mockAuth = {
     }
     otps.delete(otpId); // single use — no replay
 
-    const pending = record.purpose === 'signup' ? pendingSignups.get(otpId) : undefined;
-    if (pending) {
+    if (record.purpose === 'signup') {
+      // A signup code only ever creates the account submitted with it — never signs in to an existing one.
+      const pending = pendingSignups.get(otpId);
       pendingSignups.delete(otpId);
+      if (!pending || findByIdentifier(pending.phone)) {
+        throw new AuthError('That code is invalid or has expired', 'unauthorized');
+      }
       const created: MockUser = {
         id: randomId('u'), phone: normalizePhone(pending.phone), name: pending.name,
         createdAt: new Date().toISOString(), password: pending.password,
