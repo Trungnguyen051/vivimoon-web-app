@@ -145,9 +145,13 @@ export const mockAuth = {
     return publicUser(user);
   },
 
-  async deleteUser(id: string): Promise<void> {
+  /** Needs the current password when the account has one; a social-only account has none to give. */
+  async deleteUser(id: string, currentPassword?: string): Promise<void> {
     const i = store.findIndex((u) => u.id === id);
     if (i === -1) throw new AuthError('Account not found', 'not_found');
+    if (store[i].password !== undefined && currentPassword !== store[i].password) {
+      throw new AuthError('Your current password is incorrect', 'unauthorized');
+    }
     store.splice(i, 1);
   },
 

@@ -30,11 +30,16 @@ export async function PATCH(request: Request) {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(request: Request) {
   const userId = await readSessionUserId();
   if (!userId) return apiFail('unauthorized', 'Sign in to delete your account');
+  // Re-authenticate: a borrowed device or stolen cookie must not be enough to wipe an account.
+  const body: unknown = await request.json().catch(() => ({}));
+  const currentPassword = typeof (body as { currentPassword?: unknown })?.currentPassword === 'string'
+    ? (body as { currentPassword: string }).currentPassword
+    : undefined;
   try {
-    await account.delete(userId);
+    await account.delete(userId, currentPassword);
   } catch (error) {
     return authErrorResponse(error);
   }

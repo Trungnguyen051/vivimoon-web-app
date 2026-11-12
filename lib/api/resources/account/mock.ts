@@ -58,8 +58,8 @@ export const mockAccount = {
   },
 
   /** Removes the user with their addresses and favorites. */
-  async delete(userId: string): Promise<void> {
-    await mockAuth.deleteUser(userId);
+  async delete(userId: string, currentPassword?: string): Promise<void> {
+    await mockAuth.deleteUser(userId, currentPassword);
     delete addressStore[userId];
     delete favoriteStore[userId];
   },

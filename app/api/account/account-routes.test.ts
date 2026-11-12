@@ -23,6 +23,14 @@ function patch(body: unknown): Request {
   });
 }
 
+function del(body?: unknown): Request {
+  return new Request('http://localhost/api/account', {
+    method: 'DELETE',
+    headers: { 'content-type': 'application/json' },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+}
+
 function signIn(userId = 'u-001') { jar.set('vivimoon_session', signSession(userId)); }
 
 describe('account routes', () => {
@@ -136,15 +144,23 @@ describe('account routes', () => {
   });
 
   it('401s DELETE without a session', async () => {
-    expect((await DELETE()).status).toBe(401);
+    expect((await DELETE(del())).status).toBe(401);
   });
 
   it('DELETE removes the user and the session no longer resolves', async () => {
     signIn();
-    const res = await DELETE();
+    const res = await DELETE(del({ currentPassword: 'vivimoon123' }));
     expect(res.status).toBe(200);
     expect(jar.has('vivimoon_session')).toBe(false);
     signIn(); // a stale cookie for the deleted user
     expect((await GET()).status).toBe(404);
+  });
+
+  it('DELETE refuses without the current password and keeps the account', async () => {
+    signIn();
+    expect((await DELETE(del())).status).toBe(401);
+    expect((await DELETE(del({ currentPassword: 'wrong' }))).status).toBe(401);
+    expect(jar.has('vivimoon_session')).toBe(true);
+    expect((await GET()).status).toBe(200);
   });
 });

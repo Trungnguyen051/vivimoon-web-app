@@ -53,6 +53,7 @@ export function AccountInfo({ user, locale, dict, welcome }: { user: User; local
   const [pw, setPw] = useState({ current: '', next: '' });
   const [pwError, setPwError] = useState<string | null>(null);
   const [delOpen, setDelOpen] = useState(false);
+  const [delPw, setDelPw] = useState('');
 
   function edit(section: 'personal' | 'account') {
     setError(null);
@@ -120,7 +121,7 @@ export function AccountInfo({ user, locale, dict, welcome }: { user: User; local
     router.refresh();
   }
   const signOut = () => leave(() => apiRequest('/api/auth/logout', { method: 'POST' }));
-  const deleteAccount = () => leave(() => apiRequest('/api/account', { method: 'DELETE' }));
+  const deleteAccount = () => leave(() => apiRequest('/api/account', { method: 'DELETE', body: { currentPassword: delPw } }));
 
   const actions = (save: () => void) => (
     <div className="flex gap-3">
@@ -194,7 +195,7 @@ export function AccountInfo({ user, locale, dict, welcome }: { user: User; local
       <Button type="button" size="xl" className="w-full" onClick={() => { setPwError(null); setPw({ current: '', next: '' }); setPwOpen(true); }}>{dict.changePassword}</Button>
       <div className="grid grid-cols-2 gap-3">
         <Button type="button" variant="outline" disabled={busy} onClick={signOut}>{dict.signOut}</Button>
-        <Button type="button" variant="outline" className="border-destructive text-destructive" onClick={() => setDelOpen(true)}>{dict.deleteAccount}</Button>
+        <Button type="button" variant="outline" className="border-destructive text-destructive" onClick={() => { setDelPw(''); setError(null); setDelOpen(true); }}>{dict.deleteAccount}</Button>
       </div>
 
       <Dialog open={pwOpen} onOpenChange={setPwOpen}>
@@ -223,6 +224,13 @@ export function AccountInfo({ user, locale, dict, welcome }: { user: User; local
             <DialogTitle>{dict.deleteTitle}</DialogTitle>
             <DialogDescription>{dict.deleteBody}</DialogDescription>
           </DialogHeader>
+          {errorAlert}
+          {current.hasPassword !== false && (
+            <label className="grid gap-1.5 text-sm">
+              {dict.currentPassword}
+              <Input type="password" autoComplete="current-password" value={delPw} onChange={(e) => setDelPw(e.target.value)} />
+            </label>
+          )}
           <div className="flex gap-3">
             <Button type="button" variant="outline" className="flex-1" onClick={() => setDelOpen(false)}>{dict.cancel}</Button>
             <Button type="button" variant="destructive" className="flex-1" disabled={busy} onClick={deleteAccount}>{dict.deleteAccount}</Button>

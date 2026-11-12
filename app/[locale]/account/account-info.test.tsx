@@ -107,9 +107,11 @@ describe('AccountInfo', () => {
     await userEvent.click(screen.getByRole('button', { name: dict.deleteAccount }));
     expect(fetchMock).not.toHaveBeenCalled();
     const dialog = screen.getByRole('dialog');
+    await userEvent.type(within(dialog).getByLabelText(dict.currentPassword), 'vivimoon123');
     await userEvent.click(within(dialog).getByRole('button', { name: dict.deleteAccount }));
     await waitFor(() => expect(push).toHaveBeenCalledWith('/en'));
     expect(fetchMock.mock.calls[0][1].method).toBe('DELETE');
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ currentPassword: 'vivimoon123' });
     expect(useSessionStore.getState().user).toBeNull();
   });
 });
