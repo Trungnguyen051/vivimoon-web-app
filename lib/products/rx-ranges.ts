@@ -54,6 +54,20 @@ export function formatSph(v: number): string {
   return `${v > 0 ? '+' : ''}${v.toFixed(2)}`;
 }
 
+/**
+ * The grid a list of myopia powers is on, for a picker's header ("Bước 0.25"),
+ * read from the list itself so the header can't promise a step the list doesn't
+ * offer. `coarse`/`below` appear only when the step widens past `below`.
+ */
+export function stepNote(steps: number[]): { fine: string; coarse?: string; below?: string } {
+  const sorted = [...steps].sort((a, b) => b - a);
+  const gaps = sorted.slice(1).map((v, i) => hundredths(Math.round((sorted[i] - v) * 100)));
+  const fine = Math.min(...gaps);
+  const coarse = Math.max(...gaps);
+  if (coarse === fine) return { fine: fine.toFixed(2) };
+  return { fine: fine.toFixed(2), coarse: coarse.toFixed(2), below: formatSph(sorted[gaps.indexOf(coarse)]) };
+}
+
 /** Multifocal only. Contact multifocals ship banded, not as a numeric ADD. */
 export const addBands = ['LOW', 'MID', 'HIGH'] as const;
 export type AddBand = (typeof addBands)[number];

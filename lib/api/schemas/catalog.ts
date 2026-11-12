@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { EYE_ENLARGEMENT_BANDS } from '@/lib/products/eye-enlargement';
 import { distinctColorVariants } from '@/lib/products/variant-colors';
 import { localizedTextSchema } from './editorial';
+import { defaultRxSchema, type DefaultRx } from './rx';
 
 /**
  * Vivimoon's own three-way category split — trong suốt (clear), có màu
@@ -103,6 +104,8 @@ export const productSchema = z.object({
   // Whether the PDP prompts for a prescription. Cosmetic lenses sold plano-only
   // do not. Defaults to true: correction is the norm, so a fixture opts OUT.
   requiresRx: z.boolean().default(true),
+  /** The sph powers this lens is stocked in, both ends inclusive — what the "Độ của bạn" filter matches (#196). */
+  sphRange: z.object({ min: z.number(), max: z.number() }).optional(),
   variants: z.array(variantSchema).min(1),
   rating: z.number().min(0).max(5),
   reviewCount: z.number().int().nonnegative(),
@@ -347,6 +350,17 @@ export const DEFAULT_SORT = 'bestselling';
 /** One page of the collection grid; "Xem thêm" asks for this many more through `?show=`. */
 export const COLLECTION_PAGE_SIZE = 8;
 
+/**
+ * The "Độ của bạn" filter's `rx=L,R`: a Default Rx, left eye first. One parser owns the
+ * shape so the schema that accepts the URL and the catalog that applies it agree.
+ */
+export function parseRxPair(value: string): DefaultRx | null {
+  const [left, right, ...rest] = value.split(',');
+  if (rest.length || !left || !right) return null;
+  const parsed = defaultRxSchema.safeParse({ left: Number(left), right: Number(right) });
+  return parsed.success ? parsed.data : null;
+}
+
 /** Parses raw URL search params, so pages can hand `searchParams` straight in. */
 export const productQuerySchema = z.object({
   productLine: blankToUndefined(productLineSchema),
@@ -376,6 +390,8 @@ export const productQuerySchema = z.object({
    * value is a filter nothing matches, not malformed input.
    */
   material: blankToUndefined(z.string()),
+  /** A Default Rx as `L,R` (#196): only lenses stocked in both eyes' powers. */
+  rx: blankToUndefined(z.string().refine((v) => parseRxPair(v) !== null, 'rx must be a left and a right sph, like -2.5,-3')),
   sort: blankToUndefined(z.enum(['newest', 'price-asc', 'price-desc', 'bestselling'])),
 });
 

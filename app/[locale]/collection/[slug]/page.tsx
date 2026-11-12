@@ -7,7 +7,7 @@ import { SearchX } from 'lucide-react';
 import { ProductGrid } from '@/components/commerce/product-grid';
 import { collectionListId } from '@/lib/analytics/list-id';
 import {
-  CollectionFilters, CollectionFiltersSheet, CollectionLoadMore, CollectionSort,
+  CollectionFilters, CollectionFiltersSheet, CollectionLoadMore, CollectionSort, DefaultRxAutoApply, YourRxSheet,
 } from '@/components/commerce/collection-filters';
 import { distinctColorVariants } from '@/lib/products/variant-colors';
 import { buttonVariants } from '@/components/ui/button';
@@ -69,8 +69,10 @@ export default async function CollectionPage({
           <CollectionFilters dict={dict} counts={counts} />
         </aside>
         <div className="min-w-0 flex-1 space-y-6">
-          <div className="lg:hidden">
+          <DefaultRxAutoApply />
+          <div className="grid grid-cols-2 gap-2 lg:hidden">
             <CollectionFiltersSheet dict={dict} counts={counts} />
+            <YourRxSheet dict={dict} />
           </div>
           <div className="flex items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground">{total} {dict.collection.productsLabel}</p>

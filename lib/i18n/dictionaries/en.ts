@@ -144,6 +144,13 @@ export const en = {
       occasions: { graduation: 'Yearbook', wedding: 'Wedding', party: 'Party', date: 'Date', travel: 'Travel', photoshoot: 'Photoshoot' },
       pricePresets: { 'under-200k': 'Under 200K', '200k-300k': '200K – 300K', 'over-300k': 'Over 300K' },
       sortBy: 'Sort: {sort}', showing: 'Showing {shown} / {total} products', loadMore: 'See more products',
+      // The pinned Default Rx block (#196).
+      yourRx: {
+        title: 'Your power', subtitle: 'Show only lenses stocked in each eye’s power', enter: 'Enter power', choose: 'Choose power',
+        listTitles: { left: 'Left eye (L) power', right: 'Right eye (R) power' },
+        step: 'Steps of {fine}', stepCoarse: 'Steps of {fine} · {coarse} below {below}',
+        autoNote: 'Updates once both eyes are chosen', guide: 'Not sure of your power? How to read a prescription',
+      },
     },
   },
   reviews: {

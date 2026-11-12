@@ -1,5 +1,15 @@
 import { describe, it, expect } from 'vitest';
-import { RX_RANGES, sphSteps, addBands, cylValues, axisSteps } from './rx-ranges';
+import { RX_RANGES, sphSteps, addBands, cylValues, axisSteps, stepNote } from './rx-ranges';
+
+describe('stepNote', () => {
+  it('reads the grid a list of powers actually uses, coarse part included', () => {
+    expect(stepNote(sphSteps().filter((v) => v <= 0).reverse())).toEqual({ fine: '0.25', coarse: '0.50', below: '-6.00' });
+  });
+
+  it('has no coarse part when one step covers the whole list', () => {
+    expect(stepNote([0, -0.25, -0.5])).toEqual({ fine: '0.25' });
+  });
+});
 
 describe('sphSteps', () => {
   const steps = sphSteps();

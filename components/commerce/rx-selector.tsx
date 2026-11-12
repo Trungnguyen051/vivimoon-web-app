@@ -2,10 +2,13 @@
 import { useId } from 'react';
 import Link from 'next/link';
 import { ChevronDown, Info } from 'lucide-react';
-import type { LineRx, PurchaseUnit } from '@/lib/api/schemas/rx';
+import type { DefaultRx, LineRx, PurchaseUnit } from '@/lib/api/schemas/rx';
 import { sphSteps, formatSph } from '@/lib/products/rx-ranges';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { cn } from '@/lib/utils/cn';
+
+/** The support guide behind "Hướng dẫn chọn độ" and "Cách đọc đơn kính" (content/mock/support.ts). */
+export const POWER_GUIDE_SLUG = 'chon-do-can-the-nao';
 
 /**
  * What the buy box is controlled over: the Purchase Unit plus a power per eye
@@ -16,6 +19,11 @@ import { cn } from '@/lib/utils/cn';
  */
 export type RxDraft = { unit: PurchaseUnit; left: number; right: number; rightSameAsLeft: boolean };
 export const defaultRxDraft: RxDraft = { unit: 'single', left: 0, right: 0, rightSameAsLeft: false };
+
+/** A saved Default Rx as the buy box's starting point: different eyes mean a pair, else one lens at that power (#196). */
+export function draftFromDefaultRx({ left, right }: DefaultRx): RxDraft {
+  return { unit: left === right ? 'single' : 'pair', left, right, rightSameAsLeft: false };
+}
 
 export function draftToRx(d: RxDraft): LineRx {
   if (d.unit === 'single') return { sph: d.left };

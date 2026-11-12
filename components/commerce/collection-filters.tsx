@@ -1,13 +1,16 @@
 'use client';
 import Link from 'next/link';
-import type { ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Droplet, ListFilter, Wind } from 'lucide-react';
+import { Droplet, Eye, Info, ListFilter, Wind } from 'lucide-react';
+import { rxFilterCleared, setRxFilterCleared, useDefaultRx } from '@/features/session/default-rx';
+import { formatSph, sphSteps, stepNote } from '@/lib/products/rx-ranges';
+import { POWER_GUIDE_SLUG } from './rx-selector';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import type { FacetCounts } from '@/lib/api/resources/catalog';
 import {
   COLLECTION_PAGE_SIZE as PAGE_SIZE, DEFAULT_SORT, PRICE_PRESETS, lensSeriesSchema, makeupStyleSchema,
-  occasionSchema, parseDiameterRange, productQuerySchema, replacementScheduleSchema,
+  occasionSchema, parseDiameterRange, parseRxPair, productQuerySchema, replacementScheduleSchema,
 } from '@/lib/api/schemas/catalog';
 import { MATERIAL_VALUES, diameterBucketLabel, facetAnchorId } from '@/lib/products/lens-facets';
 import { LENS_ENTRIES } from '@/lib/products/lens-entries';
@@ -31,12 +34,12 @@ function useSetParams() {
   return {
     params,
     pathname,
-    navigate(edit: (next: URLSearchParams) => void, { keepPaging = false } = {}) {
+    navigate(edit: (next: URLSearchParams) => void, { keepPaging = false, replace = false } = {}) {
       const next = new URLSearchParams(params.toString());
       if (!keepPaging) next.delete('show');
       edit(next);
       const query = next.toString();
-      router.push(query ? `${pathname}?${query}` : pathname, { scroll: false });
+      router[replace ? 'replace' : 'push'](query ? `${pathname}?${query}` : pathname, { scroll: false });
     },
   };
 }
@@ -99,6 +102,141 @@ function Group({ value, title, anchor, children }: { value: string; title: strin
   );
 }
 
+/** Default Rx is myopia only, plano first — the same stocked steps the buy box offers. */
+const RX_STEPS = sphSteps().filter((v) => v <= 0).reverse();
+const RX_STEP_NOTE = stepNote(RX_STEPS);
+const SAME = 'same';
+
+function PowerSelect({ dict, eye, value, left, onPick }: {
+  dict: Dictionary; eye: 'left' | 'right'; value: number | undefined;
+  /** The left eye's power, so the right list can offer "Giống mắt trái". */
+  left?: number;
+  onPick: (sph: number) => void;
+}) {
+  const t = dict.filters.sidebar.yourRx;
+  const label = eye === 'left' ? dict.rx.leftEye : dict.rx.rightEye;
+  const offerSame = eye === 'right' && left !== undefined;
+  const items: Record<string, string> = Object.fromEntries(
+    RX_STEPS.map((s) => [String(s), s === 0 ? `${dict.rx.noPower} (${formatSph(0)})` : formatSph(s)]),
+  );
+  if (offerSame) items[SAME] = `${dict.rx.sameAsLeft} (${formatSph(left)})`;
+  // The header states the grid the list is really on, so it can't claim 0.25 where it widens.
+  const step = RX_STEP_NOTE.coarse
+    ? t.stepCoarse.replace('{fine}', RX_STEP_NOTE.fine).replace('{coarse}', RX_STEP_NOTE.coarse).replace('{below}', RX_STEP_NOTE.below!)
+    : t.step.replace('{fine}', RX_STEP_NOTE.fine);
+
+  return (
+    <div className="min-w-0 space-y-1.5">
+      <p className="text-xs text-muted-foreground" aria-hidden>{label}</p>
+      <Select
+        value={value === undefined ? null : String(value)}
+        onValueChange={(v) => {
+          if (v) onPick(v === SAME ? left! : Number(v));
+        }}
+        items={items}
+      >
+        <SelectTrigger aria-label={label} className="h-11 w-full rounded-none bg-background px-3 text-sm tabular-nums">
+          <SelectValue placeholder={t.choose} />
+        </SelectTrigger>
+        <SelectContent align="start" alignItemWithTrigger={false} className="max-h-96 min-w-80 rounded-none p-0">
+          <div aria-hidden className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b bg-popover px-3.5 py-2.5">
+            <span className="text-sm font-medium whitespace-nowrap">{t.listTitles[eye]}</span>
+            <span className="text-xs whitespace-nowrap text-muted-foreground">{step}</span>
+          </div>
+          {offerSame ? <SelectItem value={SAME} className="rounded-none px-3.5 py-2.5">{items[SAME]}</SelectItem> : null}
+          {RX_STEPS.map((s) => (
+            <SelectItem key={s} value={String(s)} className="rounded-none px-3.5 py-2.5 tabular-nums">{items[String(s)]}</SelectItem>
+          ))}
+          <p aria-hidden className="sticky bottom-0 flex items-center gap-1.5 border-t bg-popover px-3.5 py-2.5 text-xs text-muted-foreground">
+            <Info className="size-3.5" />
+            {t.autoNote}
+          </p>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
+/**
+ * "Độ của bạn": a power per eye. Once both are set the grid narrows through `?rx=L,R` and
+ * the pair is saved as the shopper's Default Rx (account for a member, device for a guest).
+ */
+function YourRxFields({ dict }: { dict: Dictionary }) {
+  const t = dict.filters.sidebar.yourRx;
+  const { params, navigate } = useSetParams();
+  const { save } = useDefaultRx();
+  const urlRx = params.get('rx') ?? '';
+  const [draft, setDraft] = useState<{ left?: number; right?: number }>(() => parseRxPair(urlRx) ?? {});
+  // Follows the URL when it changes underneath (a clear, the auto-apply, the other copy of this block).
+  const [seenRx, setSeenRx] = useState(urlRx);
+  if (seenRx !== urlRx) {
+    setSeenRx(urlRx);
+    setDraft(parseRxPair(urlRx) ?? {});
+  }
+
+  const pick = (eye: 'left' | 'right', sph: number) => {
+    const next = { ...draft, [eye]: sph };
+    setDraft(next);
+    if (next.left === undefined || next.right === undefined) return;
+    setRxFilterCleared(false);
+    void save({ left: next.left, right: next.right });
+    navigate((p) => p.set('rx', `${next.left},${next.right}`));
+  };
+
+  return (
+    <div className="space-y-3">
+      <p className="text-xs text-muted-foreground">{t.subtitle}</p>
+      <div className="grid grid-cols-2 gap-2">
+        <PowerSelect dict={dict} eye="left" value={draft.left} onPick={(sph) => pick('left', sph)} />
+        <PowerSelect dict={dict} eye="right" value={draft.right} left={draft.left} onPick={(sph) => pick('right', sph)} />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Puts a saved Default Rx on a collection the shopper opens without one. Once the shopper
+ * takes it off ("Xoá tất cả", "Xem tất cả"), it stays off for the session. Renders nothing.
+ */
+export function DefaultRxAutoApply() {
+  const { params, navigate } = useSetParams();
+  const { defaultRx, ready } = useDefaultRx();
+  const hasRx = params.has('rx');
+  const hadRx = useRef(hasRx);
+
+  useEffect(() => {
+    if (hadRx.current && !hasRx) setRxFilterCleared(true);
+    hadRx.current = hasRx;
+    if (!ready || !defaultRx || hasRx || rxFilterCleared()) return;
+    navigate((next) => next.set('rx', `${defaultRx.left},${defaultRx.right}`), { keepPaging: true, replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready, defaultRx?.left, defaultRx?.right, hasRx]);
+
+  return null;
+}
+
+/** Mobile: "Nhập độ" beside "Bộ lọc" opens the block as a bottom sheet (Figma M1.1 196:848). */
+export function YourRxSheet({ dict }: { dict: Dictionary }) {
+  const t = dict.filters.sidebar.yourRx;
+  const locale = usePathname().split('/')[1];
+  return (
+    <Sheet>
+      <SheetTrigger render={<Button variant="outline" className="h-11 w-full rounded-none" />}>
+        <Eye className="size-4" aria-hidden />
+        {t.enter}
+      </SheetTrigger>
+      <SheetContent side="bottom" closeLabel={dict.common.close} className="gap-0 rounded-t-2xl px-4 pt-3 pb-6">
+        <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-border" aria-hidden />
+        <SheetTitle className="mb-3 text-2xl font-semibold tracking-tight">{t.title}</SheetTitle>
+        <YourRxFields dict={dict} />
+        <Link href={`/${locale}/support/guides/${POWER_GUIDE_SLUG}`} className="mt-5 text-sm underline underline-offset-4">
+          {t.guide}
+        </Link>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
 const GROUPS = ['lensLine', 'color', 'expiry', 'diameter', 'makeupStyle', 'series', 'occasion', 'price'];
 
 /**
@@ -110,6 +248,7 @@ export function CollectionFilters({ dict, counts }: { dict: Dictionary; counts: 
   const t = dict.filters.sidebar;
   const facets = dict.nav.facets;
   const { params, pathname, navigate } = useSetParams();
+  const rxTitleId = useId();
 
   const picked = (key: string) => params.get(key)?.split(',').filter(Boolean) ?? [];
   const toggle = (key: string, value: string) =>
@@ -149,14 +288,24 @@ export function CollectionFilters({ dict, counts }: { dict: Dictionary; counts: 
           <button
             type="button"
             className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
-            onClick={() => navigate((next) => FILTER_KEYS.forEach((key) => next.delete(key)))}
+            onClick={() => {
+              // Clears the filter, not the saved Default Rx — so it mustn't come straight back.
+              if (params.get('rx')) setRxFilterCleared(true);
+              navigate((next) => FILTER_KEYS.forEach((key) => next.delete(key)));
+            }}
           >
             {t.clearAll}
           </button>
         ) : null}
       </div>
 
-      {/* The pinned "Độ của bạn" block (#196) goes here, above the groups. */}
+      <section aria-labelledby={rxTitleId} className="mb-4 space-y-3 bg-primary/5 p-4">
+        <h3 id={rxTitleId} className="flex items-center gap-2 text-base font-semibold">
+          <Eye className="size-5" aria-hidden />
+          {t.yourRx.title}
+        </h3>
+        <YourRxFields dict={dict} />
+      </section>
 
       <Accordion multiple defaultValue={GROUPS}>
         <Group value="lensLine" title={t.lensLine} anchor={facetAnchorId('material')}>

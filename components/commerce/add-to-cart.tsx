@@ -1,12 +1,13 @@
 'use client';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Product, Variant } from '@/lib/types';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { ShoppingBag } from 'lucide-react';
 import { VariantSelector } from './variant-selector';
-import { RxSelector, defaultRxDraft, draftToRx, type RxDraft } from './rx-selector';
+import { POWER_GUIDE_SLUG, RxSelector, defaultRxDraft, draftFromDefaultRx, draftToRx, type RxDraft } from './rx-selector';
+import { useDefaultRx } from '@/features/session/default-rx';
 import { PriceTag } from './price-tag';
 import { QuantityStepper } from './quantity-stepper';
 import { Button } from '@/components/ui/button';
@@ -19,8 +20,6 @@ import { useAnalytics } from '@/lib/analytics/use-analytics';
 import { toGa4Items } from '@/lib/analytics/events';
 import type { CartLine } from '@/features/cart/cart.types';
 
-/** The support guide behind "Hướng dẫn chọn độ" (content/mock/support.ts). */
-const POWER_GUIDE_SLUG = 'chon-do-can-the-nao';
 
 export function AddToCart({
   product, locale, dict, children, favorite,
@@ -40,6 +39,17 @@ export function AddToCart({
   // Every power defaults to 0.00, so the draft is always a valid Rx and the
   // buttons are never gated on it (designer note "Dev: default độ cận").
   const [rxDraft, setRxDraft] = useState<RxDraft>(defaultRxDraft);
+  // A saved Default Rx pre-fills the powers once it has loaded, unless the shopper has already picked.
+  const { defaultRx } = useDefaultRx();
+  const picked = useRef(false);
+  const onRxChange = (next: RxDraft) => {
+    picked.current = true;
+    setRxDraft(next);
+  };
+  useEffect(() => {
+    if (defaultRx && !picked.current) setRxDraft(draftFromDefaultRx(defaultRx));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultRx?.left, defaultRx?.right]);
 
   useEffect(() => {
     track({ name: 'view_item', params: { items: toGa4Items([{ product, variant: product.variants[0] }]) } });
@@ -109,7 +119,7 @@ export function AddToCart({
       <Separator />
       <VariantSelector product={product} dict={dict} onVariantChange={setVariant} />
       {product.requiresRx ? (
-        <RxSelector value={rxDraft} onChange={setRxDraft} guideHref={`/${locale}/support/guides/${POWER_GUIDE_SLUG}`} dict={dict} />
+        <RxSelector value={rxDraft} onChange={onRxChange} guideHref={`/${locale}/support/guides/${POWER_GUIDE_SLUG}`} dict={dict} />
       ) : null}
       <div className="flex flex-wrap items-center gap-4">
         <span className="text-sm text-muted-foreground">{dict.pdp.quantity}</span>

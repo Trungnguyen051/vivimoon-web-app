@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { RxSelector, defaultRxDraft, draftToRx, type RxDraft } from './rx-selector';
+import { RxSelector, defaultRxDraft, draftFromDefaultRx, draftToRx, type RxDraft } from './rx-selector';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 
 const dict = getDictionary('en');
@@ -78,6 +78,16 @@ describe('RxSelector', () => {
     await userEvent.click(unitButton('pair'));
     // Pinned count, so a control that dodges a name match still fails here.
     expect(screen.getAllByRole('combobox')).toHaveLength(2);
+  });
+});
+
+describe('draftFromDefaultRx (#196)', () => {
+  it('pre-selects 1 đôi when the eyes differ', () => {
+    expect(draftFromDefaultRx({ left: -2.5, right: -3 })).toEqual({ unit: 'pair', left: -2.5, right: -3, rightSameAsLeft: false });
+  });
+
+  it('keeps 1 chiếc at the saved power when both eyes match', () => {
+    expect(draftFromDefaultRx({ left: -2.5, right: -2.5 })).toEqual({ unit: 'single', left: -2.5, right: -2.5, rightSameAsLeft: false });
   });
 });
 
