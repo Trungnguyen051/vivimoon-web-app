@@ -130,6 +130,11 @@ export const collectionSchema = z.object({
   productIds: z.array(z.string()),
 });
 
+/** Who the reviewer is as a wearer — the PDP's review filter tabs. */
+export const reviewTagSchema = z.enum(['sensitiveEyes', 'allDay', 'beginner', 'myopic']);
+
+const subRatingSchema = z.number().min(1).max(5);
+
 export const reviewSchema = z.object({
   id: z.string(),
   productId: z.string(),
@@ -138,10 +143,30 @@ export const reviewSchema = z.object({
   title: z.string(),
   body: z.string(),
   createdAt: z.string(),
-  hasImages: z.boolean(),
+  // Free text, as the marketplace shows it ("Sandkiss 1 tháng") — not a variant id.
+  variantLabel: z.string().optional(),
+  tags: z.array(reviewTagSchema).default([]),
+  // A video's `poster` is its thumbnail; without one the tile shows only the play mark.
+  media: z.array(z.object({
+    type: z.enum(['image', 'video']),
+    url: z.string(),
+    poster: z.string().optional(),
+  })).default([]),
+  subRatings: z.object({
+    comfort: subRatingSchema,
+    colorMatch: subRatingSchema,
+    easeOfWear: subRatingSchema,
+  }).optional(),
+  helpfulCount: z.number().int().nonnegative().default(0),
   // Reviews are mirrored from marketplace listings; provenance drives the badge.
   source: reviewSourceSchema.default('vivimoon'),
   sourceUrl: z.string().url().optional(),
+});
+
+/** `GET /api/products/:slug/reviews` query — both filters optional, and they combine. */
+export const reviewFilterSchema = z.object({
+  tag: reviewTagSchema.optional(),
+  hasMedia: z.enum(['true', 'false']).transform((v) => v === 'true').optional(),
 });
 
 // Comparison (spec §4 endpoint, §10 feature note). Request is capped at 4
@@ -276,6 +301,8 @@ export type Variant = z.infer<typeof variantSchema>;
 export type Product = z.infer<typeof productSchema>;
 export type Collection = z.infer<typeof collectionSchema>;
 export type Review = z.infer<typeof reviewSchema>;
+export type ReviewTag = z.infer<typeof reviewTagSchema>;
+export type ReviewFilter = z.infer<typeof reviewFilterSchema>;
 export type ProductQuery = z.infer<typeof productQuerySchema>;
 export type CompareRequest = z.infer<typeof compareRequestSchema>;
 export type ComparisonRow = z.infer<typeof comparisonRowSchema>;

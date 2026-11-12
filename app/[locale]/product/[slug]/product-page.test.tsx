@@ -29,8 +29,9 @@ describe('a product page', () => {
     const average = own.reduce((sum, r) => sum + r.rating, 0) / own.length;
     await renderProduct(product.slug);
 
-    // Header and reviews section print the same summary, once each.
-    expect(screen.getAllByText(`${average.toFixed(1)} · ${own.length}`)).toHaveLength(2);
+    // The header and the reviews section's big average agree.
+    expect(screen.getByText(`${average.toFixed(1)} · ${own.length}`)).toBeInTheDocument();
+    expect(screen.getByText(average.toFixed(1))).toBeInTheDocument();
     expect(screen.queryByText(`${product.rating.toFixed(1)} · ${product.reviewCount}`)).not.toBeInTheDocument();
   });
 
