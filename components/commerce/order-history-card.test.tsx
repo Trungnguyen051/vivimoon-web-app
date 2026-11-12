@@ -61,7 +61,7 @@ describe('OrderHistoryCard actions by status', () => {
 
   it('links return to the support returns topic and review to the reviews anchor', () => {
     renderCard('delivered');
-    expect(screen.getByRole('link', { name: dict.orders.returnItems })).toHaveAttribute('href', '/en/support/faq?category=returns');
+    expect(screen.getByRole('link', { name: dict.orders.returnItems })).toHaveAttribute('href', '/en/support/faq?category=doi-tra-va-bao-hanh');
     expect(screen.getByRole('link', { name: dict.orders.review })).toHaveAttribute('href', '/en/product/lens-1#reviews');
   });
 });

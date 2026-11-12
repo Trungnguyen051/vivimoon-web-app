@@ -115,7 +115,7 @@ export function OrderHistoryCard({
 
         {order.status === 'delivered' ? (
           <div className="grid grid-cols-3 gap-2">
-            <Link href={`/${locale}/support/faq?category=returns`} className={buttonVariants({ variant: 'outline' })}>{t.returnItems}</Link>
+            <Link href={`/${locale}/support/faq?category=doi-tra-va-bao-hanh`} className={buttonVariants({ variant: 'outline' })}>{t.returnItems}</Link>
             {reviewSlug ? (
               <Link href={`/${locale}/product/${reviewSlug}#reviews`} className={buttonVariants({ variant: 'outline' })}>{t.review}</Link>
             ) : <span />}

@@ -58,7 +58,7 @@ export default async function OrderHistoryPage({ params }: { params: Promise<{ l
 
   return (
     <>
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
+      <div className="flex flex-col gap-8">
         <h1 className="text-3xl font-semibold tracking-tight">{dict.orders.title}</h1>
 
         {orders.length === 0 ? (
