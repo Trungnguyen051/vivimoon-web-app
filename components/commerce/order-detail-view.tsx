@@ -1,11 +1,10 @@
 import Image from 'next/image';
-import { catalog } from '@/lib/api/resources/catalog';
+import { withProducts } from './history-lines';
 import { RxSummary } from './rx-summary';
 import { OrderStatusTimeline } from './order-status-timeline';
 import { OrderActions } from './order-actions';
-import type { HistoryLine } from './order-history-card';
 import { formatPrice, toIntlLocale } from '@/lib/utils/format';
-import type { Order } from '@/lib/api/schemas/orders';
+import type { PublicOrder } from '@/lib/api/schemas/orders';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 
@@ -15,7 +14,7 @@ function formatDate(iso: string, locale: Locale): string {
 
 type Tone = 'success' | 'destructive' | 'neutral';
 
-function toneOf(status: Order['status']): Tone {
+function toneOf(status: PublicOrder['status']): Tone {
   if (status === 'delivered') return 'success';
   if (status === 'cancelled' || status === 'returned') return 'destructive';
   return 'neutral';
@@ -29,31 +28,22 @@ const TONE_CLASS: Record<Tone, string> = {
 
 /**
  * Shared between the member's order-detail page (session + ownership) and
- * the guest tracking view resolved from a token (issue #11) — both render
+ * Order Lookup (ADR-0022) — both render
  * the exact same detail for the exact same `Order`, which is what makes
  * "one tracking view" true rather than two pages that merely look alike.
  */
 export async function OrderDetailView({ order, locale, dict, signedIn }: {
-  order: Order; locale: Locale; dict: Dictionary; signedIn: boolean;
+  order: PublicOrder; locale: Locale; dict: Dictionary; signedIn: boolean;
 }) {
-  const enrichedLines = await Promise.all(
-    order.lines.map(async (line) => ({ line, found: await catalog.getVariantById(line.variantId) })),
-  );
-  // The same line shape the history card's buy-again reads — today's catalogue price, not the order's.
-  const historyLines: HistoryLine[] = enrichedLines.map(({ line, found }) => ({
-    ...line,
-    product: found && {
-      id: found.product.id, slug: found.product.slug, name: found.product.name, image: found.product.images[0],
-      sku: found.variant.sku, color: found.variant.colorLabel, compareAtPrice: found.variant.compareAtPrice, price: found.variant.price,
-    },
-  }));
+  const lines = await withProducts(order.lines);
   const itemCount = order.lines.reduce((sum, l) => sum + l.quantity, 0);
   const { address } = order;
   const delivery: [string, string | undefined][] = [
     [dict.orderDetail.recipient, address.recipient],
     [dict.orderDetail.phone, address.phone],
     [dict.orderDetail.address, [address.line1, address.ward, address.district, address.province].join(', ')],
-    [dict.orderDetail.shippingMethod, order.shippingMethod],
+    // Stored as the option id; an id this dictionary does not know shows as-is.
+    [dict.orderDetail.shippingMethod, order.shippingMethod && (dict.orderDetail.shippingMethods[order.shippingMethod as keyof typeof dict.orderDetail.shippingMethods] ?? order.shippingMethod)],
     [dict.orderDetail.carrierTrackingCode, order.carrierTrackingCode],
   ];
 
@@ -79,17 +69,17 @@ export async function OrderDetailView({ order, locale, dict, signedIn }: {
       <section aria-labelledby="order-lines" className="border">
         <h3 id="order-lines" className="border-b px-4 py-3 text-[13px] font-medium leading-5">{dict.orderDetail.lineItems}</h3>
         <ul>
-          {enrichedLines.map(({ line, found }) => (
+          {lines.map((line) => (
             <li key={line.lineKey} className="flex gap-3 px-4 py-3">
               <div className="relative size-16 shrink-0 overflow-hidden bg-secondary">
-                {found?.product.images[0] ? (
-                  <Image src={found.product.images[0]} alt="" fill className="object-cover" sizes="64px" />
+                {line.product?.image ? (
+                  <Image src={line.product.image} alt="" fill className="object-cover" sizes="64px" />
                 ) : null}
               </div>
               <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                <p className="truncate text-[13px] leading-5">{found?.product.name ?? line.variantId}</p>
-                {found?.variant.colorLabel ? (
-                  <p className="text-xs leading-4 text-muted-foreground">{found.variant.colorLabel}</p>
+                <p className="truncate text-[13px] leading-5">{line.product?.name ?? line.variantId}</p>
+                {line.product?.color ? (
+                  <p className="text-xs leading-4 text-muted-foreground">{line.product.color}</p>
                 ) : null}
                 {line.rx ? <RxSummary rx={line.rx} dict={dict} /> : null}
                 <div className="flex items-center justify-between pt-1">
@@ -127,7 +117,10 @@ export async function OrderDetailView({ order, locale, dict, signedIn }: {
         </dl>
       </section>
 
-      <OrderActions lines={historyLines} locale={locale} dict={dict} signedIn={signedIn} />
+      <OrderActions
+        lines={lines} locale={locale} signedIn={signedIn}
+        dict={{ backToOrders: dict.orderDetail.backToOrders, buyAgain: dict.orders.buyAgain, unavailable: dict.orders.unavailable, viewCart: dict.orders.viewCart }}
+      />
     </div>
   );
 }

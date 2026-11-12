@@ -146,7 +146,7 @@ export const pricedCartSchema = z.object({
   discount: z.number().int().nonnegative(),
   appliedVouchers: z.array(voucherSchema),
   shipping: z.number().int().nonnegative(),
-  // Label of the shipping option `shipping` was charged for; absent when no
+  // Id of the shipping option `shipping` was charged for; absent when no
   // address was given to quote against.
   shippingMethod: z.string().optional(),
   total: z.number().int().nonnegative(),

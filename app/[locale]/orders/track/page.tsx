@@ -7,7 +7,7 @@ import { getDictionary } from '@/lib/i18n/dictionaries';
 import { fetchViaSelf } from '@/lib/api/server-fetch';
 import { readSessionUserId } from '@/lib/auth/cookie';
 import type { ApiResult } from '@/lib/api/client';
-import { normalizeOrderCode, type Order } from '@/lib/api/schemas/orders';
+import { normalizeOrderCode, type PublicOrder } from '@/lib/api/schemas/orders';
 import { OrderDetailView } from '@/components/commerce/order-detail-view';
 import { OrderLookupForm } from '@/components/commerce/order-lookup-form';
 
@@ -20,10 +20,10 @@ export const metadata: Metadata = { referrer: 'no-referrer' };
  * order placed during this server's life lives in the route handler's module
  * instance, not this page's (ADR-0002). `null` is "no such Order Code".
  */
-async function lookUpOrder(code: string): Promise<Order | null> {
+async function lookUpOrder(code: string): Promise<PublicOrder | null> {
   const response = await fetchViaSelf(`/api/orders/track?code=${encodeURIComponent(code)}`);
   if (response.status === 404) return null;
-  const result = (await response.json()) as ApiResult<Order>;
+  const result = (await response.json()) as ApiResult<PublicOrder>;
   if (!result.ok) throw new Error(`order lookup failed: ${result.error.message}`);
   return result.data;
 }

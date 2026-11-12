@@ -41,8 +41,8 @@ export const orderSchema = z.object({
     .omit({ lines: true, unavailableLines: true, shippingMethod: true })
     .extend({ currency: currencySchema }),
   address: addressSchema,
-  // Label of the shipping option charged at placement; optional so upstream
-  // and older orders without one stay valid (shown as "—").
+  // Id of the shipping option charged at placement (localized for display);
+  // optional so upstream and older orders without one stay valid ("—").
   shippingMethod: z.string().optional(),
   // The carrier's own waybill number — set once the order ships.
   carrierTrackingCode: z.string().optional(),
@@ -52,6 +52,13 @@ export const orderSchema = z.object({
   userId: z.string().optional(),
   guestEmail: z.string().email().optional(),
 });
+
+/**
+ * What Order Lookup returns to anyone holding the Order Code (ADR-0022): the
+ * order minus who owns it and how it was paid — nothing the page shows.
+ */
+export const publicOrderSchema = orderSchema.omit({ userId: true, guestEmail: true, payment: true });
+export type PublicOrder = z.infer<typeof publicOrderSchema>;
 
 export type PlaceOrderRequest = z.infer<typeof placeOrderRequestSchema>;
 export type OrderLine = z.infer<typeof orderLineSchema>;

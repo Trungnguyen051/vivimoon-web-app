@@ -281,7 +281,7 @@ export const en = {
     steps: { placed: 'Ordered', confirmed: 'Confirmed', packed: 'Packing', shipping: 'On the way', delivered: 'Received' },
     lineItems: 'Items', totalLabel: 'Order total', items: 'items',
     delivery: 'Delivery details', recipient: 'Recipient', phone: 'Phone number', address: 'Address',
-    shippingMethod: 'Shipping method', carrierTrackingCode: 'Carrier tracking code',
+    shippingMethod: 'Shipping method', shippingMethods: { standard: 'Standard delivery', express: 'Express delivery' }, carrierTrackingCode: 'Carrier tracking code',
     backToOrders: 'Back to order history',
   },
   tracking: {

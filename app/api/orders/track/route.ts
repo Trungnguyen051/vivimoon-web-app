@@ -1,5 +1,5 @@
 import { orders } from '@/lib/api/resources/orders';
-import { normalizeOrderCode } from '@/lib/api/schemas/orders';
+import { normalizeOrderCode, publicOrderSchema } from '@/lib/api/schemas/orders';
 import { apiOk, apiFail } from '@/lib/api/response';
 
 /**
@@ -13,5 +13,6 @@ export async function GET(request: Request) {
 
   const order = await orders.findByCode(code);
   if (!order) return apiFail('not_found', 'No order matches that code');
-  return apiOk(order);
+  // Projected: the code is a bearer secret, so it reveals no owner, email or payment.
+  return apiOk(publicOrderSchema.parse(order));
 }

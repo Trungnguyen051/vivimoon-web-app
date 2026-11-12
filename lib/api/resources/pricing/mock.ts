@@ -150,7 +150,7 @@ export const mockPricing = {
         throw new PricingError(`Unknown shipping option "${input.shipping.optionId}"`, 'not_found');
       }
       shippingFee = match.fee;
-      shippingMethod = match.label;
+      shippingMethod = match.id;
     }
 
     const { discount, applied } = bestVoucher(subtotal, shippingFee, userId !== null);

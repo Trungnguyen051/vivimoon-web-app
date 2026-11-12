@@ -6,7 +6,7 @@ ADR-0006 made guest tracking an emailed link: `POST /api/orders/track` took a co
 
 The wireframe asks for the opposite: one order-code field, the order rendered inline under it — recipient, phone and address included — and an explicit "Không tìm thấy đơn hàng" state naming the code typed. Three alternatives were weighed and rejected: keeping ADR-0006 and only restyling (loses the inline result and the not-found state the design is built around), code plus phone/email (one extra field the design does not have), and a member-only code lookup with guests kept on the emailed link (two flows for one page).
 
-So anyone holding an order code can read that order. What keeps this tolerable is that order codes stay random rather than sequential (`VVM-` + 16 CSPRNG base32 characters — 80 bits, typeable yet unguessable; spec §10): a code is a bearer secret, not a counter. **Never make order codes sequential or guessable** — with this ADR in place, that change alone would turn the lookup into an address-harvesting oracle.
+So anyone holding an order code can read that order — a member's order as much as a guest's, signed in or not. The lookup answers with the order minus its owner, email and payment. What keeps this tolerable is that order codes stay random rather than sequential (`VVM-` + 16 CSPRNG base32 characters — 80 bits, typeable yet unguessable; spec §10): a code is a bearer secret, not a counter. **Never make order codes sequential or guessable** — with this ADR in place, that change alone would turn the lookup into an address-harvesting oracle.
 
 ## Consequences
 

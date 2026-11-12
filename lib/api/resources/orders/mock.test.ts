@@ -146,7 +146,7 @@ describe('mockOrders.place', () => {
 
   it('records the charged shipping option as the shipping method, with no carrier code yet', async () => {
     const order = await mockOrders.place(req(), null);
-    expect(order.shippingMethod).toBe('Standard');
+    expect(order.shippingMethod).toBe('standard');
     expect(order.carrierTrackingCode).toBeUndefined();
   });
 });

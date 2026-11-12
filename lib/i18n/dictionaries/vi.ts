@@ -285,7 +285,7 @@ export const vi: Dictionary = {
     steps: { placed: 'Đã đặt hàng', confirmed: 'Đã xác nhận', packed: 'Đang đóng gói', shipping: 'Đang giao', delivered: 'Đã nhận' },
     lineItems: 'Sản phẩm', totalLabel: 'Tổng số tiền', items: 'sản phẩm',
     delivery: 'Thông tin giao hàng', recipient: 'Người nhận', phone: 'Số điện thoại', address: 'Địa chỉ',
-    shippingMethod: 'Phương thức vận chuyển', carrierTrackingCode: 'Mã vận đơn của bên giao hàng',
+    shippingMethod: 'Phương thức vận chuyển', shippingMethods: { standard: 'Giao hàng tiêu chuẩn', express: 'Giao hàng nhanh' }, carrierTrackingCode: 'Mã vận đơn của bên giao hàng',
     backToOrders: 'Về lịch sử đơn hàng',
   },
   tracking: {

@@ -21,6 +21,13 @@ describe('GET /api/orders/track?code=', () => {
     expect(body.data.code).toBe('VVM-SEED0001');
   });
 
+  it("never reveals the order's owner, email or payment to a code holder", async () => {
+    const body = await (await lookup('VVM-SEED0001')).json();
+    expect(body.data).not.toHaveProperty('userId');
+    expect(body.data).not.toHaveProperty('guestEmail');
+    expect(body.data).not.toHaveProperty('payment');
+  });
+
   it('tolerates a leading #, lowercase and stray spaces', async () => {
     const res = await lookup('  #vvm-seed0001 ');
     expect(res.status).toBe(200);

@@ -121,7 +121,7 @@ describe('OrderDetailView delivery info', () => {
   const field = (label: string) => screen.getByText(label, { selector: 'dt' }).nextElementSibling;
 
   it('shows recipient, phone, address, shipping method and Carrier Tracking Code', async () => {
-    await renderView(order({ status: 'shipped', shippingMethod: 'Giao hàng nhanh', carrierTrackingCode: 'SPX2330404994944' }));
+    await renderView(order({ status: 'shipped', shippingMethod: 'express', carrierTrackingCode: 'SPX2330404994944' }));
     const d = dict.orderDetail;
     expect(field(d.recipient)).toHaveTextContent('Nguyễn Thị Thu Hà');
     expect(field(d.phone)).toHaveTextContent('0909000000');
