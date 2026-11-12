@@ -396,14 +396,14 @@
     "semantic_hash": "e337dcc7b7b3cc468e1af0f5c17aca4f"
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1794410909.684632,
-    "seen": 1794411041.9653602,
+    "mtime": 1794411164.7865055,
+    "seen": 1794446248.085045,
     "ast_hash": "8d19e6f80992bee66ea5e71fb4270969",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/vi.ts": {
-    "mtime": 1794410909.6842577,
-    "seen": 1794411041.9653609,
+    "mtime": 1794411164.7867198,
+    "seen": 1794446248.085046,
     "ast_hash": "2cba693fb2a4708be30dae36826c80e3",
     "semantic_hash": ""
   },
@@ -438,15 +438,15 @@
     "semantic_hash": "2d01b535f0be7422af24560c9f31c327"
   },
   "lib/utils/format.test.ts": {
-    "mtime": 1786867003.5568116,
-    "seen": 1787625522.045942,
-    "ast_hash": "357353fe60d8ec8dde8e4030fff6ed5b",
-    "semantic_hash": "357353fe60d8ec8dde8e4030fff6ed5b"
+    "mtime": 1794445715.9732594,
+    "seen": 1794446248.085073,
+    "ast_hash": "46004e614ccb4e32da0609230f00f578",
+    "semantic_hash": ""
   },
   "lib/utils/format.ts": {
-    "mtime": 1788414338.4296808,
-    "seen": 1788414379.6221461,
-    "ast_hash": "1336b1d384de98e87895c29a0717adc9",
+    "mtime": 1794445718.1426146,
+    "seen": 1794446248.085074,
+    "ast_hash": "246c9c0bd52e33e056a2e1620216f6da",
     "semantic_hash": ""
   },
   "next.config.ts": {
@@ -2226,21 +2226,21 @@
     "semantic_hash": ""
   },
   "app/[locale]/articles/[slug]/page.tsx": {
-    "mtime": 1794410945.3719044,
-    "seen": 1794411041.9650471,
-    "ast_hash": "df781357c3ce69f9a7d8ca32b4b06ac5",
+    "mtime": 1794445885.5243256,
+    "seen": 1794446248.084744,
+    "ast_hash": "5db1413922c48a1fb34b8bd90f05f3d6",
     "semantic_hash": ""
   },
   "app/[locale]/articles/page.tsx": {
-    "mtime": 1794401549.3923194,
-    "seen": 1794403029.772361,
-    "ast_hash": "e65edbc051684ad551d4b0a11ab99166",
+    "mtime": 1794446194.0577347,
+    "seen": 1794446248.084746,
+    "ast_hash": "91aa2e71fcc737967dc877bf24487b93",
     "semantic_hash": ""
   },
   "components/commerce/article-cards.tsx": {
-    "mtime": 1794398576.26611,
-    "seen": 1794399074.614592,
-    "ast_hash": "ce84b2aae19017ee42287f0e37f89ee5",
+    "mtime": 1794417655.6701026,
+    "seen": 1794446248.084836,
+    "ast_hash": "d82b85aab4a1f7adf59db224e2aa54ee",
     "semantic_hash": ""
   },
   "content/mock/articles.ts": {
@@ -2262,9 +2262,9 @@
     "semantic_hash": ""
   },
   "lib/api/resources/editorial/mock.ts": {
-    "mtime": 1794401549.404052,
-    "seen": 1794403029.7725859,
-    "ast_hash": "e8df1485f6994fa9b8c86494183899ea",
+    "mtime": 1794445780.8029318,
+    "seen": 1794446248.084984,
+    "ast_hash": "783cc692a843ca06d3b116ded3f06440",
     "semantic_hash": ""
   },
   "lib/api/schemas/editorial.test.ts": {
@@ -2388,9 +2388,9 @@
     "semantic_hash": ""
   },
   "app/[locale]/support/page.tsx": {
-    "mtime": 1794405573.259069,
-    "seen": 1794408882.400173,
-    "ast_hash": "515314da1d70edcc615391124d007227",
+    "mtime": 1794446194.0580807,
+    "seen": 1794446248.084775,
+    "ast_hash": "2a88568c83d8c345ad13c4eaaf77ba8e",
     "semantic_hash": ""
   },
   "tests/nav-destinations.test.ts": {
@@ -2526,9 +2526,9 @@
     "semantic_hash": ""
   },
   "app/[locale]/support/faq/page.tsx": {
-    "mtime": 1794410450.2978077,
-    "seen": 1794411041.9650738,
-    "ast_hash": "aaef4bdedd0434b4b621ef105a5e178d",
+    "mtime": 1794446194.057948,
+    "seen": 1794446248.0847712,
+    "ast_hash": "972802ff9f958b4cc16b6671747563ce",
     "semantic_hash": ""
   },
   "components/commerce/reading-theme-chips.test.tsx": {
@@ -2556,8 +2556,8 @@
     "semantic_hash": ""
   },
   "content/mock/support.ts": {
-    "mtime": 1794409010.153827,
-    "seen": 1794410050.1473868,
+    "mtime": 1794417808.7711818,
+    "seen": 1794446248.084942,
     "ast_hash": "05673f34a8ca0076c1427c980d309ebb",
     "semantic_hash": ""
   },
@@ -2586,15 +2586,15 @@
     "semantic_hash": ""
   },
   "lib/editorial/reading-themes.test.ts": {
-    "mtime": 1794409010.1670992,
-    "seen": 1794410050.147485,
-    "ast_hash": "f3a7d06061ef71554c26b2378db5a569",
+    "mtime": 1794445870.733063,
+    "seen": 1794446248.0850382,
+    "ast_hash": "a9603afb27024857b52524c6da46e7aa",
     "semantic_hash": ""
   },
   "lib/editorial/reading-themes.ts": {
-    "mtime": 1794409010.1677003,
-    "seen": 1794410050.147485,
-    "ast_hash": "a38ec092aceefd2301a7928d61b250c8",
+    "mtime": 1794445854.338051,
+    "seen": 1794446248.0850391,
+    "ast_hash": "07b00ffe7e66d761f76bb95ea9f2b19d",
     "semantic_hash": ""
   },
   "lib/editorial/reading-time.test.ts": {
@@ -2622,9 +2622,9 @@
     "semantic_hash": ""
   },
   "tests/authored-links.test.ts": {
-    "mtime": 1794409010.1691694,
-    "seen": 1794410050.147527,
-    "ast_hash": "2533802e4a7fb2d01a7d3b56ec745e05",
+    "mtime": 1794417792.8081172,
+    "seen": 1794446248.085082,
+    "ast_hash": "7fdb6f36087661cc74abc8f9944bcdbd",
     "semantic_hash": ""
   },
   "tests/expiry-vocabulary.test.ts": {
@@ -2652,21 +2652,21 @@
     "semantic_hash": ""
   },
   "docs/adr/0019-guide-is-a-fixed-layout-document-separate-from-article.md": {
-    "mtime": 1794394005.7093692,
-    "seen": 1794396415.5770938,
-    "ast_hash": "b0974f98fb71719c01c5523a3a724a89",
+    "mtime": 1794417738.2840056,
+    "seen": 1794446248.085123,
+    "ast_hash": "c4ca971d8ed7bc58917a105d442f007b",
     "semantic_hash": ""
   },
   "docs/adr/0020-support-search-is-a-faq-filter-not-search.md": {
-    "mtime": 1794394005.709631,
-    "seen": 1794396415.5770948,
-    "ast_hash": "e1671cb8e630b111c32851b9b1c3489a",
+    "mtime": 1794417738.2841814,
+    "seen": 1794446248.085124,
+    "ast_hash": "f3bc65dc69f3ff2033fc9458f4ad63f0",
     "semantic_hash": ""
   },
   "app/[locale]/articles/index-shape.test.tsx": {
-    "mtime": 1794399119.414407,
-    "seen": 1794399732.792696,
-    "ast_hash": "aa1752904af4ccbfe6e4282ce6f879f3",
+    "mtime": 1794417916.1770048,
+    "seen": 1794446248.084746,
+    "ast_hash": "88e4793a67e7855d095da97bee30e939",
     "semantic_hash": ""
   },
   "components/commerce/lead-article.tsx": {
@@ -2766,15 +2766,15 @@
     "semantic_hash": ""
   },
   "lib/support/faq-filter.ts": {
-    "mtime": 1794401549.4056878,
-    "seen": 1794403029.7726662,
-    "ast_hash": "f03d9af7f749f5db9d913d5195128dfb",
+    "mtime": 1794445780.803075,
+    "seen": 1794446248.085067,
+    "ast_hash": "6cebee75cce06b6a8e488e3e7bcc9175",
     "semantic_hash": ""
   },
   "lib/text/fold.ts": {
-    "mtime": 1794401549.4058917,
-    "seen": 1794403029.7726662,
-    "ast_hash": "a0072bd500b7eb52c7c5ba41edf2537f",
+    "mtime": 1794445780.8026383,
+    "seen": 1794446248.085068,
+    "ast_hash": "f327b77129d54666eecd2bbad572859c",
     "semantic_hash": ""
   },
   "lib/utils/search-params.ts": {
@@ -2814,14 +2814,14 @@
     "semantic_hash": ""
   },
   "app/[locale]/support/guides/[slug]/page.tsx": {
-    "mtime": 1794410450.297982,
-    "seen": 1794411041.965076,
-    "ast_hash": "409fee694363875d8596a97ffdcc1caf",
+    "mtime": 1794446067.397274,
+    "seen": 1794446248.084773,
+    "ast_hash": "04f0f6a4aaeea04854f9bf461c58f502",
     "semantic_hash": ""
   },
   "content/mock/guides.ts": {
-    "mtime": 1794409010.1532223,
-    "seen": 1794410050.1473799,
+    "mtime": 1794417827.9830174,
+    "seen": 1794446248.084934,
     "ast_hash": "d68a5c586a7b6d86ae464de14ec87e65",
     "semantic_hash": ""
   },
@@ -2850,9 +2850,21 @@
     "semantic_hash": ""
   },
   "app/[locale]/articles/[slug]/article-page.test.tsx": {
-    "mtime": 1794410975.5424528,
-    "seen": 1794411041.965045,
-    "ast_hash": "84c1c7ca64fc8038a1c949b40bb85b2c",
+    "mtime": 1794445870.7326777,
+    "seen": 1794446248.084743,
+    "ast_hash": "3e4374b84c39a42fc840a575d081b558",
+    "semantic_hash": ""
+  },
+  "components/commerce/search-form.tsx": {
+    "mtime": 1794446149.5668476,
+    "seen": 1794446248.0848901,
+    "ast_hash": "90ff2bfa569b7c0ecd8c610bb38d877c",
+    "semantic_hash": ""
+  },
+  "lib/editorial/dateline.ts": {
+    "mtime": 1794445547.2934349,
+    "seen": 1794446248.085036,
+    "ast_hash": "c92d1570103b39c421eee60a2430e903",
     "semantic_hash": ""
   }
 }
