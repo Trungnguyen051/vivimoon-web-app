@@ -169,6 +169,10 @@ export const vi: Dictionary = {
       title: 'Lens trên mắt thật', subtitle: 'Video makeup & review từ khách', more: 'Xem Vivimoon TV',
       views: '@vivimoon.official · {n} lượt xem', play: 'Xem video: {title}',
     },
+    bundle: {
+      title: 'Mua kèm tiết kiệm hơn', subtitle: 'Người mua lens này thường mua thêm',
+      total: 'Tổng combo', add: 'Thêm cả combo vào giỏ', addSome: 'Thêm vào giỏ',
+    },
   },
   rx: {
     power: 'Độ cận', guide: 'Hướng dẫn chọn độ',
@@ -185,7 +189,7 @@ export const vi: Dictionary = {
     checkout: 'Thanh toán', remove: 'Xóa',
     accessoryOptions: { volume: 'Dung tích', type: 'Loại' },
     orderSummary: 'Tóm tắt đơn hàng', shipping: 'Vận chuyển', free: 'Miễn phí', total: 'Tổng cộng',
-    discount: 'Giảm giá',
+    discount: 'Giảm giá', bundleSaving: 'Tiết kiệm combo',
     unavailable: 'Sản phẩm không còn bán',
     unavailableNote: 'Sản phẩm không còn bán không được tính vào tổng cộng.',
     unavailableBlocksCheckout: 'Vui lòng xóa sản phẩm không còn bán để tiếp tục.',

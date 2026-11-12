@@ -13,7 +13,7 @@ import type { CartAction, CartLine, CartState } from './cart.types';
 export function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case 'ADD': {
-      const key = action.line.lineKey || lineKey(action.line.variantId, action.line.rx);
+      const key = action.line.lineKey || lineKey(action.line.variantId, action.line.rx, action.line.bundle);
       const incoming = { ...action.line, lineKey: key, quantity: Math.min(action.line.quantity, MAX_LINE_QUANTITY) };
       const existing = state.lines.find((l) => l.lineKey === key);
       if (existing) {
@@ -40,7 +40,7 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
       };
     }
     case 'EDIT': {
-      const key = lineKey(action.line.variantId, action.line.rx);
+      const key = lineKey(action.line.variantId, action.line.rx, action.line.bundle);
       const edited = { ...action.line, lineKey: key };
       const twin = state.lines.find((l) => l.lineKey === key && l.lineKey !== action.lineKey);
       if (!twin) return { ...state, lines: state.lines.map((l) => (l.lineKey === action.lineKey ? edited : l)) };

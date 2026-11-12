@@ -6,6 +6,12 @@ import { lineRxSchema, purchaseUnitSchema, refineUnitMatchesRx } from './rx';
 export const MAX_LINE_QUANTITY = 99;
 
 /**
+ * The lens product id whose Bundle this line was added through, as one complete
+ * set (CONTEXT.md "Bundle"). Absent on lines added any other way.
+ */
+const bundleTagSchema = z.string().min(1).optional();
+
+/**
  * A line in the shopper's cart.
  *
  * `lineKey` is the line's identity, derived from `variantId` + `rx` (spec §7)
@@ -32,6 +38,7 @@ export const cartLineSchema = z.object({
   variantLabel: z.string().optional(),
   purchaseUnit: purchaseUnitSchema.optional(),
   rx: lineRxSchema.optional(),
+  bundle: bundleTagSchema,
 }).superRefine(refineUnitMatchesRx);
 
 export const cartStateSchema = z.object({
@@ -90,6 +97,7 @@ export const priceLineInputSchema = z.object({
   purchaseUnit: purchaseUnitSchema.optional(),
   rx: lineRxSchema.optional(),
   quantity: z.number().int().positive().max(MAX_LINE_QUANTITY),
+  bundle: bundleTagSchema,
 }).superRefine(refineUnitMatchesRx);
 
 /**
@@ -149,6 +157,8 @@ export const pricedCartSchema = z.object({
   lines: z.array(pricedLineSchema),
   unavailableLines: z.array(unavailableLineSchema),
   subtotal: z.number().int().nonnegative(),
+  // What complete Bundles in the request save off `subtotal`. Absent reads as 0.
+  bundleSaving: z.number().int().nonnegative().optional(),
   discount: z.number().int().nonnegative(),
   appliedVouchers: z.array(voucherSchema),
   shipping: z.number().int().nonnegative(),

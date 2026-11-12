@@ -267,6 +267,7 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
         </form>
         <OrderSummary
           subtotal={priced?.subtotal ?? null}
+          bundleSaving={priced?.bundleSaving}
           discount={priced?.discount ?? null}
           shipping={priced?.shipping ?? null}
           total={priced?.total ?? null}
