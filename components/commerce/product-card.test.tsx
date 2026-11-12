@@ -26,7 +26,9 @@ describe('ProductCard', () => {
   it('renders name, sale badge, discounted price, and a link to the PDP', () => {
     render(<ProductCard product={product} locale="en" dict={en} />);
     expect(screen.getByText('100.000₫')).toBeInTheDocument();
-    expect(screen.getByText('125.000₫')).toBeInTheDocument();
+    // The sale shows as a boxed discount beside "/ chiếc", as the frame draws it.
+    expect(screen.getByText('-20%')).toBeInTheDocument();
+    expect(screen.queryByText('125.000₫')).not.toBeInTheDocument();
     const link = screen.getByRole('link', { name: 'Aqua Daily' });
     expect(link).toHaveAttribute('href', '/en/product/aqua');
   });
@@ -55,7 +57,7 @@ describe('ProductCard', () => {
 
   it('has a favourite heart and an add-to-cart that opens the PDP until Quick add lands', () => {
     render(<ProductCard product={product} locale="vi" dict={vi} />);
-    expect(screen.getByRole('button', { name: vi.favorites.add })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Thêm Aqua Daily vào yêu thích' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Thêm vào giỏ Aqua Daily' })).toHaveAttribute('href', '/vi/product/aqua');
   });
 

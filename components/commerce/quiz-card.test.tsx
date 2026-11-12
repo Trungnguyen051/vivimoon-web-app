@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { QuizCard, markQuizTaken } from './quiz-card';
+import { QuizCard, saveQuizResults } from './quiz-card';
 import { vi } from '@/lib/i18n/dictionaries/vi';
 
 const card = () => render(<QuizCard locale="vi" dict={vi} questionCount={6} socialProof="12.400 người đã tìm được lens hợp mắt" />);
@@ -16,9 +16,10 @@ describe('QuizCard', () => {
     expect(screen.getByText('12.400 người đã tìm được lens hợp mắt')).toBeInTheDocument();
   });
 
-  it('offers "Xem lại gợi ý cho bạn" once the Quiz has been taken on this device', async () => {
-    markQuizTaken();
+  it('offers "Xem lại gợi ý cho bạn", linking to the saved picks, once the Quiz has been taken on this device', async () => {
+    saveQuizResults(['p-aqua-daily', 'p-sandkiss']);
     card();
-    expect(await screen.findByRole('link', { name: 'Xem lại gợi ý cho bạn' })).toHaveAttribute('href', '/vi/quiz');
+    expect(await screen.findByRole('link', { name: 'Xem lại gợi ý cho bạn' }))
+      .toHaveAttribute('href', `/vi/quiz?results=${encodeURIComponent('p-aqua-daily,p-sandkiss')}`);
   });
 });

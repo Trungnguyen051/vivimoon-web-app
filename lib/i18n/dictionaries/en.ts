@@ -304,7 +304,7 @@ export const en = {
   },
   favorites: {
     title: 'Favorites', empty: 'You have no favorites yet.',
-    add: 'Add to favorites', remove: 'Remove from favorites',
+    add: 'Add to favorites', remove: 'Remove from favorites', addNamed: 'Add {name} to favorites',
     addToCart: 'Add to cart', buyNow: 'Buy now', added: 'Added to cart',
   },
   compare: {
@@ -334,7 +334,7 @@ export const en = {
   },
   quiz: {
     title: 'Lens-Matching Quiz', next: 'Next', back: 'Back', submit: 'See my results',
-    resultsTitle: 'Recommended for you', retake: 'Retake the quiz',
+    resultsTitle: 'Recommended for you', retake: 'Retake the quiz', browseAll: 'See all lenses',
     unanswered: 'Select an answer to continue.',
     error: 'Something went wrong scoring your answers. Please try again.',
   },

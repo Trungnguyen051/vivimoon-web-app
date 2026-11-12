@@ -92,19 +92,41 @@ describe('QuizFlow', () => {
     expect(screen.getByText('Product rec-2')).toBeInTheDocument();
   });
 
-  it('remembers on this device that the Quiz was taken, so the PLP card can offer the picks again', async () => {
-    mockedApiRequest.mockResolvedValue({ ok: true, data: { recommendations: [product('rec-1')] } });
+  it('saves the picks on this device, so the PLP card can offer them again', async () => {
+    mockedApiRequest.mockResolvedValue({ ok: true, data: { recommendations: [product('rec-1'), product('rec-2')] } });
     const user = userEvent.setup();
     render(<QuizFlow definition={definition} locale="en" dict={en} />);
 
     await user.click(screen.getByRole('radio', { name: 'Option A' }));
     await user.click(screen.getByRole('button', { name: en.quiz.next }));
     await user.click(screen.getByRole('radio', { name: 'Option C' }));
-    expect(localStorage.getItem('vivimoon:quiz-taken')).toBeNull();
+    expect(localStorage.getItem('vivimoon:quiz-results')).toBeNull();
     await user.click(screen.getByRole('button', { name: en.quiz.submit }));
 
     await screen.findByText('Product rec-1');
-    expect(localStorage.getItem('vivimoon:quiz-taken')).toBe('1');
+    expect(localStorage.getItem('vivimoon:quiz-results')).toBe('rec-1,rec-2');
+  });
+
+  it('opens on the saved picks when revisited, and retaking starts at question 1', async () => {
+    const user = userEvent.setup();
+    render(<QuizFlow definition={definition} locale="vi" dict={viDict} savedResults={[product('rec-1')]} />);
+
+    expect(screen.getByRole('heading', { name: viDict.quiz.resultsTitle })).toBeInTheDocument();
+    expect(screen.getByText('Product rec-1')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: viDict.quiz.retake }));
+    expect(screen.getByText('Câu hỏi thứ nhất?')).toBeInTheDocument();
+  });
+
+  it('starts a fresh quiz when none of the saved picks still exist', () => {
+    render(<QuizFlow definition={definition} locale="en" dict={en} savedResults={[]} />);
+    expect(screen.getByText('First question?')).toBeInTheDocument();
+  });
+
+  it('links from the results to every lens, marked as coming from the quiz', () => {
+    render(<QuizFlow definition={definition} locale="vi" dict={viDict} savedResults={[product('rec-1')]} />);
+    expect(screen.getByRole('link', { name: 'Xem tất cả mẫu lens' }))
+      .toHaveAttribute('href', '/vi/collection/all-lenses?from=quiz');
   });
 
   it('a rapid double-click on submit fires only one request, not two', async () => {

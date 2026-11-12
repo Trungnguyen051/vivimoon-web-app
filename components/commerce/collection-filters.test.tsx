@@ -7,10 +7,11 @@ import { LENS_FACETS, facetAnchorId } from '@/lib/products/lens-facets';
 import type { FacetCounts } from '@/lib/api/resources/catalog';
 
 const push = vi.fn();
+const replace = vi.fn();
 let search = '';
 
 vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push }),
+  useRouter: () => ({ push, replace }),
   usePathname: () => '/vi/collection/all-lenses',
   useSearchParams: () => new URLSearchParams(search),
 }));
@@ -225,6 +226,7 @@ describe('CollectionLoadMore (#194)', () => {
 describe('CollectionImageView (#195)', () => {
   beforeEach(() => {
     push.mockClear();
+    replace.mockClear();
     search = '';
   });
 
@@ -234,7 +236,9 @@ describe('CollectionImageView (#195)', () => {
     expect(screen.getByRole('button', { name: 'Người mẫu' })).toHaveAttribute('aria-pressed', 'true');
 
     await userEvent.click(screen.getByRole('button', { name: 'Cận mắt' }));
-    expect(lastUrl()).toBe('/vi/collection/all-lenses?show=16&view=closeUp');
+    expect(replace).toHaveBeenLastCalledWith('/vi/collection/all-lenses?show=16&view=closeUp', { scroll: false });
+    // A view switch replaces the history entry rather than adding one.
+    expect(push).not.toHaveBeenCalled();
   });
 
   it('drops the param when going back to the default', async () => {
@@ -243,6 +247,6 @@ describe('CollectionImageView (#195)', () => {
     expect(screen.getByRole('button', { name: 'Vân lens' })).toHaveAttribute('aria-pressed', 'true');
 
     await userEvent.click(screen.getByRole('button', { name: 'Người mẫu' }));
-    expect(lastUrl()).toBe('/vi/collection/all-lenses');
+    expect(replace).toHaveBeenLastCalledWith('/vi/collection/all-lenses', { scroll: false });
   });
 });

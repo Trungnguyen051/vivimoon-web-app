@@ -32,6 +32,7 @@ export function ProductCard({
   const colors = distinctColorVariants(product.variants);
   const href = `/${locale}/product/${product.slug}`;
   const spec = specLine(product, dict);
+  const discount = v.compareAtPrice && v.compareAtPrice > v.price ? Math.round((1 - v.price / v.compareAtPrice) * 100) : 0;
 
   return (
     <div className="group flex flex-col gap-3">
@@ -73,6 +74,7 @@ export function ProductCard({
             locale={locale}
             dict={dict.favorites}
             iconOnly
+            label={dict.favorites.addNamed.replace('{name}', product.name)}
             className="size-8 rounded-full border-0 bg-background hover:bg-background/90 md:size-9"
           />
           <CompareToggle productId={product.id} dict={dict} className="size-8 border-0 bg-background md:size-9" />
@@ -117,15 +119,13 @@ export function ProductCard({
             {product.soldCount ? <span>{dict.pdp.sold.replace('{n}', formatCount(product.soldCount, locale))}</span> : null}
           </div>
         ) : null}
-        <div className="flex flex-wrap items-baseline gap-x-2">
-          <PriceTag
-            price={v.price}
-            compareAtPrice={v.compareAtPrice}
-            currency={v.currency}
-            locale={locale}
-            className="text-base md:text-lg"
-          />
+        {/* As the frame draws it: price, "/ chiếc", then the discount as a boxed chip — no struck-through price. */}
+        <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 md:gap-x-2">
+          <PriceTag price={v.price} currency={v.currency} locale={locale} className="text-base md:text-lg" />
           <span className="text-xs text-muted-foreground">{dict.pdp.perUnit.single}</span>
+          {discount > 0 ? (
+            <span className="border border-foreground px-1 text-[10px] font-medium leading-4 md:text-xs">-{discount}%</span>
+          ) : null}
         </div>
       </div>
 

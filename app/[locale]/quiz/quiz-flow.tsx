@@ -7,7 +7,10 @@ import type { Product } from '@/lib/types';
 import { apiRequest } from '@/lib/api/client';
 import { Button } from '@/components/ui/button';
 import { ProductGrid } from '@/components/commerce/product-grid';
-import { markQuizTaken } from '@/components/commerce/quiz-card';
+import { saveQuizResults } from '@/components/commerce/quiz-card';
+import { FACET_COLLECTION } from '@/lib/products/lens-facets';
+import Link from 'next/link';
+import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
 
 /**
@@ -21,13 +24,15 @@ import { cn } from '@/lib/utils/cn';
  * `components/`, so it's the sanctioned place for a mutation fetch.
  */
 export function QuizFlow({
-  definition, locale, dict,
+  definition, locale, dict, savedResults,
 }: {
   definition: QuizDefinition; locale: Locale; dict: Dictionary;
+  /** The picks this device saved last time (`/quiz?results=…`), shown instead of question 1. */
+  savedResults?: Product[];
 }) {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [results, setResults] = useState<Product[] | null>(null);
+  const [results, setResults] = useState<Product[] | null>(savedResults?.length ? savedResults : null);
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // `isPending` state alone doesn't block a second click that fires before
@@ -65,7 +70,7 @@ export function QuizFlow({
     setIsPending(false);
     if (res.ok) {
       setResults(res.data.recommendations);
-      markQuizTaken();
+      saveQuizResults(res.data.recommendations.map((p) => p.id));
     }
     // The server's message is for logs, not shoppers, and it is English either way.
     else setError(dict.quiz.error);
@@ -86,6 +91,15 @@ export function QuizFlow({
           <Button type="button" variant="outline" onClick={retake}>{dict.quiz.retake}</Button>
         </div>
         <ProductGrid products={results} locale={locale} dict={dict} listId="quiz-results" />
+        {/* `from=quiz` tells the collection to hold back its own quiz card. */}
+        <div className="flex justify-center">
+          <Link
+            href={`/${locale}/collection/${FACET_COLLECTION}?from=quiz`}
+            className={cn(buttonVariants({ variant: 'outline' }), 'h-12 w-full rounded-none px-6 md:w-auto')}
+          >
+            {dict.quiz.browseAll}
+          </Link>
+        </div>
       </div>
     );
   }

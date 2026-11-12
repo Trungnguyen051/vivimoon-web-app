@@ -32,12 +32,12 @@ function useSetParams() {
   return {
     params,
     pathname,
-    navigate(edit: (next: URLSearchParams) => void, { keepPaging = false } = {}) {
+    navigate(edit: (next: URLSearchParams) => void, { keepPaging = false, replace = false } = {}) {
       const next = new URLSearchParams(params.toString());
       if (!keepPaging) next.delete('show');
       edit(next);
       const query = next.toString();
-      router.push(query ? `${pathname}?${query}` : pathname, { scroll: false });
+      router[replace ? 'replace' : 'push'](query ? `${pathname}?${query}` : pathname, { scroll: false });
     },
   };
 }
@@ -415,7 +415,7 @@ export function CollectionImageView({ dict, className }: { dict: Dictionary; cla
               navigate((next) => {
                 if (view === 'face') next.delete('view');
                 else next.set('view', view);
-              }, { keepPaging: true })
+              }, { keepPaging: true, replace: true })
             }
             className={cn(
               'border px-2.5 py-1 text-[11px] whitespace-nowrap transition-colors lg:border-0 lg:px-3.5 lg:py-2 lg:text-sm',
