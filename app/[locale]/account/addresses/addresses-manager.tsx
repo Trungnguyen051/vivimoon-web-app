@@ -1,12 +1,11 @@
 'use client';
 import { useState } from 'react';
-import { MapPin } from 'lucide-react';
+import { MapPin, Pencil, Plus } from 'lucide-react';
 import { apiRequest } from '@/lib/api/client';
 import type { AddressCreate, SavedAddress } from '@/lib/api/schemas/account';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
@@ -33,10 +32,10 @@ function toFormState(address: SavedAddress): FormState {
 }
 
 function AddressForm({
-  initial, dict, busy, onSubmit, onCancel,
+  initial, dict, busy, onSubmit, onCancel, onDelete,
 }: {
   initial: FormState; dict: AddressDict; busy: boolean;
-  onSubmit: (form: FormState) => void; onCancel: () => void;
+  onSubmit: (form: FormState) => void; onCancel: () => void; onDelete?: () => void;
 }) {
   const [form, setForm] = useState<FormState>(initial);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -110,6 +109,7 @@ function AddressForm({
       <div className="flex gap-2">
         <Button type="submit" disabled={busy}>{dict.save}</Button>
         <Button type="button" variant="outline" onClick={onCancel} disabled={busy}>{dict.cancel}</Button>
+        {onDelete ? <Button type="button" variant="outline" onClick={onDelete} disabled={busy} className="ml-auto">{dict.delete}</Button> : null}
       </div>
     </form>
   );
@@ -183,35 +183,31 @@ export function AddressesManager({ initialAddresses, dict }: { initialAddresses:
                   initial={toFormState(address)} dict={dict} busy={busy}
                   onSubmit={(form) => handleEdit(address.id, form)}
                   onCancel={() => setEditingId(null)}
+                  onDelete={() => handleDelete(address.id)}
                 />
               </li>
             ) : (
               <li key={address.id}>
-                <Card>
-                  <CardContent className="flex flex-col gap-2 py-4">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-medium">{address.recipient}</span>
-                      {address.isDefault ? <Badge>{dict.default}</Badge> : null}
+                <div className="flex flex-col gap-1 rounded-sm border p-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold">{address.recipient}</span>
+                      {address.isDefault ? <Badge variant="outline" className="rounded-none border-primary text-primary">{dict.default}</Badge> : null}
                     </div>
-                    <p className="text-sm text-muted-foreground">{address.phone}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {address.line1}, {address.ward}, {address.district}, {address.province}
-                    </p>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      <Button type="button" size="sm" variant="outline" disabled={busy} onClick={() => setEditingId(address.id)}>
-                        {dict.edit}
-                      </Button>
-                      {!address.isDefault ? (
-                        <Button type="button" size="sm" variant="outline" disabled={busy} onClick={() => handleSetDefault(address.id)}>
-                          {dict.setDefault}
-                        </Button>
-                      ) : null}
-                      <Button type="button" size="sm" variant="outline" disabled={busy} onClick={() => handleDelete(address.id)}>
-                        {dict.delete}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                    <Button type="button" size="icon-sm" variant="ghost" aria-label={dict.edit} disabled={busy} onClick={() => setEditingId(address.id)}>
+                      <Pencil />
+                    </Button>
+                  </div>
+                  <p className="text-sm">{address.phone}</p>
+                  <p className="text-sm">
+                    {address.line1}, {address.ward}, {address.district}, {address.province}
+                  </p>
+                  {!address.isDefault ? (
+                    <Button type="button" size="sm" variant="outline" disabled={busy} onClick={() => handleSetDefault(address.id)} className="mt-2 self-start">
+                      {dict.setDefault}
+                    </Button>
+                  ) : null}
+                </div>
               </li>
             ),
           )}
@@ -221,8 +217,8 @@ export function AddressesManager({ initialAddresses, dict }: { initialAddresses:
       {editingId === 'new' ? (
         <AddressForm initial={EMPTY_FORM} dict={dict} busy={busy} onSubmit={handleCreate} onCancel={() => setEditingId(null)} />
       ) : (
-        <Button type="button" variant="outline" onClick={() => setEditingId('new')} className="self-start">
-          {dict.addNew}
+        <Button type="button" onClick={() => setEditingId('new')} className="self-start">
+          <Plus /> {dict.addNew}
         </Button>
       )}
     </div>
