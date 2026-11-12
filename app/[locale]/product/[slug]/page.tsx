@@ -80,7 +80,7 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
 
         <CollectionCarousel title={dict.pdp.related} products={related} locale={l} dict={dict} seeMoreHref={`/${l}/collection/bestsellers`} seeMoreLabel={dict.common.seeMore} />
 
-        <ReviewsList reviews={reviews} dict={dict} />
+        <ReviewsList reviews={reviews} dict={dict} locale={l} />
       </div>
     </PageContainer>
   );

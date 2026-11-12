@@ -157,15 +157,18 @@ describe('reviewSchema', () => {
   it('defaults source to vivimoon when absent', () => {
     const r = reviewSchema.parse({
       id: 'r1', productId: 'p1', author: 'A', rating: 5,
-      title: 't', body: 'b', createdAt: '2026-01-01', hasImages: false,
+      title: 't', body: 'b', createdAt: '2026-01-01',
     });
     expect(r.source).toBe('vivimoon');
+    expect(r.tags).toEqual([]);
+    expect(r.media).toEqual([]);
+    expect(r.helpfulCount).toBe(0);
   });
 
   it('accepts a mirrored marketplace review', () => {
     const r = reviewSchema.parse({
       id: 'r2', productId: 'p1', author: 'B', rating: 4,
-      title: 't', body: 'b', createdAt: '2026-01-01', hasImages: true,
+      title: 't', body: 'b', createdAt: '2026-01-01',
       source: 'shopee', sourceUrl: 'https://shopee.vn/x',
     });
     expect(r.source).toBe('shopee');

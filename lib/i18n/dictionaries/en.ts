@@ -132,6 +132,14 @@ export const en = {
     replacements: { daily: '1 day', monthly: '1 month', threeMonth: '3 months', sixMonth: '6 months' },
     sorts: { newest: 'Newest', 'price-asc': 'Price: low to high', 'price-desc': 'Price: high to low', bestselling: 'Best selling' },
   },
+  reviews: {
+    title: 'Customer reviews', summary: '{n} reviews · {p}% with real photos', outOf5: 'out of 5',
+    subRatings: { comfort: 'Comfort', colorMatch: 'Color true to photos', easeOfWear: 'Easy to wear' },
+    write: 'Write a review', filters: 'Filter reviews', all: 'All', withMedia: 'Photos/videos ({n})',
+    tags: { sensitiveEyes: 'Sensitive eyes', allDay: 'All-day wear', beginner: 'First-time wearers', myopic: 'Short-sighted' },
+    bought: 'Bought {variant}', helpful: 'Helpful ({n})', seeAll: 'See all {n} reviews',
+    noMatch: 'No reviews here yet.', photo: 'Review photo {n}', video: 'Review video',
+  },
   pdp: {
     specs: 'Specifications', related: 'You might also like', reviews: 'Reviews',
     material: 'Material', waterContent: 'Water content', baseCurve: 'Base curve',

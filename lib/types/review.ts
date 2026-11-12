@@ -1,1 +1,1 @@
-export type { Review, ReviewSource } from '@/lib/api/schemas/catalog';
+export type { Review, ReviewSource, ReviewTag, ReviewFilter } from '@/lib/api/schemas/catalog';
