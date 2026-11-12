@@ -8,6 +8,8 @@ import { SessionSync } from '@/features/session/session-sync';
 import { WelcomeDialog } from '@/features/session/welcome-dialog';
 import { ComparisonTray } from '@/components/commerce/comparison-tray';
 import { BoundaryStringsProvider } from '@/components/layout/boundary-strings';
+import { MiniCart } from '@/components/commerce/mini-cart';
+import { catalog } from '@/lib/api/resources/catalog';
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -34,6 +36,7 @@ export default async function LocaleLayout({
       </BoundaryStringsProvider>
       <Footer locale={locale as Locale} dict={dict} />
       <ComparisonTray locale={locale as Locale} dict={dict} />
+      <MiniCart locale={locale as Locale} dict={dict} accessories={await catalog.listAccessories()} />
     </>
   );
 }

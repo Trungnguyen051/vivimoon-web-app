@@ -18,6 +18,9 @@ const BASELINE_LINES = [
   { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1, ...SINGLE },
 ];
 
+// 2 x 125.000 = 250.000: under the 300.000 free-shipping Spend Tier, so shipping is charged.
+const UNDER_FREESHIP_LINES = [{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, ...SINGLE }];
+
 function req(lines: PriceCartRequest['lines']): PriceCartRequest {
   return { lines };
 }
@@ -212,7 +215,7 @@ describe('mockPricing.priceCart', () => {
     // Voucher stays SAVE15 (fixed 75.000) — FREESHIP's discount against 30.000 is
     // still smaller (min(50.000, 30.000) = 30.000), so the winner doesn't change.
     const result = await mockPricing.priceCart(
-      reqWithShipping(BASELINE_LINES, {
+      reqWithShipping(UNDER_FREESHIP_LINES, {
         province: 'Ho Chi Minh City',
         district: 'District 1',
         optionId: 'standard',
@@ -220,13 +223,13 @@ describe('mockPricing.priceCart', () => {
     );
     expect(result.shipping).toBe(30_000);
     expect(result.discount).toBe(75_000);
-    expect(result.total).toBe(350_000 + 30_000 - 75_000);
+    expect(result.total).toBe(250_000 + 30_000 - 75_000);
   });
 
   it('names the charged shipping option and its delivery days, from the same selection as the fee', async () => {
     // District 1: cheapest is standard (fee 30.000, etaDays 2).
     const result = await mockPricing.priceCart(
-      reqWithShipping(BASELINE_LINES, { province: 'Ho Chi Minh City', district: 'District 1' }),
+      reqWithShipping(UNDER_FREESHIP_LINES, { province: 'Ho Chi Minh City', district: 'District 1' }),
     );
     expect(result.shippingMethod).toBe('standard');
     expect(result.shippingEtaDays).toBe(2);
@@ -235,7 +238,7 @@ describe('mockPricing.priceCart', () => {
   it('rejects a shipping optionId that does not match any option in the real quote', async () => {
     await expect(
       mockPricing.priceCart(
-        reqWithShipping(BASELINE_LINES, {
+        reqWithShipping(UNDER_FREESHIP_LINES, {
           province: 'Ho Chi Minh City',
           district: 'District 1',
           optionId: 'not-a-real-option',
@@ -253,18 +256,18 @@ describe('mockPricing.priceCart', () => {
     it('charges the cheapest of the quoted options for the address, with no optionId given', async () => {
       // Ho Chi Minh City|District 1: standard = 30.000, express = 50.000 — cheapest wins.
       const result = await mockPricing.priceCart(
-        reqWithShipping(BASELINE_LINES, { province: 'Ho Chi Minh City', district: 'District 1' }),
+        reqWithShipping(UNDER_FREESHIP_LINES, { province: 'Ho Chi Minh City', district: 'District 1' }),
       );
       expect(result.shipping).toBe(30_000);
-      expect(result.total).toBe(350_000 + 30_000 - 75_000);
+      expect(result.total).toBe(250_000 + 30_000 - 75_000);
     });
 
     it('matches exactly what an explicit optionId for the cheapest option would charge', async () => {
       const auto = await mockPricing.priceCart(
-        reqWithShipping(BASELINE_LINES, { province: 'Hanoi', district: 'Ba Dinh' }),
+        reqWithShipping(UNDER_FREESHIP_LINES, { province: 'Hanoi', district: 'Ba Dinh' }),
       );
       const explicit = await mockPricing.priceCart(
-        reqWithShipping(BASELINE_LINES, { province: 'Hanoi', district: 'Ba Dinh', optionId: 'standard' }),
+        reqWithShipping(UNDER_FREESHIP_LINES, { province: 'Hanoi', district: 'Ba Dinh', optionId: 'standard' }),
       );
       expect(auto.shipping).toBe(explicit.shipping);
       expect(auto.total).toBe(explicit.total);
@@ -272,7 +275,7 @@ describe('mockPricing.priceCart', () => {
 
     it('still resolves a single-option fallback address (unknown province/district) with no optionId', async () => {
       const result = await mockPricing.priceCart(
-        reqWithShipping(BASELINE_LINES, { province: 'Nowhere', district: 'Nowhere' }),
+        reqWithShipping(UNDER_FREESHIP_LINES, { province: 'Nowhere', district: 'Nowhere' }),
       );
       expect(result.shipping).toBe(30_000); // defaultShippingOptions' one entry
     });
@@ -357,5 +360,70 @@ describe('mockPricing.priceCart — Bundles', () => {
       drops({ bundle: 'p-hazel-monthly' }),
     ]));
     expect(result.bundleSaving).toBe(0);
+  });
+});
+
+describe('mockPricing.priceCart — Spend Tiers and Gifts', () => {
+  const HCMC = { province: 'Ho Chi Minh City', district: 'District 1' };
+  const aqua = (quantity: number) => ({ lineKey: 'aqua', variantId: 'p-aqua-daily-30', quantity, ...SINGLE });
+
+  it('charges shipping below the free-shipping tier and zeroes it at the tier', async () => {
+    // 2 x 125.000 = 250.000; 3 x 125.000 = 375.000.
+    expect((await mockPricing.priceCart(reqWithShipping([aqua(2)], HCMC))).shipping).toBe(30_000);
+    const free = await mockPricing.priceCart(reqWithShipping([aqua(3)], HCMC));
+    expect(free.shipping).toBe(0);
+    expect(free.shippingMethod).toBe('standard');
+    expect(free.total).toBe(375_000 - free.discount);
+  });
+
+  it('reports the tiers and the amount left to the next one', async () => {
+    const result = await mockPricing.priceCart(req([aqua(2)]));
+    expect(result.spendTiers?.map((t) => t.reached)).toEqual([false, false, false]);
+    expect(result.nextSpendTier).toEqual({ threshold: 300_000, reward: 'freeShipping', remaining: 50_000 });
+  });
+
+  it('counts the tiers from the subtotal after the Bundle saving', async () => {
+    const via = { bundle: 'p-aqua-daily' };
+    // 354.000 Bundle set + 100.000 + 65.000 = 519.000, less the 24.000 saving = 495.000.
+    const result = await mockPricing.priceCart(req([
+      { lineKey: 'lens', variantId: 'p-aqua-daily-30', quantity: 1, purchaseUnit: 'pair' as const, rx: { sameBothEyes: false, left: { sph: -2 }, right: { sph: -2 } }, ...via },
+      { lineKey: 'drops', variantId: 'a-nuoc-nho-mat-15', quantity: 1, ...via },
+      { lineKey: 'tray', variantId: 'a-khay-dung-set', quantity: 1, ...via },
+      { lineKey: 'hazel', variantId: 'p-hazel-monthly-brown-30', quantity: 1, ...SINGLE },
+      { lineKey: 'drops2', variantId: 'a-nuoc-nho-mat-15', quantity: 1 },
+    ]));
+    expect(result.subtotal).toBe(519_000);
+    expect(result.nextSpendTier).toMatchObject({ reward: 'gift', remaining: 5_000 });
+    expect(result.gifts).toEqual([]);
+  });
+
+  it('adds the Khay đựng Gift at 0₫ from 500.000', async () => {
+    // 4 x 125.000 = 500.000.
+    const result = await mockPricing.priceCart(req([aqua(4)]));
+    expect(result.gifts).toEqual([
+      expect.objectContaining({ variantId: 'a-khay-dung-set', quantity: 1, lineTotal: 0, reason: 'spendTier' }),
+    ]);
+    expect(result.lines).toHaveLength(1);
+  });
+
+  it('adds a Kits Yêu Mắt Gift for a 6-month lens, and none for other lenses', async () => {
+    const result = await mockPricing.priceCart(req([
+      { lineKey: 'torica', variantId: 'p-torica-biweekly-6', quantity: 1, ...SINGLE },
+    ]));
+    expect(result.gifts).toEqual([
+      expect.objectContaining({
+        variantId: 'a-kits-yeu-mat-1', name: 'Kits Yêu Mắt', lineTotal: 0, reason: 'product', forProductId: 'p-torica-biweekly',
+      }),
+    ]);
+    expect((await mockPricing.priceCart(req([aqua(1)]))).gifts).toEqual([]);
+  });
+
+  it('takes 50.000 off the total from 800.000, after the voucher', async () => {
+    // 7 x 125.000 = 875.000 vs 6 x 125.000 = 750.000.
+    const under = await mockPricing.priceCart(req([aqua(6)]));
+    expect(under.tierDiscount).toBe(0);
+    const at = await mockPricing.priceCart(req([aqua(7)]));
+    expect(at.tierDiscount).toBe(50_000);
+    expect(at.total).toBe(875_000 - at.discount - 50_000);
   });
 });
