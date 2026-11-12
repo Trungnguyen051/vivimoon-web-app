@@ -13,7 +13,10 @@ import { cookies } from 'next/headers';
  * whatever host a caller named.
  */
 export async function fetchViaSelf(path: string): Promise<Response> {
-  const origin = process.env.SELF_ORIGIN || `http://127.0.0.1:${process.env.PORT ?? 3000}`;
+  // VERCEL_URL is set by the platform, not the request; loopback doesn't reach a Vercel function.
+  const origin =
+    process.env.SELF_ORIGIN ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : `http://127.0.0.1:${process.env.PORT ?? 3000}`);
   const cookieHeader = (await cookies()).getAll().map((c) => `${c.name}=${c.value}`).join('; ');
 
   return fetch(`${origin}${path}`, {

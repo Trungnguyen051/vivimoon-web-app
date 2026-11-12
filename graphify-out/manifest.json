@@ -1812,9 +1812,9 @@
     "semantic_hash": ""
   },
   "lib/api/server-fetch.ts": {
-    "mtime": 1794457993.901242,
-    "seen": 1794458656.223104,
-    "ast_hash": "38911b80d45390abd5a2a3c5db13e490",
+    "mtime": 1794465221.8406951,
+    "seen": 1794465234.633754,
+    "ast_hash": "9209083732ab89b70e632dedfb477fd1",
     "semantic_hash": ""
   },
   "lib/products/eye-enlargement.test.ts": {
@@ -2916,9 +2916,9 @@
     "semantic_hash": ""
   },
   "lib/api/server-fetch.test.ts": {
-    "mtime": 1794457986.047606,
-    "seen": 1794458656.223104,
-    "ast_hash": "9a6f72d20387d6058eb0f013390082ff",
+    "mtime": 1794465222.1771517,
+    "seen": 1794465234.633753,
+    "ast_hash": "93a0d908f2a22456501339e74fd8b630",
     "semantic_hash": ""
   },
   "tests/client-dictionaries.test.ts": {
