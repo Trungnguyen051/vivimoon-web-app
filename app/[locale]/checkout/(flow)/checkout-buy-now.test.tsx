@@ -37,18 +37,20 @@ function makeLine(overrides: Partial<CartLine> = {}): CartLine {
 }
 
 const ORDER_RESPONSE = {
-  id: 'order-1', code: 'VVM-TEST1', status: 'placed', userId: undefined,
+  id: 'order-1', code: 'VVM-TEST1', status: 'placed', userId: undefined, payment: { method: 'qr', status: 'pending' },
+  // Every request gets this one response, the price preview's too.
+  appliedVouchers: [], lines: [], unavailableLines: [], subtotal: 110_000, discount: 0, shipping: 0, total: 110_000, currency: 'VND',
   totals: { subtotal: 110_000, discount: 0, shipping: 0, total: 110_000, currency: 'VND' },
 };
 
 async function fillRequiredFields() {
-  await userEvent.type(screen.getByLabelText('Recipient name'), 'Alice Nguyen');
-  await userEvent.type(screen.getByLabelText('Email'), 'alice@example.com');
+  await userEvent.type(screen.getByLabelText('Full name'), 'Alice Nguyen');
+  await userEvent.type(screen.getByLabelText('Email (optional)'), 'alice@example.com');
   await userEvent.type(screen.getByLabelText('Phone'), '0912345678');
-  await userEvent.type(screen.getByLabelText('Address'), '1 Le Loi');
+  await userEvent.type(screen.getByLabelText('Street address'), '1 Le Loi');
   await userEvent.type(screen.getByLabelText('Ward'), 'Ben Nghe');
   await userEvent.type(screen.getByLabelText('District'), 'District 1');
-  await userEvent.type(screen.getByLabelText('Province'), 'Ho Chi Minh City');
+  await userEvent.type(screen.getByLabelText('Province / City'), 'Ho Chi Minh City');
 }
 
 beforeEach(() => {
@@ -77,7 +79,7 @@ describe('CheckoutPage — Buy Now (Task 12)', () => {
     expect(useCartStore.getState().lines[0].lineKey).toBe('existing');
 
     await fillRequiredFields();
-    await userEvent.click(screen.getByRole('button', { name: 'Place order' }));
+    await userEvent.click(screen.getByRole('button', { name: /Place order/ }));
 
     await waitFor(() => expect(fetchMock.mock.calls.some((c) => c[0] === '/api/orders')).toBe(true));
     // The price preview also fires (M5.4, issue #21) once the address is
@@ -111,7 +113,7 @@ describe('CheckoutPage — Buy Now (Task 12)', () => {
 
     await renderCheckoutPage();
     await fillRequiredFields();
-    await userEvent.click(screen.getByRole('button', { name: 'Place order' }));
+    await userEvent.click(screen.getByRole('button', { name: /Place order/ }));
 
     await waitFor(() => expect(fetchMock.mock.calls.some((c) => c[0] === '/api/orders')).toBe(true));
     const [, init] = fetchMock.mock.calls.find((c) => c[0] === '/api/orders')!;

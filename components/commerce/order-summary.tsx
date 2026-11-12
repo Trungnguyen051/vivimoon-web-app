@@ -11,8 +11,10 @@ import { cn } from '@/lib/utils/cn';
 
 export function OrderSummary({
   subtotal, bundleSaving, discount, tierDiscount, spendTiers, shipping, total, currency, locale, dict, ctaHref, ctaLabel,
-  note, ctaBlockedReason, children, subtotalLabel, discountLabel, gifts, saved, ctaIcon, footer, className,
+  note, ctaBlockedReason, children, title, subtotalLabel, discountLabel, gifts, saved, ctaIcon, footer, className,
 }: {
+  /** Replaces the header's plain "Tóm tắt đơn hàng", e.g. checkout's "Đơn hàng (3) · Sửa giỏ". */
+  title?: React.ReactNode;
   /** "Tạm tính (3)". Defaults to the plain label. */
   subtotalLabel?: string;
   /** "Voucher NEW30". Defaults to the plain discount label. */
@@ -61,7 +63,7 @@ export function OrderSummary({
   return (
     <Card className={cn('h-fit md:sticky md:top-24', className)}>
       <CardHeader>
-        <CardTitle>{dict.cart.orderSummary}</CardTitle>
+        {title ?? <CardTitle>{dict.cart.orderSummary}</CardTitle>}
       </CardHeader>
       <CardContent className="flex flex-col gap-3 text-sm">
         {children}

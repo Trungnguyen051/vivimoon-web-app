@@ -10,14 +10,8 @@ describe('mockPayments.createIntent', () => {
     expect(intent.redirectUrl).toBeUndefined();
   });
 
-  it('returns a redirectUrl for ZaloPay', async () => {
-    const intent = await mockPayments.createIntent({ method: 'zalopay' });
-    expect(intent.redirectUrl).toBeTruthy();
-    expect(intent.qrCode).toBeUndefined();
-  });
-
-  it('returns a redirectUrl for SePay', async () => {
-    const intent = await mockPayments.createIntent({ method: 'sepay' });
+  it('returns a redirectUrl for the e-wallet', async () => {
+    const intent = await mockPayments.createIntent({ method: 'ewallet' });
     expect(intent.redirectUrl).toBeTruthy();
     expect(intent.qrCode).toBeUndefined();
   });
@@ -28,7 +22,7 @@ describe('mockPayments.createIntent', () => {
     expect(a.id).not.toBe(b.id);
   });
 
-  it('rejects a method outside the configured set with a typed not_found error', async () => {
+  it('rejects COD, which has no intent, with a typed not_found error', async () => {
     await expect(
       mockPayments.createIntent({ method: 'cod' as unknown as 'qr' }),
     ).rejects.toMatchObject({ code: 'not_found' });

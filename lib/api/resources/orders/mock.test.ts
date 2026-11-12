@@ -31,6 +31,7 @@ function req(overrides: Partial<PlaceOrderRequest> = {}): PlaceOrderRequest {
     address: ADDRESS,
     email: 'alice@example.com',
     paymentMethod: 'qr',
+    notificationChannel: 'zalo',
     ...overrides,
   };
 }
@@ -99,8 +100,8 @@ describe('mockOrders.place', () => {
   });
 
   it('stores the chosen payment method and the submitted address', async () => {
-    const order = await mockOrders.place(req({ paymentMethod: 'zalopay' }), null);
-    expect(order.payment.method).toBe('zalopay');
+    const order = await mockOrders.place(req({ paymentMethod: 'ewallet' }), null);
+    expect(order.payment.method).toBe('ewallet');
     expect(order.address).toEqual(ADDRESS);
   });
 

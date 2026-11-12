@@ -41,6 +41,19 @@ describe('checkoutSchema', () => {
   });
 
   it('has no city field', () => {
-    expect(checkoutSchema.shape).not.toHaveProperty('city');
+    expect(checkoutSchema.innerType().shape).not.toHaveProperty('city');
+  });
+
+  // ADR-0025: email is optional; the notification channel carries the confirmation.
+  it('accepts no email, or an empty one, and defaults the channel to Zalo', () => {
+    const { email: _email, ...noEmail } = VALID;
+    const r = checkoutSchema.safeParse(noEmail);
+    expect(r.success && r.data.notificationChannel).toBe('zalo');
+    expect(checkoutSchema.safeParse({ ...VALID, email: '' }).success).toBe(true);
+  });
+
+  it('needs an email when the channel is email', () => {
+    expect(checkoutSchema.safeParse({ ...VALID, email: '', notificationChannel: 'email' }).success).toBe(false);
+    expect(checkoutSchema.safeParse({ ...VALID, notificationChannel: 'email' }).success).toBe(true);
   });
 });

@@ -4,20 +4,29 @@ import { giftLineSchema, priceCartRequestSchema, priceLineInputSchema, pricedLin
 import { currencySchema } from './catalog';
 import { lineRxSchema, purchaseUnitSchema } from './rx';
 import { addressSchema } from './checkout';
-import { paymentMethodTypeSchema, paymentStatusSchema } from './payments';
+import { paymentIntentSchema, paymentMethodTypeSchema, paymentStatusSchema } from './payments';
 
 export const orderStatusSchema = z.enum(ORDER_STATUSES);
 
-export const placeOrderRequestSchema = z.object({
-  lines: z.array(priceLineInputSchema).min(1),
-  address: addressSchema,
-  // The order confirmation is emailed; required regardless of
-  // session so a member's order carries it too.
-  email: z.string().email(),
-  paymentMethod: paymentMethodTypeSchema,
-  // The Voucher picked in the cart, priced exactly as the preview was; a refused one falls back to the best.
-  voucherCode: priceCartRequestSchema.shape.voucherCode,
-});
+/** Where the order confirmation goes (ADR-0025). Stored only; nothing is sent in the mock. */
+export const notificationChannelSchema = z.enum(['zalo', 'sms', 'email']);
+
+export const placeOrderRequestSchema = z
+  .object({
+    lines: z.array(priceLineInputSchema).min(1),
+    address: addressSchema,
+    // Optional since ADR-0025: the confirmation goes through `notificationChannel`.
+    email: z.string().email().optional(),
+    notificationChannel: notificationChannelSchema,
+    note: z.string().trim().max(500).optional(),
+    paymentMethod: paymentMethodTypeSchema,
+    // The Voucher picked in the cart, priced exactly as the preview was; a refused one falls back to the best.
+    voucherCode: priceCartRequestSchema.shape.voucherCode,
+  })
+  .refine((v) => v.notificationChannel !== 'email' || v.email, {
+    message: 'The email channel needs an email address',
+    path: ['email'],
+  });
 
 /** `CartLine` + resolved Rx (spec §6) — price fields are the server's, never the client's. */
 export const orderLineSchema = pricedLineSchema.extend({
@@ -54,9 +63,13 @@ export const orderSchema = z.object({
   shippingMethod: z.string().optional(),
   // The carrier's own waybill number — set once the order ships.
   carrierTrackingCode: z.string().optional(),
-  payment: z.object({ method: paymentMethodTypeSchema, status: paymentStatusSchema }),
-  // Exactly one of the two: a logged-in shopper's order attaches their user id,
-  // a guest's carries the email its order confirmation goes to.
+  // COD has no intent; QR carries the QR one, e-wallet the redirect one (ADR-0025).
+  payment: z.object({ method: paymentMethodTypeSchema, status: paymentStatusSchema, intent: paymentIntentSchema.optional() }),
+  // Optional so orders placed before ADR-0025 stay valid.
+  notificationChannel: notificationChannelSchema.optional(),
+  note: z.string().optional(),
+  // A logged-in shopper's order attaches their user id; a guest's carries the
+  // email they gave, if any (optional since ADR-0025).
   userId: z.string().optional(),
   guestEmail: z.string().email().optional(),
 });
@@ -68,6 +81,7 @@ export const orderSchema = z.object({
 export const publicOrderSchema = orderSchema.omit({ userId: true, guestEmail: true, payment: true });
 export type PublicOrder = z.infer<typeof publicOrderSchema>;
 
+export type NotificationChannel = z.infer<typeof notificationChannelSchema>;
 export type PlaceOrderRequest = z.infer<typeof placeOrderRequestSchema>;
 export type OrderLine = z.infer<typeof orderLineSchema>;
 export type Order = z.infer<typeof orderSchema>;

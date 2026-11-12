@@ -275,12 +275,45 @@ export const vi: Dictionary = {
       day: '{n} ngày', days: '{n} ngày', arrivesBy: 'Dự kiến nhận {date}', free: 'Miễn phí',
       failed: 'Chưa tính được phí vận chuyển lúc này. Phí sẽ được tính khi bạn đặt hàng.',
     },
-    title: 'Thanh toán', recipient: 'Tên người nhận', email: 'Email', line1: 'Địa chỉ',
-    ward: 'Phường/Xã', district: 'Quận/Huyện', province: 'Tỉnh/Thành phố',
-    phone: 'Số điện thoại', paymentMethod: 'Phương thức thanh toán', placeOrder: 'Đặt hàng', payNote: 'Thanh toán được mô phỏng trong bản demo.',
+    title: 'Thanh toán', recipient: 'Họ và tên', email: 'Email (không bắt buộc)', line1: 'Địa chỉ cụ thể',
+    ward: 'Phường / Xã', district: 'Quận / Huyện', province: 'Tỉnh / Thành phố',
+    phone: 'Số điện thoại', placeOrder: 'Đặt hàng', placeOrderTotal: 'Đặt hàng · {total}',
     success: 'Cảm ơn bạn! Đơn hàng đã được xác nhận.', orderId: 'Mã đơn hàng',
+    steps: { label: 'Các bước đặt hàng', cart: 'Giỏ hàng', info: 'Thông tin & thanh toán', done: 'Hoàn tất' },
+    secure: 'Thanh toán bảo mật', support: 'Hỗ trợ: {phone}',
+    signInPrompt: {
+      title: 'Đã có tài khoản? Đăng nhập để tự điền địa chỉ & dùng điểm',
+      optional: 'Không bắt buộc - bạn vẫn có thể đặt hàng ngay',
+      google: 'Google', zalo: 'Zalo', signIn: 'Đăng nhập',
+    },
+    member: {
+      greeting: 'Xin chào, {name}', points: '{points} điểm', prefilled: 'Đã tự điền thông tin theo lần mua trước',
+      notYou: 'Không phải bạn?',
+    },
+    contact: {
+      title: 'Thông tin nhận hàng', phoneHint: 'Dùng để giao hàng, tra cứu đơn và tích điểm',
+      emailPlaceholder: 'Nhận hoá đơn & mã đơn hàng qua email', line1Placeholder: 'Số nhà, tên đường',
+      note: 'Ghi chú cho đơn hàng', notePlaceholder: 'VD: Giao giờ hành chính',
+      channel: 'Nhận thông báo đơn hàng qua', channels: { zalo: 'Zalo', sms: 'SMS', email: 'Email' },
+    },
+    address: {
+      title: 'Địa chỉ nhận hàng', default: 'Mặc định', edit: 'Sửa', add: '+ Thêm địa chỉ mới',
+      save: 'Lưu địa chỉ', cancel: 'Hủy', saveFailed: 'Chưa lưu được địa chỉ. Vui lòng thử lại.',
+    },
+    payment: {
+      title: 'Thanh toán', remembered: 'Đã chọn sẵn theo lần mua trước',
+      methods: {
+        qr: { name: 'Chuyển khoản / Quét mã QR', hint: 'Xác nhận tự động trong 1–2 phút' },
+        cod: { name: 'Thanh toán khi nhận hàng (COD)', hint: 'Kiểm tra hàng trước khi thanh toán' },
+        ewallet: { name: 'Ví điện tử (MoMo, ZaloPay, VNPay)', hint: '' },
+      },
+    },
+    summary: {
+      title: 'Đơn hàng ({count})', editCart: 'Sửa giỏ', changeVoucher: 'Đổi mã', closeVoucher: 'Đóng',
+      bestVoucher: 'Đã tự áp mã tốt nhất cho bạn', addVoucher: 'Thêm mã ưu đãi',
+    },
     errors: {
-      required: 'Bắt buộc', invalidEmail: 'Email không hợp lệ',
+      required: 'Bắt buộc', invalidEmail: 'Email không hợp lệ', emailForChannel: 'Nhập email để nhận thông báo qua email',
       invalidPhone: 'Vui lòng nhập số điện thoại Việt Nam hợp lệ',
       summary: 'Vui lòng sửa các mục sau trước khi đặt hàng.',
       orderFailed: 'Đã có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.',
@@ -390,6 +423,8 @@ export const vi: Dictionary = {
     terms: 'Đổi 1–1 miễn phí trong 15 ngày kể từ khi nhận hàng, áp dụng lens khoá ẩm & lens cho mắt thở',
     refund: 'Đeo cộm, ngứa, không êm → hoàn tiền 100%',
     swap: 'Không ưng màu/mẫu → đổi sang mẫu khác',
+    // The checkout's one-line note; keep its period in step with `terms`.
+    refundWindow: 'Không êm hoàn tiền trong 15 ngày',
     details: 'Xem chi tiết chính sách', howTo: 'Cách gửi yêu cầu đổi trả', link: 'Chính sách đổi trả',
   },
   quiz: {

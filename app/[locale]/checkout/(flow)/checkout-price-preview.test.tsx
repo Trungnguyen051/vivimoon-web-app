@@ -70,7 +70,7 @@ describe('CheckoutPage — live price preview (M5.4, issue #21)', () => {
     });
     await renderCheckoutPage();
     await userEvent.type(screen.getByLabelText('District'), 'District 1');
-    await userEvent.type(screen.getByLabelText('Province'), 'Ho Chi Minh City');
+    await userEvent.type(screen.getByLabelText('Province / City'), 'Ho Chi Minh City');
     await waitFor(() => expect(fetchMock).toHaveBeenCalledWith('/api/cart/price', expect.anything()));
     const call = fetchMock.mock.calls.findLast(([path]) => path === '/api/cart/price')!;
     const body = JSON.parse(call[1].body);
@@ -82,10 +82,10 @@ describe('CheckoutPage — live price preview (M5.4, issue #21)', () => {
     vi.stubGlobal('fetch', fetchRoutingTo(PRICED_RESPONSE));
     await renderCheckoutPage();
 
-    await userEvent.type(screen.getByLabelText('Recipient name'), 'Alice Nguyen');
-    await userEvent.type(screen.getByLabelText('Email'), 'alice@example.com');
+    await userEvent.type(screen.getByLabelText('Full name'), 'Alice Nguyen');
+    await userEvent.type(screen.getByLabelText('Email (optional)'), 'alice@example.com');
     await userEvent.type(screen.getByLabelText('Phone'), '0912345678');
-    await userEvent.type(screen.getByLabelText('Address'), '1 Le Loi');
+    await userEvent.type(screen.getByLabelText('Street address'), '1 Le Loi');
     await userEvent.type(screen.getByLabelText('Ward'), 'Ben Nghe');
     // District/Province left blank — not complete enough to quote yet.
 
@@ -98,11 +98,12 @@ describe('CheckoutPage — live price preview (M5.4, issue #21)', () => {
     await renderCheckoutPage();
 
     await userEvent.type(screen.getByLabelText('District'), 'District 1');
-    await userEvent.type(screen.getByLabelText('Province'), 'Ho Chi Minh City');
+    await userEvent.type(screen.getByLabelText('Province / City'), 'Ho Chi Minh City');
 
     await waitFor(() => expect(screen.getByText('Total').nextElementSibling).not.toHaveTextContent('—'));
     expect(screen.getByText('Shipping').nextElementSibling).toHaveTextContent('15.000₫');
-    expect(screen.getByText('Discount').nextElementSibling).toHaveTextContent('25.000₫');
+    // The row names the applied Voucher, as in the cart.
+    expect(screen.getByText('Voucher SAVE5').nextElementSibling).toHaveTextContent('25.000₫');
     expect(screen.getByText('Total').nextElementSibling).toHaveTextContent('115.000₫');
   });
 
@@ -113,20 +114,21 @@ describe('CheckoutPage — live price preview (M5.4, issue #21)', () => {
     expect(block).toHaveTextContent('Enter your address to see the delivery option.');
 
     await userEvent.type(screen.getByLabelText('District'), 'District 1');
-    await userEvent.type(screen.getByLabelText('Province'), 'Ho Chi Minh City');
+    await userEvent.type(screen.getByLabelText('Province / City'), 'Ho Chi Minh City');
 
     await waitFor(() => expect(block).toHaveTextContent('Standard delivery · 2 days'));
     expect(block).toHaveTextContent('15.000₫');
   });
 
-  it('adds no delivery-method picker — only the existing payment method picker\'s three buttons render', async () => {
+  it('adds no delivery-method picker — only the three payment cards are choices', async () => {
     vi.stubGlobal('fetch', fetchRoutingTo(PRICED_RESPONSE));
     await renderCheckoutPage();
     await userEvent.type(screen.getByLabelText('District'), 'District 1');
-    await userEvent.type(screen.getByLabelText('Province'), 'Ho Chi Minh City');
+    await userEvent.type(screen.getByLabelText('Province / City'), 'Ho Chi Minh City');
     await waitFor(() => expect(screen.getByText('Total').nextElementSibling).not.toHaveTextContent('—'));
 
-    expect(screen.getAllByRole('button', { name: /pay|standard|express/i })).toHaveLength(3);
+    expect(screen.queryByRole('radio', { name: /standard|express/i })).not.toBeInTheDocument();
+    expect(screen.getAllByRole('radio', { name: /transfer|cash|e-wallet/i })).toHaveLength(3);
   });
 
   it("placing the order still re-prices server-side — the preview is never the value order placement trusts", async () => {
@@ -135,7 +137,7 @@ describe('CheckoutPage — live price preview (M5.4, issue #21)', () => {
       if (path === '/api/orders') {
         return Promise.resolve(json({
           ok: true,
-          data: { id: 'o1', code: 'VVM-X', status: 'placed', totals: { subtotal: 125_000, discount: 25_000, shipping: 15_000, total: 115_000, currency: 'VND' } },
+          data: { id: 'o1', code: 'VVM-X', status: 'placed', payment: { method: 'qr', status: 'pending' }, totals: { subtotal: 125_000, discount: 25_000, shipping: 15_000, total: 115_000, currency: 'VND' } },
         }));
       }
       return Promise.resolve(json({ ok: true, data: {} }));
@@ -143,16 +145,16 @@ describe('CheckoutPage — live price preview (M5.4, issue #21)', () => {
     vi.stubGlobal('fetch', fetchMock);
     await renderCheckoutPage();
 
-    await userEvent.type(screen.getByLabelText('Recipient name'), 'Alice Nguyen');
-    await userEvent.type(screen.getByLabelText('Email'), 'alice@example.com');
+    await userEvent.type(screen.getByLabelText('Full name'), 'Alice Nguyen');
+    await userEvent.type(screen.getByLabelText('Email (optional)'), 'alice@example.com');
     await userEvent.type(screen.getByLabelText('Phone'), '0912345678');
-    await userEvent.type(screen.getByLabelText('Address'), '1 Le Loi');
+    await userEvent.type(screen.getByLabelText('Street address'), '1 Le Loi');
     await userEvent.type(screen.getByLabelText('Ward'), 'Ben Nghe');
     await userEvent.type(screen.getByLabelText('District'), 'District 1');
-    await userEvent.type(screen.getByLabelText('Province'), 'Ho Chi Minh City');
+    await userEvent.type(screen.getByLabelText('Province / City'), 'Ho Chi Minh City');
     await waitFor(() => expect(screen.getByText('Total').nextElementSibling).not.toHaveTextContent('—'));
 
-    await userEvent.click(screen.getByRole('button', { name: 'Place order' }));
+    await userEvent.click(screen.getByRole('button', { name: /Place order/ }));
     await waitFor(() => expect(fetchMock.mock.calls.some((c) => c[0] === '/api/orders')).toBe(true));
 
     const [, init] = fetchMock.mock.calls.find((c) => c[0] === '/api/orders')!;

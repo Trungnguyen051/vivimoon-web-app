@@ -9,6 +9,7 @@ import { WelcomeDialog } from '@/features/session/welcome-dialog';
 import { ComparisonTray } from '@/components/commerce/comparison-tray';
 import { BoundaryStringsProvider } from '@/components/layout/boundary-strings';
 import { MiniCart } from '@/components/commerce/mini-cart';
+import { SiteChrome } from '@/components/layout/site-chrome';
 import { catalog } from '@/lib/api/resources/catalog';
 
 export function generateStaticParams() {
@@ -27,15 +28,19 @@ export default async function LocaleLayout({
     <>
       <SessionSync />
       <WelcomeDialog dict={dict.welcome} />
-      <AnnouncementBar segments={[dict.announcement.freeShipping, dict.announcement.authentic, dict.announcement.licensed]} />
-      <Header locale={locale as Locale} dict={dict} />
+      <SiteChrome>
+        <AnnouncementBar segments={[dict.announcement.freeShipping, dict.announcement.authentic, dict.announcement.licensed]} />
+        <Header locale={locale as Locale} dict={dict} />
+      </SiteChrome>
       {/* Width and padding belong to the page, not here — see ADR-0013. Pages opt in via PageContainer. */}
       {/* Only the strings `not-found` and `error` print, so the dictionaries stay off the client. */}
       <BoundaryStringsProvider value={{ locale: locale as Locale, notFound: dict.notFound, errorPage: dict.errorPage }}>
         <main>{children}</main>
       </BoundaryStringsProvider>
-      <Footer locale={locale as Locale} dict={dict} />
-      <ComparisonTray locale={locale as Locale} dict={dict} />
+      <SiteChrome>
+        <Footer locale={locale as Locale} dict={dict} />
+        <ComparisonTray locale={locale as Locale} dict={dict} />
+      </SiteChrome>
       <MiniCart locale={locale as Locale} dict={dict} accessories={await catalog.listAccessories()} />
     </>
   );

@@ -47,7 +47,7 @@ export const orders: Order[] = [
     totals: { subtotal: 220_000, discount: 0, appliedVouchers: [], shipping: 30_000, total: 250_000, currency: 'VND' },
     address: HOME_ADDRESS,
     shippingMethod: 'standard',
-    payment: { method: 'zalopay', status: 'pending' },
+    payment: { method: 'ewallet', status: 'pending' },
     userId: 'u-001',
   },
   {
@@ -63,7 +63,7 @@ export const orders: Order[] = [
     address: HOME_ADDRESS,
     shippingMethod: 'standard',
     carrierTrackingCode: 'SPX2330404994944',
-    payment: { method: 'sepay', status: 'pending' },
+    payment: { method: 'qr', status: 'pending' },
     userId: 'u-001',
   },
   {
@@ -100,7 +100,7 @@ export const orders: Order[] = [
     totals: { subtotal: 250_000, discount: 0, appliedVouchers: [], shipping: 30_000, total: 280_000, currency: 'VND' },
     address: OFFICE_ADDRESS,
     shippingMethod: 'standard',
-    payment: { method: 'zalopay', status: 'pending' },
+    payment: { method: 'ewallet', status: 'pending' },
     userId: 'u-002',
   },
   {
@@ -113,7 +113,7 @@ export const orders: Order[] = [
     address: OFFICE_ADDRESS,
     shippingMethod: 'standard',
     carrierTrackingCode: 'GHN5K8Q2W7XR',
-    payment: { method: 'sepay', status: 'pending' },
+    payment: { method: 'qr', status: 'pending' },
     userId: 'u-002',
   },
   {

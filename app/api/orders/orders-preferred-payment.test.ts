@@ -44,7 +44,7 @@ function req(body: unknown): Request {
 }
 
 function validBody(overrides: Record<string, unknown> = {}) {
-  return { lines: LINES, address: ADDRESS, email: 'alice@example.com', paymentMethod: 'qr', ...overrides };
+  return { lines: LINES, address: ADDRESS, email: 'alice@example.com', paymentMethod: 'qr', notificationChannel: 'zalo', ...overrides };
 }
 
 describe('order placement updates preferred payment method (M5.3, issue #20)', () => {
@@ -52,21 +52,21 @@ describe('order placement updates preferred payment method (M5.3, issue #20)', (
 
   it("updates a signed-in shopper's account to whatever method the order paid with", async () => {
     signIn('u-001');
-    await POST(req(validBody({ paymentMethod: 'zalopay' })));
+    await POST(req(validBody({ paymentMethod: 'ewallet' })));
     const after = await account.get('u-001');
-    expect(after.preferredPaymentMethod).toBe('zalopay');
+    expect(after.preferredPaymentMethod).toBe('ewallet');
   });
 
   it('overwrites a previously-set preference with the latest order', async () => {
     signIn('u-001');
-    await POST(req(validBody({ paymentMethod: 'sepay' })));
+    await POST(req(validBody({ paymentMethod: 'cod' })));
     await POST(req(validBody({ paymentMethod: 'qr' })));
     const after = await account.get('u-001');
     expect(after.preferredPaymentMethod).toBe('qr');
   });
 
   it('never touches any account for a guest order', async () => {
-    await POST(req(validBody({ paymentMethod: 'zalopay' })));
+    await POST(req(validBody({ paymentMethod: 'ewallet' })));
     const after = await account.get('u-001');
     expect(after.preferredPaymentMethod).toBeUndefined();
   });
