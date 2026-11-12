@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { PackageOpen } from 'lucide-react';
 import { OrderHistoryCard, type HistoryLine } from '@/components/commerce/order-history-card';
@@ -34,7 +33,7 @@ async function withProducts(order: Order): Promise<HistoryLine[]> {
         ...line,
         product: found && {
           id: found.product.id, slug: found.product.slug, name: found.product.name, image: found.product.images[0],
-          sku: found.variant.sku, color: found.variant.colorLabel, compareAtPrice: found.variant.compareAtPrice,
+          sku: found.variant.sku, color: found.variant.colorLabel, compareAtPrice: found.variant.compareAtPrice, price: found.variant.price,
         },
       };
     }),
@@ -59,7 +58,7 @@ export default async function OrderHistoryPage({ params }: { params: Promise<{ l
   return (
     <>
       <div className="flex flex-col gap-8">
-        <h1 className="text-3xl font-semibold tracking-tight">{dict.orders.title}</h1>
+        <h1 className="text-lg font-semibold uppercase tracking-wide">{dict.orders.title}</h1>
 
         {orders.length === 0 ? (
           <Empty>
@@ -79,10 +78,6 @@ export default async function OrderHistoryPage({ params }: { params: Promise<{ l
             ))}
           </ul>
         )}
-
-        <Link href={`/${locale}/account`} className="text-sm text-muted-foreground underline underline-offset-4">
-          {dict.account.title}
-        </Link>
       </div>
     </>
   );

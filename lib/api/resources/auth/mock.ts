@@ -16,7 +16,7 @@ interface ResetRecord { userId: string; expiresAt: number }
 let store: MockUser[] = seedUsers.map((u) => ({ ...u }));
 const otps = new Map<string, OtpRecord>();
 const resets = new Map<string, ResetRecord>();
-/** Registrations awaiting their OTP, by normalized phone. Not accounts until verified (ADR-0021). */
+/** Registrations awaiting their OTP, by challenge id (so a second register for the same phone cannot swap the first one's password). Not accounts until verified (ADR-0021). */
 const pendingSignups = new Map<string, RegisterInput>();
 
 /** Test helper — restores the fixture state between cases. */
@@ -56,8 +56,9 @@ export const mockAuth = {
     if (findByIdentifier(input.phone)) {
       throw new AuthError('That phone or email is already registered', 'conflict');
     }
-    pendingSignups.set(normalizePhone(input.phone), input);
-    return this.requestOtp({ identifier: input.phone, purpose: 'signup' });
+    const challenge = await this.requestOtp({ identifier: input.phone, purpose: 'signup' });
+    pendingSignups.set(challenge.otpId, input);
+    return challenge;
   },
 
   async login({ identifier, password }: LoginInput): Promise<User> {
@@ -99,6 +100,12 @@ export const mockAuth = {
     const otpId = randomId('otp');
     const code = randomCode();
     const expiresAt = Date.now() + OTP_TTL_MS;
+    // A resend carries the latest registration held for that phone to the fresh challenge.
+    if (purpose === 'signup') {
+      const phone = normalizePhone(identifier);
+      const prior = [...otps].filter(([id, r]) => r.purpose === 'signup' && normalizePhone(r.identifier) === phone && pendingSignups.has(id)).pop();
+      if (prior) pendingSignups.set(otpId, pendingSignups.get(prior[0])!);
+    }
     otps.set(otpId, { identifier, code, purpose, expiresAt, attempts: 0 });
     return {
       otpId,
@@ -117,9 +124,9 @@ export const mockAuth = {
     }
     otps.delete(otpId); // single use — no replay
 
-    const pending = record.purpose === 'signup' ? pendingSignups.get(normalizePhone(record.identifier)) : undefined;
+    const pending = record.purpose === 'signup' ? pendingSignups.get(otpId) : undefined;
     if (pending) {
-      pendingSignups.delete(normalizePhone(record.identifier));
+      pendingSignups.delete(otpId);
       const created: MockUser = {
         id: randomId('u'), phone: normalizePhone(pending.phone), name: pending.name,
         createdAt: new Date().toISOString(), password: pending.password,

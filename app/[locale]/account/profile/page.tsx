@@ -35,7 +35,7 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
   const user = await fetchAccount(locale);
 
   return (
-    <div className="w-full max-w-2xl">
+    <div className="w-full">
       <AccountInfo user={user} locale={locale} dict={dict.account} welcome={dict.welcome} />
     </div>
   );

@@ -215,13 +215,13 @@ function OtpStage({ dict, challenge, onChallenge, onVerified }: {
         </Alert>
       ) : null}
 
-      <div className="flex justify-between gap-2" role="group" aria-label={dict.otpCode}>
+      <div className="flex justify-center gap-2" role="group" aria-label={dict.otpCode}>
         {digits.map((d, i) => (
           <Input
             key={i} ref={(el) => { boxes.current[i] = el; }}
             type="text" inputMode="numeric" autoComplete={i === 0 ? 'one-time-code' : 'off'}
             aria-label={dict.otpDigit.replace('{n}', String(i + 1))}
-            className="size-12 px-0 text-center text-lg md:size-14"
+            className="size-12 px-0 text-center text-lg"
             value={d}
             onChange={(e) => {
               const v = e.target.value.replace(/\D/g, '').slice(-1);
@@ -239,7 +239,7 @@ function OtpStage({ dict, challenge, onChallenge, onVerified }: {
         ))}
       </div>
 
-      <p className="text-sm text-muted-foreground">
+      <p className="text-center text-sm text-muted-foreground">
         {secondsLeft > 0 ? (
           dict.otpExpires.replace('{n}', String(secondsLeft))
         ) : (

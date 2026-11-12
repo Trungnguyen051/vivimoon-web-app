@@ -17,7 +17,7 @@ import type { Dictionary } from '@/lib/i18n/dictionaries';
 
 /** An order line plus the catalogue facts the card shows; `product` is null once the variant is gone (ADR-0012). */
 export type HistoryLine = OrderLine & {
-  product: { id: string; slug: string; name: string; image?: string; sku: string; color?: string; compareAtPrice?: number } | null;
+  product: { id: string; slug: string; name: string; image?: string; sku: string; color?: string; compareAtPrice?: number; price: number } | null;
 };
 
 const fill = (template: string, n: number) => template.replace('{n}', String(n));
@@ -60,7 +60,7 @@ export function OrderHistoryCard({
       if (!l.product) { unavailable++; continue; }
       add({
         lineKey: l.lineKey, productId: l.product.id, variantId: l.variantId, name: l.product.name,
-        sku: l.product.sku, color: l.product.color, unitPrice: l.unitPrice, currency: l.currency,
+        sku: l.product.sku, color: l.product.color, unitPrice: l.product.price, currency: l.currency,
         quantity: l.quantity, image: l.product.image, rx: l.rx,
       });
     }
@@ -115,11 +115,11 @@ export function OrderHistoryCard({
 
         {order.status === 'delivered' ? (
           <div className="grid grid-cols-3 gap-2">
-            <Link href={`/${locale}/support/faq?category=doi-tra-va-bao-hanh`} className={buttonVariants({ variant: 'outline' })}>{t.returnItems}</Link>
+            <Link href={`/${locale}/support/faq?category=doi-tra-va-bao-hanh`} className={cn(buttonVariants({ variant: 'outline' }), 'w-full border-border')}>{t.returnItems}</Link>
             {reviewSlug ? (
-              <Link href={`/${locale}/product/${reviewSlug}#reviews`} className={buttonVariants({ variant: 'outline' })}>{t.review}</Link>
+              <Link href={`/${locale}/product/${reviewSlug}#reviews`} className={cn(buttonVariants({ variant: 'outline' }), 'w-full border-border')}>{t.review}</Link>
             ) : <span />}
-            <Button onClick={buyAgain}>{t.buyAgain}</Button>
+            <Button className="w-full" onClick={buyAgain}>{t.buyAgain}</Button>
           </div>
         ) : null}
 

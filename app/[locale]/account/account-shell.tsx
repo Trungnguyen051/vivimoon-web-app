@@ -52,7 +52,7 @@ export function AccountShell({
         <h2 className="text-2xl font-semibold uppercase tracking-tight">{name}</h2>
         <p className="mt-1 text-sm text-muted-foreground">{memberSince}</p>
         <hr className="my-6 border-border" />
-        <nav aria-label={dict.backToAccount}>
+        <nav>
           <ul className="flex flex-col">
             {rows.map(({ href, label, icon: Icon, active, badge }) => (
               <li key={href} className="border-b border-border last:border-b-0 md:border-b-0">
@@ -76,7 +76,7 @@ export function AccountShell({
           </ul>
         </nav>
       </aside>
-      <div className={cn('min-w-0 flex-1 border border-border', isHub && 'hidden md:block')}>{children}</div>
+      <div className={cn('min-w-0 flex-1 border border-border p-4 md:p-6', isHub && 'hidden md:block')}>{children}</div>
     </div>
   );
 }

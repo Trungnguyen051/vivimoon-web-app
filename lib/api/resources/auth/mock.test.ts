@@ -38,6 +38,14 @@ describe('mockAuth', () => {
     expect((await mockAuth.login({ identifier: '0911111112', password: 'abcdefgh' })).name).toBe('Mới');
   });
 
+  it('verifying a challenge creates the account submitted with that challenge, not a later registration for the same phone', async () => {
+    const a = await mockAuth.register({ phone: '0911111114', name: 'A', password: 'password-A1' });
+    await mockAuth.register({ phone: '0911111114', name: 'B', password: 'password-B1' });
+    await mockAuth.verifyOtp({ otpId: a.otpId, code: a.devCode! });
+    expect((await mockAuth.login({ identifier: '0911111114', password: 'password-A1' })).name).toBe('A');
+    await expect(mockAuth.login({ identifier: '0911111114', password: 'password-B1' })).rejects.toThrow(/invalid/i);
+  });
+
   it('a resent challenge verifies the same pending signup', async () => {
     await mockAuth.register({ phone: '0911111113', name: 'Mới', password: 'abcdefgh' });
     const again = await mockAuth.requestOtp({ identifier: '0911111113', purpose: 'signup' });

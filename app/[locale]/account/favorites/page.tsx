@@ -34,7 +34,7 @@ export default async function FavoritesPage({ params }: { params: Promise<{ loca
   return (
     <>
       <div className="flex flex-col gap-8">
-        <h1 className="text-3xl font-semibold tracking-tight">{dict.favorites.title}</h1>
+        <h1 className="text-lg font-semibold uppercase tracking-wide">{dict.favorites.title}</h1>
 
         {products.length === 0 ? (
           <Empty>

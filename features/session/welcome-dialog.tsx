@@ -8,19 +8,23 @@ import type { User } from '@/lib/api/schemas/auth';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { sphSteps } from '@/lib/products/rx-ranges';
 import { useSessionStore } from './session-store';
+
+// Default Rx is myopia only: the stocked sph steps at or below 0, ascending.
+const STEPS = sphSteps().filter((v) => v <= 0);
 
 const GENDERS = ['male', 'female', 'other'] as const;
 
 export function Stepper({ label, value, onChange, dict }: { label: string; value: number; onChange: (v: number) => void; dict: Dictionary['welcome'] }) {
+  const i = Math.max(0, STEPS.findLastIndex((s) => s <= value));
   return (
     <div className="flex flex-1 flex-col items-center gap-2">
       <span className="text-sm">{label}</span>
       <div className="flex items-center gap-2">
-        {/* Never above 0: a Default Rx is myopia only. */}
-        <Button type="button" variant="outline" size="icon" aria-label={`${dict.increase} ${label}`} disabled={value >= 0} onClick={() => onChange(value + 0.25)}><Plus /></Button>
+                <Button type="button" variant="outline" size="icon" aria-label={`${dict.increase} ${label}`} disabled={i >= STEPS.length - 1} onClick={() => onChange(STEPS[i + 1])}><Plus /></Button>
         <output aria-label={label} className="w-14 text-center tabular-nums">{value.toFixed(2)}</output>
-        <Button type="button" variant="outline" size="icon" aria-label={`${dict.decrease} ${label}`} onClick={() => onChange(value - 0.25)}><Minus /></Button>
+        <Button type="button" variant="outline" size="icon" aria-label={`${dict.decrease} ${label}`} disabled={i === 0} onClick={() => onChange(STEPS[i - 1])}><Minus /></Button>
       </div>
     </div>
   );
@@ -33,6 +37,7 @@ export function WelcomeDialog({ dict }: { dict: Dictionary['welcome'] }) {
   const [dob, setDob] = useState('');
   const [gender, setGender] = useState<(typeof GENDERS)[number] | ''>('');
   const [rx, setRx] = useState({ left: 0, right: 0 });
+  const [rxTouched, setRxTouched] = useState(false);
   const [error, setError] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -45,7 +50,7 @@ export function WelcomeDialog({ dict }: { dict: Dictionary['welcome'] }) {
     setUser(result.data);
   }
 
-  const done = () => save({ ...(dob && { dob }), ...(gender && { gender }), defaultRx: rx });
+  const done = () => save({ ...(dob && { dob }), ...(gender && { gender }), ...(rxTouched && { defaultRx: rx }) });
 
   return (
     <Dialog open={!!user && !user.onboardedAt}>
@@ -68,8 +73,8 @@ export function WelcomeDialog({ dict }: { dict: Dictionary['welcome'] }) {
           ))}
         </fieldset>
         <div className="flex gap-4" role="group" aria-label={dict.defaultRx}>
-          <Stepper label={dict.leftEye} value={rx.left} onChange={(left) => setRx({ ...rx, left })} dict={dict} />
-          <Stepper label={dict.rightEye} value={rx.right} onChange={(right) => setRx({ ...rx, right })} dict={dict} />
+          <Stepper label={dict.leftEye} value={rx.left} onChange={(left) => { setRxTouched(true); setRx({ ...rx, left }); }} dict={dict} />
+          <Stepper label={dict.rightEye} value={rx.right} onChange={(right) => { setRxTouched(true); setRx({ ...rx, right }); }} dict={dict} />
         </div>
         {error && <p role="alert" className="text-sm text-destructive">{dict.error}</p>}
         <div className="flex gap-3">

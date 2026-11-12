@@ -30,7 +30,7 @@ export default async function AddressesPage({ params }: { params: Promise<{ loca
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold uppercase tracking-tight">{dict.addresses.title}</h1>
+      <h1 className="text-lg font-semibold uppercase tracking-wide">{dict.addresses.title}</h1>
       <AddressesManager initialAddresses={addresses} dict={dict.addresses} />
     </div>
   );

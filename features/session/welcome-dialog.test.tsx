@@ -53,6 +53,29 @@ describe('WelcomeDialog', () => {
     expect(screen.getByRole('button', { name: `${dict.increase} ${dict.leftEye}` })).toBeDisabled();
   });
 
+  it('Done without touching a stepper does not send defaultRx', async () => {
+    const fetchMock = vi.fn().mockImplementation(async (_p, init) => json({ ok: true, data: { ...base, ...JSON.parse(init.body) } }));
+    vi.stubGlobal('fetch', fetchMock);
+    useSessionStore.getState().setUser(base);
+    render(<WelcomeDialog dict={dict} />);
+    await userEvent.click(screen.getByRole('button', { name: dict.done }));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).not.toHaveProperty('defaultRx');
+  });
+
+  it('steps 0.25 down to -6.00, jumps to -6.50, and stops at -10.00', async () => {
+    useSessionStore.getState().setUser(base);
+    render(<WelcomeDialog dict={dict} />);
+    const minus = screen.getByRole('button', { name: `${dict.decrease} ${dict.leftEye}` });
+    for (let i = 0; i < 24; i++) await userEvent.click(minus);
+    expect(screen.getByLabelText(dict.leftEye)).toHaveTextContent('-6.00');
+    await userEvent.click(minus);
+    expect(screen.getByLabelText(dict.leftEye)).toHaveTextContent('-6.50');
+    for (let i = 0; i < 7; i++) await userEvent.click(minus);
+    expect(screen.getByLabelText(dict.leftEye)).toHaveTextContent('-10.00');
+    expect(minus).toBeDisabled();
+  });
+
   it('Skip saves only onboardedAt', async () => {
     const fetchMock = vi.fn().mockImplementation(async (_p, init) => json({ ok: true, data: { ...base, ...JSON.parse(init.body) } }));
     vi.stubGlobal('fetch', fetchMock);

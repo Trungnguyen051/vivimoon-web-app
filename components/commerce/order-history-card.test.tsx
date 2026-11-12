@@ -15,7 +15,7 @@ const RX = { sameBothEyes: true as const, right: { sph: -2.5 }, left: { sph: -2.
 
 const product = (n: number) => ({
   id: `p${n}`, slug: `lens-${n}`, name: `Lens ${n}`, image: `/l${n}.jpg`, sku: `S${n}`, color: 'Brown',
-  compareAtPrice: n === 1 ? 30 : undefined,
+  compareAtPrice: n === 1 ? 30 : undefined, price: 40 + n,
 });
 const line = (n: number, extra: Partial<HistoryLine> = {}): HistoryLine => ({
   lineKey: `k${n}`, variantId: `v${n}`, quantity: n, unitPrice: 25, lineTotal: 25 * n, currency: 'USD',
@@ -99,6 +99,12 @@ describe('OrderHistoryCard buy again', () => {
     const lines = useCartStore.getState().lines;
     expect(lines.map((l) => [l.variantId, l.quantity, l.rx])).toEqual([['v1', 1, RX], ['v2', 2, RX]]);
     expect(push).toHaveBeenCalledWith('/en/cart');
+  });
+
+  it('uses the current catalogue price, not the order-time one', async () => {
+    renderCard('delivered', [line(1)]);
+    await userEvent.click(screen.getByRole('button', { name: dict.orders.buyAgain }));
+    expect(useCartStore.getState().lines[0].unitPrice).toBe(41);
   });
 
   it('reports an unavailable line instead of dropping it silently', async () => {

@@ -8,6 +8,8 @@ export function PriceTag({
 }: {
   price: number; currency: Currency; locale: Locale; compareAtPrice?: number; className?: string;
 }) {
+  // A "was" price at or below the price is no sale; showing it would be wrong.
+  if (compareAtPrice !== undefined && compareAtPrice <= price) compareAtPrice = undefined;
   const onSale = Boolean(compareAtPrice);
   const discount = compareAtPrice ? Math.round((1 - price / compareAtPrice) * 100) : 0;
   return (
