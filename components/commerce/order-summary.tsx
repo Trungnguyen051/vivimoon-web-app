@@ -9,8 +9,10 @@ import { Separator } from '@/components/ui/separator';
 
 export function OrderSummary({
   subtotal, discount, shipping, total, currency, locale, dict, ctaHref, ctaLabel,
-  note, ctaBlockedReason,
+  note, ctaBlockedReason, children,
 }: {
+  /** What is being bought, above the totals (checkout's line list). */
+  children?: React.ReactNode;
   /** Null until POST /api/cart/price answers. Money is server-owned (spec §7). */
   subtotal: number | null;
   /** Positive amount already subtracted server-side. A row renders only when > 0. */
@@ -42,6 +44,7 @@ export function OrderSummary({
         <CardTitle>{dict.cart.orderSummary}</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-3 text-sm">
+        {children}
         <div className="flex justify-between">
           <span className="text-muted-foreground">{dict.cart.subtotal}</span>
           <span className="tabular-nums">{price(subtotal)}</span>

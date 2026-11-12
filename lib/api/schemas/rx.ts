@@ -66,6 +66,51 @@ export const rxSchema = z
     left: v.sameBothEyes ? v.right : v.left!,
   }));
 
+/**
+ * How a lens Cart Line is bought (CONTEXT.md "Purchase Unit", ADR-0023): one
+ * lens (`single`) or two (`pair`). A lens's listed price is per single lens.
+ */
+export const purchaseUnitSchema = z.enum(['single', 'pair']);
+export type PurchaseUnit = z.infer<typeof purchaseUnitSchema>;
+
+/** A `single` line's Rx: one `sph`, no eye attached (ADR-0023). */
+export const singleRxSchema = z.object({ sph: sphSchema });
+export type SingleRx = z.infer<typeof singleRxSchema>;
+
+/** What a lens line carries: a pair's left/right Rx, or a single's lone `sph`. */
+export const lineRxSchema = z.union([rxSchema, singleRxSchema]);
+export type LineRx = z.infer<typeof lineRxSchema>;
+/** Pre-parse form of `LineRx` — what `lineKey()` accepts. */
+export type LineRxInput = z.input<typeof lineRxSchema>;
+
+export const isSingleRx = (rx: LineRxInput): rx is SingleRx => 'sph' in rx;
+
+/**
+ * A line's unit, reading a unit-less line that carries an Rx as a `pair` —
+ * every line persisted before ADR-0023 had a two-eye Rx and meant a pair.
+ * A line with no Rx (a non-Rx product) has no unit.
+ */
+export function purchaseUnitOf(line: { purchaseUnit?: PurchaseUnit; rx?: unknown }): PurchaseUnit | undefined {
+  return line.purchaseUnit ?? (line.rx ? 'pair' : undefined);
+}
+
+/** Lenses in one unit — what the per-lens price is multiplied by. No unit (a non-Rx product) is one item. */
+export const lensesIn = (unit: PurchaseUnit | undefined): number => (unit === 'pair' ? 2 : 1);
+
+/**
+ * Shared by every schema carrying a line's unit + Rx: a `single` must carry a
+ * single Rx, and a `pair` (or a legacy unit-less line) a two-eye one.
+ */
+export function refineUnitMatchesRx(line: { purchaseUnit?: PurchaseUnit; rx?: LineRxInput }, ctx: z.RefinementCtx) {
+  if (line.rx && isSingleRx(line.rx) !== (purchaseUnitOf(line) === 'single')) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['rx'],
+      message: 'a single line carries one sph; a pair carries left and right',
+    });
+  }
+}
+
 export type RxEye = z.infer<typeof rxEyeSchema>;
 
 /** Parsed/output shape: `sameBothEyes` is a REQUIRED boolean here, because

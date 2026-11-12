@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { withProducts } from './history-lines';
 import { shippingMethodName } from '@/lib/orders/shipping-method-name';
-import { RxSummary } from './rx-summary';
+import { LineSummary } from './line-summary';
 import { OrderStatusTimeline } from './order-status-timeline';
 import { OrderActions } from './order-actions';
 import { formatPrice, toIntlLocale } from '@/lib/utils/format';
@@ -81,7 +81,7 @@ export async function OrderDetailView({ order, locale, dict, signedIn }: {
                 {line.product?.color ? (
                   <p className="text-xs leading-4 text-muted-foreground">{line.product.color}</p>
                 ) : null}
-                {line.rx ? <RxSummary rx={line.rx} dict={dict} /> : null}
+                <LineSummary line={line} dict={dict} />
                 <div className="flex items-center justify-between pt-1">
                   <p className="flex items-center gap-1.5">
                     {line.compareAtUnitPrice !== undefined ? (

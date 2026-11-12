@@ -2,7 +2,8 @@ import { describe, it, expect, vi } from 'vitest';
 
 // Every catalogue product is `requiresRx`, and pricing refuses a line for one
 // without a prescription — so every real-variant fixture line carries this.
-const RX = { sameBothEyes: true, right: { sph: -2.5 }, left: { sph: -2.5 } };
+// Single lenses, so each line costs its listed per-lens price (ADR-0023).
+const SINGLE = { purchaseUnit: 'single', rx: { sph: -2.5 } } as const;
 
 // Dynamic imports below defer loading './route' until after `jar` exists —
 // vi.mock('next/headers', ...) is hoisted above every import, so a static
@@ -26,8 +27,8 @@ function signIn(userId = 'user-1') { jar.set('vivimoon_session', signSession(use
 
 // Same baseline as route.test.ts: 2 x p-aqua-daily-30 (25) + 1 x p-hazel-monthly-brown-30 (20) = 70.
 const BASELINE_LINES = [
-  { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, rx: RX },
-  { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1, rx: RX },
+  { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, ...SINGLE },
+  { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1, ...SINGLE },
 ];
 
 function req(body: unknown): Request {

@@ -18,6 +18,7 @@ import { isPhone, type User } from '@/lib/api/schemas/auth';
 import type { SavedAddress } from '@/lib/api/schemas/account';
 import { ShippingBlock } from '@/components/commerce/shipping-block';
 import { OrderSummary } from '@/components/commerce/order-summary';
+import { LineSummary } from '@/components/commerce/line-summary';
 import { PaymentMethodPicker } from '@/components/commerce/payment-method-picker';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -271,7 +272,19 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
           total={priced?.total ?? null}
           currency={currency} locale={locale} dict={dict}
           note={hasUnavailableLines ? dict.cart.unavailableNote : undefined}
-        />
+        >
+          <ul className="flex flex-col gap-3 border-b pb-3">
+            {lines.map((l) => (
+              <li key={l.lineKey} className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-medium">{l.name}</p>
+                  <LineSummary line={l} dict={dict} />
+                </div>
+                <span className="shrink-0 text-muted-foreground tabular-nums">×{l.quantity}</span>
+              </li>
+            ))}
+          </ul>
+        </OrderSummary>
       </div>
     </PageContainer>
   );
