@@ -28,10 +28,10 @@ const merchandised = articles.find((a) => matchCount(a.readingTheme) > 0)!;
 /* A theme with more lenses than the strip shows, so the count in the banner is visibly
    not just "what you can already see". */
 const bannered = articles.find((a) => matchCount(a.readingTheme) > STRIP_SIZE)!;
-/* And one whose collection holds exactly one lens — `natural` and `occasion` do. These
-   had no banner at all until #160, which is also what made the singular copy below
-   unreachable (#153). */
-const singular = articles.find((a) => matchCount(a.readingTheme) === 1)!;
+/* And one whose collection is narrowed to exactly one lens below. These had no banner at
+   all until #160, which is also what made the singular copy unreachable (#153). `occasion`
+   opens Bán chạy unnarrowed, which the grown catalog (#194) no longer holds to one lens. */
+const singular = articles.find((a) => a.readingTheme === 'occasion')!;
 const careArticle = articles.find((a) => a.readingTheme === 'care')!;
 
 async function renderArticle(slug: string) {
@@ -136,7 +136,10 @@ describe('an article page', () => {
    * the singular string — dead copy in both locales until this landed — finally renders.
    */
   it('banners a collection holding a single lens, in the singular', async () => {
+    const getProductsByIds = catalog.getProductsByIds;
+    const spy = vi.spyOn(catalog, 'getProductsByIds').mockImplementation(async (ids) => (await getProductsByIds(ids)).slice(0, 1));
     await renderArticle(singular.slug);
+    spy.mockRestore();
     const entry = readingThemeDestination(singular.readingTheme)!;
 
     const line = viDict.articles.collectionBannerCount.one.replace('{count}', '1');

@@ -83,4 +83,12 @@ describe('collectionListId', () => {
   it('reads as the filter it describes', () => {
     expect(idFor('colored-lenses', 'color=brown,gray')).toBe('colored-lenses:color=brown,gray');
   });
+
+  // The sidebar's facets (#194) narrow the list as surely as a colour does.
+  it.each(['makeupStyle=pink', 'series=eyeconic', 'occasion=wedding', 'minPrice=200000', 'maxPrice=300000'])(
+    'tells %s apart from the whole catalog',
+    (search) => {
+      expect(idFor('all-lenses', search)).toBe(`all-lenses:${search}`);
+    },
+  );
 });

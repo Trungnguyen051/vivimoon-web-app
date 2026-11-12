@@ -131,6 +131,20 @@ export const en = {
     productLines: { trongSuot: 'Clear', coMau: 'Colored', vanNhu: 'Glitter' },
     replacements: { daily: '1 day', monthly: '1 month', threeMonth: '3 months', sixMonth: '6 months' },
     sorts: { newest: 'Newest', 'price-asc': 'Price: low to high', 'price-desc': 'Price: high to low', bestselling: 'Best selling' },
+    sidebar: {
+      title: 'Filters', clearAll: 'Clear all', lensLine: 'Lens line', makeupStyle: 'Makeup style',
+      series: 'Collection', occasion: 'Occasion', price: 'Price range', priceFrom: 'From ₫', priceTo: 'To ₫',
+      compareLines: 'Compare the 2 lens lines',
+      materialNotes: {
+        moisture: 'Water Grip moisture lock · suits sensitive, dry eyes · 1 day / 1 month / 6 months',
+        breathable: '100% Silicone Hydrogel · 5× the oxygen · suits long wear · 3 / 6 months',
+      },
+      makeupStyles: { natural: 'Fresh natural', pink: 'Pink tones', orange: 'Orange tones', smoky: 'Western / Smoky eye' },
+      seriesNames: { lenspresso: 'Lenspresso - breathable tinted', eyeconic: 'Eyeconic - big baby eyes', clear: 'Clear lenses' },
+      occasions: { graduation: 'Yearbook', wedding: 'Wedding', party: 'Party', date: 'Date', travel: 'Travel', photoshoot: 'Photoshoot' },
+      pricePresets: { 'under-200k': 'Under 200K', '200k-300k': '200K – 300K', 'over-300k': 'Over 300K' },
+      sortBy: 'Sort: {sort}', showing: 'Showing {shown} / {total} products', loadMore: 'See more products',
+    },
   },
   reviews: {
     title: 'Customer reviews', summary: '{n} reviews · {p}% with real photos', outOf5: 'out of 5',
