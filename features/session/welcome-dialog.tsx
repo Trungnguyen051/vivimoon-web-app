@@ -12,7 +12,7 @@ import { useSessionStore } from './session-store';
 
 const GENDERS = ['male', 'female', 'other'] as const;
 
-function Stepper({ label, value, onChange, dict }: { label: string; value: number; onChange: (v: number) => void; dict: Dictionary['welcome'] }) {
+export function Stepper({ label, value, onChange, dict }: { label: string; value: number; onChange: (v: number) => void; dict: Dictionary['welcome'] }) {
   return (
     <div className="flex flex-1 flex-col items-center gap-2">
       <span className="text-sm">{label}</span>

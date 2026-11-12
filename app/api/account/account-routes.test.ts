@@ -11,7 +11,7 @@ vi.mock('next/headers', () => ({
 
 process.env.AUTH_COOKIE_SECRET = 'test-secret';
 
-const { GET, PATCH } = await import('./route');
+const { GET, PATCH, DELETE } = await import('./route');
 const { signSession } = await import('@/lib/auth/cookie');
 const { resetMockAuthState } = await import('@/lib/api/resources/auth/mock');
 
@@ -133,5 +133,18 @@ describe('account routes', () => {
   it.each([{ left: 1, right: -1 }, { left: -1, right: 0.5 }, { left: -1.1, right: -1 }])('rejects Default Rx %j', async (defaultRx) => {
     signIn();
     expect((await PATCH(patch({ defaultRx }))).status).toBe(400);
+  });
+
+  it('401s DELETE without a session', async () => {
+    expect((await DELETE()).status).toBe(401);
+  });
+
+  it('DELETE removes the user and the session no longer resolves', async () => {
+    signIn();
+    const res = await DELETE();
+    expect(res.status).toBe(200);
+    expect(jar.has('vivimoon_session')).toBe(false);
+    signIn(); // a stale cookie for the deleted user
+    expect((await GET()).status).toBe(404);
   });
 });
