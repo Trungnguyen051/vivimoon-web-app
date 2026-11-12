@@ -1,11 +1,12 @@
 import { z } from 'zod';
 import { productSchema } from './catalog';
+import { localizedTextSchema } from './editorial';
 
 // Quiz (spec §4, §11). Lands under `discovery` per spec §5's Group C, same
 // split as the comparison matrix: schemas here, resource key `discovery`.
 export const quizOptionSchema = z.object({
   id: z.string(),
-  label: z.string(),
+  label: localizedTextSchema,
   // Tag weights drawn from real product fields (type/replacement/badges) —
   // e.g. "type:colored": 2. Keys are free-form so content stays a data edit.
   tags: z.record(z.string(), z.number()),
@@ -13,7 +14,7 @@ export const quizOptionSchema = z.object({
 
 export const quizQuestionSchema = z.object({
   id: z.string(),
-  prompt: z.string(),
+  prompt: localizedTextSchema,
   options: z.array(quizOptionSchema).min(2),
 });
 

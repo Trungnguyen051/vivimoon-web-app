@@ -2,6 +2,9 @@ import { z } from 'zod';
 import { currencySchema } from './catalog';
 import { rxSchema } from './rx';
 
+/** The most units one line may carry — in a cart, a price request, or an order. */
+export const MAX_LINE_QUANTITY = 99;
+
 /**
  * A line in the shopper's cart.
  *
@@ -21,7 +24,7 @@ export const cartLineSchema = z.object({
   color: z.string().optional(),
   unitPrice: z.number().int().nonnegative(),
   currency: currencySchema,
-  quantity: z.number().int().positive(),
+  quantity: z.number().int().positive().max(MAX_LINE_QUANTITY),
   image: z.string().optional(),
   rx: rxSchema.optional(),
 });
@@ -80,7 +83,7 @@ export const priceLineInputSchema = z.object({
   lineKey: z.string().min(1),
   variantId: z.string().min(1),
   rx: rxSchema.optional(),
-  quantity: z.number().int().positive(),
+  quantity: z.number().int().positive().max(MAX_LINE_QUANTITY),
 });
 
 /**
@@ -107,7 +110,7 @@ export const priceCartRequestSchema = z.object({
 export const pricedLineSchema = z.object({
   lineKey: z.string(),
   variantId: z.string(),
-  quantity: z.number().int().positive(),
+  quantity: z.number().int().positive().max(MAX_LINE_QUANTITY),
   unitPrice: z.number().int().nonnegative(),
   lineTotal: z.number().int().nonnegative(),
   currency: currencySchema,

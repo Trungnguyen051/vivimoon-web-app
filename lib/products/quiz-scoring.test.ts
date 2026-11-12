@@ -29,10 +29,10 @@ function product(overrides: Partial<Product> & Pick<Product, 'id'>): Product {
 const questions: QuizQuestion[] = [
   {
     id: 'q1',
-    prompt: 'Look?',
+    prompt: { vi: 'Look?', en: 'Look?' },
     options: [
-      { id: 'q1-colored', label: 'Colored', tags: { 'productLine:coMau': 2 } },
-      { id: 'q1-clear', label: 'Clear', tags: { 'productLine:trongSuot': 2 } },
+      { id: 'q1-colored', label: { vi: 'Colored', en: 'Colored' }, tags: { 'productLine:coMau': 2 } },
+      { id: 'q1-clear', label: { vi: 'Clear', en: 'Clear' }, tags: { 'productLine:trongSuot': 2 } },
     ],
   },
 ];

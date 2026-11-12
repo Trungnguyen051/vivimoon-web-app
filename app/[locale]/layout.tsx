@@ -6,6 +6,7 @@ import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { SessionSync } from '@/features/session/session-sync';
 import { ComparisonTray } from '@/components/commerce/comparison-tray';
+import { BoundaryStringsProvider } from '@/components/layout/boundary-strings';
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -25,7 +26,10 @@ export default async function LocaleLayout({
       <AnnouncementBar segments={[dict.announcement.freeShipping, dict.announcement.authentic, dict.announcement.licensed]} />
       <Header locale={locale as Locale} dict={dict} />
       {/* Width and padding belong to the page, not here — see ADR-0013. Pages opt in via PageContainer. */}
-      <main>{children}</main>
+      {/* Only the strings `not-found` and `error` print, so the dictionaries stay off the client. */}
+      <BoundaryStringsProvider value={{ locale: locale as Locale, notFound: dict.notFound, errorPage: dict.errorPage }}>
+        <main>{children}</main>
+      </BoundaryStringsProvider>
       <Footer locale={locale as Locale} dict={dict} />
       <ComparisonTray locale={locale as Locale} dict={dict} />
     </>

@@ -52,6 +52,29 @@ describe('AccountForm', () => {
     expect(JSON.parse(fetchMock.mock.calls[0][1].body)).not.toHaveProperty('password');
   });
 
+  it('sends the current password alongside a new one', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(json({ ok: true, data: user }));
+    vi.stubGlobal('fetch', fetchMock);
+    render(<AccountForm user={user} dict={dict} />);
+    await userEvent.type(screen.getByLabelText(dict.currentPassword), 'vivimoon123');
+    await userEvent.type(screen.getByLabelText(dict.newPassword), 'brandnew1');
+    await userEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toMatchObject({
+      password: 'brandnew1', currentPassword: 'vivimoon123',
+    });
+  });
+
+  it('asks for the current password before sending a new one', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    render(<AccountForm user={user} dict={dict} />);
+    await userEvent.type(screen.getByLabelText(dict.newPassword), 'brandnew1');
+    await userEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+    expect(await screen.findByText(dict.errors.currentPassword)).toBeInTheDocument();
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
   it('surfaces a server error', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(
       json({ ok: false, error: { code: 'validation_failed', message: 'Enter a valid email address' } }, 400),

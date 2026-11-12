@@ -1,24 +1,33 @@
 import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
-import { orders } from '@/lib/api/resources/orders';
+import { fetchViaSelf } from '@/lib/api/server-fetch';
+import type { ApiResult } from '@/lib/api/client';
+import type { Order } from '@/lib/api/schemas/orders';
 import { OrderDetailView } from '@/components/commerce/order-detail-view';
 import { PageContainer } from '@/components/layout/page-container';
 
 /**
- * Public — no session, so nothing here needs the cookie-forwarding,
- * same-origin-fetch dance the account pages use to see another route
- * handler's in-memory writes. Resolving the token is itself a plain read
- * against the shared `orders` singleton, same as catalog reads on the PDP.
+ * Public — no session — but it still goes through the same-origin route
+ * handler rather than importing the orders resource directly: the token was
+ * written by POST /api/orders/track, a separate module instance from this
+ * page, so a direct read here would never see it (see
+ * app/[locale]/account/page.tsx). An invalid or expired token is a 404.
  */
+async function fetchTrackedOrder(token: string): Promise<Order> {
+  const response = await fetchViaSelf(`/api/orders/track/${encodeURIComponent(token)}`);
+  const result = (await response.json()) as ApiResult<Order>;
+  if (!result.ok) notFound();
+  return result.data;
+}
+
 export default async function TrackedOrderPage({ params }: { params: Promise<{ locale: string; token: string }> }) {
   const { locale: raw, token } = await params;
   if (!isLocale(raw)) notFound();
   const locale: Locale = raw;
   const dict = getDictionary(locale);
 
-  const order = await orders.resolveTrackingToken(token);
-  if (!order) notFound();
+  const order = await fetchTrackedOrder(token);
 
   return (
     <PageContainer>

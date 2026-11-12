@@ -63,7 +63,8 @@ export function QuizFlow({
     isSubmittingRef.current = false;
     setIsPending(false);
     if (res.ok) setResults(res.data.recommendations);
-    else setError(res.error.message || dict.quiz.error);
+    // The server's message is for logs, not shoppers, and it is English either way.
+    else setError(dict.quiz.error);
   }
 
   function retake() {
@@ -101,9 +102,9 @@ export function QuizFlow({
         </div>
       </div>
 
-      <h1 className="text-2xl font-semibold tracking-tight">{question.prompt}</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">{question.prompt[locale]}</h1>
 
-      <div role="radiogroup" aria-label={question.prompt} className="flex flex-col gap-3">
+      <div role="radiogroup" aria-label={question.prompt[locale]} className="flex flex-col gap-3">
         {question.options.map((option) => {
           const checked = selectedOptionId === option.id;
           return (
@@ -118,7 +119,7 @@ export function QuizFlow({
                 checked ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted',
               )}
             >
-              {option.label}
+              {option.label[locale]}
             </button>
           );
         })}

@@ -37,6 +37,23 @@ describe('mockAuth', () => {
     ).rejects.toThrow(/already/i);
   });
 
+  it('treats +84 and 0-prefixed forms of a phone as the same account on register', async () => {
+    await expect(
+      mockAuth.register({ identifier: '+84912345678', name: 'Dup', password: 'abcdefgh' }),
+    ).rejects.toThrow(/already/i);
+  });
+
+  it('signs in with the +84 form of a phone registered in 0-prefixed form', async () => {
+    const user = await mockAuth.login({ identifier: '+84912345678', password: 'vivimoon123' });
+    expect(user.id).toBe('u-001');
+  });
+
+  it('stores a +84 phone in its 0-prefixed form', async () => {
+    const user = await mockAuth.register({ identifier: '+84911111112', name: 'Mới', password: 'abcdefgh' });
+    expect(user.phone).toBe('0911111112');
+    expect((await mockAuth.login({ identifier: '0911111112', password: 'abcdefgh' })).id).toBe(user.id);
+  });
+
   it('stores an email identifier on the email field, not the phone field', async () => {
     const user = await mockAuth.register({ identifier: 'new@example.vn', name: 'E' });
     expect(user.email).toBe('new@example.vn');
@@ -70,6 +87,24 @@ describe('mockAuth', () => {
     const c = await mockAuth.requestOtp({ identifier: '0912345678', purpose: 'reset' });
     const wrong = c.devCode === '000000' ? '111111' : '000000';
     await expect(mockAuth.verifyOtp({ otpId: c.otpId, code: wrong })).rejects.toThrow(/invalid|expired/i);
+  });
+
+  it('burns a challenge after five wrong codes, so the right one no longer works', async () => {
+    const c = await mockAuth.requestOtp({ identifier: '0912345678', purpose: 'reset' });
+    const wrong = c.devCode === '000000' ? '111111' : '000000';
+    for (let i = 0; i < 5; i++) {
+      await expect(mockAuth.verifyOtp({ otpId: c.otpId, code: wrong })).rejects.toThrow(/invalid|expired/i);
+    }
+    await expect(mockAuth.verifyOtp({ otpId: c.otpId, code: c.devCode! })).rejects.toThrow(/invalid|expired/i);
+  });
+
+  it('still accepts the right code after fewer than five wrong ones', async () => {
+    const c = await mockAuth.requestOtp({ identifier: '0912345678', purpose: 'login' });
+    const wrong = c.devCode === '000000' ? '111111' : '000000';
+    for (let i = 0; i < 4; i++) {
+      await expect(mockAuth.verifyOtp({ otpId: c.otpId, code: wrong })).rejects.toThrow();
+    }
+    expect((await mockAuth.verifyOtp({ otpId: c.otpId, code: c.devCode! })).kind).toBe('session');
   });
 
   it('consumes an OTP so it cannot be replayed', async () => {

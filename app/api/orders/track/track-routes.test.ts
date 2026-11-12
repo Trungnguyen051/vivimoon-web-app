@@ -1,5 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
+// Every catalogue product is `requiresRx`, and pricing refuses a line for one
+// without a prescription — so every real-variant fixture line carries this.
+const RX = { sameBothEyes: true, right: { sph: -2.5 }, left: { sph: -2.5 } };
+
 vi.mock('next/headers', () => ({ cookies: async () => ({ get: () => undefined }) }));
 
 const { POST } = await import('./route');
@@ -18,7 +22,7 @@ async function placeGuestOrder(email = 'guest@example.com') {
   const { orders } = await import('@/lib/api/resources/orders');
   return orders.place(
     {
-      lines: [{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1 }],
+      lines: [{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1, rx: RX }],
       address: GUEST_ADDRESS,
       email,
       paymentMethod: 'qr',
@@ -75,7 +79,7 @@ describe('POST /api/orders/track', () => {
     const { orders } = await import('@/lib/api/resources/orders');
     const order = await orders.place(
       {
-        lines: [{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1 }],
+        lines: [{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1, rx: RX }],
         address: { ...GUEST_ADDRESS, phone: '+84909111222' },
         email: 'guest@example.com',
         paymentMethod: 'qr',

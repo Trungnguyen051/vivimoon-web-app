@@ -6,10 +6,10 @@ import { Logo } from './logo';
 import { contactEmail, contactHotline } from '@/lib/support/contact-channels';
 
 export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+  // Into the FAQ at the matching Topic. There is no privacy page yet, so no link to one.
   const policyLinks = [
-    { label: dict.footer.shipping, href: `/${locale}` },
-    { label: dict.footer.returns, href: `/${locale}` },
-    { label: dict.footer.privacy, href: `/${locale}` },
+    { label: dict.footer.shipping, href: `/${locale}/support/faq?category=giao-hang` },
+    { label: dict.footer.returns, href: `/${locale}/support/faq?category=doi-tra-va-bao-hanh` },
   ];
 
   return (

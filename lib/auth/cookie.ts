@@ -4,9 +4,15 @@ import { cookies } from 'next/headers';
 export const SESSION_COOKIE = 'vivimoon_session';
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
 
+/** The placeholder shipped in .env.example — fine locally, forgeable anywhere public. */
+const EXAMPLE_SECRET = 'dev-only-not-a-real-secret';
+
 function secret(): string {
   const value = process.env.AUTH_COOKIE_SECRET;
   if (!value) throw new Error('AUTH_COOKIE_SECRET is not set');
+  if (process.env.NODE_ENV === 'production' && (value === EXAMPLE_SECRET || value.length < 32)) {
+    throw new Error('AUTH_COOKIE_SECRET must be a real secret of at least 32 characters in production');
+  }
   return value;
 }
 
@@ -38,7 +44,12 @@ export function verifySession(value: string | undefined): string | null {
 
   const payload = value.slice(0, sigIndex);
   const provided = Buffer.from(value.slice(sigIndex + 1), 'hex');
-  const expected = Buffer.from(sign(payload), 'hex');
+  let expected: Buffer;
+  try {
+    expected = Buffer.from(sign(payload), 'hex');
+  } catch {
+    return null; // missing or refused secret — nothing can verify, so no one is signed in
+  }
   if (provided.length !== expected.length) return null;
   if (!timingSafeEqual(provided, expected)) return null;
 

@@ -152,8 +152,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
             *is* the collection at that size. Plausible, but nobody asked for it, and it
             cost `natural` and `occasion` their only route into a collection while making
             the singular copy below unreachable (#160, #153). A shopper who just read
-            about a theme may well want its collection page even when it holds one lens. */}
-        {destination ? (
+            about a theme may well want its collection page even when it holds one lens.
+            One that holds none is not a destination, so "0 products" never shows. */}
+        {destination && count > 0 ? (
           <section className="flex flex-col items-start gap-4 rounded-xl border p-6 sm:flex-row sm:items-center sm:justify-between md:p-10">
             <div className="flex flex-col gap-1">
               <h2 className="text-2xl font-semibold tracking-tight">{dict.articles.collectionBannerTitle}</h2>

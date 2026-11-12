@@ -1,7 +1,7 @@
 'use client';
-import { Fragment } from 'react';
+import { Fragment, Suspense } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { locales, type Locale } from '@/lib/i18n/config';
 import { cn } from '@/lib/utils/cn';
 
@@ -18,8 +18,33 @@ import { cn } from '@/lib/utils/cn';
  * Dropping the `select` loses its implicit semantics, so they are replaced rather
  * than left out: the group carries the dictionary's label (#64/#65), and each
  * target is 44px tall even though the text is small.
+ *
+ * The query string comes along, so a filtered collection stays filtered. Reading it
+ * needs a Suspense boundary on a prerendered page; until it resolves the links carry
+ * the path alone, which is what they did before.
  */
-export function LocaleSwitcher({ currentLocale, label }: { currentLocale: Locale; label: string }) {
+export function LocaleSwitcher(props: { currentLocale: Locale; label: string }) {
+  return (
+    <Suspense fallback={<LocaleLinks {...props} search="" />}>
+      <LocaleLinksWithQuery {...props} />
+    </Suspense>
+  );
+}
+
+function LocaleLinksWithQuery(props: { currentLocale: Locale; label: string }) {
+  const search = useSearchParams().toString();
+  return <LocaleLinks {...props} search={search ? `?${search}` : ''} />;
+}
+
+function LocaleLinks({
+  currentLocale,
+  label,
+  search,
+}: {
+  currentLocale: Locale;
+  label: string;
+  search: string;
+}) {
   const pathname = usePathname();
   const rest = pathname.replace(new RegExp(`^/(${locales.join('|')})`), '');
 
@@ -33,7 +58,7 @@ export function LocaleSwitcher({ currentLocale, label }: { currentLocale: Locale
             </span>
           ) : null}
           <Link
-            href={`/${locale}${rest || ''}`}
+            href={`/${locale}${rest || ''}${search}`}
             aria-current={locale === currentLocale ? 'true' : undefined}
             className={cn(
               'inline-flex min-h-11 items-center rounded-md px-1.5 text-xs font-medium uppercase transition-colors',

@@ -1,5 +1,9 @@
 import { describe, it, expect, vi } from 'vitest';
 
+// Every catalogue product is `requiresRx`, and pricing refuses a line for one
+// without a prescription — so every real-variant fixture line carries this.
+const RX = { sameBothEyes: true, right: { sph: -2.5 }, left: { sph: -2.5 } };
+
 // Dynamic imports below defer loading './route' until after `jar` exists —
 // vi.mock('next/headers', ...) is hoisted above every import, so a static
 // `import { POST } from './route'` would invoke the factory (reading `jar`)
@@ -22,8 +26,8 @@ function signIn(userId = 'user-1') { jar.set('vivimoon_session', signSession(use
 
 // Same baseline as route.test.ts: 2 x p-aqua-daily-30 (25) + 1 x p-hazel-monthly-brown-30 (20) = 70.
 const BASELINE_LINES = [
-  { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2 },
-  { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1 },
+  { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, rx: RX },
+  { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1, rx: RX },
 ];
 
 function req(body: unknown): Request {

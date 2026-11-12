@@ -1,5 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
+// Every catalogue product is `requiresRx`, and pricing refuses a line for one
+// without a prescription — so every real-variant fixture line carries this.
+const RX = { sameBothEyes: true, right: { sph: -2.5 }, left: { sph: -2.5 } };
+
 const jar = new Map<string, string>();
 vi.mock('next/headers', () => ({
   cookies: async () => ({
@@ -29,7 +33,7 @@ const ADDRESS = {
   label: 'home' as const,
 };
 
-const LINES = [{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1 }];
+const LINES = [{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1, rx: RX }];
 
 function req(body: unknown): Request {
   return new Request('http://localhost/api/orders', {

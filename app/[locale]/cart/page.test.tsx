@@ -3,7 +3,8 @@ import { Suspense } from 'react';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { apiRequest } from '@/lib/api/client';
 import { useCartStore } from '@/features/cart/cart-store';
-import CartPage from './page';
+import { CartView } from './cart-view';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 import type { CartLine } from '@/features/cart/cart.types';
 import type { PricedCart } from '@/lib/api/schemas/cart';
 
@@ -30,7 +31,7 @@ async function renderCartPage() {
   await act(async () => {
     utils = render(
       <Suspense fallback={null}>
-        <CartPage params={Promise.resolve({ locale: 'en' })} />
+        <CartView locale="en" dict={getDictionary('en')} />
       </Suspense>,
     );
     await Promise.resolve();

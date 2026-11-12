@@ -13,51 +13,51 @@ export const quiz: QuizDefinition = {
   questions: [
     {
       id: 'lifestyle',
-      prompt: 'How active is your day-to-day?',
+      prompt: { vi: 'Một ngày của bạn bận rộn đến mức nào?', en: 'How active is your day-to-day?' },
       options: [
-        { id: 'lifestyle-onthego', label: 'Always on the go — fresh lenses every day', tags: { 'replacement:daily': 2 } },
-        { id: 'lifestyle-routine', label: 'Steady routine — every 3 months works fine', tags: { 'replacement:threeMonth': 2 } },
-        { id: 'lifestyle-lowkey', label: 'Low maintenance — monthly is easiest', tags: { 'replacement:monthly': 2 } },
+        { id: 'lifestyle-onthego', label: { vi: 'Luôn di chuyển — mỗi ngày một cặp lens mới', en: 'Always on the go — fresh lenses every day' }, tags: { 'replacement:daily': 2 } },
+        { id: 'lifestyle-routine', label: { vi: 'Nếp sinh hoạt đều đặn — 3 tháng thay một lần là ổn', en: 'Steady routine — every 3 months works fine' }, tags: { 'replacement:threeMonth': 2 } },
+        { id: 'lifestyle-lowkey', label: { vi: 'Ít chăm chút — thay hằng tháng là tiện nhất', en: 'Low maintenance — monthly is easiest' }, tags: { 'replacement:monthly': 2 } },
       ],
     },
     {
       id: 'look',
-      prompt: 'What look are you going for?',
+      prompt: { vi: 'Bạn muốn vẻ ngoài như thế nào?', en: 'What look are you going for?' },
       options: [
-        { id: 'look-natural', label: 'Natural, barely-there clarity', tags: { 'productLine:trongSuot': 2 } },
-        { id: 'look-color', label: 'A noticeable color change', tags: { 'productLine:coMau': 2, 'productLine:vanNhu': 2 } },
+        { id: 'look-natural', label: { vi: 'Tự nhiên, trong trẻo như không đeo', en: 'Natural, barely-there clarity' }, tags: { 'productLine:trongSuot': 2 } },
+        { id: 'look-color', label: { vi: 'Đổi màu mắt rõ rệt', en: 'A noticeable color change' }, tags: { 'productLine:coMau': 2, 'productLine:vanNhu': 2 } },
       ],
     },
     {
       id: 'discovery',
-      prompt: 'How do you like to shop?',
+      prompt: { vi: 'Bạn thích mua sắm theo kiểu nào?', en: 'How do you like to shop?' },
       options: [
-        { id: 'discovery-new', label: 'I love trying the newest releases', tags: { 'badge:new': 2 } },
-        { id: 'discovery-proven', label: 'I stick to proven bestsellers', tags: { 'badge:bestseller': 2 } },
+        { id: 'discovery-new', label: { vi: 'Mình thích thử những mẫu mới nhất', en: 'I love trying the newest releases' }, tags: { 'badge:new': 2 } },
+        { id: 'discovery-proven', label: { vi: 'Mình chọn những mẫu bán chạy đã được kiểm chứng', en: 'I stick to proven bestsellers' }, tags: { 'badge:bestseller': 2 } },
       ],
     },
     {
       id: 'budget',
-      prompt: 'What matters most on price?',
+      prompt: { vi: 'Về giá, điều gì quan trọng nhất với bạn?', en: 'What matters most on price?' },
       options: [
-        { id: 'budget-deal', label: 'Getting the best deal', tags: { 'badge:sale': 2 } },
-        { id: 'budget-noPref', label: "Price isn't my main concern", tags: {} },
+        { id: 'budget-deal', label: { vi: 'Có được ưu đãi tốt nhất', en: 'Getting the best deal' }, tags: { 'badge:sale': 2 } },
+        { id: 'budget-noPref', label: { vi: 'Giá không phải mối bận tâm chính', en: "Price isn't my main concern" }, tags: {} },
       ],
     },
     {
       id: 'wear',
-      prompt: 'How long do you usually wear lenses per day?',
+      prompt: { vi: 'Mỗi ngày bạn thường đeo lens bao lâu?', en: 'How long do you usually wear lenses per day?' },
       options: [
-        { id: 'wear-short', label: 'A few hours here and there', tags: { 'replacement:daily': 1 } },
-        { id: 'wear-allday', label: 'All day, every day', tags: { 'replacement:monthly': 1, 'productLine:trongSuot': 1 } },
+        { id: 'wear-short', label: { vi: 'Vài tiếng, lúc có lúc không', en: 'A few hours here and there' }, tags: { 'replacement:daily': 1 } },
+        { id: 'wear-allday', label: { vi: 'Cả ngày, ngày nào cũng đeo', en: 'All day, every day' }, tags: { 'replacement:monthly': 1, 'productLine:trongSuot': 1 } },
       ],
     },
     {
       id: 'occasion',
-      prompt: "What's the occasion?",
+      prompt: { vi: 'Bạn đeo lens cho dịp nào?', en: "What's the occasion?" },
       options: [
-        { id: 'occasion-everyday', label: 'Everyday wear', tags: { 'productLine:trongSuot': 1, 'replacement:daily': 1 } },
-        { id: 'occasion-special', label: 'A special look for photos or events', tags: { 'productLine:coMau': 1, 'productLine:vanNhu': 1, 'badge:new': 1 } },
+        { id: 'occasion-everyday', label: { vi: 'Đeo hằng ngày', en: 'Everyday wear' }, tags: { 'productLine:trongSuot': 1, 'replacement:daily': 1 } },
+        { id: 'occasion-special', label: { vi: 'Một vẻ ngoài đặc biệt để chụp ảnh hoặc dự sự kiện', en: 'A special look for photos or events' }, tags: { 'productLine:coMau': 1, 'productLine:vanNhu': 1, 'badge:new': 1 } },
       ],
     },
   ],

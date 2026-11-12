@@ -9,9 +9,8 @@ import { AddToCart } from '@/components/commerce/add-to-cart';
 import { FavoriteButton } from '@/components/commerce/favorite-button';
 import { CompareToggle } from '@/components/commerce/compare-toggle';
 import { SpecTable } from '@/components/commerce/spec-table';
-import { ReviewsList } from '@/components/commerce/reviews-list';
+import { ReviewsList, ReviewsSummary } from '@/components/commerce/reviews-list';
 import { CollectionCarousel } from '@/components/commerce/collection-carousel';
-import { RatingStars } from '@/components/commerce/rating-stars';
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
@@ -58,12 +57,7 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
             )}
             <div className="flex flex-col gap-5">
               <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{product.name}</h1>
-              <div className="flex items-center gap-2">
-                <RatingStars label={dict.common.rating} outOfLabel={dict.common.outOf} rating={product.rating} />
-                <span className="text-sm text-muted-foreground">
-                  {product.rating.toFixed(1)} · {product.reviewCount}
-                </span>
-              </div>
+              <ReviewsSummary reviews={reviews} dict={dict} />
               <p className="max-w-prose leading-relaxed text-muted-foreground">{product.description}</p>
               {/* Keyed by product.id so a client-side nav between two PDPs (e.g. a
                   related-product link) remounts AddToCart instead of reusing its

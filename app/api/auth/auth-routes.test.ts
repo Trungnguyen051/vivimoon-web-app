@@ -116,6 +116,18 @@ describe('auth routes', () => {
     expect(jar.get(SESSION_COOKIE)).toBeTruthy();
   });
 
+  it('refuses Google sign-in in a production build, where the mock cannot verify a token', async () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    try {
+      const res = await google(post({ idToken: 'mai@example.vn' }));
+      expect(res.status).toBe(401);
+      expect((await res.json()).error.code).toBe('unauthorized');
+      expect(jar.has(SESSION_COOKIE)).toBe(false);
+    } finally {
+      vi.unstubAllEnvs();
+    }
+  });
+
   it('returns the current user from the session cookie', async () => {
     await login(post({ identifier: '0912345678', password: 'vivimoon123' }));
     const body = await (await session()).json();

@@ -1,4 +1,5 @@
 import { lineKey } from '@/lib/cart/line-key';
+import { MAX_LINE_QUANTITY } from '@/lib/api/schemas/cart';
 import type { CartAction, CartState } from './cart.types';
 
 /**
@@ -12,13 +13,13 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case 'ADD': {
       const key = action.line.lineKey || lineKey(action.line.variantId, action.line.rx);
-      const incoming = { ...action.line, lineKey: key };
+      const incoming = { ...action.line, lineKey: key, quantity: Math.min(action.line.quantity, MAX_LINE_QUANTITY) };
       const existing = state.lines.find((l) => l.lineKey === key);
       if (existing) {
         return {
           ...state,
           lines: state.lines.map((l) =>
-            l.lineKey === key ? { ...l, quantity: l.quantity + incoming.quantity } : l,
+            l.lineKey === key ? { ...l, quantity: Math.min(l.quantity + incoming.quantity, MAX_LINE_QUANTITY) } : l,
           ),
         };
       }
@@ -33,7 +34,7 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
       return {
         ...state,
         lines: state.lines.map((l) =>
-          l.lineKey === action.lineKey ? { ...l, quantity: action.quantity } : l,
+          l.lineKey === action.lineKey ? { ...l, quantity: Math.min(action.quantity, MAX_LINE_QUANTITY) } : l,
         ),
       };
     }

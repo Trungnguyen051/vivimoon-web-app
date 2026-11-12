@@ -5,10 +5,10 @@ const validDefinition = {
   questions: [
     {
       id: 'q1',
-      prompt: 'Look?',
+      prompt: { vi: 'Look?', en: 'Look?' },
       options: [
-        { id: 'q1-a', label: 'Colored', tags: { 'productLine:coMau': 2 } },
-        { id: 'q1-b', label: 'Clear', tags: { 'productLine:trongSuot': 2 } },
+        { id: 'q1-a', label: { vi: 'Colored', en: 'Colored' }, tags: { 'productLine:coMau': 2 } },
+        { id: 'q1-b', label: { vi: 'Clear', en: 'Clear' }, tags: { 'productLine:trongSuot': 2 } },
       ],
     },
   ],
@@ -29,10 +29,10 @@ describe('quizDefinitionSchema', () => {
       questions: [
         {
           id: 'q1',
-          prompt: 'p',
+          prompt: { vi: 'p', en: 'p' },
           options: [
-            { id: 'a', label: 'A', tags: { 'badge:new': 1, 'replacement:daily': 3 } },
-            { id: 'b', label: 'B', tags: {} },
+            { id: 'a', label: { vi: 'A', en: 'A' }, tags: { 'badge:new': 1, 'replacement:daily': 3 } },
+            { id: 'b', label: { vi: 'B', en: 'B' }, tags: {} },
           ],
         },
       ],
