@@ -45,18 +45,10 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                   and the Support design had already drifted — `hello@vivimoon.com`
                   against `vivimoon@gmail.com`, `1900 0000` against `0909.000.000` —
                   and neither looked wrong on its own. */}
-              <a
-                href={contactEmail().href}
-                className="text-sm text-background/80 transition-colors hover:text-background"
-              >
-                {contactEmail().value}
-              </a>
-              <a
-                href={contactHotline().href}
-                className="text-sm text-background/70 transition-colors hover:text-background"
-              >
+              <span className="text-sm text-background/80">{contactEmail().value}</span>
+              <span className="text-sm text-background/70">
                 {dict.footer.hotline}: {contactHotline().value}
-              </a>
+              </span>
               <Link
                 href={`/${locale}/orders/track`}
                 className="text-sm text-background/80 transition-colors hover:text-background"

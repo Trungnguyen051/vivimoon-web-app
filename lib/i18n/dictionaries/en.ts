@@ -308,8 +308,8 @@ export const en = {
       channels: {
         hotline: 'Hotline',
         email: 'Email',
-        messenger: 'Messenger',
-        zalo: 'Zalo',
+        facebook: 'Facebook',
+        instagram: 'Instagram',
       },
       policies: {
         shipping: { title: 'Delivery & shipping fees', body: '1–2 working days in the city, 3–5 to other provinces. Free shipping on orders from 300,000₫.' },

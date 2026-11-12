@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
   CreditCard, Eye, Glasses, RotateCcw, Truck, UserRound,
-  MessageCircle, Phone, Mail, MessagesSquare, type LucideIcon,
+  type LucideIcon,
 } from 'lucide-react';
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary, type Dictionary } from '@/lib/i18n/dictionaries';
@@ -39,10 +39,6 @@ const TOPIC_ICONS: Record<Topic, LucideIcon> = {
   'doi-tra-va-bao-hanh': RotateCcw,
   'tai-khoan-va-uu-dai': UserRound,
 };
-
-const CHANNEL_ICONS = {
-  hotline: Phone, email: Mail, messenger: MessageCircle, zalo: MessagesSquare,
-} as const;
 
 /**
  * Derived from the dictionary, not listed beside it — the same reason `TOPIC_ICONS` is
@@ -200,23 +196,21 @@ export default async function SupportPage({ params }: { params: Promise<{ locale
             <p className="text-muted-foreground">{service.contactSubtitle}</p>
           </div>
           {/* Values from `contact-channels.ts`, which the footer also reads — the two
-              surfaces can no longer answer "what is the hotline" differently. */}
+              surfaces can no longer answer "what is the hotline" differently.
+
+              Text, not links (#158). Every value here is placeholder wireframe copy, and
+              an invented handle rendered as a working link lands a shopper on a "page not
+              found" while looking finished. */}
           <ul className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            {CONTACT_CHANNELS.map((channel) => {
-              const Icon = CHANNEL_ICONS[channel.id];
-              return (
-                <li key={channel.id}>
-                  <a
-                    href={channel.href}
-                    className="flex h-full flex-col gap-2 rounded-xl border p-5 transition-colors hover:bg-muted"
-                  >
-                    <Icon className="size-5 text-muted-foreground" aria-hidden="true" />
-                    <span className="text-sm font-medium">{service.channels[channel.id]}</span>
-                    <span className="text-sm text-muted-foreground">{channel.value}</span>
-                  </a>
-                </li>
-              );
-            })}
+            {CONTACT_CHANNELS.map((channel) => (
+              <li
+                key={channel.id}
+                className="flex h-full flex-col gap-2 rounded-xl border p-5"
+              >
+                <span className="text-sm font-medium">{service.channels[channel.id]}</span>
+                <span className="text-sm text-muted-foreground">{channel.value}</span>
+              </li>
+            ))}
           </ul>
         </section>
       </div>

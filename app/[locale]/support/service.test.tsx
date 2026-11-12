@@ -78,16 +78,20 @@ describe('the Support hub service surface', () => {
     expect(within(tracking).getByRole('button', { name: viDict.tracking.submit })).toBeInTheDocument();
   });
 
-  it('renders every contact channel from the shared module', async () => {
+  it('renders every contact channel from the shared module, as text', async () => {
     await renderHub();
     const contact = section(service.contactTitle);
 
-    expect(within(contact).getAllByRole('link')).toHaveLength(CONTACT_CHANNELS.length);
     for (const channel of CONTACT_CHANNELS) {
-      const link = within(contact).getByRole('link', { name: new RegExp(service.channels[channel.id]) });
-      expect(link).toHaveAttribute('href', channel.href);
-      expect(within(link).getByText(channel.value)).toBeInTheDocument();
+      expect(within(contact).getByText(service.channels[channel.id])).toBeInTheDocument();
+      expect(within(contact).getByText(channel.value)).toBeInTheDocument();
     }
+
+    /* Nothing here navigates (#158). Every value is placeholder wireframe copy, and an
+       invented handle rendered as a working link lands a shopper on a "page not found"
+       while looking finished. The day Vivimoon sends the real ones, this is the test
+       that has to be changed on purpose. */
+    expect(within(contact).queryAllByRole('link')).toHaveLength(0);
   });
 });
 
@@ -97,19 +101,27 @@ describe('the Support hub service surface', () => {
  * neither file looked wrong on its own.
  */
 describe('contact channels', () => {
-  it('builds every tel: and mailto: from the value it displays', () => {
-    expect(contactHotline().href).toBe(`tel:${contactHotline().value.replace(/\D/g, '')}`);
-    expect(contactEmail().href).toBe(`mailto:${contactEmail().value}`);
+  it('gives the footer the same hotline and email the hub shows', () => {
+    expect(CONTACT_CHANNELS).toContain(contactHotline());
+    expect(CONTACT_CHANNELS).toContain(contactEmail());
   });
 
-  it('gives every channel a value and a real destination', () => {
+  it('gives every channel a value', () => {
     for (const channel of CONTACT_CHANNELS) {
       expect(channel.value.trim(), channel.id).not.toBe('');
-      /* Shape only. The social handles are placeholders Vivimoon has not confirmed,
-         and no test can tell a real `m.me` handle from a guess — asserting `!== '#'`
-         over an invented value would look like a guard and check nothing. That one is
-         flagged in `contact-channels.ts` for a human instead. */
-      expect(channel.href, channel.id).toMatch(/^(tel:|mailto:|https:\/\/)/);
+    }
+  });
+
+  /**
+   * The module carries no destinations at all (#158) — not a `#`, not an invented
+   * handle, not a `tel:` built from a placeholder number. Held as a shape rather than
+   * left to review: an `href` added back here would quietly make every surface above
+   * navigable again, and the first thing anyone would notice is a shopper landing
+   * nowhere.
+   */
+  it('carries no hrefs while the values are placeholders', () => {
+    for (const channel of CONTACT_CHANNELS) {
+      expect(Object.keys(channel), channel.id).toEqual(['id', 'value']);
     }
   });
 });
