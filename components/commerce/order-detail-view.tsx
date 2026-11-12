@@ -1,8 +1,8 @@
+import Image from 'next/image';
 import { catalog } from '@/lib/api/resources/catalog';
 import { paymentMethods } from '@/lib/payments/methods';
 import { RxSummary } from './rx-summary';
 import { OrderStatusTimeline } from './order-status-timeline';
-import { Card, CardContent } from '@/components/ui/card';
 import { formatPrice, toIntlLocale } from '@/lib/utils/format';
 import type { Order } from '@/lib/api/schemas/orders';
 import type { Locale } from '@/lib/i18n/config';
@@ -36,6 +36,7 @@ export async function OrderDetailView({ order, locale, dict }: { order: Order; l
   const enrichedLines = await Promise.all(
     order.lines.map(async (line) => ({ line, found: await catalog.getVariantById(line.variantId) })),
   );
+  const itemCount = order.lines.reduce((sum, l) => sum + l.quantity, 0);
   const methodLabel = paymentMethods.find((m) => m.type === order.payment.method)?.label ?? order.payment.method;
 
   return (
@@ -57,26 +58,43 @@ export async function OrderDetailView({ order, locale, dict }: { order: Order; l
         <OrderStatusTimeline status={order.status} dict={dict} />
       </section>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-medium">{dict.orderDetail.lineItems}</h2>
-        <ul className="flex flex-col gap-3">
+      <section aria-labelledby="order-lines" className="border">
+        <h3 id="order-lines" className="border-b px-4 py-3 text-[13px] font-medium leading-5">{dict.orderDetail.lineItems}</h3>
+        <ul>
           {enrichedLines.map(({ line, found }) => (
-            <li key={line.lineKey}>
-              <Card>
-                <CardContent className="flex items-center justify-between gap-4 py-4">
-                  <div className="flex flex-col gap-1">
-                    <span className="font-medium">{found?.product.name ?? line.variantId}</span>
-                    <span className="text-sm text-muted-foreground">
-                      {dict.pdp.quantity}: {line.quantity} · {formatPrice(line.unitPrice, line.currency, locale)}
-                    </span>
-                    {line.rx ? <RxSummary rx={line.rx} dict={dict} /> : null}
-                  </div>
-                  <span className="font-medium">{formatPrice(line.lineTotal, line.currency, locale)}</span>
-                </CardContent>
-              </Card>
+            <li key={line.lineKey} className="flex gap-3 px-4 py-3">
+              <div className="relative size-16 shrink-0 overflow-hidden bg-secondary">
+                {found?.product.images[0] ? (
+                  <Image src={found.product.images[0]} alt="" fill className="object-cover" sizes="64px" />
+                ) : null}
+              </div>
+              <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                <p className="truncate text-[13px] leading-5">{found?.product.name ?? line.variantId}</p>
+                {found?.variant.colorLabel ? (
+                  <p className="text-xs leading-4 text-muted-foreground">{found.variant.colorLabel}</p>
+                ) : null}
+                {line.rx ? <RxSummary rx={line.rx} dict={dict} /> : null}
+                <div className="flex items-center justify-between pt-1">
+                  <p className="flex items-center gap-1.5">
+                    {line.compareAtUnitPrice !== undefined ? (
+                      <s className="text-xs leading-4 text-muted-foreground">
+                        {formatPrice(line.compareAtUnitPrice, line.currency, locale)}
+                      </s>
+                    ) : null}
+                    <span className="text-[13px] leading-5">{formatPrice(line.unitPrice, line.currency, locale)}</span>
+                  </p>
+                  <span className="text-xs leading-4 text-muted-foreground">×{line.quantity}</span>
+                </div>
+              </div>
             </li>
           ))}
         </ul>
+        <p className="flex items-center justify-end gap-1 border-t px-4 py-3">
+          <span className="text-xs leading-5">
+            {dict.orderDetail.totalLabel} ({itemCount} {dict.orderDetail.items}):
+          </span>
+          <span className="text-sm font-bold leading-5">{formatPrice(order.totals.total, order.totals.currency, locale)}</span>
+        </p>
       </section>
 
       <section className="grid gap-6 sm:grid-cols-2">

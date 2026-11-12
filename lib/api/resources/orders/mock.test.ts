@@ -127,6 +127,17 @@ describe('mockOrders.place', () => {
     ).rejects.toMatchObject({ code: 'validation_failed' });
   });
 
+  it("captures a discounted variant's original price on its line, at placement", async () => {
+    // p-mystic-daily-violet-30: price 18, compareAtPrice 24 (content/mock/products.ts).
+    const order = await mockOrders.place(
+      req({ lines: [...BASELINE_LINES, { lineKey: 'l3', variantId: 'p-mystic-daily-violet-30', quantity: 1, rx: RX }] }),
+      null,
+    );
+    const byKey = Object.fromEntries(order.lines.map((l) => [l.lineKey, l]));
+    expect(byKey.l3.compareAtUnitPrice).toBe(24);
+    expect(byKey.l1.compareAtUnitPrice).toBeUndefined();
+  });
+
   it('charges the cheapest quoted shipping option for the address, with no picker to choose one (M5.4, issue #21)', async () => {
     // District 1 (content/mock/shipping-rates.ts): standard = 3, express = 8.
     const order = await mockOrders.place(req(), null);

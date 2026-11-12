@@ -20,6 +20,10 @@ export const placeOrderRequestSchema = z.object({
 /** `CartLine` + resolved Rx (spec §6) — price fields are the server's, never the client's. */
 export const orderLineSchema = pricedLineSchema.extend({
   rx: rxSchema.optional(),
+  // The variant's compare-at price as it stood when the order was placed —
+  // only when it was above what was charged — so a past order never quotes
+  // today's catalogue.
+  compareAtUnitPrice: z.number().int().nonnegative().optional(),
 });
 
 export const orderSchema = z.object({

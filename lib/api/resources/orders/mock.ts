@@ -1,6 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import { orders as seedOrders } from '@/content/mock';
 import { pricing } from '@/lib/api/resources/pricing';
+import { catalog } from '@/lib/api/resources/catalog';
 import type { Order, PlaceOrderRequest } from '@/lib/api/schemas/orders';
 import { normalizeOrderCode } from '@/lib/api/schemas/orders';
 
@@ -88,7 +89,16 @@ export const mockOrders = {
     // same line by luck — and would silently attach one line's prescription
     // to another.
     const rxByLineKey = new Map(input.lines.map((l) => [l.lineKey, l.rx]));
-    const lines = priced.lines.map((line) => ({ ...line, rx: rxByLineKey.get(line.lineKey) }));
+    const lines = await Promise.all(
+      priced.lines.map(async (line) => {
+        const compareAt = (await catalog.getVariantById(line.variantId))?.variant.compareAtPrice;
+        return {
+          ...line,
+          rx: rxByLineKey.get(line.lineKey),
+          ...(compareAt !== undefined && compareAt > line.unitPrice ? { compareAtUnitPrice: compareAt } : {}),
+        };
+      }),
+    );
 
     const order: Order = {
       id: randomId('order'),

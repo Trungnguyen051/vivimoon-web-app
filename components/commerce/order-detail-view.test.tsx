@@ -71,3 +71,37 @@ describe('OrderDetailView stepper', () => {
     expect(screen.getAllByText(dict.orders.statuses.cancelled)).toHaveLength(2);
   });
 });
+
+describe('OrderDetailView products panel', () => {
+  // p-aqua-daily-30 is "Aqua Daily" (content/mock/products.ts).
+  const lines: Order['lines'] = [
+    { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, unitPrice: 25, lineTotal: 50, currency: 'USD' },
+    { lineKey: 'l2', variantId: 'p-mystic-daily-violet-30', quantity: 1, unitPrice: 18, compareAtUnitPrice: 24, lineTotal: 18, currency: 'USD' },
+  ];
+  const totals = { subtotal: 68, discount: 0, appliedVouchers: [], shipping: 3, total: 71, currency: 'USD' as const };
+
+  it('lists each line with its thumbnail, name and quantity', async () => {
+    await renderView(order({ lines, totals }));
+    const panel = screen.getByRole('region', { name: dict.orderDetail.lineItems });
+    const rows = within(panel).getAllByRole('listitem');
+    expect(rows).toHaveLength(2);
+    expect(rows[0].querySelector('img')).not.toBeNull(); // decorative: the name sits beside it
+    expect(rows[0]).toHaveTextContent('Aqua Daily Clear');
+    expect(rows[0]).toHaveTextContent('×2');
+    expect(rows[1]).toHaveTextContent('×1');
+  });
+
+  it('strikes through the original price only on a line that captured one', async () => {
+    await renderView(order({ lines, totals }));
+    const panel = screen.getByRole('region', { name: dict.orderDetail.lineItems });
+    const struck = panel.querySelectorAll('s');
+    expect(struck).toHaveLength(1);
+    expect(struck[0].textContent).toMatch(/24/);
+  });
+
+  it('footers the item count (sum of quantities) and the order total', async () => {
+    await renderView(order({ lines, totals }));
+    const footer = screen.getByText(`${dict.orderDetail.totalLabel} (3 ${dict.orderDetail.items}):`);
+    expect(footer.parentElement).toHaveTextContent(/71/);
+  });
+});
