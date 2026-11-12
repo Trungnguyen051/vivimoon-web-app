@@ -85,14 +85,15 @@ describe('POST /api/cart/price', () => {
   it('folds a chosen shipping option into shipping and total end-to-end', async () => {
     const res = await POST(
       req({
-        lines: BASELINE_LINES,
+        // Under the 300.000 free-shipping Spend Tier, so the fee is charged.
+        lines: [{ ...BASELINE_LINES[0], quantity: 1 }],
         shipping: { province: 'Ho Chi Minh City', district: 'District 1', optionId: 'standard' },
       }),
     );
     const body = await res.json();
     expect(res.status).toBe(200);
     expect(body.data.shipping).toBe(30_000);
-    expect(body.data.total).toBe(700_000 + 30_000 - body.data.discount);
+    expect(body.data.total).toBe(body.data.subtotal + 30_000 - body.data.discount);
   });
 
   it('404s a tampered shipping optionId, not a silent 0 fee', async () => {

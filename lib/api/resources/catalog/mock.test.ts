@@ -258,4 +258,34 @@ describe('mockCatalog', () => {
       expect(sold).toEqual([...sold].sort((a, b) => b - a));
     });
   });
+
+  describe('Default Rx filter (#196)', () => {
+    const covers = (p: Product, sph: number) => Boolean(p.sphRange && p.sphRange.min <= sph && sph <= p.sphRange.max);
+
+    it('every lens fixture states the sph range it is stocked in', async () => {
+      expect((await mockCatalog.listProducts()).every((p) => p.sphRange)).toBe(true);
+    });
+
+    it('keeps only lenses whose range covers both eyes', async () => {
+      const all = await mockCatalog.listProducts();
+      const list = await mockCatalog.listProducts({ rx: '-2.5,-7' });
+      expect(list.length).toBeGreaterThan(0);
+      expect(list.length).toBeLessThan(all.length);
+      expect(list.every((p) => covers(p, -2.5) && covers(p, -7))).toBe(true);
+      expect(all.filter((p) => covers(p, -2.5) && covers(p, -7))).toHaveLength(list.length);
+    });
+
+    it('drops a lens when only one eye is out of its range', async () => {
+      const shallow = (await mockCatalog.listProducts()).find((p) => p.sphRange!.min > -10)!;
+      const outside = shallow.sphRange!.min - 0.5;
+      expect((await mockCatalog.listProducts({ rx: `-1,-1` })).map((p) => p.id)).toContain(shallow.id);
+      expect((await mockCatalog.listProducts({ rx: `-1,${outside}` })).map((p) => p.id)).not.toContain(shallow.id);
+      expect((await mockCatalog.listProducts({ rx: `${outside},-1` })).map((p) => p.id)).not.toContain(shallow.id);
+    });
+
+    it("narrows the other facets' counts too", async () => {
+      const { counts } = await mockCatalog.searchProducts({ rx: '-8,-8' });
+      expect(counts.replacement.monthly ?? 0).toBe((await mockCatalog.listProducts({ rx: '-8,-8', replacement: 'monthly' })).length);
+    });
+  });
 });

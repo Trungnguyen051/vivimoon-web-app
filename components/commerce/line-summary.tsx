@@ -15,11 +15,18 @@ type SummaryLine = { purchaseUnit?: PurchaseUnit; rx?: LineRx; variantLabel?: st
 export function formatLineSummary(line: SummaryLine, dict: Dictionary): string | null {
   const { rx } = line;
   if (!rx) return line.variantLabel ? `${line.variantLabel} · x${line.quantity ?? 1}` : null;
-  const unit = dict.rx.units[purchaseUnitOf(line) ?? 'pair'];
-  if (isSingleRx(rx)) return `${unit} · ${rx.sph === 0 ? dict.rx.noPower : power(rx.sph)}`;
-  if (rx.left.sph === 0 && rx.right.sph === 0) return `${unit} · ${dict.rx.noPower}`;
-  return `${unit} · ${dict.rx.left} ${power(rx.left.sph)} · ${dict.rx.right} ${power(rx.right.sph)}`;
+  return `${dict.rx.units[purchaseUnitOf(line) ?? 'pair']} · ${formatPowers(rx, dict)}`;
 }
+
+/** Just the power part of the summary: "−2.50", "L −2.50 · R −3.00" or "Không độ". */
+export function formatPowers(rx: LineRx, dict: Dictionary): string {
+  if (isSingleRx(rx)) return formatPower(rx.sph, dict);
+  if (rx.left.sph === 0 && rx.right.sph === 0) return dict.rx.noPower;
+  return `${dict.rx.left} ${power(rx.left.sph)} · ${dict.rx.right} ${power(rx.right.sph)}`;
+}
+
+/** One power as the summary shows it, "−2.50" or "Không độ". */
+export const formatPower = (sph: number, dict: Dictionary): string => (sph === 0 ? dict.rx.noPower : power(sph));
 
 /** Tells two lines of one variant apart by unit and power (spec §7). */
 export function LineSummary({ line, dict }: { line: SummaryLine; dict: Dictionary }) {

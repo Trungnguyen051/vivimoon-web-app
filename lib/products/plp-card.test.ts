@@ -53,6 +53,12 @@ describe('quiz card rules', () => {
     expect(showQuizCard({ rx: '-2.50,-3.00', minPrice: '1', maxPrice: '2' }, 20)).toBe(false);
   });
 
+  it('does not count a malformed Độ, which filters nothing', () => {
+    expect(activeFilterGroups({ rx: 'abc' })).toBe(0);
+    expect(activeFilterGroups({ rx: '-2.50' })).toBe(0);
+    expect(showQuizCard({ rx: 'abc', minPrice: '1' }, 20)).toBe(true);
+  });
+
   it('hides under 6 results', () => {
     expect(showQuizCard({}, 5)).toBe(false);
   });

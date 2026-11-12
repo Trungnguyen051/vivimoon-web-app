@@ -155,6 +155,12 @@ export const vi: Dictionary = {
       occasions: { graduation: 'Kỷ yếu', wedding: 'Đám cưới', party: 'Tiệc', date: 'Hẹn hò', travel: 'Du lịch', photoshoot: 'Chụp ảnh' },
       pricePresets: { 'under-200k': 'Dưới 200K', '200k-300k': '200K – 300K', 'over-300k': 'Trên 300K' },
       sortBy: 'Sắp xếp: {sort}', showing: 'Đang xem {shown} / {total} sản phẩm', loadMore: 'Xem thêm sản phẩm',
+      yourRx: {
+        title: 'Độ của bạn', subtitle: 'Chỉ hiện mẫu có sẵn đúng độ từng mắt', enter: 'Nhập độ', choose: 'Chọn độ',
+        listTitles: { left: 'Độ mắt trái (L)', right: 'Độ mắt phải (R)' },
+        step: 'Bước {fine}', stepCoarse: 'Bước {fine} · {coarse} dưới {below}',
+        autoNote: 'Tự cập nhật khi chọn xong 2 mắt', guide: 'Chưa biết độ? Cách đọc đơn kính',
+      },
     },
   },
   reviews: {
@@ -215,6 +221,27 @@ export const vi: Dictionary = {
     unavailableNote: 'Sản phẩm không còn bán không được tính vào tổng cộng.',
     unavailableBlocksCheckout: 'Vui lòng xóa sản phẩm không còn bán để tiếp tục.',
     priceError: 'Không cập nhật được tổng tiền. Vui lòng thử lại.',
+    eyes: { left: 'Mắt trái', right: 'Mắt phải' },
+    tierDiscount: 'Ưu đãi đơn từ {threshold}',
+  },
+  spendTier: {
+    remaining: {
+      freeShipping: 'Mua thêm {amount} để được Freeship',
+      gift: 'Mua thêm {amount} để được tặng Khay đựng',
+      discount: 'Mua thêm {amount} để được giảm {value}',
+    },
+    caption: {
+      freeShipping: 'Freeship cho đơn từ {threshold}',
+      gift: 'Tặng Khay đựng cho đơn từ {threshold}',
+      discount: 'Giảm {value} cho đơn từ {threshold}',
+    },
+    allReached: 'Bạn đã nhận đủ ưu đãi: Freeship, tặng Khay đựng và giảm giá',
+  },
+  miniCart: {
+    title: 'Giỏ hàng ({count})', close: 'Đóng giỏ hàng',
+    added: 'Đã thêm {item} vào giỏ', addedMany: 'Đã thêm {count} sản phẩm vào giỏ',
+    upsell: 'Thêm để đủ Freeship', addItem: 'Thêm {name} vào giỏ',
+    note: 'Phí vận chuyển & voucher áp dụng ở bước thanh toán', viewCart: 'Xem giỏ hàng',
   },
   checkout: {
     shipping: {

@@ -1,4 +1,4 @@
-import type { LensGalleryContexts, Product } from '@/lib/api/schemas/catalog';
+import { parseRxPair, type LensGalleryContexts, type Product } from '@/lib/api/schemas/catalog';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { MATERIAL_VALUES } from './lens-facets';
 
@@ -35,11 +35,13 @@ export function specLine(product: Product, dict: Dictionary): string {
  */
 const FILTER_GROUPS: string[][] = [
   ['material'], ['color', 'productLine'], ['replacement'], ['diameter'], ['makeupStyle'],
-  ['series'], ['occasion'], ['minPrice', 'maxPrice'], ['brandId'], ['rx'],
+  ['series'], ['occasion'], ['minPrice', 'maxPrice'], ['brandId'],
 ];
 
+/** A malformed `rx` filters nothing (#196), so it isn't a group either. */
 export const activeFilterGroups = (params: Record<string, string | undefined>) =>
-  FILTER_GROUPS.filter((keys) => keys.some((key) => params[key])).length;
+  FILTER_GROUPS.filter((keys) => keys.some((key) => params[key])).length
+  + (params.rx && parseRxPair(params.rx) ? 1 : 0);
 
 /** The designer's "Rule hiện / ẩn card Quiz" (Figma PLP 55:2). */
 export const showQuizCard = (params: Record<string, string | undefined>, total: number) =>

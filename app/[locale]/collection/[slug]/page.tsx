@@ -8,6 +8,7 @@ import { ProductGrid } from '@/components/commerce/product-grid';
 import { collectionListId } from '@/lib/analytics/list-id';
 import {
   CollectionFilters, CollectionFiltersSheet, CollectionImageView, CollectionLoadMore, CollectionSort,
+  DefaultRxAutoApply, YourRxSheet,
 } from '@/components/commerce/collection-filters';
 import { QuizCard } from '@/components/commerce/quiz-card';
 import { cardImage, parseCardView, showQuizCard } from '@/lib/products/plp-card';
@@ -80,8 +81,10 @@ export default async function CollectionPage({
           <CollectionFilters dict={dict} counts={counts} />
         </aside>
         <div className="min-w-0 flex-1 space-y-6">
-          <div className="lg:hidden">
+          <DefaultRxAutoApply />
+          <div className="grid grid-cols-2 gap-2 lg:hidden">
             <CollectionFiltersSheet dict={dict} counts={counts} />
+            <YourRxSheet dict={dict} />
           </div>
           <div className="space-y-3">
             <div className="flex items-center justify-between gap-4">

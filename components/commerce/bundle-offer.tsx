@@ -9,10 +9,11 @@ import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/features/cart/use-cart';
 import { useBuyBoxStore } from '@/features/cart/buy-box-store';
+import { useMiniCartStore } from '@/features/cart/mini-cart-store';
+import { accessoryLine } from '@/features/cart/accessory-line';
 import { usePricedCart } from '@/features/cart/use-priced-cart';
 import { lineKey } from '@/lib/cart/line-key';
 import { formatPrice } from '@/lib/utils/format';
-import type { CartLine } from '@/features/cart/cart.types';
 
 /**
  * "Mua kèm tiết kiệm hơn" (CONTEXT.md "Bundle"): the lens as set up in the buy
@@ -33,27 +34,14 @@ export function BundleOffer({
 }) {
   const t = dict.pdp.bundle;
   const { add } = useCart();
+  const showMiniCart = useMiniCartStore((s) => s.show);
   const buyBoxLine = useBuyBoxStore((s) => s.line);
   // A line left by the previous PDP until this one's buy box publishes its own.
   const lensLine = buyBoxLine?.productId === product.id ? buyBoxLine : null;
   const [unticked, setUnticked] = useState<ReadonlySet<string>>(new Set());
 
   const items = useMemo(() => {
-    const accessoryLines = accessories.map((a): CartLine => {
-      const v = a.variants[0];
-      return {
-        lineKey: lineKey(v.id),
-        productId: a.id,
-        variantId: v.id,
-        name: a.option === 'volume' ? `${a.name} ${v.label}` : a.name,
-        sku: v.sku,
-        unitPrice: v.price,
-        currency: v.currency,
-        quantity: 1,
-        image: a.images[0],
-        variantLabel: v.label,
-      };
-    });
+    const accessoryLines = accessories.map(accessoryLine);
     return lensLine ? [lensLine, ...accessoryLines] : accessoryLines;
   }, [accessories, lensLine]);
 
@@ -162,7 +150,10 @@ export function BundleOffer({
               size="xl"
               className="w-full lg:w-auto"
               disabled={ticked.length === 0}
-              onClick={() => ticked.forEach((l) => add(l))}
+              onClick={() => {
+                ticked.forEach((l) => add(l));
+                showMiniCart(ticked);
+              }}
             >
               {ticked.length === items.length ? t.add : t.addSome}
             </Button>

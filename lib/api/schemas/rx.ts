@@ -25,6 +25,7 @@ const sphSchema = z.number().refine((v) => SPH_STEPS.includes(v), 'sph is not a 
 /** A shopper's saved starting point per eye (CONTEXT.md "Default Rx"): myopia only, in 0.25 steps. */
 const defaultSphSchema = sphSchema.refine((v) => v <= 0 && Number.isInteger(v * 4), 'Use a value of 0 or below in 0.25 steps');
 export const defaultRxSchema = z.object({ left: defaultSphSchema, right: defaultSphSchema });
+export type DefaultRx = z.infer<typeof defaultRxSchema>;
 
 export const rxEyeSchema = z.object({
   sph: sphSchema,

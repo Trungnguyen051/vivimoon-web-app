@@ -121,8 +121,8 @@ export const mockOrders = {
       lines,
       totals: {
         subtotal: priced.subtotal,
-        // A Bundle's saving is money off too, so the order's totals still add up.
-        discount: priced.discount + (priced.bundleSaving ?? 0),
+        // A Bundle's saving and a Spend Tier's amount off are money off too, so the order's totals still add up.
+        discount: priced.discount + (priced.bundleSaving ?? 0) + (priced.tierDiscount ?? 0),
         appliedVouchers: priced.appliedVouchers,
         shipping: priced.shipping,
         total: priced.total,
@@ -130,6 +130,7 @@ export const mockOrders = {
         // least one did — an all-unavailable cart never reaches here.
         currency: priced.currency!,
       },
+      ...(priced.gifts?.length ? { gifts: priced.gifts } : {}),
       address: input.address,
       ...(priced.shippingMethod ? { shippingMethod: priced.shippingMethod } : {}),
       payment: { method: input.paymentMethod, status: 'pending' },

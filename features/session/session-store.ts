@@ -1,5 +1,6 @@
 'use client';
 import { create } from 'zustand';
+import type { DefaultRx } from '@/lib/api/schemas/rx';
 
 export interface SessionUser {
   id: string;
@@ -8,6 +9,7 @@ export interface SessionUser {
   email?: string;
   avatarUrl?: string;
   onboardedAt?: string;
+  defaultRx?: DefaultRx;
 }
 
 /** `unknown` means the session has not been checked yet, so the header can
