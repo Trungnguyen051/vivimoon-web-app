@@ -11,7 +11,7 @@ vi.mock('next/headers', () => ({
 
 process.env.AUTH_COOKIE_SECRET = 'test-secret';
 
-const { GET, PATCH } = await import('./route');
+const { GET, PATCH, DELETE } = await import('./route');
 const { signSession } = await import('@/lib/auth/cookie');
 const { resetMockAuthState } = await import('@/lib/api/resources/auth/mock');
 
@@ -20,6 +20,14 @@ function patch(body: unknown): Request {
     method: 'PATCH',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(body),
+  });
+}
+
+function del(body?: unknown): Request {
+  return new Request('http://localhost/api/account', {
+    method: 'DELETE',
+    headers: { 'content-type': 'application/json' },
+    body: body === undefined ? undefined : JSON.stringify(body),
   });
 }
 
@@ -121,5 +129,38 @@ describe('account routes', () => {
   it('401s a tampered session cookie', async () => {
     jar.set('vivimoon_session', 'u-001.deadbeef');
     expect((await GET()).status).toBe(401);
+  });
+
+  it('round-trips gender, Default Rx and onboardedAt', async () => {
+    signIn();
+    const fields = { gender: 'female', defaultRx: { left: -2.25, right: -3 }, onboardedAt: '2026-01-01T00:00:00.000Z' };
+    expect((await (await PATCH(patch(fields))).json()).data).toMatchObject(fields);
+    expect((await (await GET()).json()).data).toMatchObject(fields);
+  });
+
+  it.each([{ left: 1, right: -1 }, { left: -1, right: 0.5 }, { left: -1.1, right: -1 }])('rejects Default Rx %j', async (defaultRx) => {
+    signIn();
+    expect((await PATCH(patch({ defaultRx }))).status).toBe(400);
+  });
+
+  it('401s DELETE without a session', async () => {
+    expect((await DELETE(del())).status).toBe(401);
+  });
+
+  it('DELETE removes the user and the session no longer resolves', async () => {
+    signIn();
+    const res = await DELETE(del({ currentPassword: 'vivimoon123' }));
+    expect(res.status).toBe(200);
+    expect(jar.has('vivimoon_session')).toBe(false);
+    signIn(); // a stale cookie for the deleted user
+    expect((await GET()).status).toBe(404);
+  });
+
+  it('DELETE refuses without the current password and keeps the account', async () => {
+    signIn();
+    expect((await DELETE(del())).status).toBe(401);
+    expect((await DELETE(del({ currentPassword: 'wrong' }))).status).toBe(401);
+    expect(jar.has('vivimoon_session')).toBe(true);
+    expect((await GET()).status).toBe(200);
   });
 });

@@ -1,3 +1,4 @@
+import { defaultRxSchema } from './rx';
 import { z } from 'zod';
 import { paymentMethodTypeSchema } from './payments';
 
@@ -37,6 +38,10 @@ export const userSchema = z.object({
   // Set automatically from whichever method a logged-in shopper's most
   // recent order paid with (M5.3, issue #20); checkout preselects it.
   preferredPaymentMethod: paymentMethodTypeSchema.optional(),
+  gender: z.enum(['male', 'female', 'other']).optional(),
+  defaultRx: defaultRxSchema.optional(),
+  /** Set once the welcome dialog is done or skipped; its absence is what opens it. */
+  onboardedAt: z.string().optional(),
   // False for a Google-only account: it sets a first password without a current one.
   hasPassword: z.boolean().optional(),
 });
@@ -47,21 +52,12 @@ export const userSchema = z.object({
  */
 const passwordSchema = z.string().min(8, 'Use at least 8 characters');
 
-export const registerSchema = z
-  .object({
-    identifier: identifierSchema,
-    name: z.string().trim().min(1, 'Enter your name'),
-    password: passwordSchema.optional(),
-    confirmPassword: z.string().optional(),
-  })
-  .superRefine((v, ctx) => {
-    if (v.password === undefined) return;
-    if (v.confirmPassword === undefined) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['confirmPassword'], message: 'Confirm your password' });
-    } else if (v.confirmPassword !== v.password) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['confirmPassword'], message: 'Passwords do not match' });
-    }
-  });
+/** Phone sign-up only (ADR-0021): no email, and the password is required. */
+export const registerSchema = z.object({
+  name: z.string().trim().min(1, 'Enter your name'),
+  phone: z.string().trim().regex(VN_PHONE, 'Enter a valid phone number'),
+  password: passwordSchema,
+});
 
 export const loginSchema = z.object({
   identifier: identifierSchema,
@@ -69,6 +65,7 @@ export const loginSchema = z.object({
 });
 
 export const googleLoginSchema = z.object({ idToken: z.string().min(1) });
+export const appleLoginSchema = googleLoginSchema;
 
 export const otpPurposeSchema = z.enum(['signup', 'login', 'reset']);
 

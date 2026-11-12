@@ -158,3 +158,16 @@ describe('mockOrders.list', () => {
     expect(list.every((o) => o.userId === 'u-002')).toBe(true);
   });
 });
+
+describe("mockOrders.cancel", () => {
+  beforeEach(() => resetMockOrdersState());
+
+  it("moves a placed order to cancelled", async () => {
+    expect((await mockOrders.cancel("order-seed-1")).status).toBe("cancelled");
+    expect((await mockOrders.get("order-seed-1"))?.status).toBe("cancelled");
+  });
+
+  it("refuses a shipped order", async () => {
+    await expect(mockOrders.cancel("order-seed-3")).rejects.toMatchObject({ code: "conflict" });
+  });
+});

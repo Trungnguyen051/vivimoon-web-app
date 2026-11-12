@@ -1,5 +1,5 @@
 import { users as seedUsers, type MockUser } from '@/content/mock';
-import { isPhone, normalizePhone, type LoginInput, type OtpChallenge, type OtpPurpose, type OtpRequestInput, type OtpVerifyInput, type OtpVerifyResult, type PasswordResetInput, type RegisterInput, type User } from '@/lib/api/schemas/auth';
+import { normalizePhone, type LoginInput, type OtpChallenge, type OtpPurpose, type OtpRequestInput, type OtpVerifyInput, type OtpVerifyResult, type PasswordResetInput, type RegisterInput, type User } from '@/lib/api/schemas/auth';
 
 /** Thrown by the mock so route handlers can map to an error code. */
 export class AuthError extends Error {
@@ -16,12 +16,15 @@ interface ResetRecord { userId: string; expiresAt: number }
 let store: MockUser[] = seedUsers.map((u) => ({ ...u }));
 const otps = new Map<string, OtpRecord>();
 const resets = new Map<string, ResetRecord>();
+/** Registrations awaiting their OTP, by challenge id (so a second register for the same phone cannot swap the first one's password). Not accounts until verified (ADR-0021). */
+const pendingSignups = new Map<string, RegisterInput>();
 
 /** Test helper — restores the fixture state between cases. */
 export function resetMockAuthState(): void {
   store = seedUsers.map((u) => ({ ...u }));
   otps.clear();
   resets.clear();
+  pendingSignups.clear();
 }
 
 const OTP_TTL_MS = 5 * 60 * 1000;
@@ -48,21 +51,14 @@ function randomCode(): string {
 }
 
 export const mockAuth = {
-  async register(input: RegisterInput): Promise<User> {
-    if (findByIdentifier(input.identifier)) {
+  /** Holds the registration and issues a `signup` challenge; the account exists only once it is verified. */
+  async register(input: RegisterInput): Promise<OtpChallenge> {
+    if (findByIdentifier(input.phone)) {
       throw new AuthError('That phone or email is already registered', 'conflict');
     }
-    const phoneLike = isPhone(input.identifier);
-    const user: MockUser = {
-      id: randomId('u'),
-      phone: phoneLike ? normalizePhone(input.identifier) : '',
-      email: phoneLike ? undefined : input.identifier,
-      name: input.name,
-      createdAt: new Date().toISOString(),
-      password: input.password,
-    };
-    store.push(user);
-    return publicUser(user);
+    const challenge = await this.requestOtp({ identifier: input.phone, purpose: 'signup' });
+    pendingSignups.set(challenge.otpId, input);
+    return challenge;
   },
 
   async login({ identifier, password }: LoginInput): Promise<User> {
@@ -76,6 +72,14 @@ export const mockAuth = {
   },
 
   async loginWithGoogle(idToken: string): Promise<User> {
+    return this.loginWithSocial(idToken);
+  },
+
+  async loginWithApple(idToken: string): Promise<User> {
+    return this.loginWithSocial(idToken);
+  },
+
+  async loginWithSocial(idToken: string): Promise<User> {
     // The mock treats the token as an email. Real verification is Vivimoon's.
     const existing = findByIdentifier(idToken);
     if (existing) return publicUser(existing);
@@ -114,6 +118,21 @@ export const mockAuth = {
     }
     otps.delete(otpId); // single use — no replay
 
+    if (record.purpose === 'signup') {
+      // A signup code only ever creates the account submitted with it — never signs in to an existing one.
+      const pending = pendingSignups.get(otpId);
+      pendingSignups.delete(otpId);
+      if (!pending || findByIdentifier(pending.phone)) {
+        throw new AuthError('That code is invalid or has expired', 'unauthorized');
+      }
+      const created: MockUser = {
+        id: randomId('u'), phone: normalizePhone(pending.phone), name: pending.name,
+        createdAt: new Date().toISOString(), password: pending.password,
+      };
+      store.push(created);
+      return { kind: 'session', user: publicUser(created) };
+    }
+
     const user = findByIdentifier(record.identifier);
     if (!user) throw new AuthError('That code is invalid or has expired', 'unauthorized');
 
@@ -137,6 +156,16 @@ export const mockAuth = {
     return publicUser(user);
   },
 
+  /** Needs the current password when the account has one; a social-only account has none to give. */
+  async deleteUser(id: string, currentPassword?: string): Promise<void> {
+    const i = store.findIndex((u) => u.id === id);
+    if (i === -1) throw new AuthError('Account not found', 'not_found');
+    if (store[i].password !== undefined && currentPassword !== store[i].password) {
+      throw new AuthError('Your current password is incorrect', 'unauthorized');
+    }
+    store.splice(i, 1);
+  },
+
   async getUserById(id: string): Promise<User | null> {
     const user = store.find((u) => u.id === id);
     return user ? publicUser(user) : null;
@@ -149,7 +178,7 @@ export const mockAuth = {
    */
   async updateUser(
     id: string,
-    { currentPassword, ...patch }: Partial<Pick<MockUser, 'name' | 'email' | 'dob' | 'password' | 'preferredPaymentMethod'>> & { currentPassword?: string },
+    { currentPassword, ...patch }: Partial<Pick<MockUser, 'name' | 'email' | 'dob' | 'password' | 'preferredPaymentMethod' | 'gender' | 'defaultRx' | 'onboardedAt'>> & { currentPassword?: string },
   ): Promise<User> {
     const user = store.find((u) => u.id === id);
     if (!user) throw new AuthError('Account not found', 'not_found');

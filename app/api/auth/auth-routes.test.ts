@@ -18,6 +18,7 @@ process.env.AUTH_COOKIE_SECRET = 'test-secret';
 const { POST: login } = await import('./login/route');
 const { POST: register } = await import('./register/route');
 const { POST: google } = await import('./google/route');
+const { POST: apple } = await import('./apple/route');
 const { GET: session } = await import('./session/route');
 const { POST: logout } = await import('./logout/route');
 const { POST: otpRequest } = await import('./otp/request/route');
@@ -88,25 +89,31 @@ describe('auth routes', () => {
   });
 
   it('409s a duplicate registration', async () => {
-    const res = await register(
-      post({ identifier: '0912345678', name: 'Dup', password: 'abcdefgh', confirmPassword: 'abcdefgh' }),
-    );
+    const res = await register(post({ phone: '0912345678', name: 'Dup', password: 'abcdefgh' }));
     expect(res.status).toBe(409);
   });
 
-  it('registers a new account and starts a session', async () => {
-    const res = await register(
-      post({ identifier: '0900000001', name: 'Mới', password: 'abcdefgh', confirmPassword: 'abcdefgh' }),
-    );
+  it('register returns a signup challenge and sets no session; login before verify fails', async () => {
+    const res = await register(post({ phone: '0900000001', name: 'Mới', password: 'abcdefgh' }));
     expect(res.status).toBe(200);
+    expect((await res.json()).data.otpId).toBeTruthy();
+    expect(jar.get(SESSION_COOKIE)).toBeUndefined();
+    const attempt = await login(post({ identifier: '0900000001', password: 'abcdefgh' }));
+    expect(attempt.status).toBe(401);
+  });
+
+  it('verifying the signup challenge starts a session; a wrong code does not', async () => {
+    const { data } = await (await register(post({ phone: '0900000003', name: 'Mới', password: 'abcdefgh' }))).json();
+    const wrong = data.devCode === '000000' ? '111111' : '000000';
+    expect((await otpVerify(post({ otpId: data.otpId, code: wrong }))).status).toBe(401);
+    expect(jar.get(SESSION_COOKIE)).toBeUndefined();
+    const res = await otpVerify(post({ otpId: data.otpId, code: data.devCode }));
     expect((await res.json()).data.user.name).toBe('Mới');
     expect(jar.get(SESSION_COOKIE)).toBeTruthy();
   });
 
-  it('400s a registration with a mismatched confirmPassword', async () => {
-    const res = await register(
-      post({ identifier: '0900000002', name: 'Mismatch', password: 'abcdefgh', confirmPassword: 'somethingelse' }),
-    );
+  it('400s a registration without a password', async () => {
+    const res = await register(post({ phone: '0900000002', name: 'NoPw' }));
     expect(res.status).toBe(400);
   });
 
@@ -114,6 +121,23 @@ describe('auth routes', () => {
     const res = await google(post({ idToken: 'mai@example.vn' }));
     expect((await res.json()).data.user.id).toBe('u-001');
     expect(jar.get(SESSION_COOKIE)).toBeTruthy();
+  });
+
+  it('signs in with Apple and starts a session', async () => {
+    const res = await apple(post({ idToken: 'mai@example.vn' }));
+    expect((await res.json()).data.user.id).toBe('u-001');
+    expect(jar.get(SESSION_COOKIE)).toBeTruthy();
+  });
+
+  it('refuses Apple sign-in in a production build', async () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    try {
+      const res = await apple(post({ idToken: 'mai@example.vn' }));
+      expect(res.status).toBe(401);
+      expect(jar.has(SESSION_COOKIE)).toBe(false);
+    } finally {
+      vi.unstubAllEnvs();
+    }
   });
 
   it('refuses Google sign-in in a production build, where the mock cannot verify a token', async () => {

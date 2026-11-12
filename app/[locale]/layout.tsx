@@ -5,6 +5,7 @@ import { AnnouncementBar } from '@/components/layout/announcement-bar';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import { SessionSync } from '@/features/session/session-sync';
+import { WelcomeDialog } from '@/features/session/welcome-dialog';
 import { ComparisonTray } from '@/components/commerce/comparison-tray';
 import { BoundaryStringsProvider } from '@/components/layout/boundary-strings';
 
@@ -23,6 +24,7 @@ export default async function LocaleLayout({
   return (
     <>
       <SessionSync />
+      <WelcomeDialog dict={dict.welcome} />
       <AnnouncementBar segments={[dict.announcement.freeShipping, dict.announcement.authentic, dict.announcement.licensed]} />
       <Header locale={locale as Locale} dict={dict} />
       {/* Width and padding belong to the page, not here — see ADR-0013. Pages opt in via PageContainer. */}

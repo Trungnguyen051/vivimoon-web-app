@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { Heart } from 'lucide-react';
 import { isLocale, type Locale } from '@/lib/i18n/config';
@@ -6,10 +5,9 @@ import { getDictionary } from '@/lib/i18n/dictionaries';
 import { readSessionUserId } from '@/lib/auth/cookie';
 import { fetchViaSelf } from '@/lib/api/server-fetch';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { ProductGrid } from '@/components/commerce/product-grid';
+import { FavoritesGrid } from './favorites-grid';
 import type { ApiResult } from '@/lib/api/client';
 import type { Product } from '@/lib/api/schemas/catalog';
-import { PageContainer } from '@/components/layout/page-container';
 
 /**
  * Goes through the same-origin route handler rather than importing the
@@ -34,9 +32,9 @@ export default async function FavoritesPage({ params }: { params: Promise<{ loca
   const products = await fetchFavorites(locale);
 
   return (
-    <PageContainer>
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-12">
-        <h1 className="text-3xl font-semibold tracking-tight">{dict.favorites.title}</h1>
+    <>
+      <div className="flex flex-col gap-8">
+        <h1 className="text-lg font-semibold uppercase tracking-wide">{dict.favorites.title}</h1>
 
         {products.length === 0 ? (
           <Empty>
@@ -48,13 +46,9 @@ export default async function FavoritesPage({ params }: { params: Promise<{ loca
             </EmptyHeader>
           </Empty>
         ) : (
-          <ProductGrid products={products} locale={locale} dict={dict} listId="favorites" />
+          <FavoritesGrid initialProducts={products} locale={locale} dict={dict.favorites} />
         )}
-
-        <Link href={`/${locale}/account`} className="text-sm text-muted-foreground underline underline-offset-4">
-          {dict.account.title}
-        </Link>
       </div>
-    </PageContainer>
+    </>
   );
 }

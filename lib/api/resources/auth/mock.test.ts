@@ -25,39 +25,59 @@ describe('mockAuth', () => {
     expect(unknown).toBe(wrong);
   });
 
-  it('registers a new account', async () => {
-    const user = await mockAuth.register({ identifier: '0911111111', name: 'Mới', password: 'abcdefgh' });
-    expect(user.phone).toBe('0911111111');
-    expect(await mockAuth.getUserById(user.id)).not.toBeNull();
+  it('registers into a pending signup: a challenge, and no account yet', async () => {
+    const c = await mockAuth.register({ phone: '0911111111', name: 'Mới', password: 'abcdefgh' });
+    expect(c.devCode).toMatch(/^\d{6}$/);
+    await expect(mockAuth.login({ identifier: '0911111111', password: 'abcdefgh' })).rejects.toThrow(/invalid/i);
   });
 
-  it('refuses to register an identifier already in use', async () => {
-    await expect(
-      mockAuth.register({ identifier: '0912345678', name: 'Dup', password: 'abcdefgh' }),
-    ).rejects.toThrow(/already/i);
+  it('creates the account only when the signup challenge is verified', async () => {
+    const c = await mockAuth.register({ phone: '+84911111112', name: 'Mới', password: 'abcdefgh' });
+    const result = await mockAuth.verifyOtp({ otpId: c.otpId, code: c.devCode! });
+    expect(result.kind === 'session' && result.user.phone).toBe('0911111112');
+    expect((await mockAuth.login({ identifier: '0911111112', password: 'abcdefgh' })).name).toBe('Mới');
   });
 
-  it('treats +84 and 0-prefixed forms of a phone as the same account on register', async () => {
-    await expect(
-      mockAuth.register({ identifier: '+84912345678', name: 'Dup', password: 'abcdefgh' }),
-    ).rejects.toThrow(/already/i);
+  it('verifying a challenge creates the account submitted with that challenge, not a later registration for the same phone', async () => {
+    const a = await mockAuth.register({ phone: '0911111114', name: 'A', password: 'password-A1' });
+    await mockAuth.register({ phone: '0911111114', name: 'B', password: 'password-B1' });
+    await mockAuth.verifyOtp({ otpId: a.otpId, code: a.devCode! });
+    expect((await mockAuth.login({ identifier: '0911111114', password: 'password-A1' })).name).toBe('A');
+    await expect(mockAuth.login({ identifier: '0911111114', password: 'password-B1' })).rejects.toThrow(/invalid/i);
+  });
+
+  it('a resend (registering again) verifies with the same details', async () => {
+    await mockAuth.register({ phone: '0911111113', name: 'Mới', password: 'abcdefgh' });
+    const again = await mockAuth.register({ phone: '0911111113', name: 'Mới', password: 'abcdefgh' });
+    expect((await mockAuth.verifyOtp({ otpId: again.otpId, code: again.devCode! })).kind).toBe('session');
+  });
+
+  it('a bare signup OTP for a pending phone carries no registration and cannot create the account', async () => {
+    await mockAuth.register({ phone: '0911111115', name: 'Victim', password: 'abcdefgh' });
+    const bare = await mockAuth.requestOtp({ identifier: '0911111115', purpose: 'signup' });
+    await expect(mockAuth.verifyOtp({ otpId: bare.otpId, code: bare.devCode! })).rejects.toThrow();
+  });
+
+  it('a signup code never signs in to an existing account', async () => {
+    const bare = await mockAuth.requestOtp({ identifier: '0912345678', purpose: 'signup' });
+    await expect(mockAuth.verifyOtp({ otpId: bare.otpId, code: bare.devCode! })).rejects.toThrow();
+  });
+
+  it('a second pending signup for a phone that got verified meanwhile cannot create a duplicate', async () => {
+    const first = await mockAuth.register({ phone: '0911111116', name: 'A', password: 'password-A1' });
+    const second = await mockAuth.register({ phone: '0911111116', name: 'B', password: 'password-B1' });
+    await mockAuth.verifyOtp({ otpId: first.otpId, code: first.devCode! });
+    await expect(mockAuth.verifyOtp({ otpId: second.otpId, code: second.devCode! })).rejects.toThrow();
+  });
+
+  it('refuses to register a phone already in use, in either form', async () => {
+    await expect(mockAuth.register({ phone: '0912345678', name: 'Dup', password: 'abcdefgh' })).rejects.toThrow(/already/i);
+    await expect(mockAuth.register({ phone: '+84912345678', name: 'Dup', password: 'abcdefgh' })).rejects.toThrow(/already/i);
   });
 
   it('signs in with the +84 form of a phone registered in 0-prefixed form', async () => {
     const user = await mockAuth.login({ identifier: '+84912345678', password: 'vivimoon123' });
     expect(user.id).toBe('u-001');
-  });
-
-  it('stores a +84 phone in its 0-prefixed form', async () => {
-    const user = await mockAuth.register({ identifier: '+84911111112', name: 'Mới', password: 'abcdefgh' });
-    expect(user.phone).toBe('0911111112');
-    expect((await mockAuth.login({ identifier: '0911111112', password: 'abcdefgh' })).id).toBe(user.id);
-  });
-
-  it('stores an email identifier on the email field, not the phone field', async () => {
-    const user = await mockAuth.register({ identifier: 'new@example.vn', name: 'E' });
-    expect(user.email).toBe('new@example.vn');
-    expect(user.phone).toBe('');
   });
 
   it('issues an OTP challenge carrying a dev code in mock mode', async () => {

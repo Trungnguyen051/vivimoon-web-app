@@ -7,6 +7,7 @@ export interface SessionUser {
   phone: string;
   email?: string;
   avatarUrl?: string;
+  onboardedAt?: string;
 }
 
 /** `unknown` means the session has not been checked yet, so the header can
