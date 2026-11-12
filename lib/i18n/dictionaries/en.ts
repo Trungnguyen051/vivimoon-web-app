@@ -370,7 +370,7 @@ export const en = {
          deliberately does not read. */
       chips: ['wearing lenses', 'delivery', 'return', 'payment'],
     },
-    /* PROVISIONAL — owner: Vivimoon. The policy windows below (7 days, 30 days,
+    /* PROVISIONAL — owner: Vivimoon. The policy windows below (15 days, 30 days,
        300.000₫) are plausible rather than confirmed. */
     service: {
       topicsTitle: 'Pick the topic you need',
@@ -386,7 +386,7 @@ export const en = {
       },
       policies: {
         shipping: { title: 'Delivery & shipping fees', body: '1–2 working days in the city, 3–5 to other provinces. Free shipping on orders from 300,000₫.' },
-        returns: { title: 'Returns', body: 'Return within 7 days of delivery, with the seal unbroken.' },
+        returns: { title: 'Returns', body: 'Free 1-for-1 exchange within 15 days of delivery, for moisture-lock and breathable lenses.' },
         warranty: { title: 'Warranty', body: 'Manufacturing defects are replaced within 30 days, with a photo of the seal and blister.' },
         payment: { title: 'Payment', body: 'Bank transfer, e-wallet, domestic and international cards, or cash on delivery.' },
       },

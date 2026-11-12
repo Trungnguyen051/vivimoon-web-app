@@ -368,7 +368,7 @@ export const vi: Dictionary = {
       seeAllFaq: 'XEM TẤT CẢ CÁC CÂU HỎI THƯỜNG GẶP',
       chips: ['đeo lens', 'độ cận', 'giao hàng', 'đổi trả'],
     },
-    /* PROVISIONAL — owner: Vivimoon. The policy windows below (7 days, 30 days,
+    /* PROVISIONAL — owner: Vivimoon. The policy windows below (15 days, 30 days,
        300.000₫) are plausible rather than confirmed. */
     service: {
       topicsTitle: 'Chọn chủ đề bạn cần',
@@ -384,7 +384,7 @@ export const vi: Dictionary = {
       },
       policies: {
         shipping: { title: 'Giao hàng & phí vận chuyển', body: 'Nội thành 1–2 ngày làm việc, tỉnh xa 3–5 ngày. Miễn phí vận chuyển cho đơn từ 300.000₫.' },
-        returns: { title: 'Đổi trả', body: 'Đổi trả trong 7 ngày kể từ khi nhận hàng, với sản phẩm còn nguyên tem niêm phong.' },
+        returns: { title: 'Đổi trả', body: 'Đổi 1–1 miễn phí trong 15 ngày kể từ khi nhận hàng, áp dụng lens khoá ẩm & lens cho mắt thở.' },
         warranty: { title: 'Bảo hành', body: 'Lens lỗi do nhà sản xuất được đổi mới trong 30 ngày, kèm ảnh chụp tem và vỉ.' },
         payment: { title: 'Thanh toán', body: 'Chuyển khoản, ví điện tử, thẻ nội địa và quốc tế, hoặc thanh toán khi nhận hàng.' },
       },
