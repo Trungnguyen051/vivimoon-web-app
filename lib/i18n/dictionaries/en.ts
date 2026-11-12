@@ -281,9 +281,12 @@ export const en = {
     backToOrders: 'Back to order history',
   },
   tracking: {
-    title: 'Track your order', code: 'Order code', identifier: 'Phone or email', submit: 'Get tracking link',
-    devLinkNote: 'Development mode — your tracking link is',
-    error: 'That lookup did not go through. Please try again.',
+    title: 'Track your order', subtitle: 'Enter your order code to see its delivery status and details.',
+    code: 'Order code', placeholder: 'Enter your order code, e.g. #VVM-1A2B3C4D5E', submit: 'Look up',
+    idle: 'Enter an order code to see the result.',
+    notFoundTitle: 'Order not found', notFoundBefore: 'Order code ',
+    notFoundAfter: ' does not exist. Please check it again or contact Vivimoon for help.',
+    contactSupport: 'Contact support →',
   },
   addresses: {
     title: 'Saved addresses', empty: 'You have no saved addresses yet.',

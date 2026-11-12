@@ -5,15 +5,14 @@ import { currencySchema } from './catalog';
 import { rxSchema } from './rx';
 import { addressSchema } from './checkout';
 import { paymentMethodTypeSchema, paymentStatusSchema } from './payments';
-import { identifierSchema } from './auth';
 
 export const orderStatusSchema = z.enum(ORDER_STATUSES);
 
 export const placeOrderRequestSchema = z.object({
   lines: z.array(priceLineInputSchema).min(1),
   address: addressSchema,
-  // Guest order-tracking link is emailed (spec §10); required regardless of
-  // session so a member's order carries it too without a second lookup.
+  // The order confirmation is emailed; required regardless of
+  // session so a member's order carries it too.
   email: z.string().email(),
   paymentMethod: paymentMethodTypeSchema,
 });
@@ -40,7 +39,7 @@ export const orderSchema = z.object({
   address: addressSchema,
   payment: z.object({ method: paymentMethodTypeSchema, status: paymentStatusSchema }),
   // Exactly one of the two: a logged-in shopper's order attaches their user id,
-  // a guest's carries the email their tracking link goes to.
+  // a guest's carries the email its order confirmation goes to.
   userId: z.string().optional(),
   guestEmail: z.string().email().optional(),
 });
@@ -50,25 +49,9 @@ export type OrderLine = z.infer<typeof orderLineSchema>;
 export type Order = z.infer<typeof orderSchema>;
 
 /**
- * POST /api/orders/track body (M3.2, issue #11; widened to phone-or-email
- * M5.2, issue #19) — a guest's order code + the phone or email it was
- * placed with, reusing the same identifier validator sign-in uses.
+ * Order Lookup input (ADR-0022): trimmed, one leading `#` dropped (the page's
+ * placeholder shows codes as `#VVM-…`), uppercased. Empty means no code.
  */
-export const trackingRequestSchema = z.object({
-  code: z.string().min(1),
-  identifier: identifierSchema,
-});
-
-/**
- * Identical shape whether or not the order/email combination matched, so the
- * response itself can never be used to probe which order codes are real.
- * `devLink` is mock-mode-only (stripped by the route handler once anything
- * is upstream, same posture as `OtpChallenge.devCode`).
- */
-export const trackingAckSchema = z.object({
-  message: z.string(),
-  devLink: z.string().optional(),
-});
-
-export type TrackingRequest = z.infer<typeof trackingRequestSchema>;
-export type TrackingAck = z.infer<typeof trackingAckSchema>;
+export function normalizeOrderCode(raw: string): string {
+  return raw.trim().replace(/^#/, '').trim().toUpperCase();
+}

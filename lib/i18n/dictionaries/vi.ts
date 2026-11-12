@@ -285,10 +285,12 @@ export const vi: Dictionary = {
     backToOrders: 'Quay lại lịch sử đơn hàng',
   },
   tracking: {
-    title: 'Tra cứu đơn hàng', code: 'Mã đơn hàng',
-    identifier: 'Số điện thoại hoặc email', submit: 'Lấy liên kết theo dõi',
-    devLinkNote: 'Chế độ phát triển — liên kết theo dõi của bạn là',
-    error: 'Chưa tra cứu được. Bạn thử lại giúp mình nhé.',
+    title: 'Tra cứu đơn hàng', subtitle: 'Nhập mã đơn hàng của bạn để xem trạng thái giao hàng và thông tin chi tiết.',
+    code: 'Mã đơn hàng', placeholder: 'Nhập mã đơn hàng, ví dụ: #VVM-1A2B3C4D5E', submit: 'Tra cứu',
+    idle: 'Nhập mã đơn hàng để xem kết quả tra cứu.',
+    notFoundTitle: 'Không tìm thấy đơn hàng', notFoundBefore: 'Mã đơn hàng ',
+    notFoundAfter: ' không tồn tại. Vui lòng kiểm tra lại hoặc liên hệ Vivimoon để được hỗ trợ.',
+    contactSupport: 'Liên hệ hỗ trợ →',
   },
   addresses: {
     title: 'Địa chỉ đã lưu', empty: 'Bạn chưa lưu địa chỉ nào.',

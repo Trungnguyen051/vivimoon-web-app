@@ -9,7 +9,7 @@ import { getDictionary, type Dictionary } from '@/lib/i18n/dictionaries';
 import { support } from '@/lib/api/resources/support';
 import { topicSchema, type Topic } from '@/lib/api/schemas/support';
 import { CONTACT_CHANNELS } from '@/lib/support/contact-channels';
-import { TrackingRequestForm } from '@/components/commerce/tracking-request-form';
+import { OrderLookupForm } from '@/components/commerce/order-lookup-form';
 import {
   Accordion, AccordionItem, AccordionTrigger, AccordionContent,
 } from '@/components/ui/accordion';
@@ -185,7 +185,7 @@ export default async function SupportPage({ params }: { params: Promise<{ locale
             {/* The real form, not a teaser. A shopper looking for help with a delivery
                 should not have to know that Tra cứu đơn hàng is a different nav item. */}
             <div className="rounded-xl border p-6">
-              <TrackingRequestForm dict={dict.tracking} />
+              <OrderLookupForm locale={locale} dict={dict.tracking} />
             </div>
           </section>
         </div>
