@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
@@ -35,11 +34,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ lo
 
   return (
     <>
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
-        <OrderDetailView order={order} locale={locale} dict={dict} />
-        <Link href={`/${locale}/account/orders`} className="text-sm text-muted-foreground underline underline-offset-4">
-          {dict.orderDetail.backToOrders}
-        </Link>
+      <div className="mx-auto w-full max-w-[720px]">
+        <OrderDetailView order={order} locale={locale} dict={dict} signedIn />
       </div>
     </>
   );

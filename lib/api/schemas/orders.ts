@@ -5,15 +5,14 @@ import { currencySchema } from './catalog';
 import { rxSchema } from './rx';
 import { addressSchema } from './checkout';
 import { paymentMethodTypeSchema, paymentStatusSchema } from './payments';
-import { identifierSchema } from './auth';
 
 export const orderStatusSchema = z.enum(ORDER_STATUSES);
 
 export const placeOrderRequestSchema = z.object({
   lines: z.array(priceLineInputSchema).min(1),
   address: addressSchema,
-  // Guest order-tracking link is emailed (spec §10); required regardless of
-  // session so a member's order carries it too without a second lookup.
+  // The order confirmation is emailed; required regardless of
+  // session so a member's order carries it too.
   email: z.string().email(),
   paymentMethod: paymentMethodTypeSchema,
 });
@@ -21,6 +20,10 @@ export const placeOrderRequestSchema = z.object({
 /** `CartLine` + resolved Rx (spec §6) — price fields are the server's, never the client's. */
 export const orderLineSchema = pricedLineSchema.extend({
   rx: rxSchema.optional(),
+  // The variant's compare-at price as it stood when the order was placed —
+  // only when it was above what was charged — so a past order never quotes
+  // today's catalogue.
+  compareAtUnitPrice: z.number().int().nonnegative().optional(),
 });
 
 export const orderSchema = z.object({
@@ -35,40 +38,36 @@ export const orderSchema = z.object({
   // always-empty array, and `currency` is narrowed back to required: an
   // order that priced nothing cannot exist.
   totals: pricedCartSchema
-    .omit({ lines: true, unavailableLines: true })
+    .omit({ lines: true, unavailableLines: true, shippingMethod: true })
     .extend({ currency: currencySchema }),
   address: addressSchema,
+  // Id of the shipping option charged at placement (localized for display);
+  // optional so upstream and older orders without one stay valid ("—").
+  shippingMethod: z.string().optional(),
+  // The carrier's own waybill number — set once the order ships.
+  carrierTrackingCode: z.string().optional(),
   payment: z.object({ method: paymentMethodTypeSchema, status: paymentStatusSchema }),
   // Exactly one of the two: a logged-in shopper's order attaches their user id,
-  // a guest's carries the email their tracking link goes to.
+  // a guest's carries the email its order confirmation goes to.
   userId: z.string().optional(),
   guestEmail: z.string().email().optional(),
 });
+
+/**
+ * What Order Lookup returns to anyone holding the Order Code (ADR-0022): the
+ * order minus who owns it and how it was paid — nothing the page shows.
+ */
+export const publicOrderSchema = orderSchema.omit({ userId: true, guestEmail: true, payment: true });
+export type PublicOrder = z.infer<typeof publicOrderSchema>;
 
 export type PlaceOrderRequest = z.infer<typeof placeOrderRequestSchema>;
 export type OrderLine = z.infer<typeof orderLineSchema>;
 export type Order = z.infer<typeof orderSchema>;
 
 /**
- * POST /api/orders/track body (M3.2, issue #11; widened to phone-or-email
- * M5.2, issue #19) — a guest's order code + the phone or email it was
- * placed with, reusing the same identifier validator sign-in uses.
+ * Order Lookup input (ADR-0022): trimmed, one leading `#` dropped (the page's
+ * placeholder shows codes as `#VVM-…`), uppercased. Empty means no code.
  */
-export const trackingRequestSchema = z.object({
-  code: z.string().min(1),
-  identifier: identifierSchema,
-});
-
-/**
- * Identical shape whether or not the order/email combination matched, so the
- * response itself can never be used to probe which order codes are real.
- * `devLink` is mock-mode-only (stripped by the route handler once anything
- * is upstream, same posture as `OtpChallenge.devCode`).
- */
-export const trackingAckSchema = z.object({
-  message: z.string(),
-  devLink: z.string().optional(),
-});
-
-export type TrackingRequest = z.infer<typeof trackingRequestSchema>;
-export type TrackingAck = z.infer<typeof trackingAckSchema>;
+export function normalizeOrderCode(raw: string): string {
+  return raw.trim().replace(/^#/, '').trim().toUpperCase();
+}

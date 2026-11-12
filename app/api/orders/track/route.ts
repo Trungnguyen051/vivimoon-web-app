@@ -1,24 +1,18 @@
 import { orders } from '@/lib/api/resources/orders';
-import { trackingRequestSchema } from '@/lib/api/schemas/orders';
-import { isAnyUpstream } from '@/lib/api/config';
-import { apiOk } from '@/lib/api/response';
-import { parseBody } from '@/lib/api/route-helpers';
+import { normalizeOrderCode, publicOrderSchema } from '@/lib/api/schemas/orders';
+import { apiOk, apiFail } from '@/lib/api/response';
 
-// "the email on file" (not "your email") since the identifier used to
-// request tracking may be a phone number — the link itself is always
-// emailed to the order's own guestEmail regardless of what was typed here.
-const ACK_MESSAGE = 'If that order exists, a tracking link has been sent to the email on file for it.';
+/**
+ * Order Lookup — public, by Order Code alone (ADR-0022, superseding the
+ * emailed-link flow of ADR-0006). The code is the credential, which is why
+ * codes must stay random.
+ */
+export async function GET(request: Request) {
+  const code = new URL(request.url).searchParams.get('code') ?? '';
+  if (!normalizeOrderCode(code)) return apiFail('validation_failed', 'code is required', { field: 'code' });
 
-export async function POST(request: Request) {
-  const parsed = await parseBody(request, trackingRequestSchema);
-  if (!parsed.ok) return parsed.response;
-
-  const { devLink } = await orders.requestTracking(parsed.data.code, parsed.data.identifier);
-
-  // devLink is a local convenience — strip it the moment anything is live, or
-  // in any production build, same posture as auth's devCode.
-  if (isAnyUpstream() || process.env.NODE_ENV === 'production' || !devLink) {
-    return apiOk({ message: ACK_MESSAGE });
-  }
-  return apiOk({ message: ACK_MESSAGE, devLink });
+  const order = await orders.findByCode(code);
+  if (!order) return apiFail('not_found', 'No order matches that code');
+  // Projected: the code is a bearer secret, so it reveals no owner, email or payment.
+  return apiOk(publicOrderSchema.parse(order));
 }

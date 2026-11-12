@@ -35,6 +35,18 @@ _Avoid_: Line item, SKU line
 **Buy Now**:
 A PDP action that takes the shopper's current Rx selection straight to checkout as a single-line cart, leaving their existing Cart untouched.
 
+**Order Code**:
+The random code a shopper reads back for an Order (e.g. `VVM-…`). It is a bearer secret: anyone holding it can look the Order up (ADR-0022), so it is never sequential.
+_Avoid_: Order number, order ID (the internal `id` is a different thing)
+
+**Order Lookup**:
+The public Track Order page: an Order Code in, the Order shown inline — or "not found" — out. No phone/email, no emailed link.
+_Avoid_: Tracking link, track request
+
+**Carrier Tracking Code**:
+The shipping carrier's own waybill number for an Order (e.g. `SPX…`), present only once the Order has shipped. Distinct from the Order Code.
+_Avoid_: Tracking number, mã vận đơn (in code)
+
 **Loyalty**:
 A per-account points balance and history, credited per placed order. Earn and burn rules are provisional pending Vivimoon's real program design.
 _Avoid_: Rewards, points program

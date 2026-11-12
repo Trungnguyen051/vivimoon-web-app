@@ -10,7 +10,7 @@ import { addressLabelSchema } from '@/lib/api/schemas/checkout';
  */
 export const checkoutSchema = z.object({
   recipient: z.string().min(1),
-  // Guest checkout emails the order-tracking link (spec §10), so email stays
+  // Guest checkout emails the order confirmation, so email stays
   // required even though saved-address contacts are M3.
   email: z.string().email(),
   phone: z.string().refine(isPhone, 'Enter a valid Vietnamese phone number'),

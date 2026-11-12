@@ -146,6 +146,9 @@ export const pricedCartSchema = z.object({
   discount: z.number().int().nonnegative(),
   appliedVouchers: z.array(voucherSchema),
   shipping: z.number().int().nonnegative(),
+  // Id of the shipping option `shipping` was charged for; absent when no
+  // address was given to quote against.
+  shippingMethod: z.string().optional(),
   total: z.number().int().nonnegative(),
   // Absent only when NO line could be priced: currency is read off the
   // catalogue variants, so a cart with nothing priceable has no currency to

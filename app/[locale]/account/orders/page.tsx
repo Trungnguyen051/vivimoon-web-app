@@ -1,7 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { PackageOpen } from 'lucide-react';
-import { OrderHistoryCard, type HistoryLine } from '@/components/commerce/order-history-card';
-import { catalog } from '@/lib/api/resources/catalog';
+import { OrderHistoryCard } from '@/components/commerce/order-history-card';
+import { withProducts } from '@/components/commerce/history-lines';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
@@ -24,22 +24,6 @@ async function fetchOrders(locale: string): Promise<Order[]> {
   return result.data;
 }
 
-/** Catalogue facts per line, looked up server-side (same as the detail view); money stays the order's own. */
-async function withProducts(order: Order): Promise<HistoryLine[]> {
-  return Promise.all(
-    order.lines.map(async (line) => {
-      const found = await catalog.getVariantById(line.variantId);
-      return {
-        ...line,
-        product: found && {
-          id: found.product.id, slug: found.product.slug, name: found.product.name, image: found.product.images[0],
-          sku: found.variant.sku, color: found.variant.colorLabel, compareAtPrice: found.variant.compareAtPrice, price: found.variant.price,
-        },
-      };
-    }),
-  );
-}
-
 export default async function OrderHistoryPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: raw } = await params;
   if (!isLocale(raw)) notFound();
@@ -53,7 +37,7 @@ export default async function OrderHistoryPage({ params }: { params: Promise<{ l
   if (!userId) redirect(`/${locale}/sign-in?next=${encodeURIComponent(`/${locale}/account/orders`)}`);
 
   const orders = await fetchOrders(locale);
-  const cards = await Promise.all(orders.map(async (order) => ({ order, lines: await withProducts(order) })));
+  const cards = await Promise.all(orders.map(async (order) => ({ order, lines: await withProducts(order.lines) })));
 
   return (
     <>

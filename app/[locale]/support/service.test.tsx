@@ -73,9 +73,10 @@ describe('the Support hub service surface', () => {
     await renderHub();
     const tracking = section(service.trackingTitle);
 
-    expect(within(tracking).getByLabelText(viDict.tracking.code)).toBeInTheDocument();
-    expect(within(tracking).getByLabelText(viDict.tracking.identifier)).toBeInTheDocument();
+    // Order Lookup's one field (ADR-0022), submitting to the Track Order page.
+    expect(within(tracking).getByLabelText(viDict.tracking.code)).toHaveAttribute('name', 'code');
     expect(within(tracking).getByRole('button', { name: viDict.tracking.submit })).toBeInTheDocument();
+    expect(within(tracking).getByRole('search')).toHaveAttribute('action', '/vi/orders/track');
   });
 
   it('renders every contact channel from the shared module, as text', async () => {

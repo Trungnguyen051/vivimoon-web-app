@@ -137,6 +137,7 @@ export const mockPricing = {
     // M5.4 issue #21 — there is no delivery-method picker), the cheapest
     // quoted option, same selection order placement already made itself.
     let shippingFee = 0;
+    let shippingMethod: string | undefined;
     if (input.shipping) {
       const options = await shipping.quote({
         province: input.shipping.province,
@@ -149,6 +150,7 @@ export const mockPricing = {
         throw new PricingError(`Unknown shipping option "${input.shipping.optionId}"`, 'not_found');
       }
       shippingFee = match.fee;
+      shippingMethod = match.id;
     }
 
     const { discount, applied } = bestVoucher(subtotal, shippingFee, userId !== null);
@@ -161,6 +163,7 @@ export const mockPricing = {
       discount,
       appliedVouchers: applied,
       shipping: shippingFee,
+      ...(shippingMethod ? { shippingMethod } : {}),
       total,
       currency,
     };

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useCart } from '@/features/cart/use-cart';
+import { useBuyAgain } from './use-buy-again';
 import { RxSummary } from './rx-summary';
 import { PriceTag } from './price-tag';
 import { formatPrice } from '@/lib/utils/format';
@@ -27,12 +27,11 @@ export function OrderHistoryCard({
 }: { order: Order; lines: HistoryLine[]; locale: Locale; dict: Dictionary }) {
   const t = dict.orders;
   const router = useRouter();
-  const { add } = useCart();
   const [expanded, setExpanded] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [missing, setMissing] = useState(0);
+  const { buyAgain, missing } = useBuyAgain(lines, locale);
 
   const shown = expanded ? lines : lines.slice(0, 1);
   const itemCount = lines.reduce((n, l) => n + l.quantity, 0);
@@ -52,21 +51,6 @@ export function OrderHistoryCard({
     } finally {
       setBusy(false);
     }
-  };
-
-  const buyAgain = () => {
-    let unavailable = 0;
-    for (const l of lines) {
-      if (!l.product) { unavailable++; continue; }
-      add({
-        lineKey: l.lineKey, productId: l.product.id, variantId: l.variantId, name: l.product.name,
-        sku: l.product.sku, color: l.product.color, unitPrice: l.product.price, currency: l.currency,
-        quantity: l.quantity, image: l.product.image, rx: l.rx,
-      });
-    }
-    setMissing(unavailable);
-    // Stay put when something was skipped, so the shopper reads why.
-    if (unavailable === 0) router.push(`/${locale}/cart`);
   };
 
   return (
