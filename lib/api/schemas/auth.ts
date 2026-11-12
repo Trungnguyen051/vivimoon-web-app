@@ -69,6 +69,7 @@ export const loginSchema = z.object({
 });
 
 export const googleLoginSchema = z.object({ idToken: z.string().min(1) });
+export const appleLoginSchema = googleLoginSchema;
 
 export const otpPurposeSchema = z.enum(['signup', 'login', 'reset']);
 

@@ -11,7 +11,10 @@ export default async function SignInPage({ params }: { params: Promise<{ locale:
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-3xl font-semibold tracking-tight">{dict.auth.signInTitle}</h1>
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl font-semibold uppercase tracking-tight">{dict.auth.signInTitle}</h1>
+        <p className="text-sm text-muted-foreground">{dict.auth.signInSubtitle}</p>
+      </div>
       {/* useSearchParams() in SignInForm needs a Suspense boundary for static prerendering. */}
       <Suspense>
         <SignInForm locale={locale} dict={dict.auth} />

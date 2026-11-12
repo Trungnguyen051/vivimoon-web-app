@@ -76,6 +76,14 @@ export const mockAuth = {
   },
 
   async loginWithGoogle(idToken: string): Promise<User> {
+    return this.loginWithSocial(idToken);
+  },
+
+  async loginWithApple(idToken: string): Promise<User> {
+    return this.loginWithSocial(idToken);
+  },
+
+  async loginWithSocial(idToken: string): Promise<User> {
     // The mock treats the token as an email. Real verification is Vivimoon's.
     const existing = findByIdentifier(idToken);
     if (existing) return publicUser(existing);
