@@ -145,11 +145,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
           ) : null}
         </article>
 
-        {/* Only when it leads somewhere the strip has not already shown. With a theme
-            matching three lenses or fewer, the strip *is* the collection, and inviting a
-            shopper to "see the whole collection" they have just scrolled past is an
-            invitation to nothing. */}
-        {destination && count > strip.length ? (
+        {/* Whenever the theme leads somewhere, as #130 draws it — the only condition the
+            ticket states is having a destination at all.
+
+            An earlier gate hid this below four products, on the reasoning that the strip
+            *is* the collection at that size. Plausible, but nobody asked for it, and it
+            cost `natural` and `occasion` their only route into a collection while making
+            the singular copy below unreachable (#160, #153). A shopper who just read
+            about a theme may well want its collection page even when it holds one lens. */}
+        {destination ? (
           <section className="flex flex-col items-start gap-4 rounded-xl border p-6 sm:flex-row sm:items-center sm:justify-between md:p-10">
             <div className="flex flex-col gap-1">
               <h2 className="text-2xl font-semibold tracking-tight">{dict.articles.collectionBannerTitle}</h2>
