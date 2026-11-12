@@ -24,6 +24,13 @@ export const vi: Dictionary = {
     colored: 'Lens màu', daily: 'Lens hằng ngày', allLenses: 'Tất cả lens',
     beginnerFriendly: 'Lens cho người mới',
     productsLabel: 'sản phẩm', noResults: 'Không có sản phẩm phù hợp với bộ lọc.', showAll: 'Xem tất cả sản phẩm',
+    card: { lines: { moisture: 'Khoá ẩm', breathable: 'Mắt thở' }, moreColors: '+{n} màu' },
+    imageView: 'Xem ảnh:',
+    quizCard: {
+      title: 'Chưa biết chọn mẫu nào?',
+      body: '{count} câu hỏi · 30 giây. Vivimoon gợi ý lens hợp với mắt, phong cách và thời gian đeo của bạn.',
+      cta: 'Làm quiz chọn lens', revisit: 'Xem lại gợi ý cho bạn',
+    },
   },
   home: {
     moments: {
@@ -327,7 +334,7 @@ export const vi: Dictionary = {
   },
   favorites: {
     title: 'Yêu thích', empty: 'Bạn chưa có sản phẩm yêu thích nào.',
-    add: 'Thêm vào yêu thích', remove: 'Bỏ yêu thích',
+    add: 'Thêm vào yêu thích', remove: 'Bỏ yêu thích', addNamed: 'Thêm {name} vào yêu thích',
     addToCart: 'Thêm vào giỏ', buyNow: 'Mua ngay', added: 'Đã thêm vào giỏ',
   },
   compare: {
@@ -357,7 +364,7 @@ export const vi: Dictionary = {
   },
   quiz: {
     title: 'Trắc nghiệm chọn lens', next: 'Tiếp theo', back: 'Quay lại', submit: 'Xem kết quả',
-    resultsTitle: 'Gợi ý cho bạn', retake: 'Làm lại bài trắc nghiệm',
+    resultsTitle: 'Gợi ý cho bạn', retake: 'Làm lại bài trắc nghiệm', browseAll: 'Xem tất cả mẫu lens',
     unanswered: 'Chọn một câu trả lời để tiếp tục.',
     error: 'Đã có lỗi khi chấm điểm câu trả lời của bạn. Vui lòng thử lại.',
   },

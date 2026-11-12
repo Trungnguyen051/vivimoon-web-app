@@ -11,11 +11,13 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
 
 export function FavoriteButton({
-  productId, locale, dict, iconOnly = false, className,
+  productId, locale, dict, iconOnly = false, label, className,
 }: {
   productId: string; locale: Locale; dict: Dictionary['favorites'];
   /** A heart alone, labelled for assistive tech — the PDP's image and buy-box hearts. */
   iconOnly?: boolean;
+  /** The icon-only heart's name where many sit on one page, e.g. "Thêm Sandkiss vào yêu thích". */
+  label?: string;
   className?: string;
 }) {
   const router = useRouter();
@@ -53,7 +55,7 @@ export function FavoriteButton({
       disabled={busy}
       onClick={toggle}
       aria-pressed={favorited}
-      aria-label={iconOnly ? dict.add : undefined}
+      aria-label={iconOnly ? label ?? dict.add : undefined}
       className={cn('gap-2', className)}
     >
       <Heart className={cn('size-4', favorited && 'fill-current text-destructive')} />

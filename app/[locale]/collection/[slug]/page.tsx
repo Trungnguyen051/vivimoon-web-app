@@ -7,8 +7,12 @@ import { SearchX } from 'lucide-react';
 import { ProductGrid } from '@/components/commerce/product-grid';
 import { collectionListId } from '@/lib/analytics/list-id';
 import {
-  CollectionFilters, CollectionFiltersSheet, CollectionLoadMore, CollectionSort, DefaultRxAutoApply, YourRxSheet,
+  CollectionFilters, CollectionFiltersSheet, CollectionImageView, CollectionLoadMore, CollectionSort,
+  DefaultRxAutoApply, YourRxSheet,
 } from '@/components/commerce/collection-filters';
+import { QuizCard } from '@/components/commerce/quiz-card';
+import { cardImage, parseCardView, showQuizCard } from '@/lib/products/plp-card';
+import { quiz, quizSocialProof } from '@/content/quiz';
 import { distinctColorVariants } from '@/lib/products/variant-colors';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
@@ -52,6 +56,14 @@ export default async function CollectionPage({
     { ids: collection.productIds, limit: shown },
   );
 
+  // "Xem ảnh": every card shows the chosen view and swaps to the close-up (or, on it, the model) on hover.
+  const view = parseCardView(sp.view);
+  const hoverView = view === 'closeUp' ? 'face' : 'closeUp';
+  const images = Object.fromEntries(await Promise.all(products.map(async (p) => {
+    const gallery = (await catalog.getGallery(p.id))?.contexts;
+    return [p.id, { image: cardImage(p, gallery, view), hoverImage: cardImage(p, gallery, hoverView) }] as const;
+  })));
+
   /* The colours this collection contains bound the analytics id's only free-form field. */
   const base = await catalog.getProductsByIds(collection.productIds);
   const colors = distinctColorVariants(base.flatMap((p) => p.variants)).map((v) => v.color as string);
@@ -74,9 +86,15 @@ export default async function CollectionPage({
             <CollectionFiltersSheet dict={dict} counts={counts} />
             <YourRxSheet dict={dict} />
           </div>
-          <div className="flex items-center justify-between gap-4">
-            <p className="text-sm text-muted-foreground">{total} {dict.collection.productsLabel}</p>
-            <CollectionSort dict={dict} />
+          <div className="space-y-3">
+            <div className="flex items-center justify-between gap-4">
+              <p className="text-sm text-muted-foreground">{total} {dict.collection.productsLabel}</p>
+              <div className="flex items-center gap-6">
+                <CollectionImageView dict={dict} className="hidden lg:flex" />
+                <CollectionSort dict={dict} />
+              </div>
+            </div>
+            <CollectionImageView dict={dict} className="lg:hidden" />
           </div>
         {products.length === 0 ? (
           <Empty className="rounded-xl border py-16">
@@ -103,6 +121,15 @@ export default async function CollectionPage({
             locale={l}
             dict={dict}
             listId={collectionListId(collection.slug, query, colors)}
+            images={images}
+            fourth={showQuizCard(sp, total) ? (
+              <QuizCard
+                locale={l}
+                dict={dict}
+                questionCount={quiz.questions.length}
+                socialProof={quizSocialProof(dict.home.quiz.socialProof, l)}
+              />
+            ) : null}
             // Three across beside the sidebar, as the frame draws it.
             className="lg:grid-cols-3"
           />

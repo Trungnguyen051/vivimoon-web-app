@@ -53,6 +53,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils/cn';
+import { CARD_VIEWS, parseCardView } from '@/lib/products/plp-card';
 
 /** Every field a collection URL can carry, so "Xoá tất cả" cannot fall behind one. `sort` survives it. */
 const FILTER_KEYS = Object.keys(productQuerySchema.shape).filter(
@@ -857,5 +858,40 @@ export function CollectionFiltersSheet({
         <CollectionFilters dict={dict} counts={counts} showRx={false} />
       </SheetContent>
     </Sheet>
+  );
+}
+
+/**
+ * "Xem ảnh: Vân lens / Người mẫu / Cận mắt" switches every card's photo (Figma 55:231, 194:471).
+ * Kept in `?view=` so a shared link shows the same photos; the paging stays. Người mẫu is the default.
+ */
+export function CollectionImageView({ dict, className }: { dict: Dictionary; className?: string }) {
+  const { params, navigate } = useSetParams();
+  const current = parseCardView(params.get('view') ?? undefined);
+  return (
+    <div role="group" aria-label={dict.collection.imageView} className={cn('flex items-center gap-2 lg:gap-3', className)}>
+      <span className="text-[11px] text-muted-foreground lg:text-sm" aria-hidden>{dict.collection.imageView}</span>
+      <div className="flex gap-1.5 lg:gap-0 lg:border lg:border-border">
+        {CARD_VIEWS.map((view) => (
+          <button
+            key={view}
+            type="button"
+            aria-pressed={current === view}
+            onClick={() =>
+              navigate((next) => {
+                if (view === 'face') next.delete('view');
+                else next.set('view', view);
+              }, { keepPaging: true, replace: true })
+            }
+            className={cn(
+              'border px-2.5 py-1 text-[11px] whitespace-nowrap transition-colors lg:border-0 lg:px-3.5 lg:py-2 lg:text-sm',
+              current === view ? 'border-foreground bg-foreground text-background' : 'border-border hover:bg-muted',
+            )}
+          >
+            {dict.viewer.tabs[view]}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }

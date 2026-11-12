@@ -22,6 +22,13 @@ export const en = {
     colored: 'Colored Lenses', daily: 'Daily Lenses', allLenses: 'All Lenses',
     beginnerFriendly: 'Beginner-Friendly Lenses',
     productsLabel: 'products', noResults: 'No products match your filters.', showAll: 'Show all products',
+    card: { lines: { moisture: 'Moisture-lock', breathable: 'Breathable' }, moreColors: '+{n} colors' },
+    imageView: 'View:',
+    quizCard: {
+      title: 'Not sure which one to pick?',
+      body: '{count} questions · 30 seconds. Vivimoon suggests lenses that suit your eyes, style and wearing time.',
+      cta: 'Take the lens quiz', revisit: 'See your picks again',
+    },
   },
   home: {
     moments: {
@@ -326,7 +333,7 @@ export const en = {
   },
   favorites: {
     title: 'Favorites', empty: 'You have no favorites yet.',
-    add: 'Add to favorites', remove: 'Remove from favorites',
+    add: 'Add to favorites', remove: 'Remove from favorites', addNamed: 'Add {name} to favorites',
     addToCart: 'Add to cart', buyNow: 'Buy now', added: 'Added to cart',
   },
   compare: {
@@ -356,7 +363,7 @@ export const en = {
   },
   quiz: {
     title: 'Lens-Matching Quiz', next: 'Next', back: 'Back', submit: 'See my results',
-    resultsTitle: 'Recommended for you', retake: 'Retake the quiz',
+    resultsTitle: 'Recommended for you', retake: 'Retake the quiz', browseAll: 'See all lenses',
     unanswered: 'Select an answer to continue.',
     error: 'Something went wrong scoring your answers. Please try again.',
   },
