@@ -290,7 +290,7 @@ export const vi: Dictionary = {
   },
   tracking: {
     title: 'Tra cứu đơn hàng', subtitle: 'Nhập mã đơn hàng của bạn để xem trạng thái giao hàng và thông tin chi tiết.',
-    code: 'Mã đơn hàng', placeholder: 'Nhập mã đơn hàng, ví dụ: #VVM-1A2B3C4D5E', submit: 'Tra cứu',
+    code: 'Mã đơn hàng', placeholder: 'Nhập mã đơn hàng, ví dụ: #VVM-7K2Q9XM4P8RT3ZB6', submit: 'Tra cứu',
     idle: 'Nhập mã đơn hàng để xem kết quả tra cứu.',
     notFoundTitle: 'Không tìm thấy đơn hàng', notFoundBefore: 'Mã đơn hàng ',
     notFoundAfter: ' không tồn tại. Vui lòng kiểm tra lại hoặc liên hệ Vivimoon để được hỗ trợ.',

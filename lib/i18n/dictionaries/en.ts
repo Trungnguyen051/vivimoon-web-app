@@ -286,7 +286,7 @@ export const en = {
   },
   tracking: {
     title: 'Track your order', subtitle: 'Enter your order code to see its delivery status and details.',
-    code: 'Order code', placeholder: 'Enter your order code, e.g. #VVM-1A2B3C4D5E', submit: 'Look up',
+    code: 'Order code', placeholder: 'Enter your order code, e.g. #VVM-7K2Q9XM4P8RT3ZB6', submit: 'Look up',
     idle: 'Enter an order code to see the result.',
     notFoundTitle: 'Order not found', notFoundBefore: 'Order code ',
     notFoundAfter: ' does not exist. Please check it again or contact Vivimoon for help.',

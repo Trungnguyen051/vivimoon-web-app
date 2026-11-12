@@ -42,8 +42,12 @@ function randomId(prefix: string): string {
  * (ADR-0022) — anyone holding it reads the order's address — so it comes from
  * a CSPRNG, never `Math.random()` or a counter.
  */
+// Crockford-style base32: no I/L/O/U, so a code read aloud or retyped survives.
+const CODE_ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+
 function randomOrderCode(): string {
-  return `VVM-${randomBytes(5).toString('hex').toUpperCase()}`;
+  // 16 chars x 5 bits = 80 bits; 32 divides 256, so `% 32` is unbiased.
+  return `VVM-${[...randomBytes(16)].map((b) => CODE_ALPHABET[b % 32]).join('')}`;
 }
 
 export const mockOrders = {
