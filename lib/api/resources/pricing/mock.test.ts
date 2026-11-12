@@ -8,9 +8,9 @@ import type { PriceCartRequest } from '@/lib/api/schemas/cart';
 const SINGLE = { purchaseUnit: 'single', rx: { sph: -2.5 } } as const;
 
 // Two known variants from content/mock/products.ts:
-//   p-aqua-daily-30        price 25, USD
-//   p-hazel-monthly-brown-30  price 20, USD
-// 2 x 25 + 1 x 20 = 70 — a non-trivial baseline, not a round number, so a
+//   p-aqua-daily-30        price 125.000, VND
+//   p-hazel-monthly-brown-30  price 100.000, VND
+// 2 x 125.000 + 1 x 100.000 = 350.000 — a non-trivial baseline, not a round number, so a
 // broken implementation (e.g. one that prices everything at 0, or at the
 // posted `unitPrice`) cannot pass by accident.
 const BASELINE_LINES = [
@@ -32,23 +32,23 @@ function reqWithShipping(
 describe('mockPricing.priceCart', () => {
   it('sums the server-looked-up price times quantity for a non-trivial cart', async () => {
     const result = await mockPricing.priceCart(req(BASELINE_LINES));
-    expect(result.subtotal).toBe(70);
+    expect(result.subtotal).toBe(350_000);
     expect(result.lines).toEqual([
       {
         lineKey: 'l1',
         variantId: 'p-aqua-daily-30',
         quantity: 2,
-        unitPrice: 25,
-        lineTotal: 50,
-        currency: 'USD',
+        unitPrice: 125_000,
+        lineTotal: 250_000,
+        currency: 'VND',
       },
       {
         lineKey: 'l2',
         variantId: 'p-hazel-monthly-brown-30',
         quantity: 1,
-        unitPrice: 20,
-        lineTotal: 20,
-        currency: 'USD',
+        unitPrice: 100_000,
+        lineTotal: 100_000,
+        currency: 'VND',
       },
     ]);
   });
@@ -65,33 +65,33 @@ describe('mockPricing.priceCart', () => {
     } as unknown as PriceCartRequest;
 
     const result = await mockPricing.priceCart(rigged);
-    expect(result.subtotal).toBe(70);
+    expect(result.subtotal).toBe(350_000);
   });
 
   it('auto-applies the best applicable voucher and does not stack', async () => {
-    // At subtotal 70: SUMMER10 (10%) = 7, SAVE15 (fixed) = 15. SAVE15 wins.
+    // At subtotal 350.000: SUMMER10 (10%) = 35.000, SAVE15 (fixed) = 75.000. SAVE15 wins.
     // EXPIRED50, STALE-ACTIVE60 and USED5OFF would all win bigger discounts
     // if they were wrongly considered — they must not be.
     const result = await mockPricing.priceCart(req(BASELINE_LINES));
     expect(result.appliedVouchers).toHaveLength(1);
     expect(result.appliedVouchers[0].code).toBe('SAVE15');
-    expect(result.discount).toBe(15);
+    expect(result.discount).toBe(75_000);
     // Pinned literally, not derived from result.shipping — shipping is
     // always 0 until Task 8, and this proves both that value and the
     // subtotal + shipping - discount arithmetic in one assertion.
     expect(result.shipping).toBe(0);
-    expect(result.total).toBe(55);
+    expect(result.total).toBe(275_000);
   });
 
   it('applies no voucher when the cart is below every eligible minSpend', async () => {
-    // A single line at 22 clears no minSpend (SUMMER10/SAVE15 need 50,
-    // BIGSPEND needs 200). FREESHIP has no minSpend and is active/unexpired,
+    // A single line at 110.000 clears no minSpend (SUMMER10/SAVE15 need 250.000,
+    // BIGSPEND needs 1.000.000). FREESHIP has no minSpend and is active/unexpired,
     // but its discount against shipping=0 is 0 — a zero-discount candidate
     // is excluded from selection, so it does not "apply" for nothing either.
     const result = await mockPricing.priceCart(
       req([{ lineKey: 'l1', variantId: 'p-breeze-daily-30', quantity: 1, ...SINGLE }]),
     );
-    expect(result.subtotal).toBe(22);
+    expect(result.subtotal).toBe(110_000);
     expect(result.discount).toBe(0);
     expect(result.appliedVouchers).toEqual([]);
   });
@@ -128,7 +128,7 @@ describe('mockPricing.priceCart', () => {
     expect(result.unavailableLines.map((l) => l.lineKey)).toEqual(['l2']);
     // The surviving line's own total, not a zero, and not the whole cart's
     // price blanked out by its stale neighbour.
-    expect(result.subtotal).toBe(50);
+    expect(result.subtotal).toBe(250_000);
   });
 
   it('omits currency, and zeroes every total, when no line could be priced', async () => {
@@ -158,14 +158,14 @@ describe('mockPricing.priceCart', () => {
   });
 
   describe('accessories (Product Kind)', () => {
-    // a-nuoc-ngam-120: price 4, a-nuoc-ngam-360: price 8 (content/mock/accessories.ts).
+    // a-nuoc-ngam-120: price 89.000, a-nuoc-ngam-360: price 159.000 (content/mock/accessories.ts).
     it('prices an accessory by its variant, with no Rx and no unit', async () => {
       const result = await mockPricing.priceCart(req([
         { lineKey: 'a1', variantId: 'a-nuoc-ngam-120', quantity: 2 },
         { lineKey: 'a2', variantId: 'a-nuoc-ngam-360', quantity: 1 },
       ]));
-      expect(result.lines.map((l) => [l.unitPrice, l.lineTotal])).toEqual([[4, 8], [8, 8]]);
-      expect(result.subtotal).toBe(16);
+      expect(result.lines.map((l) => [l.unitPrice, l.lineTotal])).toEqual([[89_000, 178_000], [159_000, 159_000]]);
+      expect(result.subtotal).toBe(337_000);
     });
 
     it('prices an accessory alongside a lens in one cart', async () => {
@@ -173,7 +173,7 @@ describe('mockPricing.priceCart', () => {
         { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1, ...SINGLE },
         { lineKey: 'a1', variantId: 'a-nuoc-ngam-120', quantity: 1 },
       ]));
-      expect(result.subtotal).toBe(29);
+      expect(result.subtotal).toBe(214_000);
     });
 
     it('rejects an accessory line that carries an Rx', async () => {
@@ -208,9 +208,9 @@ describe('mockPricing.priceCart', () => {
   });
 
   it('folds the quoted shipping fee into shipping and total when a valid selection is given', async () => {
-    // Known district (content/mock/shipping-rates.ts): standard = 3.
-    // Voucher stays SAVE15 (fixed 15) — FREESHIP's discount against 3 is
-    // still smaller (min(5, 3) = 3), so the winner doesn't change.
+    // Known district (content/mock/shipping-rates.ts): standard = 30.000.
+    // Voucher stays SAVE15 (fixed 75.000) — FREESHIP's discount against 30.000 is
+    // still smaller (min(30.000, 30.000) = 30.000), so the winner doesn't change.
     const result = await mockPricing.priceCart(
       reqWithShipping(BASELINE_LINES, {
         province: 'Ho Chi Minh City',
@@ -218,13 +218,13 @@ describe('mockPricing.priceCart', () => {
         optionId: 'standard',
       }),
     );
-    expect(result.shipping).toBe(3);
-    expect(result.discount).toBe(15);
-    expect(result.total).toBe(70 + 3 - 15);
+    expect(result.shipping).toBe(30_000);
+    expect(result.discount).toBe(75_000);
+    expect(result.total).toBe(350_000 + 30_000 - 75_000);
   });
 
   it('names the charged shipping option and its delivery days, from the same selection as the fee', async () => {
-    // District 1: cheapest is standard (fee 3, etaDays 2).
+    // District 1: cheapest is standard (fee 30.000, etaDays 2).
     const result = await mockPricing.priceCart(
       reqWithShipping(BASELINE_LINES, { province: 'Ho Chi Minh City', district: 'District 1' }),
     );
@@ -251,12 +251,12 @@ describe('mockPricing.priceCart', () => {
 
   describe('auto-selecting the cheapest shipping option when optionId is omitted (M5.4, issue #21)', () => {
     it('charges the cheapest of the quoted options for the address, with no optionId given', async () => {
-      // Ho Chi Minh City|District 1: standard = 3, express = 8 — cheapest wins.
+      // Ho Chi Minh City|District 1: standard = 30.000, express = 50.000 — cheapest wins.
       const result = await mockPricing.priceCart(
         reqWithShipping(BASELINE_LINES, { province: 'Ho Chi Minh City', district: 'District 1' }),
       );
-      expect(result.shipping).toBe(3);
-      expect(result.total).toBe(70 + 3 - 15);
+      expect(result.shipping).toBe(30_000);
+      expect(result.total).toBe(350_000 + 30_000 - 75_000);
     });
 
     it('matches exactly what an explicit optionId for the cheapest option would charge', async () => {
@@ -274,7 +274,7 @@ describe('mockPricing.priceCart', () => {
       const result = await mockPricing.priceCart(
         reqWithShipping(BASELINE_LINES, { province: 'Nowhere', district: 'Nowhere' }),
       );
-      expect(result.shipping).toBe(5); // defaultShippingOptions' one entry
+      expect(result.shipping).toBe(30_000); // defaultShippingOptions' one entry
     });
   });
 
@@ -283,20 +283,20 @@ describe('mockPricing.priceCart', () => {
       const result = await mockPricing.priceCart(req(BASELINE_LINES));
       const codes = result.appliedVouchers.map((v) => v.code);
       expect(codes).not.toContain('MEMBER20');
-      // Unchanged from the guest baseline: SAVE15 still wins at 70.
+      // Unchanged from the guest baseline: SAVE15 still wins at 350.000.
       expect(result.appliedVouchers[0].code).toBe('SAVE15');
-      expect(result.discount).toBe(15);
+      expect(result.discount).toBe(75_000);
     });
 
     it('applies the memberOnly voucher once signed in, and it outbids the guest winner', async () => {
-      // At subtotal 70: MEMBER20 (fixed 20) beats SAVE15 (fixed 15) and
-      // SUMMER10 (10% = 7) — the same cart, re-priced under a session,
+      // At subtotal 350.000: MEMBER20 (fixed 100.000) beats SAVE15 (fixed 75.000) and
+      // SUMMER10 (10% = 35.000) — the same cart, re-priced under a session,
       // yields a *different* (larger) discount purely from userId flipping.
       const result = await mockPricing.priceCart(req(BASELINE_LINES), 'user-1');
       expect(result.appliedVouchers).toHaveLength(1);
       expect(result.appliedVouchers[0].code).toBe('MEMBER20');
-      expect(result.discount).toBe(20);
-      expect(result.total).toBe(70 - 20);
+      expect(result.discount).toBe(100_000);
+      expect(result.total).toBe(350_000 - 100_000);
     });
 
     it('does not apply a memberOnly voucher below its minSpend even when signed in', async () => {
@@ -304,7 +304,7 @@ describe('mockPricing.priceCart', () => {
         req([{ lineKey: 'l1', variantId: 'p-breeze-daily-30', quantity: 1, ...SINGLE }]),
         'user-1',
       );
-      expect(result.subtotal).toBe(22);
+      expect(result.subtotal).toBe(110_000);
       const codes = result.appliedVouchers.map((v) => v.code);
       expect(codes).not.toContain('MEMBER20');
     });

@@ -1,7 +1,7 @@
 import type { Accessory } from '@/lib/api/schemas/catalog';
 
-// USD like every lens fixture: pricing refuses a cart mixing currencies.
-// Prices are the wireframe's VND figures (Figma 57:807) at roughly 25.000₫/USD.
+// VND like every lens fixture: pricing refuses a cart mixing currencies.
+// Prices are the wireframe's figures (Figma 57:807); 360ml and Kits Yêu Mắt are PROVISIONAL.
 export const accessories: Accessory[] = [
   {
     kind: 'accessory',
@@ -13,8 +13,8 @@ export const accessories: Accessory[] = [
     requiresRx: false,
     option: 'volume',
     variants: [
-      { id: 'a-nuoc-ngam-120', sku: 'NNL-120', label: '120ml', price: 4, currency: 'USD', stock: 300 },
-      { id: 'a-nuoc-ngam-360', sku: 'NNL-360', label: '360ml', price: 8, currency: 'USD', stock: 150 },
+      { id: 'a-nuoc-ngam-120', sku: 'NNL-120', label: '120ml', price: 89_000, currency: 'VND', stock: 300 },
+      { id: 'a-nuoc-ngam-360', sku: 'NNL-360', label: '360ml', price: 159_000, currency: 'VND', stock: 150 },
     ],
   },
   {
@@ -26,7 +26,7 @@ export const accessories: Accessory[] = [
     images: ['/images/accessories/nuoc-nho-mat.svg'],
     requiresRx: false,
     option: 'volume',
-    variants: [{ id: 'a-nuoc-nho-mat-15', sku: 'NNM-15', label: '15ml', price: 3, currency: 'USD', stock: 400 }],
+    variants: [{ id: 'a-nuoc-nho-mat-15', sku: 'NNM-15', label: '15ml', price: 65_000, currency: 'VND', stock: 400 }],
   },
   {
     kind: 'accessory',
@@ -37,7 +37,7 @@ export const accessories: Accessory[] = [
     images: ['/images/accessories/khay-dung.svg'],
     requiresRx: false,
     option: 'type',
-    variants: [{ id: 'a-khay-dung-set', sku: 'KDD-SET', label: 'Khay + nhíp + que đeo', price: 2, currency: 'USD', stock: 250 }],
+    variants: [{ id: 'a-khay-dung-set', sku: 'KDD-SET', label: 'Khay + nhíp + que đeo', price: 39_000, currency: 'VND', stock: 250 }],
   },
   {
     kind: 'accessory',
@@ -48,7 +48,7 @@ export const accessories: Accessory[] = [
     images: ['/images/accessories/combo-ve-sinh.svg'],
     requiresRx: false,
     option: 'type',
-    variants: [{ id: 'a-combo-ve-sinh-3', sku: 'CVS-3', label: 'Combo 3 món', price: 5, currency: 'USD', stock: 120 }],
+    variants: [{ id: 'a-combo-ve-sinh-3', sku: 'CVS-3', label: 'Combo 3 món', price: 129_000, currency: 'VND', stock: 120 }],
   },
   {
     kind: 'accessory',
@@ -59,7 +59,7 @@ export const accessories: Accessory[] = [
     images: ['/images/accessories/kits-yeu-mat.svg'],
     requiresRx: false,
     option: 'type',
-    variants: [{ id: 'a-kits-yeu-mat-1', sku: 'KYM-1', label: 'Bộ quà tặng', price: 6, currency: 'USD', stock: 500 }],
+    variants: [{ id: 'a-kits-yeu-mat-1', sku: 'KYM-1', label: 'Bộ quà tặng', price: 149_000, currency: 'VND', stock: 500 }],
     giftOnly: true,
   },
 ];

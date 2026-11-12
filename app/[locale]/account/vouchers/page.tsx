@@ -28,7 +28,7 @@ async function fetchVouchers(locale: string): Promise<Voucher[]> {
 function discountLabel(v: Voucher, locale: Locale, dict: Dictionary['vouchers']): string {
   if (v.type === 'percent') return `${v.value}% ${dict.off}`;
   if (v.type === 'shipping') return dict.freeShipping;
-  return `${formatPrice(v.value, 'USD', locale)} ${dict.off}`;
+  return `${formatPrice(v.value, 'VND', locale)} ${dict.off}`;
 }
 
 function formatDate(iso: string, locale: Locale): string {
@@ -73,7 +73,7 @@ export default async function VouchersPage({ params }: { params: Promise<{ local
                     <p className="text-sm text-muted-foreground">{v.description}</p>
                     <div className="flex flex-wrap gap-x-4 text-xs text-muted-foreground">
                       {v.minSpend !== undefined ? (
-                        <span>{dict.vouchers.minSpend}: {formatPrice(v.minSpend, 'USD', locale)}</span>
+                        <span>{dict.vouchers.minSpend}: {formatPrice(v.minSpend, 'VND', locale)}</span>
                       ) : null}
                       <span>{dict.vouchers.expires}: {formatDate(v.expiresAt, locale)}</span>
                     </div>

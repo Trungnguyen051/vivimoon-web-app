@@ -17,7 +17,7 @@ vi.mock('@/lib/analytics/use-analytics', () => ({ useAnalytics: () => ({ track }
 function makeLine(overrides: Partial<CartLine> = {}): CartLine {
   return {
     lineKey: 'k1', productId: 'p1', variantId: 'v1', name: 'Aqua', sku: 'SKU1',
-    unitPrice: 25, currency: 'USD', quantity: 1,
+    unitPrice: 125_000, currency: 'VND', quantity: 1,
     ...overrides,
   };
 }
@@ -53,19 +53,19 @@ describe('CartPage', () => {
     // positional (index-based) match would attach the wrong total to each line.
     const priced: PricedCart = {
       lines: [
-        { lineKey: 'kB', variantId: lineB.variantId, quantity: 2, unitPrice: 25, lineTotal: 999, currency: 'USD' },
-        { lineKey: 'kA', variantId: lineA.variantId, quantity: 1, unitPrice: 25, lineTotal: 111, currency: 'USD' },
+        { lineKey: 'kB', variantId: lineB.variantId, quantity: 2, unitPrice: 125_000, lineTotal: 4_995_000, currency: 'VND' },
+        { lineKey: 'kA', variantId: lineA.variantId, quantity: 1, unitPrice: 125_000, lineTotal: 555_000, currency: 'VND' },
       ],
       unavailableLines: [],
-      subtotal: 1110, discount: 0, appliedVouchers: [], shipping: 0, total: 1110, currency: 'USD',
+      subtotal: 5_550_000, discount: 0, appliedVouchers: [], shipping: 0, total: 5_550_000, currency: 'VND',
     };
     mockedApiRequest.mockResolvedValue({ ok: true, data: priced });
     useCartStore.setState({ lines: [lineA, lineB], hydrated: true });
 
     await renderCartPage();
 
-    await waitFor(() => expect(screen.getByText('$111.00')).toBeInTheDocument(), { timeout: 2000 });
-    expect(screen.getByText('$999.00')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('555.000₫')).toBeInTheDocument(), { timeout: 2000 });
+    expect(screen.getByText('4.995.000₫')).toBeInTheDocument();
   });
 
   // ADR-0012 / issue #29. A cart persisted in localStorage outlives a
@@ -76,10 +76,10 @@ describe('CartPage', () => {
     const kept = makeLine({ lineKey: 'kKept', variantId: 'vKept', name: 'Aqua' });
     const partiallyPriced: PricedCart = {
       lines: [
-        { lineKey: 'kKept', variantId: 'vKept', quantity: 1, unitPrice: 25, lineTotal: 25, currency: 'USD' },
+        { lineKey: 'kKept', variantId: 'vKept', quantity: 1, unitPrice: 125_000, lineTotal: 125_000, currency: 'VND' },
       ],
       unavailableLines: [{ lineKey: 'kGone', variantId: 'vGone' }],
-      subtotal: 25, discount: 0, appliedVouchers: [], shipping: 0, total: 25, currency: 'USD',
+      subtotal: 125_000, discount: 0, appliedVouchers: [], shipping: 0, total: 125_000, currency: 'VND',
     };
 
     async function renderWithStaleLine() {
@@ -93,7 +93,7 @@ describe('CartPage', () => {
       await renderWithStaleLine();
       // The surviving line's total — not the blank '—' the whole cart used
       // to collapse to when one line went missing.
-      expect(screen.getAllByText('$25.00').length).toBeGreaterThan(0);
+      expect(screen.getAllByText('125.000₫').length).toBeGreaterThan(0);
     });
 
     it('keeps the stale line visible and removable rather than dropping it', async () => {
@@ -135,9 +135,9 @@ describe('CartPage', () => {
   it('fires view_cart exactly once per cart view, even through a later re-price', async () => {
     const line = makeLine();
     const priced: PricedCart = {
-      lines: [{ lineKey: line.lineKey, variantId: line.variantId, quantity: 1, unitPrice: 25, lineTotal: 25, currency: 'USD' }],
+      lines: [{ lineKey: line.lineKey, variantId: line.variantId, quantity: 1, unitPrice: 125_000, lineTotal: 125_000, currency: 'VND' }],
       unavailableLines: [],
-      subtotal: 25, discount: 0, appliedVouchers: [], shipping: 0, total: 25, currency: 'USD',
+      subtotal: 125_000, discount: 0, appliedVouchers: [], shipping: 0, total: 125_000, currency: 'VND',
     };
     mockedApiRequest.mockResolvedValue({ ok: true, data: priced });
     useCartStore.setState({ lines: [line], hydrated: true });
@@ -147,22 +147,22 @@ describe('CartPage', () => {
     await waitFor(() => expect(track).toHaveBeenCalledTimes(1), { timeout: 2000 });
     expect(track).toHaveBeenCalledWith({
       name: 'view_cart',
-      params: { currency: 'USD', value: 25, items: expect.any(Array) },
+      params: { currency: 'VND', value: 125_000, items: expect.any(Array) },
     });
 
     // A rapid quantity change re-prices the cart. That must not fire a second view_cart.
     const line2 = makeLine({ quantity: 2 });
     const priced2: PricedCart = {
-      lines: [{ lineKey: line2.lineKey, variantId: line2.variantId, quantity: 2, unitPrice: 25, lineTotal: 50, currency: 'USD' }],
+      lines: [{ lineKey: line2.lineKey, variantId: line2.variantId, quantity: 2, unitPrice: 125_000, lineTotal: 250_000, currency: 'VND' }],
       unavailableLines: [],
-      subtotal: 50, discount: 0, appliedVouchers: [], shipping: 0, total: 50, currency: 'USD',
+      subtotal: 250_000, discount: 0, appliedVouchers: [], shipping: 0, total: 250_000, currency: 'VND',
     };
     mockedApiRequest.mockResolvedValue({ ok: true, data: priced2 });
     useCartStore.setState({ lines: [line2] });
 
-    // $50.00 shows up in the line item AND the order summary (subtotal + total)
+    // 250.000₫ shows up in the line item AND the order summary (subtotal + total)
     // once re-priced — wait for at least one occurrence rather than a single unique match.
-    await waitFor(() => expect(screen.getAllByText('$50.00').length).toBeGreaterThan(0), { timeout: 2000 });
+    await waitFor(() => expect(screen.getAllByText('250.000₫').length).toBeGreaterThan(0), { timeout: 2000 });
     expect(track).toHaveBeenCalledTimes(1);
   });
 

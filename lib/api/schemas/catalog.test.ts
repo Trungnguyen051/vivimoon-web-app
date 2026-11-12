@@ -13,7 +13,7 @@ const validProduct = {
     diameter: '14.2mm', origin: 'M',
   },
   variants: [{
-    id: 'v1', sku: 'S1', price: 250000,
+    id: 'v1', sku: 'S1', price: 1_250_000_000,
     currency: 'VND', stock: 5,
   }],
   rating: 4.5, reviewCount: 10,
@@ -38,7 +38,7 @@ describe('productSchema', () => {
   });
 
   it('rejects a non-integer price, since VND has no minor unit', () => {
-    const bad = { ...validProduct, variants: [{ ...validProduct.variants[0], price: 1.5 }] };
+    const bad = { ...validProduct, variants: [{ ...validProduct.variants[0], price: 5_000.5 }] };
     expect(() => productSchema.parse(bad)).toThrow();
   });
 
@@ -136,18 +136,18 @@ describe('productSchema', () => {
 
 describe('variantSchema', () => {
   it('rejects a variant with color but no colorLabel', () => {
-    const bad = { id: 'v1', sku: 'S1', color: 'brown', price: 10, currency: 'USD', stock: 1 };
+    const bad = { id: 'v1', sku: 'S1', color: 'brown', price: 50_000, currency: 'VND', stock: 1 };
     expect(() => variantSchema.parse(bad)).toThrow();
   });
 
   it('rejects a variant with colorLabel but no color', () => {
-    const bad = { id: 'v1', sku: 'S1', colorLabel: 'Hazel Brown', price: 10, currency: 'USD', stock: 1 };
+    const bad = { id: 'v1', sku: 'S1', colorLabel: 'Hazel Brown', price: 50_000, currency: 'VND', stock: 1 };
     expect(() => variantSchema.parse(bad)).toThrow();
   });
 
   it('accepts a variant with both color and colorLabel, or neither', () => {
-    const withColor = { id: 'v1', sku: 'S1', color: 'brown', colorLabel: 'Hazel Brown', price: 10, currency: 'USD', stock: 1 };
-    const withoutColor = { id: 'v2', sku: 'S2', price: 10, currency: 'USD', stock: 1 };
+    const withColor = { id: 'v1', sku: 'S1', color: 'brown', colorLabel: 'Hazel Brown', price: 50_000, currency: 'VND', stock: 1 };
+    const withoutColor = { id: 'v2', sku: 'S2', price: 50_000, currency: 'VND', stock: 1 };
     expect(variantSchema.parse(withColor).color).toBe('brown');
     expect(variantSchema.parse(withoutColor).color).toBeUndefined();
   });

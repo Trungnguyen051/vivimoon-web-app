@@ -30,16 +30,16 @@ function json(body: unknown, status = 200) {
 function makeLine(overrides: Partial<CartLine> = {}): CartLine {
   return {
     lineKey: 'existing', productId: 'p0', variantId: 'p-aqua-daily-30', name: 'Existing',
-    sku: 'SKU0', unitPrice: 25, currency: 'USD', quantity: 1,
+    sku: 'SKU0', unitPrice: 125_000, currency: 'VND', quantity: 1,
     ...overrides,
   };
 }
 
 const PRICED_RESPONSE = {
-  lines: [{ lineKey: 'existing', variantId: 'p-aqua-daily-30', quantity: 1, unitPrice: 25, lineTotal: 25, currency: 'USD' }],
+  lines: [{ lineKey: 'existing', variantId: 'p-aqua-daily-30', quantity: 1, unitPrice: 125_000, lineTotal: 125_000, currency: 'VND' }],
   unavailableLines: [],
-  subtotal: 25, discount: 5, appliedVouchers: [{ code: 'SAVE5', title: 'x', description: 'x', type: 'fixed', value: 5, expiresAt: '2099-01-01', status: 'active' }],
-  shipping: 3, shippingMethod: 'standard', shippingEtaDays: 2, total: 23, currency: 'USD',
+  subtotal: 125_000, discount: 25_000, appliedVouchers: [{ code: 'SAVE5', title: 'x', description: 'x', type: 'fixed', value: 25_000, expiresAt: '2099-01-01', status: 'active' }],
+  shipping: 15_000, shippingMethod: 'standard', shippingEtaDays: 2, total: 115_000, currency: 'VND',
 };
 
 function fetchRoutingTo(pricePreview: unknown) {
@@ -83,9 +83,9 @@ describe('CheckoutPage — live price preview (M5.4, issue #21)', () => {
     await userEvent.type(screen.getByLabelText('Province'), 'Ho Chi Minh City');
 
     await waitFor(() => expect(screen.getByText('Total').nextElementSibling).not.toHaveTextContent('—'));
-    expect(screen.getByText('Shipping').nextElementSibling).toHaveTextContent('$3.00');
-    expect(screen.getByText('Discount').nextElementSibling).toHaveTextContent('$5.00');
-    expect(screen.getByText('Total').nextElementSibling).toHaveTextContent('$23.00');
+    expect(screen.getByText('Shipping').nextElementSibling).toHaveTextContent('15.000₫');
+    expect(screen.getByText('Discount').nextElementSibling).toHaveTextContent('25.000₫');
+    expect(screen.getByText('Total').nextElementSibling).toHaveTextContent('115.000₫');
   });
 
   it('names the delivery option the order will be charged for, once the address can be quoted', async () => {
@@ -98,7 +98,7 @@ describe('CheckoutPage — live price preview (M5.4, issue #21)', () => {
     await userEvent.type(screen.getByLabelText('Province'), 'Ho Chi Minh City');
 
     await waitFor(() => expect(block).toHaveTextContent('Standard delivery · 2 days'));
-    expect(block).toHaveTextContent('$3.00');
+    expect(block).toHaveTextContent('15.000₫');
   });
 
   it('adds no delivery-method picker — only the existing payment method picker\'s three buttons render', async () => {
@@ -117,7 +117,7 @@ describe('CheckoutPage — live price preview (M5.4, issue #21)', () => {
       if (path === '/api/orders') {
         return Promise.resolve(json({
           ok: true,
-          data: { id: 'o1', code: 'VVM-X', status: 'placed', totals: { subtotal: 25, discount: 5, shipping: 3, total: 23, currency: 'USD' } },
+          data: { id: 'o1', code: 'VVM-X', status: 'placed', totals: { subtotal: 125_000, discount: 25_000, shipping: 15_000, total: 115_000, currency: 'VND' } },
         }));
       }
       return Promise.resolve(json({ ok: true, data: {} }));

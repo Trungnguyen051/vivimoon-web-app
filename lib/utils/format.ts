@@ -7,11 +7,9 @@ export function formatPrice(
   currency: 'VND' | 'USD',
   locale: 'en' | 'vi',
 ): string {
-  return new Intl.NumberFormat(toIntlLocale(locale), {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: currency === 'VND' ? 0 : 2,
-  }).format(amount);
+  // The storefront writes đồng as "95.000₫" in both locales; Intl would give "₫95,000" in en.
+  if (currency === 'VND') return `${amount.toLocaleString('vi-VN', { maximumFractionDigits: 0 })}₫`;
+  return new Intl.NumberFormat(toIntlLocale(locale), { style: 'currency', currency, minimumFractionDigits: 2 }).format(amount);
 }
 
 /**

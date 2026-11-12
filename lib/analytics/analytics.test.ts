@@ -8,7 +8,7 @@ const product = {
   productLine: 'trongSuot', replacement: 'daily', description: '', images: [], badges: [],
   specs: { material: '', waterContent: '', baseCurve: '', diameter: '', origin: '' },
   requiresRx: true,
-  variants: [{ id: 'v1', sku: 'SKU1', price: 25, currency: 'USD', stock: 10 }],
+  variants: [{ id: 'v1', sku: 'SKU1', price: 125_000, currency: 'VND', stock: 10 }],
   rating: 5, reviewCount: 1,
 } as Product;
 
@@ -17,7 +17,7 @@ describe('toGa4Items', () => {
     const [item] = toGa4Items([{ product, variant: product.variants[0], quantity: 2 }]);
     expect(item).toEqual({
       item_id: 'SKU1', item_name: 'Aqua', item_brand: 'Vivimoon',
-      item_category: 'trongSuot', price: 25, quantity: 2,
+      item_category: 'trongSuot', price: 125_000, quantity: 2,
     });
   });
 });

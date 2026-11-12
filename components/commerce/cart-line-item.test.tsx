@@ -12,22 +12,22 @@ const dict = getDictionary('en');
 const line: CartLine = {
   lineKey: lineKey('v1'),
   productId: 'p1', variantId: 'v1', name: 'Aqua', sku: 'S1',
-  unitPrice: 25, currency: 'USD', quantity: 2,
+  unitPrice: 125_000, currency: 'VND', quantity: 2,
 };
 const rx: RxInput = { sameBothEyes: true, right: { sph: -2.5 }, left: { sph: -2.5 } };
 const lineWithRx: CartLine = { ...line, lineKey: lineKey('v1', rx), rx: rx as CartLine['rx'] };
 
 describe('CartLineItem', () => {
   it('renders the server-priced line total', () => {
-    render(<CartLineItem line={line} locale="en" dict={dict} lineTotal={50} onQty={vi.fn()} onRemove={vi.fn()} />);
-    expect(screen.getByText('$50.00')).toBeInTheDocument();
+    render(<CartLineItem line={line} locale="en" dict={dict} lineTotal={250_000} onQty={vi.fn()} onRemove={vi.fn()} />);
+    expect(screen.getByText('250.000₫')).toBeInTheDocument();
   });
 
   it('shows a pending placeholder before the server has priced the line', () => {
     // The client never multiplies unitPrice by quantity — money is server-owned.
     render(<CartLineItem line={line} locale="en" dict={dict} onQty={vi.fn()} onRemove={vi.fn()} />);
     expect(screen.getByText('—')).toBeInTheDocument();
-    expect(screen.queryByText('$50.00')).not.toBeInTheDocument();
+    expect(screen.queryByText('250.000₫')).not.toBeInTheDocument();
   });
 
   it('addresses the line by lineKey, not variantId', async () => {
@@ -68,7 +68,7 @@ describe('CartLineItem', () => {
     const nuocNgam = accessories.find((a) => a.id === 'a-nuoc-ngam')!;
     const accessoryLine: CartLine = {
       lineKey: lineKey('a-nuoc-ngam-120'), productId: 'a-nuoc-ngam', variantId: 'a-nuoc-ngam-120',
-      name: 'Nước ngâm lens', sku: 'NNL-120', variantLabel: '120ml', unitPrice: 4, currency: 'USD', quantity: 1,
+      name: 'Nước ngâm lens', sku: 'NNL-120', variantLabel: '120ml', unitPrice: 20_000, currency: 'VND', quantity: 1,
     };
 
     it('shows its variant in the shared line-summary format, not its SKU', () => {

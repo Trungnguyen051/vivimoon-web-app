@@ -47,7 +47,7 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
   // resolving) would otherwise abort and needlessly re-debounce the
   // in-flight price request.
   const lines = useMemo(() => (isBuyNow ? [buyNowLine] : cartLines), [isBuyNow, buyNowLine, cartLines]);
-  const currency = lines[0]?.currency ?? 'USD';
+  const currency = lines[0]?.currency ?? 'VND';
   const [submitError, setSubmitError] = useState<string | null>(null);
   // Defaults to the first configured method, same posture as VariantSelector
   // pre-selecting a pack — Task 10 (order placement) reads this on submit.
