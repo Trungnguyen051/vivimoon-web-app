@@ -149,7 +149,7 @@ export const mockAuth = {
    */
   async updateUser(
     id: string,
-    { currentPassword, ...patch }: Partial<Pick<MockUser, 'name' | 'email' | 'dob' | 'password' | 'preferredPaymentMethod'>> & { currentPassword?: string },
+    { currentPassword, ...patch }: Partial<Pick<MockUser, 'name' | 'email' | 'dob' | 'password' | 'preferredPaymentMethod' | 'gender' | 'defaultRx' | 'onboardedAt'>> & { currentPassword?: string },
   ): Promise<User> {
     const user = store.find((u) => u.id === id);
     if (!user) throw new AuthError('Account not found', 'not_found');

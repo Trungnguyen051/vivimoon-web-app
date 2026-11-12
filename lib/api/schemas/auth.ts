@@ -1,3 +1,4 @@
+import { defaultRxSchema } from './rx';
 import { z } from 'zod';
 import { paymentMethodTypeSchema } from './payments';
 
@@ -37,6 +38,10 @@ export const userSchema = z.object({
   // Set automatically from whichever method a logged-in shopper's most
   // recent order paid with (M5.3, issue #20); checkout preselects it.
   preferredPaymentMethod: paymentMethodTypeSchema.optional(),
+  gender: z.enum(['male', 'female', 'other']).optional(),
+  defaultRx: defaultRxSchema.optional(),
+  /** Set once the welcome dialog is done or skipped; its absence is what opens it. */
+  onboardedAt: z.string().optional(),
   // False for a Google-only account: it sets a first password without a current one.
   hasPassword: z.boolean().optional(),
 });

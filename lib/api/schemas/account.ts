@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { addressSchema } from './checkout';
 import { paymentMethodTypeSchema } from './payments';
+import { defaultRxSchema } from './rx';
+import { userSchema } from './auth';
 
 /**
  * Phone is deliberately absent: the client checklist specifies it as the one
@@ -16,6 +18,9 @@ export const accountPatchSchema = z
     /** Required alongside `password` when the account has one (checked by the resource, which knows). */
     currentPassword: z.string().optional(),
     preferredPaymentMethod: paymentMethodTypeSchema.optional(),
+    gender: userSchema.shape.gender,
+    defaultRx: defaultRxSchema.optional(),
+    onboardedAt: z.string().optional(),
   })
   .refine((v) => Object.values(v).some((x) => x !== undefined), {
     message: 'Nothing to update',
