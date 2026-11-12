@@ -157,6 +157,44 @@ describe('mockPricing.priceCart', () => {
     ).rejects.toMatchObject({ name: 'PricingError', code: 'validation_failed' });
   });
 
+  describe('accessories (Product Kind)', () => {
+    // a-nuoc-ngam-120: price 4, a-nuoc-ngam-360: price 8 (content/mock/accessories.ts).
+    it('prices an accessory by its variant, with no Rx and no unit', async () => {
+      const result = await mockPricing.priceCart(req([
+        { lineKey: 'a1', variantId: 'a-nuoc-ngam-120', quantity: 2 },
+        { lineKey: 'a2', variantId: 'a-nuoc-ngam-360', quantity: 1 },
+      ]));
+      expect(result.lines.map((l) => [l.unitPrice, l.lineTotal])).toEqual([[4, 8], [8, 8]]);
+      expect(result.subtotal).toBe(16);
+    });
+
+    it('prices an accessory alongside a lens in one cart', async () => {
+      const result = await mockPricing.priceCart(req([
+        { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1, ...SINGLE },
+        { lineKey: 'a1', variantId: 'a-nuoc-ngam-120', quantity: 1 },
+      ]));
+      expect(result.subtotal).toBe(29);
+    });
+
+    it('rejects an accessory line that carries an Rx', async () => {
+      await expect(
+        mockPricing.priceCart(req([{ lineKey: 'a1', variantId: 'a-nuoc-ngam-120', quantity: 1, ...SINGLE }])),
+      ).rejects.toMatchObject({ name: 'PricingError', code: 'validation_failed' });
+    });
+
+    it('rejects a gift-only accessory as a paid line', async () => {
+      await expect(
+        mockPricing.priceCart(req([{ lineKey: 'g1', variantId: 'a-kits-yeu-mat-1', quantity: 1 }])),
+      ).rejects.toMatchObject({ name: 'PricingError', code: 'validation_failed' });
+    });
+
+    it('rejects an accessory line that carries a Purchase Unit', async () => {
+      await expect(
+        mockPricing.priceCart(req([{ lineKey: 'a1', variantId: 'a-nuoc-ngam-120', quantity: 1, purchaseUnit: 'pair' }])),
+      ).rejects.toMatchObject({ name: 'PricingError', code: 'validation_failed' });
+    });
+  });
+
   it('rejects a zero or negative quantity', async () => {
     await expect(
       mockPricing.priceCart(req([{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 0, ...SINGLE }])),

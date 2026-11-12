@@ -56,6 +56,8 @@ export const variantSchema = z.object({
   compareAtPrice: z.number().int().nonnegative().optional(),
   currency: currencySchema,
   stock: z.number().int().nonnegative(),
+  // An accessory variant's option value, e.g. '120ml' (Product Kind). Lenses use color instead.
+  label: z.string().optional(),
 }).superRefine((v, ctx) => {
   // CartLine.color is built from colorLabel (add-to-cart.tsx), not color —
   // if only color were set, the cart line would silently lose its color.
@@ -71,7 +73,12 @@ export const variantSchema = z.object({
   }
 });
 
+/** Lens or accessory (CONTEXT.md "Product Kind"). Only lenses are listed, take an Rx or a Purchase Unit. */
+export const productKindSchema = z.enum(['lens', 'accessory']);
+
 export const productSchema = z.object({
+  // Absent reads as a lens: every product before Product Kind was one.
+  kind: z.literal('lens').optional(),
   id: z.string(),
   slug: z.string(),
   name: z.string(),
@@ -148,6 +155,32 @@ export const productSchema = z.object({
       message: 'a clear product must not specify specs.graphicDiameter',
       path: ['specs', 'graphicDiameter'],
     });
+  }
+});
+
+/** What an accessory's variants vary by — the label its option picker shows. */
+export const accessoryOptionSchema = z.enum(['volume', 'type']);
+
+/**
+ * An accessory (Product Kind): its own variants, no Rx, no Purchase Unit, no
+ * Product Line. Never listed and no detail page — sold from the cart, the mini
+ * cart and Bundles, or given as a Gift.
+ */
+export const accessorySchema = z.object({
+  kind: z.literal('accessory'),
+  id: z.string(),
+  slug: z.string(),
+  name: z.string(),
+  brandName: z.string(),
+  images: z.array(z.string()).min(1),
+  requiresRx: z.literal(false),
+  option: accessoryOptionSchema,
+  variants: z.array(variantSchema).min(1),
+  // Only ever given as a Gift, never sold on its own.
+  giftOnly: z.boolean().optional(),
+}).superRefine((a, ctx) => {
+  if (a.variants.some((v) => !v.label || v.color)) {
+    ctx.addIssue({ code: 'custom', message: 'an accessory variant carries a label and no color', path: ['variants'] });
   }
 });
 
@@ -331,6 +364,9 @@ export type ReviewSource = z.infer<typeof reviewSourceSchema>;
 export type ProductSpecs = z.infer<typeof productSpecsSchema>;
 export type Variant = z.infer<typeof variantSchema>;
 export type Product = z.infer<typeof productSchema>;
+export type Accessory = z.infer<typeof accessorySchema>;
+/** Anything the catalogue can price: a lens or an accessory. */
+export type CatalogItem = Product | Accessory;
 export type Collection = z.infer<typeof collectionSchema>;
 export type Review = z.infer<typeof reviewSchema>;
 export type ReviewTag = z.infer<typeof reviewTagSchema>;

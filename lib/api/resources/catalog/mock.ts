@@ -1,6 +1,6 @@
-import { products, collections, reviews, galleries } from '@/content/mock';
+import { products, accessories, collections, reviews, galleries } from '@/content/mock';
 import { diameterMm, parseDiameterRange } from '@/lib/api/schemas/catalog';
-import type { Collection, LensGallery, Product, ProductQuery, Review, ReviewFilter, Variant } from '@/lib/api/schemas/catalog';
+import type { Accessory, CatalogItem, Collection, LensGallery, Product, ProductQuery, Review, ReviewFilter, Variant } from '@/lib/api/schemas/catalog';
 import { cheapestVariant } from '@/lib/products/cheapest-variant';
 import { filterReviews } from '@/lib/products/reviews';
 
@@ -14,6 +14,7 @@ export const mockCatalog = {
     return products.find((p) => p.slug === slug) ?? null;
   },
 
+  /** Lenses only: accessories are never listed (Product Kind). */
   async listProducts(query: ProductQuery = {}): Promise<Product[]> {
     let list = [...products];
     if (query.productLine) list = list.filter((p) => p.productLine === query.productLine);
@@ -50,6 +51,11 @@ export const mockCatalog = {
       default: break;
     }
     return list;
+  },
+
+  /** The cart's accessory variant picker reads this. */
+  async listAccessories(): Promise<Accessory[]> {
+    return [...accessories];
   },
 
   async getCollection(slug: string): Promise<Collection | null> {
@@ -90,8 +96,8 @@ export const mockCatalog = {
    * belongs to. This is the server-side price lookup pricing/mock.ts uses —
    * variant ids are asserted globally unique in tests/contract/fixtures.test.ts.
    */
-  async getVariantById(id: string): Promise<{ product: Product; variant: Variant } | null> {
-    for (const product of products) {
+  async getVariantById(id: string): Promise<{ product: CatalogItem; variant: Variant } | null> {
+    for (const product of [...products, ...accessories]) {
       const variant = product.variants.find((v) => v.id === id);
       if (variant) return { product, variant };
     }

@@ -16,6 +16,7 @@ export function useCart() {
   const updateQty = useCartStore((s) => s.updateQty);
   const remove = useCartStore((s) => s.remove);
   const clear = useCartStore((s) => s.clear);
+  const edit = useCartStore((s) => s.edit);
 
   return {
     lines,
@@ -26,5 +27,6 @@ export function useCart() {
     updateQty,
     remove,
     clear,
+    edit,
   };
 }

@@ -13,4 +13,6 @@ export type CartAction =
   | { type: 'ADD'; line: CartLine }
   | { type: 'UPDATE_QTY'; lineKey: string; quantity: number }
   | { type: 'REMOVE'; lineKey: string }
+  /** Replaces a line (new variant, unit or Rx), re-keying it and merging into any identical line. */
+  | { type: 'EDIT'; lineKey: string; line: CartLine }
   | { type: 'CLEAR' };

@@ -183,6 +183,7 @@ export const vi: Dictionary = {
   cart: {
     title: 'Giỏ hàng', empty: 'Giỏ hàng trống', subtotal: 'Tạm tính',
     checkout: 'Thanh toán', remove: 'Xóa',
+    accessoryOptions: { volume: 'Dung tích', type: 'Loại' },
     orderSummary: 'Tóm tắt đơn hàng', shipping: 'Vận chuyển', free: 'Miễn phí', total: 'Tổng cộng',
     discount: 'Giảm giá',
     unavailable: 'Sản phẩm không còn bán',
