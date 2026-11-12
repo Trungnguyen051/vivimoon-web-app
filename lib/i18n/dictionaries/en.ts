@@ -223,6 +223,25 @@ export const en = {
     priceError: 'We couldn’t update your total. Please try again.',
     eyes: { left: 'Left eye', right: 'Right eye' },
     tierDiscount: 'Orders from {threshold}',
+    titleCount: 'Your Cart ({count})', continueShopping: 'Continue shopping', continueShort: 'Shop more',
+    selectAll: 'Select all ({count})', selectLine: 'Select {name}', nothingSelected: 'Select at least one item to check out.',
+    gift: 'Gift: {name}', giftWith: 'Gift: {name} (with {product})',
+    giftRows: { product: '6-month lens gift', spendTier: 'Gift on orders from {threshold}' },
+    moveToFavorites: 'Move unselected items to Favorites', movedToFavorites: 'Moved {count} item(s) to Favorites',
+    subtotalCount: 'Subtotal ({count})', voucherRow: 'Voucher {code}',
+    saved: 'You save {amount} · VAT included', vatIncluded: 'VAT included',
+    proceed: 'Proceed to checkout', paymentMethods: 'Accepted payment methods',
+    payments: { cod: 'Cash on delivery', transfer: 'Bank transfer / QR', ewallet: 'E-wallet' },
+    voucher: {
+      label: 'Voucher', placeholder: 'Enter a voucher code', apply: 'Apply', list: 'Available vouchers',
+      minSpend: 'Orders from {amount}', expires: 'Valid until {date}',
+      errors: {
+        unknown: 'Code {code} doesn’t exist.',
+        expired: 'Code {code} has expired.',
+        memberOnly: 'Code {code} is for members. Sign in to use it.',
+        minSpend: 'Your order doesn’t reach the minimum for {code} yet.',
+      },
+    },
   },
   // Spend Tiers (CONTEXT.md): {amount}, {threshold} and {value} are formatted prices.
   spendTier: {
@@ -237,6 +256,13 @@ export const en = {
       discount: '{value} off orders from {threshold}',
     },
     allReached: 'You have every reward: free shipping, a free lens case and money off',
+    // "You've got free shipping & a free lens case!" before what is left to the next tier.
+    reached: 'You’ve got {rewards}!', and: ' & ',
+    rewards: { freeShipping: 'free shipping', gift: 'a free lens case', discount: '{value} off' },
+    // Under the bar: each tier's threshold and reward, "300K · Freeship".
+    marks: { freeShipping: 'Free shipping', gift: 'Free case', discount: '{value} off' },
+    upsell: { freeShipping: 'Add more for free shipping', gift: 'Add more for a free lens case', discount: 'Add more to get {value} off' },
+    upsellDone: 'You may also need',
   },
   miniCart: {
     title: 'Cart ({count})', close: 'Close cart',

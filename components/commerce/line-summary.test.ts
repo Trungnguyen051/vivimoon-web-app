@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatLineSummary } from './line-summary';
+import { formatLineSummary, lineTitle } from './line-summary';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 
 const vi = getDictionary('vi');
@@ -21,5 +21,13 @@ describe('formatLineSummary (ADR-0023)', () => {
   it('formats an accessory as its variant and quantity', () => {
     expect(formatLineSummary({ variantLabel: '120ml', quantity: 1 }, vi)).toBe('120ml · x1');
     expect(formatLineSummary({ variantLabel: '120ml', quantity: 3 }, vi)).toBe('120ml · x3');
+  });
+});
+
+describe('lineTitle', () => {
+  it('names the Dòng lens the PLP card labels, then the replacement (#202)', () => {
+    expect(lineTitle({ name: 'Sandkiss', lensLine: 'moisture', replacement: 'monthly' }, vi)).toBe('Sandkiss · Khoá ẩm 1 tháng');
+    expect(lineTitle({ name: 'Savage Gray', lensLine: 'breathable', replacement: 'sixMonth' }, vi)).toBe('Savage Gray · Mắt thở 6 tháng');
+    expect(lineTitle({ name: 'Nước ngâm lens 120ml' }, vi)).toBe('Nước ngâm lens 120ml');
   });
 });

@@ -61,5 +61,6 @@ export const accessories: Accessory[] = [
     option: 'type',
     variants: [{ id: 'a-kits-yeu-mat-1', sku: 'KYM-1', label: 'Bộ quà tặng', price: 149_000, currency: 'VND', stock: 500 }],
     giftOnly: true,
+    description: 'Khăn ướt làm sạch · sticker ghi hạn · khay & bộ dụng cụ đeo lens · thẻ bảo hành 3in1',
   },
 ];

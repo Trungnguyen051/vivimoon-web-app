@@ -16,7 +16,7 @@ const dict = getDictionary('vi');
 
 const sandkiss = (left: number, right: number): CartLine => ({
   lineKey: lineKey('v-sandkiss', { left: { sph: left }, right: { sph: right } }), productId: 'p-sandkiss', variantId: 'v-sandkiss', name: 'Sandkiss', sku: 'SK', unitPrice: 190_000,
-  currency: 'VND', quantity: 1, purchaseUnit: 'pair', productLine: 'coMau', replacement: 'monthly',
+  currency: 'VND', quantity: 1, purchaseUnit: 'pair', lensLine: 'moisture', replacement: 'monthly',
   rx: { sameBothEyes: false, left: { sph: left }, right: { sph: right } },
 });
 
@@ -55,7 +55,7 @@ describe('MiniCart', () => {
     open([sandkiss(-2.5, -3)]);
     const drawer = screen.getByRole('dialog');
     expect(within(drawer).getByText('Đã thêm Sandkiss (L −2.50 · R −3.00) vào giỏ')).toBeTruthy();
-    expect(within(drawer).getByText('Sandkiss · Có màu 1 tháng')).toBeTruthy();
+    expect(within(drawer).getByText('Sandkiss · Khoá ẩm 1 tháng')).toBeTruthy();
     expect(await within(drawer).findByText('Mua thêm 110.000₫ để được Freeship')).toBeTruthy();
     expect(within(drawer).getByRole('heading', { name: dict.miniCart.upsell })).toBeTruthy();
     expect(within(drawer).getByRole('link', { name: dict.cart.checkout })).toBeTruthy();

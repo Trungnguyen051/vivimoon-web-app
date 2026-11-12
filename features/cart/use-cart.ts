@@ -1,5 +1,7 @@
 'use client';
+import { useMemo } from 'react';
 import { useCartStore, selectCartCount } from './cart-store';
+import { tickedLines } from './cart-reducer';
 
 /**
  * Cart access for client components. Lines are addressed by `lineKey`, not
@@ -10,6 +12,7 @@ import { useCartStore, selectCartCount } from './cart-store';
  */
 export function useCart() {
   const lines = useCartStore((s) => s.lines);
+  const unticked = useCartStore((s) => s.unticked);
   const hydrated = useCartStore((s) => s.hydrated);
   const count = useCartStore(selectCartCount);
   const add = useCartStore((s) => s.add);
@@ -17,9 +20,18 @@ export function useCart() {
   const remove = useCartStore((s) => s.remove);
   const clear = useCartStore((s) => s.clear);
   const edit = useCartStore((s) => s.edit);
+  const tick = useCartStore((s) => s.tick);
+  const tickAll = useCartStore((s) => s.tickAll);
+  const removeLines = useCartStore((s) => s.removeLines);
+  const voucherCode = useCartStore((s) => s.voucherCode);
+  const setVoucherCode = useCartStore((s) => s.setVoucherCode);
+  // Reference-stable: usePricedCart re-prices on every new array.
+  const ticked = useMemo(() => tickedLines({ lines, unticked }), [lines, unticked]);
 
   return {
     lines,
+    /** The lines priced and checked out (CONTEXT.md "Cart Line"). */
+    tickedLines: ticked,
     hydrated,
     count,
     currency: lines[0]?.currency ?? 'VND',
@@ -28,5 +40,10 @@ export function useCart() {
     remove,
     clear,
     edit,
+    tick,
+    tickAll,
+    removeLines,
+    voucherCode,
+    setVoucherCode,
   };
 }

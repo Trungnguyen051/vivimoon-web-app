@@ -4,7 +4,7 @@ import { vouchers as voucherFixtures } from '@/content/mock';
 import type { Currency } from '@/lib/api/schemas/catalog';
 import { lensesIn, purchaseUnitOf } from '@/lib/api/schemas/rx';
 import type {
-  GiftLine, PriceCartRequest, PricedCart, PricedLine, UnavailableLine, Voucher,
+  GiftLine, PriceCartRequest, PricedCart, PricedLine, UnavailableLine, Voucher, VoucherError,
 } from '@/lib/api/schemas/cart';
 import { spendTiersFor, TIER_GIFT_VARIANT_ID } from './spend-tiers';
 
@@ -19,6 +19,7 @@ async function giftLine(variantId: string, reason: GiftLine['reason'], forProduc
     variantId,
     name: found.product.name,
     image: found.product.images[0],
+    ...(found.product.kind === 'accessory' && found.product.description ? { description: found.product.description } : {}),
     quantity: 1,
     lineTotal: 0,
     reason,
@@ -41,12 +42,33 @@ export class PricingError extends Error {
  * yet — see `STALE-ACTIVE60` in content/mock/vouchers.ts), so relying on
  * `status` alone would let a stale voucher apply.
  */
-function voucherApplies(v: Voucher, subtotal: number, isMember: boolean): boolean {
-  if (v.status !== 'active') return false;
-  if (Date.parse(v.expiresAt) <= Date.now()) return false;
-  if (v.minSpend !== undefined && subtotal < v.minSpend) return false;
-  if (v.memberOnly && !isMember) return false;
-  return true;
+function voucherRefusal(v: Voucher, subtotal: number, isMember: boolean): VoucherError['reason'] | null {
+  if (v.status !== 'active') return 'expired';
+  if (Date.parse(v.expiresAt) <= Date.now()) return 'expired';
+  if (v.memberOnly && !isMember) return 'memberOnly';
+  if (v.minSpend !== undefined && subtotal < v.minSpend) return 'minSpend';
+  return null;
+}
+
+const voucherApplies = (v: Voucher, subtotal: number, isMember: boolean) => voucherRefusal(v, subtotal, isMember) === null;
+
+/**
+ * The Vouchers listed to every shopper (CONTEXT.md "Voucher"): filtered by status,
+ * expiry and, for member-only ones, sign-in — not by minSpend, which picking one reports.
+ */
+function validVouchers(isMember: boolean): Voucher[] {
+  return voucherFixtures.filter((v) => voucherRefusal(v, Infinity, isMember) === null);
+}
+
+/** A code the shopper picked or typed: applied, or refused with a typed reason. */
+function chosenVoucher(
+  code: string, subtotal: number, shipping: number, isMember: boolean,
+): { discount: number; applied: Voucher[] } | { error: VoucherError } {
+  const voucher = voucherFixtures.find((v) => v.code.toUpperCase() === code.toUpperCase());
+  if (!voucher) return { error: { code, reason: 'unknown' } };
+  const reason = voucherRefusal(voucher, subtotal, isMember);
+  if (reason) return { error: { code: voucher.code, reason } };
+  return { discount: voucherDiscount(voucher, subtotal, shipping), applied: [voucher] };
 }
 
 function voucherDiscount(v: Voucher, subtotal: number, shipping: number): number {
@@ -230,7 +252,10 @@ export const mockPricing = {
       shippingEtaDays = match.etaDays;
     }
 
-    const { discount, applied } = bestVoucher(payable, shippingFee, userId !== null);
+    const isMember = userId !== null;
+    // A refused code leaves the rest of the price intact: the best Voucher applies instead.
+    const chosen = input.voucherCode ? chosenVoucher(input.voucherCode, payable, shippingFee, isMember) : null;
+    const { discount, applied } = chosen && !('error' in chosen) ? chosen : bestVoucher(payable, shippingFee, isMember);
     const total = Math.max(0, payable + shippingFee - discount - tiers.discount);
 
     return {
@@ -241,6 +266,9 @@ export const mockPricing = {
       bundledSubtotal: payable,
       discount,
       appliedVouchers: applied,
+      vouchers: validVouchers(isMember),
+      ...(chosen && 'error' in chosen ? { voucherError: chosen.error } : {}),
+      saved: bundleSaving + discount + tiers.discount,
       spendTiers: tiers.tiers,
       ...(tiers.next ? { nextSpendTier: tiers.next } : {}),
       tierDiscount: tiers.discount,

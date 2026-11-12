@@ -8,5 +8,7 @@ import { CartView } from './cart-view';
 export default async function CartPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  return <CartView locale={locale} dict={getDictionary(locale)} accessories={await catalog.listAccessories()} />;
+  const [accessories, lenses] = await Promise.all([catalog.listAccessories(), catalog.listProducts({ sort: 'bestselling' })]);
+  // Two lenses are enough for the "Mua thêm" row, which shows four cards at most.
+  return <CartView locale={locale} dict={getDictionary(locale)} accessories={accessories} lenses={lenses.slice(0, 2)} />;
 }

@@ -12,7 +12,7 @@ import { cartLinesToGa4Items } from '@/lib/analytics/events';
 import { PageContainer } from '@/components/layout/page-container';
 
 export function SuccessView({ locale, dict }: { locale: Locale; dict: Dictionary }) {
-  const { clear } = useCart();
+  const { removeLines, setVoucherCode } = useCart();
   const { track } = useAnalytics();
   const [orderId, setOrderId] = useState('');
 
@@ -21,7 +21,7 @@ export function SuccessView({ locale, dict }: { locale: Locale; dict: Dictionary
     if (raw) {
       const order = JSON.parse(raw) as {
         orderId: string; currency: string; value: number | null;
-        lines: { sku: string; name: string; unitPrice: number; quantity: number }[];
+        lines: { lineKey: string; sku: string; name: string; unitPrice: number; quantity: number }[];
         isBuyNow?: boolean;
       };
       // Reading sessionStorage must happen post-hydration (SSR has no sessionStorage and
@@ -38,7 +38,11 @@ export function SuccessView({ locale, dict }: { locale: Locale; dict: Dictionary
       sessionStorage.removeItem('vivimoon-last-order');
       // A buy-now order never drew from the real cart (spec §10) — clearing
       // it here would wipe items the shopper never checked out with.
-      if (!order.isBuyNow) clear();
+      // Only the lines this order was placed with leave the cart; unticked ones stay (CONTEXT.md "Cart Line").
+      if (!order.isBuyNow) {
+        removeLines(order.lines.map((l) => l.lineKey));
+        setVoucherCode(undefined);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { currencySchema, productLineSchema, replacementScheduleSchema } from './catalog';
+import { currencySchema, replacementScheduleSchema } from './catalog';
 import { lineRxSchema, purchaseUnitSchema, refineUnitMatchesRx } from './rx';
 
 /** The most units one line may carry — in a cart, a price request, or an order. */
@@ -39,13 +39,16 @@ export const cartLineSchema = z.object({
   purchaseUnit: purchaseUnitSchema.optional(),
   rx: lineRxSchema.optional(),
   bundle: bundleTagSchema,
-  // A lens's line and replacement, so the mini cart can title it "Sandkiss · Có màu 1 tháng" (Figma 57:2).
-  productLine: productLineSchema.optional(),
+  // A lens's Dòng lens (by material, lib/products/lens-facets.ts) and replacement, so every cart
+  // surface titles it "Sandkiss · Khoá ẩm 1 tháng" (Figma 57:807), as the PLP card labels it.
+  lensLine: z.enum(['moisture', 'breathable']).optional(),
   replacement: replacementScheduleSchema.optional(),
 }).superRefine(refineUnitMatchesRx);
 
 export const cartStateSchema = z.object({
   lines: z.array(cartLineSchema),
+  // Keys of the lines the shopper unticked: they stay in the cart but are not priced or checked out. Absent = all ticked.
+  unticked: z.array(z.string()).optional(),
 });
 
 export type CartLine = z.infer<typeof cartLineSchema>;
@@ -122,6 +125,14 @@ export const shippingSelectionSchema = z.object({
 export const priceCartRequestSchema = z.object({
   lines: z.array(priceLineInputSchema).min(1),
   shipping: shippingSelectionSchema.optional(),
+  // The Voucher the shopper picked or typed. Absent = the best valid one (CONTEXT.md "Voucher").
+  voucherCode: z.string().trim().min(1).max(40).optional(),
+});
+
+/** Why a requested voucher code did not apply. The rest of the price is unaffected. */
+export const voucherErrorSchema = z.object({
+  code: z.string(),
+  reason: z.enum(['unknown', 'expired', 'memberOnly', 'minSpend']),
 });
 
 export const pricedLineSchema = z.object({
@@ -167,6 +178,7 @@ export const giftLineSchema = z.object({
   variantId: z.string(),
   name: z.string(),
   image: z.string().optional(),
+  description: z.string().optional(),
   quantity: z.number().int().positive(),
   lineTotal: z.literal(0),
   reason: z.enum(['spendTier', 'product']),
@@ -195,6 +207,12 @@ export const pricedCartSchema = z.object({
   bundledSubtotal: z.number().int().nonnegative().optional(),
   discount: z.number().int().nonnegative(),
   appliedVouchers: z.array(voucherSchema),
+  // Every currently valid Voucher, for the cart's radio list. Absent reads as none.
+  vouchers: z.array(voucherSchema).optional(),
+  // Present when the request's `voucherCode` was refused; the best Voucher applies instead.
+  voucherError: voucherErrorSchema.optional(),
+  // Bundle saving + voucher discount + tier discount: "Tiết kiệm X". Absent reads as 0.
+  saved: z.number().int().nonnegative().optional(),
   // Spend Tiers, counted from `bundledSubtotal`. All absent read as "no tiers".
   spendTiers: z.array(spendTierSchema).optional(),
   // Absent once every tier is reached.
@@ -228,3 +246,4 @@ export type PricedCart = z.infer<typeof pricedCartSchema>;
 export type SpendTier = z.infer<typeof spendTierSchema>;
 export type NextSpendTier = z.infer<typeof nextSpendTierSchema>;
 export type GiftLine = z.infer<typeof giftLineSchema>;
+export type VoucherError = z.infer<typeof voucherErrorSchema>;

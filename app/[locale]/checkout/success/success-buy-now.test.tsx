@@ -50,6 +50,19 @@ describe('SuccessPage — Buy Now (Task 12)', () => {
     await waitFor(() => expect(useCartStore.getState().lines).toHaveLength(0));
   });
 
+  it('keeps the unticked lines the order was not placed with', async () => {
+    useCartStore.getState().add(makeLine());
+    useCartStore.getState().add(makeLine({ lineKey: 'later', variantId: 'v9' }));
+    useCartStore.getState().tick('later', false);
+    useCartStore.getState().setVoucherCode('NEW30');
+    seedLastOrder({ isBuyNow: false });
+
+    await renderSuccessPage();
+
+    await waitFor(() => expect(useCartStore.getState().lines.map((l) => l.lineKey)).toEqual(['later']));
+    expect(useCartStore.getState().voucherCode).toBeUndefined();
+  });
+
   it('does not clear the real cart after a buy-now order', async () => {
     useCartStore.getState().add(makeLine());
     seedLastOrder({ isBuyNow: true });

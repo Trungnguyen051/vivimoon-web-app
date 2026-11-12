@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ORDER_STATUSES } from '@/lib/orders/statuses';
-import { giftLineSchema, priceLineInputSchema, pricedLineSchema, pricedCartSchema } from './cart';
+import { giftLineSchema, priceCartRequestSchema, priceLineInputSchema, pricedLineSchema, pricedCartSchema } from './cart';
 import { currencySchema } from './catalog';
 import { lineRxSchema, purchaseUnitSchema } from './rx';
 import { addressSchema } from './checkout';
@@ -15,6 +15,8 @@ export const placeOrderRequestSchema = z.object({
   // session so a member's order carries it too.
   email: z.string().email(),
   paymentMethod: paymentMethodTypeSchema,
+  // The Voucher picked in the cart, priced exactly as the preview was; a refused one falls back to the best.
+  voucherCode: priceCartRequestSchema.shape.voucherCode,
 });
 
 /** `CartLine` + resolved Rx (spec §6) — price fields are the server's, never the client's. */

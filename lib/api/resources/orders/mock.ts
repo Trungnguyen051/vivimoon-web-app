@@ -74,6 +74,7 @@ export const mockOrders = {
       {
         lines: input.lines,
         shipping: { province: input.address.province, district: input.address.district },
+        voucherCode: input.voucherCode,
       },
       userId,
     );

@@ -86,7 +86,7 @@ describe('mockPricing.priceCart', () => {
     expect(result.total).toBe(275_000);
   });
 
-  it('applies no voucher when the cart is below every eligible minSpend', async () => {
+  it('below every minSpend, applies only the no-minimum NEW30', async () => {
     // A single line at 110.000 clears no minSpend (SUMMER10/SAVE15 need 250.000,
     // BIGSPEND needs 1.000.000). FREESHIP has no minSpend and is active/unexpired,
     // but its discount against shipping=0 is 0 — a zero-discount candidate
@@ -95,8 +95,57 @@ describe('mockPricing.priceCart', () => {
       req([{ lineKey: 'l1', variantId: 'p-breeze-daily-30', quantity: 1, ...SINGLE }]),
     );
     expect(result.subtotal).toBe(110_000);
-    expect(result.discount).toBe(0);
-    expect(result.appliedVouchers).toEqual([]);
+    expect(result.discount).toBe(30_000);
+    expect(result.appliedVouchers.map((v) => v.code)).toEqual(['NEW30']);
+  });
+
+  describe('a voucher the shopper picked or typed (CONTEXT.md "Voucher")', () => {
+    const priced = (voucherCode: string, userId: string | null = null) =>
+      mockPricing.priceCart({ lines: BASELINE_LINES, voucherCode }, userId);
+
+    it('lists every currently valid Voucher for the radio list, members-only ones only with a session', async () => {
+      const guest = await mockPricing.priceCart(req(BASELINE_LINES));
+      const codes = guest.vouchers?.map((v) => v.code);
+      expect(codes).toEqual(expect.arrayContaining(['NEW30', 'SUMMER10', 'SAVE15', 'BIGSPEND', 'FREESHIP']));
+      expect(codes).not.toEqual(expect.arrayContaining(['MEMBER20']));
+      for (const gone of ['USED5OFF', 'EXPIRED50', 'STALE-ACTIVE60']) expect(codes).not.toContain(gone);
+      const member = await mockPricing.priceCart(req(BASELINE_LINES), 'user-1');
+      expect(member.vouchers?.map((v) => v.code)).toContain('MEMBER20');
+    });
+
+    it('applies a valid code in place of the best one, case-insensitively', async () => {
+      const result = await priced('new30');
+      expect(result.appliedVouchers.map((v) => v.code)).toEqual(['NEW30']);
+      expect(result.discount).toBe(30_000);
+      expect(result.total).toBe(350_000 - 30_000);
+      expect(result.voucherError).toBeUndefined();
+    });
+
+    it.each([
+      ['NOPE', 'unknown'],
+      ['EXPIRED50', 'expired'],
+      ['STALE-ACTIVE60', 'expired'],
+      ['USED5OFF', 'expired'],
+      ['MEMBER20', 'memberOnly'],
+      ['BIGSPEND', 'minSpend'],
+    ] as const)('refuses %s with a typed "%s" error and keeps the best Voucher and the rest of the price', async (code, reason) => {
+      const result = await priced(code);
+      expect(result.voucherError).toEqual({ code, reason });
+      expect(result.appliedVouchers.map((v) => v.code)).toEqual(['SAVE15']);
+      expect(result.subtotal).toBe(350_000);
+      expect(result.total).toBe(275_000);
+    });
+
+    it('accepts a member-only code with a session', async () => {
+      const result = await priced('MEMBER20', 'user-1');
+      expect(result.voucherError).toBeUndefined();
+      expect(result.discount).toBe(100_000);
+    });
+
+    it('reports what the shopper saves: Bundle, Voucher and Spend Tier discounts together', async () => {
+      const result = await priced('NEW30');
+      expect(result.saved).toBe(30_000);
+    });
   });
 
   it('never applies an expired or used voucher even when it would pay more', async () => {

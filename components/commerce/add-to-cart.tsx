@@ -22,6 +22,7 @@ import { lensesIn } from '@/lib/api/schemas/rx';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
 import { toGa4Items } from '@/lib/analytics/events';
 import type { CartLine } from '@/features/cart/cart.types';
+import { lensLineOf } from '@/lib/products/lens-facets';
 
 
 export function AddToCart({
@@ -81,7 +82,7 @@ export function AddToCart({
       productId: product.id, variantId: variant.id, name: product.name, sku: variant.sku,
       color: variant.colorLabel, unitPrice: variant.price * lenses,
       currency: variant.currency, quantity: qty, image: product.images[0],
-      productLine: product.productLine, replacement: product.replacement,
+      lensLine: lensLineOf(product.specs.material), replacement: product.replacement,
       ...(unit ? { purchaseUnit: unit, rx } : {}),
     };
   };

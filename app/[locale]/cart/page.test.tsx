@@ -1,8 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Suspense } from 'react';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { apiRequest } from '@/lib/api/client';
 import { useCartStore } from '@/features/cart/cart-store';
+import { useSessionStore } from '@/features/session/session-store';
 import { CartView } from './cart-view';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import type { CartLine } from '@/features/cart/cart.types';
@@ -12,6 +13,9 @@ import { formatPrice } from '@/lib/utils/format';
 
 vi.mock('@/lib/api/client', () => ({ apiRequest: vi.fn() }));
 const mockedApiRequest = vi.mocked(apiRequest);
+
+const push = vi.fn();
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push }) }));
 
 const track = vi.fn();
 vi.mock('@/lib/analytics/use-analytics', () => ({ useAnalytics: () => ({ track }) }));
@@ -44,7 +48,8 @@ async function renderCartPage() {
 beforeEach(() => {
   mockedApiRequest.mockReset();
   track.mockReset();
-  useCartStore.setState({ lines: [], hydrated: false });
+  push.mockReset();
+  useCartStore.setState({ lines: [], unticked: [], voucherCode: undefined, hydrated: false });
 });
 
 describe('CartPage', () => {
@@ -125,7 +130,7 @@ describe('CartPage', () => {
 
     it('blocks checkout, naming what has to happen first', async () => {
       await renderWithStaleLine();
-      expect(screen.getByRole('button', { name: 'Checkout' })).toBeDisabled();
+      expect(screen.getByRole('button', { name: 'Proceed to checkout' })).toBeDisabled();
       expect(screen.getByText('Remove unavailable items to continue.')).toBeInTheDocument();
       expect(screen.getByText('Unavailable items are not included in the total.')).toBeInTheDocument();
     });
@@ -137,7 +142,7 @@ describe('CartPage', () => {
       });
       useCartStore.setState({ lines: [kept], hydrated: true });
       await renderCartPage();
-      await waitFor(() => expect(screen.getByRole('link', { name: 'Checkout' })).toBeInTheDocument(), { timeout: 2000 });
+      await waitFor(() => expect(screen.getByRole('link', { name: 'Proceed to checkout' })).toBeInTheDocument(), { timeout: 2000 });
       expect(screen.queryByText('No longer available')).not.toBeInTheDocument();
     });
   });
@@ -150,7 +155,7 @@ describe('CartPage', () => {
       () => expect(screen.getByText('We couldn’t update your total. Please try again.')).toBeInTheDocument(),
       { timeout: 2000 },
     );
-    expect(screen.getByRole('button', { name: 'Checkout' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Proceed to checkout' })).toBeDisabled();
   });
 
   it('fires view_cart exactly once per cart view, even through a later re-price', async () => {
@@ -208,12 +213,116 @@ describe('CartPage — Spend Tier discount (#198)', () => {
     const vnd = (n: number) => formatPrice(n, 'VND', 'en');
     const row = (label: string) => screen.getByText(label).parentElement!.lastElementChild!.textContent;
 
-    await waitFor(() => expect(screen.getByText(dict.cart.discount)).toBeInTheDocument());
     const priced = await mockPricing.priceCart({ lines: [{ lineKey: 'k', variantId: 'p-aqua-daily-30', quantity: 7, purchaseUnit: 'single', rx: { sph: -2.5 } }] });
-    expect(row(dict.cart.subtotal)).toBe(vnd(875_000));
-    expect(row(dict.cart.discount)).toBe(`-${vnd(priced.discount)}`);
+    const voucherRow = dict.cart.voucherRow.replace('{code}', priced.appliedVouchers[0].code);
+    await waitFor(() => expect(screen.getByText(voucherRow)).toBeInTheDocument());
+    expect(row(dict.cart.subtotalCount.replace('{count}', '7'))).toBe(vnd(875_000));
+    expect(row(voucherRow)).toBe(`-${vnd(priced.discount)}`);
     expect(row(dict.cart.tierDiscount.replace('{threshold}', vnd(800_000)))).toBe(`-${vnd(50_000)}`);
     expect(row(dict.cart.shipping)).toBe(dict.cart.free);
     expect(row(dict.cart.total)).toBe(vnd(875_000 - priced.discount - 50_000));
+  });
+});
+
+/** The real pricing behind the mocked client, recording each request body. */
+function realPricing() {
+  const bodies: PriceCartRequest[] = [];
+  mockedApiRequest.mockImplementation(async (url, init) => {
+    if (url !== '/api/cart/price') return { ok: true, data: [] } as never;
+    const body = init!.body as PriceCartRequest;
+    bodies.push(body);
+    return { ok: true, data: await mockPricing.priceCart(body) } as never;
+  });
+  return bodies;
+}
+
+const lens = (lineKey: string, variantId: string, quantity = 1) =>
+  makeLine({ lineKey, variantId, name: lineKey, quantity, purchaseUnit: 'single', rx: { sph: -2.5 } });
+
+describe('CartPage — ticked lines (#202)', () => {
+  it('prices only the ticked lines, and re-prices when one is unticked', async () => {
+    const bodies = realPricing();
+    useCartStore.setState({ lines: [lens('Aqua', 'p-aqua-daily-30', 2), lens('Hazel', 'p-hazel-monthly-brown-30')], hydrated: true });
+    await renderCartPage();
+    await waitFor(() => expect(bodies).toHaveLength(1));
+    expect(bodies[0].lines.map((l) => l.lineKey)).toEqual(['Aqua', 'Hazel']);
+
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Select Hazel' }));
+    await waitFor(() => expect(bodies.at(-1)!.lines.map((l) => l.lineKey)).toEqual(['Aqua']), { timeout: 2000 });
+    // Unticked, not removed.
+    expect(useCartStore.getState().lines).toHaveLength(2);
+    expect(screen.getByText('Hazel')).toBeInTheDocument();
+  });
+
+  it('blocks checkout when nothing is ticked', async () => {
+    realPricing();
+    useCartStore.setState({ lines: [lens('Aqua', 'p-aqua-daily-30')], hydrated: true });
+    await renderCartPage();
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Select all (1)' }));
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Proceed to checkout' })).toBeDisabled());
+    expect(screen.getByText('Select at least one item to check out.')).toBeInTheDocument();
+  });
+
+  it('shows a Gift line at 0₫ with what is in it', async () => {
+    realPricing();
+    // p-* 6-month lenses earn Kits Yêu Mắt; find one in the catalogue.
+    const { products } = await import('@/content/mock');
+    const sixMonth = products.find((p) => p.replacement === 'sixMonth')!;
+    useCartStore.setState({
+      lines: [makeLine({ lineKey: 'six', productId: sixMonth.id, variantId: sixMonth.variants[0].id, name: sixMonth.name, replacement: 'sixMonth', purchaseUnit: 'single', rx: { sph: -1 } })],
+      hydrated: true,
+    });
+    await renderCartPage();
+    await waitFor(() => expect(screen.getByText(`Gift: Kits Yêu Mắt (with ${sixMonth.name} 6 months)`)).toBeInTheDocument(), { timeout: 2000 });
+    expect(screen.getByText(/Khăn ướt làm sạch/)).toBeInTheDocument();
+  });
+});
+
+describe('CartPage — vouchers (#202)', () => {
+  it('pre-selects the best Voucher, and switching the radio re-prices with that code', async () => {
+    const bodies = realPricing();
+    useCartStore.setState({ lines: [lens('Aqua', 'p-aqua-daily-30', 2), lens('Hazel', 'p-hazel-monthly-brown-30')], hydrated: true });
+    await renderCartPage();
+    const best = await screen.findByRole('radio', { name: /SAVE15/ }, { timeout: 2000 });
+    expect(best).toBeChecked();
+    expect(bodies[0].voucherCode).toBeUndefined();
+
+    fireEvent.click(screen.getByRole('radio', { name: /NEW30/ }));
+    await waitFor(() => expect(screen.getByRole('radio', { name: /NEW30/ })).toBeChecked(), { timeout: 2000 });
+    expect(bodies.at(-1)!.voucherCode).toBe('NEW30');
+    expect(screen.getByText('Voucher NEW30').parentElement!.lastElementChild!.textContent).toBe('-30.000₫');
+  });
+
+  it('applies a typed code, and names why a bad one was refused', async () => {
+    realPricing();
+    useCartStore.setState({ lines: [lens('Aqua', 'p-aqua-daily-30', 2), lens('Hazel', 'p-hazel-monthly-brown-30')], hydrated: true });
+    await renderCartPage();
+    const field = await screen.findByPlaceholderText('Enter a voucher code');
+    fireEvent.change(field, { target: { value: 'MEMBER20' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Apply' }));
+    expect(await screen.findByRole('alert', {}, { timeout: 2000 })).toHaveTextContent('Code MEMBER20 is for members. Sign in to use it.');
+    // The rest of the price still stands, with the best Voucher.
+    expect(screen.getByRole('radio', { name: /SAVE15/ })).toBeChecked();
+  });
+});
+
+describe('CartPage — move to Favorites (#202)', () => {
+  it('asks a guest to sign in', async () => {
+    realPricing();
+    useSessionStore.setState({ status: 'anonymous' });
+    useCartStore.setState({ lines: [lens('Aqua', 'p-aqua-daily-30')], unticked: ['Aqua'], hydrated: true });
+    await renderCartPage();
+    fireEvent.click(screen.getByRole('button', { name: 'Move unselected items to Favorites' }));
+    expect(push).toHaveBeenCalledWith('/en/sign-in?next=%2Fen%2Fcart');
+  });
+
+  it('moves a member’s unticked lenses to Favorites and out of the cart', async () => {
+    realPricing();
+    useSessionStore.setState({ status: 'authenticated' });
+    useCartStore.setState({ lines: [lens('Aqua', 'p-aqua-daily-30'), lens('Hazel', 'p-hazel-monthly-brown-30')], unticked: ['Hazel'], hydrated: true });
+    await renderCartPage();
+    fireEvent.click(screen.getByRole('button', { name: 'Move unselected items to Favorites' }));
+    await waitFor(() => expect(useCartStore.getState().lines.map((l) => l.lineKey)).toEqual(['Aqua']));
+    expect(mockedApiRequest).toHaveBeenCalledWith('/api/account/favorites', { method: 'POST', body: { productId: 'p1' } });
   });
 });

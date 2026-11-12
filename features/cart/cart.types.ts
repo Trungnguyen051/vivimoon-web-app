@@ -15,4 +15,8 @@ export type CartAction =
   | { type: 'REMOVE'; lineKey: string }
   /** Replaces a line (new variant, unit or Rx), re-keying it and merging into any identical line. */
   | { type: 'EDIT'; lineKey: string; line: CartLine }
+  | { type: 'TICK'; lineKey: string; ticked: boolean }
+  | { type: 'TICK_ALL'; ticked: boolean }
+  /** Drops the lines an order was placed with; the unticked ones stay. */
+  | { type: 'REMOVE_LINES'; lineKeys: string[] }
   | { type: 'CLEAR' };

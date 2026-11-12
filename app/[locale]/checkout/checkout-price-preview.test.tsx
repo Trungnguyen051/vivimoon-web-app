@@ -60,6 +60,24 @@ afterEach(() => {
 });
 
 describe('CheckoutPage — live price preview (M5.4, issue #21)', () => {
+  it('prices only the ticked cart lines, with the Voucher picked in the cart (#202)', async () => {
+    const fetchMock = fetchRoutingTo(PRICED_RESPONSE);
+    vi.stubGlobal('fetch', fetchMock);
+    useCartStore.setState({
+      lines: [makeLine(), makeLine({ lineKey: 'later', variantId: 'p-hazel-monthly-brown-30' })],
+      unticked: ['later'],
+      voucherCode: 'NEW30',
+    });
+    await renderCheckoutPage();
+    await userEvent.type(screen.getByLabelText('District'), 'District 1');
+    await userEvent.type(screen.getByLabelText('Province'), 'Ho Chi Minh City');
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledWith('/api/cart/price', expect.anything()));
+    const call = fetchMock.mock.calls.findLast(([path]) => path === '/api/cart/price')!;
+    const body = JSON.parse(call[1].body);
+    expect(body.lines.map((l: { lineKey: string }) => l.lineKey)).toEqual(['existing']);
+    expect(body.voucherCode).toBe('NEW30');
+  });
+
   it('shows the total as pending, never a wrong or zero number, until the address is complete', async () => {
     vi.stubGlobal('fetch', fetchRoutingTo(PRICED_RESPONSE));
     await renderCheckoutPage();
