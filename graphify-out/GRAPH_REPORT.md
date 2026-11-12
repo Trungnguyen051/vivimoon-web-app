@@ -1,16 +1,16 @@
 # Graph Report - vivimoon-web-app  (2026-11-12)
 
 ## Corpus Check
-- 444 files · ~236,634 words
+- 444 files · ~236,841 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1981 nodes · 5016 edges · 164 communities (111 shown, 53 thin omitted)
+- 1981 nodes · 5016 edges · 163 communities (109 shown, 54 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.78)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `f2bf88f2`
+- Built from commit: `f81efc77`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -86,7 +86,7 @@
 - discovery/mock.ts
 - mobile-nav.tsx
 - loyalty/mock.ts
-- collection-filters.tsx
+- [id]/route.test.ts
 - vouchers/mock.ts
 - Process
 - Vivimoon M1 — Foundation Implementation Plan
@@ -134,21 +134,20 @@
 - vouchers/page.tsx
 - ForgotPasswordForm
 - schemas/support.ts
-- lucide-react
+- tw-animate-css
 - AddressesManager
 - add-to-cart.tsx
 - 0010-product-line-excludes-correction-complexity.md
 - 0011-eye-enlargement-derives-from-graphic-diameter.md
 - parseProductQueryLoose
 - Locale
-- nav-destinations.test.ts
+- mega-nav.tsx
 - apiRequest
 - 0013-pages-own-their-width.md
 - 0012-unavailable-cart-lines-are-reported-not-dropped.md
 - Pages run full-bleed with 40px gutters; `PageContainer` no longer caps at `max-w-7xl`
 - QuizFlow
 - package.json
-- lens-viewer.tsx
 - orders-preferred-payment.test.ts
 - @types/node
 - catalog/mock.ts
@@ -205,7 +204,7 @@
 - **Four swappable architecture seams (data, theming, i18n, analytics) isolating volatility** — docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productrepository, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_theming_seam, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_i18n_seam, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_analytics_seam [EXTRACTED 1.00]
 - **Coolmate apparel patterns re-modeled for Vivimoon contact-lens domain** — docs_research_coolmate_website_analysis_product_card, docs_research_coolmate_website_analysis_pdp, docs_research_coolmate_website_analysis_color_variant_url_pattern, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productcard, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant [INFERRED 0.85]
 
-## Communities (164 total, 53 thin omitted)
+## Communities (163 total, 54 thin omitted)
 
 ### Community 0 - "Product"
 Cohesion: 0.21
@@ -237,7 +236,7 @@ Nodes (10): ProductPage(), renderProduct(), addresses, articles, collections, fa
 
 ### Community 7 - "dependencies"
 Cohesion: 0.07
-Nodes (27): @base-ui/react, class-variance-authority, clsx, embla-carousel-react, @hookform/resolvers, next, @next/third-parties, dependencies (+19 more)
+Nodes (27): @base-ui/react, class-variance-authority, clsx, embla-carousel-react, @hookform/resolvers, lucide-react, next, @next/third-parties (+19 more)
 
 ### Community 8 - "Vivimoon M2 — Purchase Core Implementation Plan"
 Cohesion: 0.11
@@ -356,8 +355,8 @@ Cohesion: 0.40
 Nodes (5): FocalPro Monthly Product Image (Blank Placeholder), FocalPro Product (Monthly Plan), Blank Placeholder Image Asset, Torica Monthly Product Photo 2 (blank placeholder), Torica Monthly Product
 
 ### Community 37 - "orders/mock.ts"
-Cohesion: 0.10
-Nodes (17): jar, mockOrders, OrderError, Orders, randomId(), randomOrderCode(), randomSuffix(), resetMockOrdersState() (+9 more)
+Cohesion: 0.12
+Nodes (16): mockOrders, OrderError, Orders, randomId(), randomOrderCode(), randomSuffix(), resetMockOrdersState(), store (+8 more)
 
 ### Community 38 - "Aqua Daily 2 (Placeholder Image)"
 Cohesion: 0.50
@@ -419,10 +418,6 @@ Nodes (15): FaqAccordion(), FaqAnswer, entries, Accordion(), AccordionContent(),
 Cohesion: 0.11
 Nodes (12): ADDRESS, jar, LINES, RX, loyaltyHistory, Loyalty, mockLoyalty, store (+4 more)
 
-### Community 73 - "collection-filters.tsx"
-Cohesion: 0.17
-Nodes (13): DIAMETERS, MATERIALS, QUERY_KEYS, SORTS, SelectContent(), SelectGroup(), SelectItem(), SelectLabel() (+5 more)
-
 ### Community 74 - "vouchers/mock.ts"
 Cohesion: 0.31
 Nodes (5): vouchers, vouchers, mockVouchers, Vouchers, Voucher
@@ -444,8 +439,8 @@ Cohesion: 0.20
 Nodes (10): scripts, build, dev, lint, start, test, test:contract, test:contract:upstream (+2 more)
 
 ### Community 79 - "lens-facets.ts"
-Cohesion: 0.12
-Nodes (24): CollectionFilters(), colors, push, FacetBrowser(), Swatches(), valueLabel(), pathname, MobileNav() (+16 more)
+Cohesion: 0.11
+Nodes (28): CollectionFilters(), DIAMETERS, MATERIALS, QUERY_KEYS, SORTS, colors, push, FacetBrowser() (+20 more)
 
 ### Community 80 - "editorial/mock.ts"
 Cohesion: 0.18
@@ -536,8 +531,8 @@ Cohesion: 0.40
 Nodes (4): 1. Site structure, 2. Product detail page — data fields observed, 3. Open question — not acted on, Vivimoon.vn — Live Site Data-Model Audit
 
 ### Community 119 - "cn"
-Cohesion: 0.11
-Nodes (24): LocaleLinks(), ITEM_CLASS, MegaNav(), AlertAction(), AspectRatio(), Dialog(), DialogContent(), DialogDescription() (+16 more)
+Cohesion: 0.09
+Nodes (29): CONTEXT_KEYS, LensViewer(), gallery, ProductGallery(), LocaleLinks(), AlertAction(), AspectRatio(), Dialog() (+21 more)
 
 ### Community 120 - "cookie.ts"
 Cohesion: 0.14
@@ -571,9 +566,9 @@ Nodes (15): collectionListId(), MEMBERSHIP_FILTERS, normalizeColors(), COLLECTIO
 Cohesion: 0.27
 Nodes (6): CarouselNav(), CollectionCarousel(), ComparisonDialog(), PriceTag(), ProductCard(), Locale
 
-### Community 131 - "nav-destinations.test.ts"
-Cohesion: 0.36
-Nodes (7): getNavItems(), NavItem, NavLink, facetHrefs(), hrefsOf(), navHrefs(), routeSegments()
+### Community 131 - "mega-nav.tsx"
+Cohesion: 0.13
+Nodes (20): ITEM_CLASS, MegaNav(), pathname, getNavItems(), NavItem, NavLink, NavigationMenu(), NavigationMenuContent() (+12 more)
 
 ### Community 132 - "apiRequest"
 Cohesion: 0.14
@@ -582,10 +577,6 @@ Nodes (12): FavoriteButton(), toggle(), mockedApiRequest, UsePricedCartResult, S
 ### Community 137 - "package.json"
 Cohesion: 0.50
 Nodes (3): name, private, version
-
-### Community 138 - "lens-viewer.tsx"
-Cohesion: 0.24
-Nodes (9): CONTEXT_KEYS, LensViewer(), gallery, ProductGallery(), Tabs(), TabsContent(), TabsList(), tabsListVariants (+1 more)
 
 ### Community 139 - "orders-preferred-payment.test.ts"
 Cohesion: 0.25
@@ -648,7 +639,7 @@ Nodes (4): fetchRoutingTo(), json(), PRICED_RESPONSE, renderCheckoutPage()
 ## Knowledge Gaps
 - **586 isolated node(s):** `npx`, `Stage`, `push`, `push`, `Stage` (+581 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **53 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **54 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_

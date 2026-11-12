@@ -37,6 +37,8 @@ export const userSchema = z.object({
   // Set automatically from whichever method a logged-in shopper's most
   // recent order paid with (M5.3, issue #20); checkout preselects it.
   preferredPaymentMethod: paymentMethodTypeSchema.optional(),
+  // False for a Google-only account: it sets a first password without a current one.
+  hasPassword: z.boolean().optional(),
 });
 
 /**

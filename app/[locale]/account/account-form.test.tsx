@@ -65,6 +65,19 @@ describe('AccountForm', () => {
     });
   });
 
+  it('sets a first password with no current-password field for a Google-only account', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(json({ ok: true, data: { ...user, hasPassword: true } }));
+    vi.stubGlobal('fetch', fetchMock);
+    render(<AccountForm user={{ ...user, hasPassword: false }} dict={dict} />);
+    expect(screen.queryByLabelText(dict.currentPassword)).toBeNull();
+    await userEvent.type(screen.getByLabelText(dict.newPassword), 'brandnew1');
+    await userEvent.click(screen.getByRole('button', { name: 'Save changes' }));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).not.toHaveProperty('currentPassword');
+    // Now it has one, so the next change needs it.
+    expect(await screen.findByLabelText(dict.currentPassword)).toBeTruthy();
+  });
+
   it('asks for the current password before sending a new one', async () => {
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);

@@ -13,16 +13,12 @@ export const accountPatchSchema = z
     email: z.string().email('Enter a valid email address').optional(),
     dob: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Use the format YYYY-MM-DD').optional(),
     password: z.string().min(8, 'Use at least 8 characters').optional(),
-    /** Required alongside `password` — a borrowed session alone can't change it. */
+    /** Required alongside `password` when the account has one (checked by the resource, which knows). */
     currentPassword: z.string().optional(),
     preferredPaymentMethod: paymentMethodTypeSchema.optional(),
   })
   .refine((v) => Object.values(v).some((x) => x !== undefined), {
     message: 'Nothing to update',
-  })
-  .refine((v) => v.password === undefined || Boolean(v.currentPassword), {
-    message: 'Enter your current password',
-    path: ['currentPassword'],
   });
 
 export type AccountPatch = z.infer<typeof accountPatchSchema>;

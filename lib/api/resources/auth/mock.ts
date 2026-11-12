@@ -30,8 +30,8 @@ const RESET_TTL_MS = 15 * 60 * 1000;
 const OTP_MAX_ATTEMPTS = 5;
 
 function publicUser(u: MockUser): User {
-  const { password: _password, ...rest } = u;
-  return rest;
+  const { password, ...rest } = u;
+  return { ...rest, hasPassword: password !== undefined };
 }
 
 function findByIdentifier(identifier: string): MockUser | undefined {
@@ -144,7 +144,8 @@ export const mockAuth = {
 
   /**
    * Used by the account resource, which shares this store. A `password`
-   * change must carry the `currentPassword` it replaces.
+   * change must carry the `currentPassword` it replaces, unless there is none
+   * yet (a Google-only account setting its first one).
    */
   async updateUser(
     id: string,
@@ -158,7 +159,7 @@ export const mockAuth = {
         throw new AuthError('That phone or email is already registered', 'conflict');
       }
     }
-    if (patch.password !== undefined && currentPassword !== user.password) {
+    if (patch.password !== undefined && user.password !== undefined && currentPassword !== user.password) {
       throw new AuthError('Your current password is incorrect', 'unauthorized');
     }
     Object.assign(user, patch);

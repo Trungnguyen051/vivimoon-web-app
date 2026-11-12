@@ -86,11 +86,21 @@ describe('account routes', () => {
     expect((await PATCH(patch({ email: 'mai@example.vn' }))).status).toBe(200);
   });
 
-  it('400s a new password sent without the current one', async () => {
+  it('401s a new password sent without the current one', async () => {
     signIn();
     const res = await PATCH(patch({ password: 'brandnew1' }));
-    expect(res.status).toBe(400);
-    expect((await res.json()).error.field).toBe('currentPassword');
+    expect(res.status).toBe(401);
+  });
+
+  it('lets a Google-only account set its first password without a current one', async () => {
+    const { mockAuth } = await import('@/lib/api/resources/auth/mock');
+    const google = await mockAuth.loginWithGoogle('lan@gmail.com');
+    expect(google.hasPassword).toBe(false);
+    signIn(google.id);
+    const res = await PATCH(patch({ password: 'brandnew1' }));
+    expect(res.status).toBe(200);
+    expect((await res.json()).data.hasPassword).toBe(true);
+    expect((await mockAuth.login({ identifier: 'lan@gmail.com', password: 'brandnew1' })).id).toBe(google.id);
   });
 
   it('401s a new password with the wrong current password', async () => {
