@@ -1,33 +1,95 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ReviewsList } from './reviews-list';
 import { en } from '@/lib/i18n/dictionaries/en';
-import type { Review } from '@/lib/types';
+import { reviewSchema } from '@/lib/api/schemas/catalog';
 
-const reviews: Review[] = [
-  {
-    id: 'r1', productId: 'p1', author: 'Mai', rating: 5, title: 'Great lenses',
-    body: 'Comfortable all day.', createdAt: '2026-08-01', hasImages: false,
+const base = { productId: 'p1', title: 't', createdAt: '2026-08-01' };
+const reviews = [
+  reviewSchema.parse({
+    ...base, id: 'r1', author: 'Mai', rating: 5, body: 'Comfortable all day.',
     source: 'shopee', sourceUrl: 'https://shopee.vn/item/123',
-  },
-  {
-    id: 'r2', productId: 'p1', author: 'An', rating: 4, title: 'Good',
-    body: 'Would buy again.', createdAt: '2026-08-02', hasImages: false,
-    source: 'vivimoon',
-  },
+    variantLabel: 'Sandkiss 1 month', tags: ['allDay', 'myopic'], helpfulCount: 24,
+    media: [{ type: 'image', url: '/a.jpg' }, { type: 'video', url: 'https://tiktok.com/v/1' }],
+    subRatings: { comfort: 5, colorMatch: 4, easeOfWear: 5 },
+  }),
+  reviewSchema.parse({
+    ...base, id: 'r2', author: 'An', rating: 4, body: 'Would buy again.', tags: ['sensitiveEyes'],
+    subRatings: { comfort: 4, colorMatch: 4, easeOfWear: 4 },
+  }),
+  reviewSchema.parse({ ...base, id: 'r3', author: 'Lan', rating: 5, body: 'Lovely.', tags: ['beginner'] }),
+  reviewSchema.parse({ ...base, id: 'r4', author: 'Hoa', rating: 1, body: 'Not for me.' }),
 ];
+
+const renderList = (list = reviews) => render(<ReviewsList reviews={list} locale="en" dict={en} />);
+const authors = () => screen.getAllByRole('article').map((a) => within(a).getByRole('heading').textContent);
 
 describe('ReviewsList', () => {
   it('shows the empty state when there are no reviews', () => {
-    render(<ReviewsList reviews={[]} dict={en} />);
+    renderList([]);
     expect(screen.getByText(en.pdp.noReviews)).toBeInTheDocument();
   });
 
+  it('summarises count, media share, average and the 5→1 histogram', () => {
+    renderList();
+    expect(screen.getByText('4 reviews · 25% with real photos')).toBeInTheDocument();
+    expect(screen.getByText('3.8')).toBeInTheDocument();
+    const rows = screen.getAllByTestId('histogram-row').map((r) => r.textContent);
+    expect(rows).toEqual(['5★50%', '4★25%', '3★0%', '2★0%', '1★25%']);
+  });
+
+  it('averages the sub-ratings', () => {
+    renderList();
+    expect(screen.getByText(en.reviews.subRatings.comfort).nextSibling).toHaveTextContent('4.5 / 5');
+    expect(screen.getByText(en.reviews.subRatings.colorMatch).nextSibling).toHaveTextContent('4.0 / 5');
+  });
+
+  it('filters the list by tab, and the media tab counts what it shows', async () => {
+    renderList();
+    expect(authors()).toEqual(['Mai', 'An', 'Lan', 'Hoa']);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Photos/videos (1)' }));
+    expect(authors()).toEqual(['Mai']);
+
+    await userEvent.click(screen.getByRole('button', { name: en.reviews.tags.sensitiveEyes }));
+    expect(authors()).toEqual(['An']);
+    expect(screen.getByRole('button', { name: en.reviews.tags.sensitiveEyes })).toHaveAttribute('aria-pressed', 'true');
+
+    await userEvent.click(screen.getByRole('button', { name: en.reviews.tags.allDay }));
+    expect(authors()).toEqual(['Mai']);
+
+    await userEvent.click(screen.getByRole('button', { name: en.reviews.all }));
+    expect(authors()).toHaveLength(4);
+  });
+
+  it('shows a review’s variant, wearer tags, photos, video and helpful count', () => {
+    renderList();
+    const card = screen.getAllByRole('article')[0];
+    expect(within(card).getByText('· Bought Sandkiss 1 month')).toBeInTheDocument();
+    expect(within(card).getByText('All-day wear · Short-sighted')).toBeInTheDocument();
+    expect(within(card).getByRole('link', { name: 'Review photo 1' })).toHaveAttribute('href', '/a.jpg');
+    expect(within(card).getByRole('link', { name: en.reviews.video })).toHaveAttribute('href', 'https://tiktok.com/v/1');
+    expect(within(card).getByText('Helpful (24)')).toBeInTheDocument();
+  });
+
   it('renders a source badge per review, linked when sourceUrl is present', () => {
-    render(<ReviewsList reviews={reviews} dict={en} />);
-    const shopeeLink = screen.getByRole('link', { name: en.pdp.reviewSource.shopee });
-    expect(shopeeLink).toHaveAttribute('href', 'https://shopee.vn/item/123');
-    expect(screen.getByText(en.pdp.reviewSource.vivimoon)).toBeInTheDocument();
-    expect(screen.queryAllByRole('link')).toHaveLength(1);
+    renderList();
+    expect(screen.getByRole('link', { name: en.pdp.reviewSource.shopee })).toHaveAttribute('href', 'https://shopee.vn/item/123');
+    expect(screen.getAllByText(en.pdp.reviewSource.vivimoon)).toHaveLength(3);
+  });
+
+  it('sends "Write a review" to the shopper’s orders', () => {
+    renderList();
+    expect(screen.getByRole('link', { name: en.reviews.write })).toHaveAttribute('href', '/en/account/orders');
+  });
+
+  it('shows the first reviews and reveals the rest from "See all"', async () => {
+    const many = Array.from({ length: 6 }, (_, i) => reviewSchema.parse({ ...base, id: `m${i}`, author: `A${i}`, rating: 5, body: 'b' }));
+    renderList(many);
+    expect(screen.getAllByRole('article')).toHaveLength(4);
+    await userEvent.click(screen.getByRole('button', { name: 'See all 6 reviews' }));
+    expect(screen.getAllByRole('article')).toHaveLength(6);
+    expect(screen.queryByRole('button', { name: 'See all 6 reviews' })).not.toBeInTheDocument();
   });
 });

@@ -5,7 +5,7 @@ A contact-lens and eyewear e-commerce storefront for the Vietnamese market, buil
 ## Language
 
 **Voucher**:
-A discount currently valid for an account to apply at checkout. Every logged-in member sees the same currently-valid list, filtered by status and expiry — not a personally issued or claimed subset.
+A discount currently valid to apply to a cart. Every shopper sees the same currently-valid list, filtered by status, expiry and (for member-only Vouchers) sign-in — not a personally issued or claimed subset. The best one is pre-selected; the shopper may switch to another from the list or type its code. At most one Voucher applies per order.
 _Avoid_: Coupon, promo code, claimed voucher
 
 **Favorites**:
@@ -17,11 +17,11 @@ A shopper's saved Vietnamese shipping address (province/district/ward). Exactly 
 _Avoid_: Shipping address, delivery address (same concept — Address)
 
 **Rx**:
-A shopper's per-eye contact-lens prescription, captured at add-to-cart as line metadata rather than a purchasable product variant. `sph` is always present; `cyl`/`axis` apply only to toric lenses (deferred past M2 — no selector collects them yet, see ADR-0004) and `add` (banded low/mid/high, not a numeric power) only to multifocal lenses. Rx is fully decoupled from the product taxonomy (ADR-0010): the Rx rules branch on their own `rxLensTypeSchema`, and every call site passes the fixed `RX_LENS_TYPE`, so no Product can reach the toric/multifocal branches until a real line for them exists.
+A shopper's per-eye contact-lens prescription, captured at add-to-cart as line metadata rather than a purchasable product variant. A `single` Cart Line's Rx is one `sph` with no eye (ADR-0023). `sph` is always present; `cyl`/`axis` apply only to toric lenses (deferred past M2 — no selector collects them yet, see ADR-0004) and `add` (banded low/mid/high, not a numeric power) only to multifocal lenses. Rx is fully decoupled from the product taxonomy (ADR-0010): the Rx rules branch on their own `rxLensTypeSchema`, and the buy box collects `sph` alone, so no Product can reach the toric/multifocal branches until a real line for them exists.
 _Avoid_: Prescription, power
 
 **Default Rx**:
-A per-eye `sph` saved on the account itself — collected once by the welcome step after an account is created and editable from Account info. It is a shopper's standing answer, not an Rx: it never travels with a Cart Line on its own, and an Rx is still captured at add-to-cart. Myopia only, in 0.25 steps; no `cyl`/`axis`/`add`.
+A per-eye `sph` a shopper keeps as their standing answer — shown to shoppers as "Độ của bạn". A member's lives on the account (collected by the welcome step, editable from Account info and from the collection sidebar); a guest's lives on their device. It narrows collection listings to lenses stocked in both eyes' powers and pre-fills the Rx at add-to-cart, but it is not an Rx: it never travels with a Cart Line on its own. Myopia only, in 0.25 steps; no `cyl`/`axis`/`add`.
 _Avoid_: Eye power, độ cận (in code), saved prescription
 
 **Product Line**:
@@ -29,8 +29,28 @@ Vivimoon's own lens technology/marketing category for a Product — trong suốt
 _Avoid_: Lens type, category
 
 **Cart Line**:
-A single entry in the cart, identified by its variant plus its Rx — not by variant alone. The same lens variant at two different prescriptions is two distinct Cart Lines, each surviving a reload separately.
+A single entry in the cart, identified by its variant, its Purchase Unit and its Rx — not by variant alone. The same lens variant at two different prescriptions, or bought singly versus as a pair, is two distinct Cart Lines, each surviving a reload separately. Its quantity counts Purchase Units. A shopper may tick or untick each Cart Line; only ticked lines go to checkout, and unticked ones stay in the cart.
 _Avoid_: Line item, SKU line
+
+**Purchase Unit**:
+How a lens Cart Line is bought — **single** (1 chiếc: one lens, one `sph`, no eye attached) or **pair** (1 đôi: two lenses, a left and a right `sph`). A lens's listed price is always per single lens; a pair costs two. Accessories have no Purchase Unit (ADR-0023).
+_Avoid_: Mode, buy-as, pack size
+
+**Product Kind**:
+Whether a Product is a **lens** or an **accessory** (solution, eye drops, case and tools, cleaning combo). Only lenses carry a Product Line, an Rx, a Purchase Unit or appear in collection listings; accessories are sold from the cart, mini cart and bundles.
+_Avoid_: Category, product type
+
+**Bundle**:
+A PDP offer to buy a lens together with chosen accessories at a combined price below their separate prices ("Mua kèm tiết kiệm hơn").
+_Avoid_: Combo (in code), cross-sell
+
+**Spend Tier**:
+A cart-subtotal threshold that unlocks a reward — free shipping, a free Gift, or an amount off. The cart and mini cart show progress toward the next one. Thresholds are provisional pending Vivimoon's real promotion rules.
+_Avoid_: Milestone, free-shipping bar
+
+**Gift**:
+An item added to an order at 0₫ because the order qualifies for it — by a Spend Tier or by containing a particular Product. It is shown as its own line, is never chosen or removed by the shopper, and is not a Cart Line.
+_Avoid_: Freebie, gift with purchase (in code)
 
 **Buy Now**:
 A PDP action that takes the shopper's current Rx selection straight to checkout as a single-line cart, leaving their existing Cart untouched.
@@ -48,8 +68,12 @@ The shipping carrier's own waybill number for an Order (e.g. `SPX…`), present 
 _Avoid_: Tracking number, mã vận đơn (in code)
 
 **Loyalty**:
-A per-account points balance and history, credited per placed order. Earn and burn rules are provisional pending Vivimoon's real program design.
+A per-account points balance and history. An order earns one point per 10.000₫ paid. A member may spend points at checkout, worth 100₫ each, up to 10% of the order's subtotal; points spent and earned both appear in the history. Members have no tiers. Earn and spend rates are provisional pending Vivimoon's real program design.
 _Avoid_: Rewards, points program
+
+**Held Points**:
+Loyalty points earned by a guest order, kept against the order's phone number until an account verifies that phone, at which point they are credited to it (ADR-0024). They cannot be spent while held.
+_Avoid_: Pending points, guest points
 
 **Comparison Tray**:
 The persistent, always-visible strip that accumulates a shopper's product selections (up to 4) for comparison as they browse across pages. Distinct from the Comparison Matrix — the tray is the accumulator; the matrix is the side-by-side view it opens.

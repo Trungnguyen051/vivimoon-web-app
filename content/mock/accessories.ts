@@ -1,0 +1,65 @@
+import type { Accessory } from '@/lib/api/schemas/catalog';
+
+// USD like every lens fixture: pricing refuses a cart mixing currencies.
+// Prices are the wireframe's VND figures (Figma 57:807) at roughly 25.000₫/USD.
+export const accessories: Accessory[] = [
+  {
+    kind: 'accessory',
+    id: 'a-nuoc-ngam',
+    slug: 'nuoc-ngam-lens',
+    name: 'Nước ngâm lens',
+    brandName: 'Vivimoon',
+    images: ['/images/accessories/nuoc-ngam.svg'],
+    requiresRx: false,
+    option: 'volume',
+    variants: [
+      { id: 'a-nuoc-ngam-120', sku: 'NNL-120', label: '120ml', price: 4, currency: 'USD', stock: 300 },
+      { id: 'a-nuoc-ngam-360', sku: 'NNL-360', label: '360ml', price: 8, currency: 'USD', stock: 150 },
+    ],
+  },
+  {
+    kind: 'accessory',
+    id: 'a-nuoc-nho-mat',
+    slug: 'nuoc-nho-mat',
+    name: 'Nước nhỏ mắt',
+    brandName: 'Vivimoon',
+    images: ['/images/accessories/nuoc-nho-mat.svg'],
+    requiresRx: false,
+    option: 'volume',
+    variants: [{ id: 'a-nuoc-nho-mat-15', sku: 'NNM-15', label: '15ml', price: 3, currency: 'USD', stock: 400 }],
+  },
+  {
+    kind: 'accessory',
+    id: 'a-khay-dung',
+    slug: 'khay-dung-dung-cu',
+    name: 'Khay đựng + dụng cụ',
+    brandName: 'Vivimoon',
+    images: ['/images/accessories/khay-dung.svg'],
+    requiresRx: false,
+    option: 'type',
+    variants: [{ id: 'a-khay-dung-set', sku: 'KDD-SET', label: 'Khay + nhíp + que đeo', price: 2, currency: 'USD', stock: 250 }],
+  },
+  {
+    kind: 'accessory',
+    id: 'a-combo-ve-sinh',
+    slug: 'combo-ve-sinh-lens',
+    name: 'Combo vệ sinh lens',
+    brandName: 'Vivimoon',
+    images: ['/images/accessories/combo-ve-sinh.svg'],
+    requiresRx: false,
+    option: 'type',
+    variants: [{ id: 'a-combo-ve-sinh-3', sku: 'CVS-3', label: 'Combo 3 món', price: 5, currency: 'USD', stock: 120 }],
+  },
+  {
+    kind: 'accessory',
+    id: 'a-kits-yeu-mat',
+    slug: 'kits-yeu-mat',
+    name: 'Kits Yêu Mắt',
+    brandName: 'Vivimoon',
+    images: ['/images/accessories/kits-yeu-mat.svg'],
+    requiresRx: false,
+    option: 'type',
+    variants: [{ id: 'a-kits-yeu-mat-1', sku: 'KYM-1', label: 'Bộ quà tặng', price: 6, currency: 'USD', stock: 500 }],
+    giftOnly: true,
+  },
+];

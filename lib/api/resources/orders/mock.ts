@@ -4,6 +4,7 @@ import { pricing } from '@/lib/api/resources/pricing';
 import { catalog } from '@/lib/api/resources/catalog';
 import type { Order, PlaceOrderRequest } from '@/lib/api/schemas/orders';
 import { normalizeOrderCode } from '@/lib/api/schemas/orders';
+import { lensesIn, purchaseUnitOf } from '@/lib/api/schemas/rx';
 
 /** Thrown by the mock so the route handler can map it to an envelope. */
 export class OrderError extends Error {
@@ -92,13 +93,21 @@ export const mockOrders = {
     // the request's lines, so an index into `input.lines` is only ever the
     // same line by luck — and would silently attach one line's prescription
     // to another.
-    const rxByLineKey = new Map(input.lines.map((l) => [l.lineKey, l.rx]));
+    const inputByLineKey = new Map(input.lines.map((l) => [l.lineKey, l]));
     const lines = await Promise.all(
       priced.lines.map(async (line) => {
-        const compareAt = (await catalog.getVariantById(line.variantId))?.variant.compareAtPrice;
+        const requested = inputByLineKey.get(line.lineKey);
+        const rx = requested?.rx;
+        const purchaseUnit = requested && purchaseUnitOf(requested);
+        const variant = (await catalog.getVariantById(line.variantId))?.variant;
+        const perLens = variant?.compareAtPrice;
+        // Per unit, like `unitPrice`: a pair's compare-at is two lenses' (ADR-0023).
+        const compareAt = perLens === undefined ? undefined : perLens * lensesIn(purchaseUnit);
         return {
           ...line,
-          rx: rxByLineKey.get(line.lineKey),
+          rx,
+          ...(purchaseUnit ? { purchaseUnit } : {}),
+          ...(variant?.label ? { variantLabel: variant.label } : {}),
           ...(compareAt !== undefined && compareAt > line.unitPrice ? { compareAtUnitPrice: compareAt } : {}),
         };
       }),

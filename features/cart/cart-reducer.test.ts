@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cartReducer, cartCount } from './cart-reducer';
+import { cartReducer, cartCount, readPersistedLine } from './cart-reducer';
 import { lineKey } from '@/lib/cart/line-key';
 import { MAX_LINE_QUANTITY } from '@/lib/api/schemas/cart';
 import type { RxInput } from '@/lib/api/schemas/rx';
@@ -117,6 +117,29 @@ describe('cartReducer — addressing lines by lineKey', () => {
   });
 });
 
+describe('cartReducer — editing an accessory line (Product Kind)', () => {
+  const ml120 = makeLine({ productId: 'a1', variantId: 'a1-120', sku: 'A-120', variantLabel: '120ml', unitPrice: 4 });
+  const ml360 = makeLine({ productId: 'a1', variantId: 'a1-360', sku: 'A-360', variantLabel: '360ml', unitPrice: 8 });
+
+  it('adds an accessory line with no Rx, keyed by its variant', () => {
+    const s = cartReducer(empty, { type: 'ADD', line: ml120 });
+    expect(s.lines).toEqual([ml120]);
+    expect(s.lines[0].lineKey).toBe('a1-120');
+  });
+
+  it('EDIT swaps the variant in place and re-keys the line', () => {
+    const start = cartReducer(cartReducer(empty, { type: 'ADD', line: { ...ml120, quantity: 2 } }), { type: 'ADD', line: plain });
+    const s = cartReducer(start, { type: 'EDIT', lineKey: ml120.lineKey, line: { ...ml360, lineKey: ml120.lineKey, quantity: 2 } });
+    expect(s.lines.map((l) => [l.lineKey, l.variantLabel, l.quantity])).toEqual([['a1-360', '360ml', 2], [plain.lineKey, undefined, 1]]);
+  });
+
+  it('EDIT merges into a line that becomes identical', () => {
+    const start = cartReducer(cartReducer(empty, { type: 'ADD', line: ml120 }), { type: 'ADD', line: { ...ml360, quantity: 2 } });
+    const s = cartReducer(start, { type: 'EDIT', lineKey: ml120.lineKey, line: { ...ml360, quantity: 1 } });
+    expect(s.lines.map((l) => [l.lineKey, l.quantity])).toEqual([['a1-360', 3]]);
+  });
+});
+
 describe('cartCount', () => {
   it('sums quantities across lines', () => {
     const s = cartReducer(cartReducer(empty, { type: 'ADD', line: { ...atA, quantity: 2 } }), {
@@ -133,5 +156,35 @@ describe('client-side money', () => {
     // drift from the server's answer the moment a voucher applies.
     const mod = await import('./cart-reducer');
     expect('cartSubtotal' in mod).toBe(false);
+  });
+});
+
+describe('Purchase Unit (ADR-0023)', () => {
+  it('a single and a pair of the same variant at the same power are two lines', () => {
+    const single = makeLine({ purchaseUnit: 'single', rx: { sph: -2.5 } as never });
+    const pair = makeLine({ purchaseUnit: 'pair', rx: rxA as never });
+    expect(single.lineKey).not.toBe(pair.lineKey);
+    const s = cartReducer(cartReducer(empty, { type: 'ADD', line: single }), { type: 'ADD', line: pair });
+    expect(s.lines).toHaveLength(2);
+    // Quantity counts units: adding the same single again bumps that line only.
+    const s2 = cartReducer(s, { type: 'ADD', line: single });
+    expect(s2.lines.map((l) => l.quantity)).toEqual([2, 1]);
+  });
+
+  it('reads a persisted lens line with no unit as a pair, keeping its key', () => {
+    const legacy = JSON.parse(JSON.stringify(atA));
+    delete legacy.purchaseUnit;
+    const read = readPersistedLine(legacy);
+    expect(read?.purchaseUnit).toBe('pair');
+    expect(read?.lineKey).toBe(atA.lineKey);
+    // ...so a fresh pair add at the same power merges into it.
+    const fresh = makeLine({ purchaseUnit: 'pair', rx: rxA as never });
+    expect(fresh.lineKey).toBe(read?.lineKey);
+  });
+
+  it('leaves a no-Rx line without a unit, and drops a corrupt one', () => {
+    expect(readPersistedLine(JSON.parse(JSON.stringify(plain)))?.purchaseUnit).toBeUndefined();
+    expect(readPersistedLine({ lineKey: 'x' })).toBeNull();
+    expect(readPersistedLine({ ...JSON.parse(JSON.stringify(atA)), purchaseUnit: 'single' })).toBeNull();
   });
 });

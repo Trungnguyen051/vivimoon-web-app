@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { currencySchema } from './catalog';
-import { rxSchema } from './rx';
+import { lineRxSchema, purchaseUnitSchema, refineUnitMatchesRx } from './rx';
 
 /** The most units one line may carry — in a cart, a price request, or an order. */
 export const MAX_LINE_QUANTITY = 99;
@@ -9,11 +9,13 @@ export const MAX_LINE_QUANTITY = 99;
  * A line in the shopper's cart.
  *
  * `lineKey` is the line's identity, derived from `variantId` + `rx` (spec §7)
- * by lib/cart/line-key.ts. The same variant at two different powers is two
- * lines, so `variantId` alone is NOT the identity.
+ * by lib/cart/line-key.ts. The same variant at two different powers, or bought
+ * singly versus as a pair, is two lines, so `variantId` alone is NOT the
+ * identity. `quantity` counts Purchase Units (ADR-0023).
  *
- * `unitPrice` is a display snapshot only. Money is server-owned: totals come
- * from POST /api/cart/price, and nothing on the client multiplies this field.
+ * `unitPrice` is a per-unit display/analytics snapshot only. Money is
+ * server-owned: totals come from POST /api/cart/price, and nothing on the
+ * client multiplies this field by quantity.
  */
 export const cartLineSchema = z.object({
   lineKey: z.string().min(1),
@@ -26,8 +28,11 @@ export const cartLineSchema = z.object({
   currency: currencySchema,
   quantity: z.number().int().positive().max(MAX_LINE_QUANTITY),
   image: z.string().optional(),
-  rx: rxSchema.optional(),
-});
+  // An accessory's variant option, e.g. '120ml' — what its line summary shows.
+  variantLabel: z.string().optional(),
+  purchaseUnit: purchaseUnitSchema.optional(),
+  rx: lineRxSchema.optional(),
+}).superRefine(refineUnitMatchesRx);
 
 export const cartStateSchema = z.object({
   lines: z.array(cartLineSchema),
@@ -73,18 +78,19 @@ export const voucherSchema = z
   });
 
 /**
- * One line of the pricing request body. Deliberately narrow: `variantId` +
- * `quantity` are all that determine money, and both are resolved
- * server-side against the catalogue — nothing here lets a client name its
+ * One line of the pricing request body. Deliberately narrow: `variantId`,
+ * `purchaseUnit` and `quantity` are all that determine money, and the price
+ * is resolved server-side against the catalogue — nothing here lets a client name its
  * own price. `lineKey` is an opaque passthrough so the response can be
  * matched back to the shopper's cart lines.
  */
 export const priceLineInputSchema = z.object({
   lineKey: z.string().min(1),
   variantId: z.string().min(1),
-  rx: rxSchema.optional(),
+  purchaseUnit: purchaseUnitSchema.optional(),
+  rx: lineRxSchema.optional(),
   quantity: z.number().int().positive().max(MAX_LINE_QUANTITY),
-});
+}).superRefine(refineUnitMatchesRx);
 
 /**
  * An address to quote shipping for, resolved against the `shipping`

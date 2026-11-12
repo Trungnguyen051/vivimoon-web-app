@@ -44,6 +44,8 @@ export const variantSchema = z.object({
   compareAtPrice: z.number().int().nonnegative().optional(),
   currency: currencySchema,
   stock: z.number().int().nonnegative(),
+  // An accessory variant's option value, e.g. '120ml' (Product Kind). Lenses use color instead.
+  label: z.string().optional(),
 }).superRefine((v, ctx) => {
   // CartLine.color is built from colorLabel (add-to-cart.tsx), not color —
   // if only color were set, the cart line would silently lose its color.
@@ -59,7 +61,12 @@ export const variantSchema = z.object({
   }
 });
 
+/** Lens or accessory (CONTEXT.md "Product Kind"). Only lenses are listed, take an Rx or a Purchase Unit. */
+export const productKindSchema = z.enum(['lens', 'accessory']);
+
 export const productSchema = z.object({
+  // Absent reads as a lens: every product before Product Kind was one.
+  kind: z.literal('lens').optional(),
   id: z.string(),
   slug: z.string(),
   name: z.string(),
@@ -138,6 +145,32 @@ export const productSchema = z.object({
   }
 });
 
+/** What an accessory's variants vary by — the label its option picker shows. */
+export const accessoryOptionSchema = z.enum(['volume', 'type']);
+
+/**
+ * An accessory (Product Kind): its own variants, no Rx, no Purchase Unit, no
+ * Product Line. Never listed and no detail page — sold from the cart, the mini
+ * cart and Bundles, or given as a Gift.
+ */
+export const accessorySchema = z.object({
+  kind: z.literal('accessory'),
+  id: z.string(),
+  slug: z.string(),
+  name: z.string(),
+  brandName: z.string(),
+  images: z.array(z.string()).min(1),
+  requiresRx: z.literal(false),
+  option: accessoryOptionSchema,
+  variants: z.array(variantSchema).min(1),
+  // Only ever given as a Gift, never sold on its own.
+  giftOnly: z.boolean().optional(),
+}).superRefine((a, ctx) => {
+  if (a.variants.some((v) => !v.label || v.color)) {
+    ctx.addIssue({ code: 'custom', message: 'an accessory variant carries a label and no color', path: ['variants'] });
+  }
+});
+
 export const collectionSchema = z.object({
   slug: z.string(),
   title: z.string(),
@@ -145,6 +178,11 @@ export const collectionSchema = z.object({
   bannerImage: z.string().optional(),
   productIds: z.array(z.string()),
 });
+
+/** Who the reviewer is as a wearer — the PDP's review filter tabs. */
+export const reviewTagSchema = z.enum(['sensitiveEyes', 'allDay', 'beginner', 'myopic']);
+
+const subRatingSchema = z.number().min(1).max(5);
 
 export const reviewSchema = z.object({
   id: z.string(),
@@ -154,10 +192,30 @@ export const reviewSchema = z.object({
   title: z.string(),
   body: z.string(),
   createdAt: z.string(),
-  hasImages: z.boolean(),
+  // Free text, as the marketplace shows it ("Sandkiss 1 tháng") — not a variant id.
+  variantLabel: z.string().optional(),
+  tags: z.array(reviewTagSchema).default([]),
+  // A video's `poster` is its thumbnail; without one the tile shows only the play mark.
+  media: z.array(z.object({
+    type: z.enum(['image', 'video']),
+    url: z.string(),
+    poster: z.string().optional(),
+  })).default([]),
+  subRatings: z.object({
+    comfort: subRatingSchema,
+    colorMatch: subRatingSchema,
+    easeOfWear: subRatingSchema,
+  }).optional(),
+  helpfulCount: z.number().int().nonnegative().default(0),
   // Reviews are mirrored from marketplace listings; provenance drives the badge.
   source: reviewSourceSchema.default('vivimoon'),
   sourceUrl: z.string().url().optional(),
+});
+
+/** `GET /api/products/:slug/reviews` query — both filters optional, and they combine. */
+export const reviewFilterSchema = z.object({
+  tag: reviewTagSchema.optional(),
+  hasMedia: z.enum(['true', 'false']).transform((v) => v === 'true').optional(),
 });
 
 // Comparison (spec §4 endpoint, §10 feature note). Request is capped at 4
@@ -322,8 +380,13 @@ export type Occasion = z.infer<typeof occasionSchema>;
 export type ProductSpecs = z.infer<typeof productSpecsSchema>;
 export type Variant = z.infer<typeof variantSchema>;
 export type Product = z.infer<typeof productSchema>;
+export type Accessory = z.infer<typeof accessorySchema>;
+/** Anything the catalogue can price: a lens or an accessory. */
+export type CatalogItem = Product | Accessory;
 export type Collection = z.infer<typeof collectionSchema>;
 export type Review = z.infer<typeof reviewSchema>;
+export type ReviewTag = z.infer<typeof reviewTagSchema>;
+export type ReviewFilter = z.infer<typeof reviewFilterSchema>;
 export type ProductQuery = z.infer<typeof productQuerySchema>;
 export type CompareRequest = z.infer<typeof compareRequestSchema>;
 export type ComparisonRow = z.infer<typeof comparisonRowSchema>;

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { ORDER_STATUSES } from '@/lib/orders/statuses';
 import { priceLineInputSchema, pricedLineSchema, pricedCartSchema } from './cart';
 import { currencySchema } from './catalog';
-import { rxSchema } from './rx';
+import { lineRxSchema, purchaseUnitSchema } from './rx';
 import { addressSchema } from './checkout';
 import { paymentMethodTypeSchema, paymentStatusSchema } from './payments';
 
@@ -19,7 +19,11 @@ export const placeOrderRequestSchema = z.object({
 
 /** `CartLine` + resolved Rx (spec §6) — price fields are the server's, never the client's. */
 export const orderLineSchema = pricedLineSchema.extend({
-  rx: rxSchema.optional(),
+  // Absent on older orders: a lens line without one was a pair (ADR-0023).
+  purchaseUnit: purchaseUnitSchema.optional(),
+  rx: lineRxSchema.optional(),
+  // An accessory's variant option at placement, e.g. '120ml'.
+  variantLabel: z.string().optional(),
   // The variant's compare-at price as it stood when the order was placed —
   // only when it was above what was charged — so a past order never quotes
   // today's catalogue.

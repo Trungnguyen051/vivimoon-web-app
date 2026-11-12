@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/features/cart/use-cart';
+import { purchaseUnitOf } from '@/lib/api/schemas/rx';
 import type { Locale } from '@/lib/i18n/config';
 import type { HistoryLine } from './order-history-card';
 
@@ -22,7 +23,7 @@ export function useBuyAgain(lines: HistoryLine[], locale: Locale) {
       add({
         lineKey: l.lineKey, productId: l.product.id, variantId: l.variantId, name: l.product.name,
         sku: l.product.sku, color: l.product.color, unitPrice: l.product.price, currency: l.currency,
-        quantity: l.quantity, image: l.product.image, rx: l.rx,
+        quantity: l.quantity, image: l.product.image, purchaseUnit: purchaseUnitOf(l), rx: l.rx,
       });
     }
     setMissing(unavailable);

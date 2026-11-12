@@ -1,12 +1,32 @@
 import { describe, it, expect } from 'vitest';
 import { mockCatalog, minPrice } from './mock';
 import { PRICE_PRESETS, type Product } from '@/lib/api/schemas/catalog';
-import { reviews } from '@/content/mock';
+import { accessories, reviews } from '@/content/mock';
 
 describe('mockCatalog', () => {
   it('finds a product by slug', async () => {
     const p = await mockCatalog.getProductBySlug('aqua-daily-clear');
     expect(p?.name).toBe('Aqua Daily Clear');
+  });
+
+  it('never lists an accessory, with or without filters (Product Kind)', async () => {
+    const accessoryIds = new Set(accessories.map((a) => a.id));
+    const lists = await Promise.all([
+      mockCatalog.listProducts(),
+      mockCatalog.listProducts({ sort: 'price-asc' }),
+      mockCatalog.listProducts({ brandId: 'vivimoon' }),
+    ]);
+    for (const list of lists) {
+      expect(list.length).toBeGreaterThan(0);
+      expect(list.filter((p) => accessoryIds.has(p.id))).toEqual([]);
+    }
+  });
+
+  it('has no detail page for an accessory, but prices it by variant id', async () => {
+    expect(await mockCatalog.getProductBySlug('nuoc-ngam-lens')).toBeNull();
+    const found = await mockCatalog.getVariantById('a-nuoc-ngam-120');
+    expect(found?.product.kind).toBe('accessory');
+    expect(found?.variant.label).toBe('120ml');
   });
 
   it('returns null for an unknown slug', async () => {

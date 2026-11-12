@@ -1,7 +1,8 @@
-import { products, collections, reviews, galleries } from '@/content/mock';
+import { products, accessories, collections, reviews, galleries } from '@/content/mock';
 import { diameterMm, parseDiameterRange, PRICE_PRESETS } from '@/lib/api/schemas/catalog';
-import type { Collection, LensGallery, Product, ProductQuery, Review, Variant } from '@/lib/api/schemas/catalog';
+import type { Accessory, CatalogItem, Collection, LensGallery, Product, ProductQuery, Review, ReviewFilter, Variant } from '@/lib/api/schemas/catalog';
 import { cheapestVariant } from '@/lib/products/cheapest-variant';
+import { filterReviews } from '@/lib/products/reviews';
 
 /** Lowest variant price, used for sorting. */
 export function minPrice(product: Product): number {
@@ -105,6 +106,7 @@ export const mockCatalog = {
     return products.find((p) => p.slug === slug) ?? null;
   },
 
+  /** Lenses only: accessories are never listed (Product Kind). */
   async listProducts(query: ProductQuery = {}): Promise<Product[]> {
     return sortProducts(products.filter((p) => applies(p, query)), query.sort);
   },
@@ -120,6 +122,11 @@ export const mockCatalog = {
     const scope = ids ? products.filter((p) => ids.includes(p.id)) : products;
     const result = sortProducts(scope.filter((p) => applies(p, query)), query.sort);
     return { products: result.slice(offset, offset + limit), total: result.length, counts: facetCounts(scope, query) };
+  },
+
+  /** The cart's accessory variant picker reads this. */
+  async listAccessories(): Promise<Accessory[]> {
+    return [...accessories];
   },
 
   async getCollection(slug: string): Promise<Collection | null> {
@@ -146,8 +153,8 @@ export const mockCatalog = {
       .slice(0, limit);
   },
 
-  async getReviews(productId: string): Promise<Review[]> {
-    return reviews.filter((r) => r.productId === productId);
+  async getReviews(productId: string, filter: ReviewFilter = {}): Promise<Review[]> {
+    return filterReviews(reviews.filter((r) => r.productId === productId), filter);
   },
 
   /** `null` when the product has no gallery entry — the fallback signal the PDP branches on to render the plain `ProductGallery` instead. */
@@ -160,8 +167,8 @@ export const mockCatalog = {
    * belongs to. This is the server-side price lookup pricing/mock.ts uses —
    * variant ids are asserted globally unique in tests/contract/fixtures.test.ts.
    */
-  async getVariantById(id: string): Promise<{ product: Product; variant: Variant } | null> {
-    for (const product of products) {
+  async getVariantById(id: string): Promise<{ product: CatalogItem; variant: Variant } | null> {
+    for (const product of [...products, ...accessories]) {
       const variant = product.variants.find((v) => v.id === id);
       if (variant) return { product, variant };
     }

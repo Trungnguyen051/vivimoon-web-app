@@ -6,6 +6,7 @@ import { getDictionary } from '@/lib/i18n/dictionaries';
 import { lineKey } from '@/lib/cart/line-key';
 import type { CartLine } from '@/features/cart/cart.types';
 import type { RxInput } from '@/lib/api/schemas/rx';
+import { accessories } from '@/content/mock';
 
 const dict = getDictionary('en');
 const line: CartLine = {
@@ -40,14 +41,14 @@ describe('CartLineItem', () => {
     expect(onQty).toHaveBeenCalledWith(line.lineKey, 3);
   });
 
-  it('renders an Rx summary when the line has a prescription, so two lines of the same variant are distinguishable', () => {
+  it('renders the line summary when the line has a prescription, so two lines of the same variant are distinguishable', () => {
     render(<CartLineItem line={lineWithRx} locale="en" dict={dict} onQty={vi.fn()} onRemove={vi.fn()} />);
-    expect(screen.getByText(`${dict.rx.summaryLabel}:`, { exact: false })).toBeInTheDocument();
+    expect(screen.getByText("1 pair · L −2.50 · R −2.50")).toBeInTheDocument();
   });
 
-  it('renders no Rx summary for a line without a prescription', () => {
+  it('renders no line summary for a line without a prescription', () => {
     render(<CartLineItem line={line} locale="en" dict={dict} onQty={vi.fn()} onRemove={vi.fn()} />);
-    expect(screen.queryByText(`${dict.rx.summaryLabel}:`, { exact: false })).not.toBeInTheDocument();
+    expect(screen.queryByText(/1 (pair|lens)/)).not.toBeInTheDocument();
   });
 
   it('falls back to the SKU for a colorless line, so two same-named lines stay distinguishable', () => {
@@ -60,5 +61,37 @@ describe('CartLineItem', () => {
     render(<CartLineItem line={coloredLine} locale="en" dict={dict} onQty={vi.fn()} onRemove={vi.fn()} />);
     expect(screen.getByText('Hazel Brown')).toBeInTheDocument();
     expect(screen.queryByText(line.sku)).not.toBeInTheDocument();
+  });
+
+  describe('an accessory line (Product Kind)', () => {
+    const viDict = getDictionary('vi');
+    const nuocNgam = accessories.find((a) => a.id === 'a-nuoc-ngam')!;
+    const accessoryLine: CartLine = {
+      lineKey: lineKey('a-nuoc-ngam-120'), productId: 'a-nuoc-ngam', variantId: 'a-nuoc-ngam-120',
+      name: 'Nước ngâm lens', sku: 'NNL-120', variantLabel: '120ml', unitPrice: 4, currency: 'USD', quantity: 1,
+    };
+
+    it('shows its variant in the shared line-summary format, not its SKU', () => {
+      render(<CartLineItem line={accessoryLine} accessory={nuocNgam} locale="vi" dict={viDict} onQty={vi.fn()} onRemove={vi.fn()} onVariant={vi.fn()} />);
+      expect(screen.getByText('120ml · x1')).toBeInTheDocument();
+      expect(screen.queryByText('NNL-120')).not.toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: viDict.cart.accessoryOptions.volume })).toHaveTextContent('Dung tích 120ml');
+    });
+
+    it('changes the variant from its picker, addressed by lineKey', async () => {
+      const onVariant = vi.fn();
+      render(<CartLineItem line={accessoryLine} accessory={nuocNgam} locale="vi" dict={viDict} onQty={vi.fn()} onRemove={vi.fn()} onVariant={onVariant} />);
+      await userEvent.click(screen.getByRole('combobox', { name: viDict.cart.accessoryOptions.volume }));
+      await userEvent.click(await screen.findByRole('option', { name: 'Dung tích 360ml' }));
+      expect(onVariant).toHaveBeenCalledWith(accessoryLine.lineKey, nuocNgam.variants[1]);
+    });
+
+    it('names a single-variant accessory without a picker', () => {
+      const drops = accessories.find((a) => a.id === 'a-nuoc-nho-mat')!;
+      const line = { ...accessoryLine, productId: drops.id, variantId: drops.variants[0].id, variantLabel: '15ml' };
+      render(<CartLineItem line={line} accessory={drops} locale="vi" dict={viDict} onQty={vi.fn()} onRemove={vi.fn()} onVariant={vi.fn()} />);
+      expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+      expect(screen.getByText('Dung tích 15ml')).toBeInTheDocument();
+    });
   });
 });

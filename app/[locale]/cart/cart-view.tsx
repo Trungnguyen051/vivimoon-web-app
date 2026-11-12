@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ShoppingBag } from 'lucide-react';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
+import type { Accessory } from '@/lib/api/schemas/catalog';
 import { useCart } from '@/features/cart/use-cart';
 import { usePricedCart } from '@/features/cart/use-priced-cart';
 import { useSessionStore } from '@/features/session/session-store';
@@ -16,8 +17,8 @@ import { useAnalytics } from '@/lib/analytics/use-analytics';
 import { cartLinesToGa4Items } from '@/lib/analytics/events';
 import { PageContainer } from '@/components/layout/page-container';
 
-export function CartView({ locale, dict }: { locale: Locale; dict: Dictionary }) {
-  const { lines, hydrated, currency, updateQty, remove } = useCart();
+export function CartView({ locale, dict, accessories = [] }: { locale: Locale; dict: Dictionary; accessories?: Accessory[] }) {
+  const { lines, hydrated, currency, updateQty, remove, edit } = useCart();
   const sessionStatus = useSessionStore((s) => s.status);
   // Guest→member cart merge (spec §9): lines already survive login (the
   // cart lives in localStorage, untouched by auth), so re-pricing on a
@@ -114,7 +115,10 @@ export function CartView({ locale, dict }: { locale: Locale; dict: Dictionary })
                   lineTotal={pricedLine?.lineTotal ?? null}
                   unavailable={unavailableKeys.has(l.lineKey)}
                   onQty={(key, q) => (q < 1 ? handleRemove(key) : updateQty(key, q))}
-                  onRemove={handleRemove} />
+                  onRemove={handleRemove}
+                  accessory={accessories.find((a) => a.id === l.productId)}
+                  // unitPrice is a display snapshot only; pricing re-reads the variant (ADR-0003).
+                  onVariant={(key, v) => edit(key, { ...l, variantId: v.id, sku: v.sku, variantLabel: v.label, unitPrice: v.price })} />
               );
             })}
           </div>

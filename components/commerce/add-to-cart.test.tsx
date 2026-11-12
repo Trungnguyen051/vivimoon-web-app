@@ -5,7 +5,6 @@ import { AddToCart } from './add-to-cart';
 import { useCartStore } from '@/features/cart/cart-store';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import type { Product } from '@/lib/types';
-import { productLineSchema } from '@/lib/api/schemas/catalog';
 
 const push = vi.fn();
 vi.mock('next/navigation', () => ({
@@ -21,18 +20,15 @@ function makeProduct(overrides: Partial<Product> = {}): Product {
     specs: { material: '', waterContent: '', baseCurve: '', diameter: '', origin: '' },
     requiresRx: true,
     variants: [
-      { id: 'v1', sku: 'H-BR-10', price: 22, currency: 'USD', stock: 5 },
+      { id: 'v1', sku: 'H-BR-10', price: 22, currency: 'USD', stock: 9 },
     ],
     rating: 4, reviewCount: 0,
     ...overrides,
   };
 }
 
-async function fillRightSphAndMirror(sph: string) {
-  const rightSph = screen.getByLabelText(`${dict.rx.rightEye} ${dict.rx.sph}`);
-  await userEvent.selectOptions(rightSph, sph);
-  await userEvent.click(screen.getByLabelText(dict.rx.sameBothEyes));
-}
+const unitButton = (unit: 'single' | 'pair') => screen.getByRole('button', { name: dict.pdp.unitOptions[unit] });
+const addButton = () => screen.getByRole('button', { name: dict.common.addToCart });
 
 beforeEach(() => {
   localStorage.clear();
@@ -42,113 +38,93 @@ beforeEach(() => {
   useCartStore.setState({ lines: [], hydrated: false, buyNowLine: null });
 });
 
-describe('AddToCart — Rx gating (Task 5, Step 4)', () => {
-  it('disables the button until a valid Rx is entered, then enables it', async () => {
-    const product = makeProduct({ requiresRx: true });
-    render(<AddToCart product={product} locale="en" dict={dict} />);
-    const addButton = screen.getByRole('button', { name: dict.common.addToCart });
-    expect(addButton).toBeDisabled();
+describe('AddToCart — Purchase Unit (ADR-0023)', () => {
+  it('shows the per-lens price "/ lens", and the per-pair price in pair mode', async () => {
+    render(<AddToCart product={makeProduct()} locale="en" dict={dict} />);
+    expect(screen.getByText('$22.00')).toBeInTheDocument();
+    expect(screen.getByText(dict.pdp.perUnit.single)).toBeInTheDocument();
 
-    await fillRightSphAndMirror('-2.5');
-
-    expect(addButton).toBeEnabled();
+    await userEvent.click(unitButton('pair'));
+    expect(screen.getByText('$44.00')).toBeInTheDocument();
+    expect(screen.getByText(dict.pdp.perUnit.pair)).toBeInTheDocument();
   });
 
-  it('shows the required-Rx message only after the shopper has touched the selector', async () => {
-    const product = makeProduct({ requiresRx: true });
-    render(<AddToCart product={product} locale="en" dict={dict} />);
-    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
-
-    // Touch the control but leave the prescription incomplete (right only).
-    const rightSph = screen.getByLabelText(`${dict.rx.rightEye} ${dict.rx.sph}`);
-    await userEvent.selectOptions(rightSph, '-2.5');
-
-    expect(screen.getByRole('alert')).toHaveTextContent(dict.rx.required);
+  it('counts stock in the chosen unit', async () => {
+    render(<AddToCart product={makeProduct()} locale="en" dict={dict} />);
+    expect(screen.getByText('lens · 9 left')).toBeInTheDocument();
+    await userEvent.click(unitButton('pair'));
+    expect(screen.getByText('pair · 4 left')).toBeInTheDocument();
   });
 
-  it('does not render RxSelector and enables the button immediately when requiresRx is false', () => {
-    const product = makeProduct({ requiresRx: false });
-    render(<AddToCart product={product} locale="en" dict={dict} />);
-    expect(screen.queryByLabelText(`${dict.rx.rightEye} ${dict.rx.sph}`)).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: dict.common.addToCart })).toBeEnabled();
+  it('works straight away at 0.00, adding a single plano lens, and shows the hint only while at 0.00', async () => {
+    render(<AddToCart product={makeProduct()} locale="en" dict={dict} />);
+    expect(screen.getByText(dict.rx.zeroHint)).toBeInTheDocument();
+    await userEvent.click(addButton());
+
+    expect(useCartStore.getState().lines).toEqual([
+      expect.objectContaining({ variantId: 'v1', purchaseUnit: 'single', rx: { sph: 0 }, quantity: 1, unitPrice: 22 }),
+    ]);
+
+    await userEvent.selectOptions(screen.getByRole('combobox', { name: dict.rx.power }), '-2.5');
+    expect(screen.queryByText(dict.rx.zeroHint)).not.toBeInTheDocument();
   });
 
-  it('adds a line with no rx and lineKey === variantId when requiresRx is false', async () => {
-    const product = makeProduct({ requiresRx: false });
-    render(<AddToCart product={product} locale="en" dict={dict} />);
-    await userEvent.click(screen.getByRole('button', { name: dict.common.addToCart }));
+  it('keeps the chosen power when switching unit, and adds a pair as a distinct line', async () => {
+    render(<AddToCart product={makeProduct()} locale="en" dict={dict} />);
+    await userEvent.selectOptions(screen.getByRole('combobox', { name: dict.rx.power }), '-2.5');
+    await userEvent.click(addButton());
 
+    await userEvent.click(unitButton('pair'));
+    expect(screen.getByLabelText(dict.rx.leftEye)).toHaveValue('-2.5');
+    await userEvent.selectOptions(screen.getByLabelText(dict.rx.rightEye), '-3');
+    await userEvent.click(addButton());
+
+    const [single, pair] = useCartStore.getState().lines;
+    expect(single).toMatchObject({ purchaseUnit: 'single', rx: { sph: -2.5 } });
+    expect(pair).toMatchObject({ purchaseUnit: 'pair', rx: { left: { sph: -2.5 }, right: { sph: -3 } }, unitPrice: 44 });
+    expect(single.lineKey).not.toBe(pair.lineKey);
+  });
+
+  it('adding the same unit and power again bumps the quantity of one line', async () => {
+    render(<AddToCart product={makeProduct()} locale="en" dict={dict} />);
+    await userEvent.click(addButton());
+    await userEvent.click(addButton());
     const lines = useCartStore.getState().lines;
     expect(lines).toHaveLength(1);
-    expect(lines[0].rx).toBeUndefined();
-    expect(lines[0].lineKey).toBe('v1');
+    expect(lines[0].quantity).toBe(2);
   });
+});
 
-  it('adding the same variant at two different powers produces two distinct cart lines', async () => {
-    const product = makeProduct({ requiresRx: true });
-    render(<AddToCart product={product} locale="en" dict={dict} />);
+describe('AddToCart — a product with no Rx', () => {
+  it('renders no unit or power controls and adds a unit-less line keyed by its variant', async () => {
+    render(<AddToCart product={makeProduct({ requiresRx: false })} locale="en" dict={dict} />);
+    expect(screen.queryByRole('button', { name: dict.pdp.unitOptions.single })).not.toBeInTheDocument();
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+    expect(screen.queryByText(dict.pdp.perUnit.single)).not.toBeInTheDocument();
+    await userEvent.click(addButton());
 
-    await fillRightSphAndMirror('-2.5');
-    await userEvent.click(screen.getByRole('button', { name: dict.common.addToCart }));
-
-    const rightSph = screen.getByLabelText(`${dict.rx.rightEye} ${dict.rx.sph}`);
-    await userEvent.selectOptions(rightSph, '-3');
-    await userEvent.click(screen.getByRole('button', { name: dict.common.addToCart }));
-
-    const lines = useCartStore.getState().lines;
-    expect(lines).toHaveLength(2);
-    expect(lines[0].lineKey).not.toBe(lines[1].lineKey);
-    expect(lines[0].rx).toBeDefined();
-    expect(lines[1].rx).toBeDefined();
+    const [line] = useCartStore.getState().lines;
+    expect(line.rx).toBeUndefined();
+    expect(line.purchaseUnit).toBeUndefined();
+    expect(line.lineKey).toBe('v1');
   });
 });
 
 describe('AddToCart — Buy Now (Task 12)', () => {
-  it('disables Buy Now with the same Rx gating as Add to Cart', async () => {
-    const product = makeProduct({ requiresRx: true });
-    render(<AddToCart product={product} locale="en" dict={dict} />);
-    expect(screen.getByRole('button', { name: dict.common.buyNow })).toBeDisabled();
-
-    await fillRightSphAndMirror('-2.5');
-    expect(screen.getByRole('button', { name: dict.common.buyNow })).toBeEnabled();
-  });
-
-  it('sets buyNowLine and navigates to checkout without touching the real cart', async () => {
-    const product = makeProduct({ requiresRx: false });
+  it('sets buyNowLine with the chosen unit and power and navigates to checkout without touching the real cart', async () => {
     useCartStore.getState().add({
       lineKey: 'existing', productId: 'p0', variantId: 'v0', name: 'Existing',
       sku: 'SKU0', unitPrice: 10, currency: 'USD', quantity: 1,
     });
 
-    render(<AddToCart product={product} locale="en" dict={dict} />);
+    render(<AddToCart product={makeProduct()} locale="en" dict={dict} />);
+    await userEvent.click(unitButton('pair'));
     await userEvent.click(screen.getByRole('button', { name: dict.common.buyNow }));
 
     const state = useCartStore.getState();
     expect(state.lines).toHaveLength(1); // the pre-existing line, untouched
     expect(state.lines[0].lineKey).toBe('existing');
-    expect(state.buyNowLine).not.toBeNull();
-    expect(state.buyNowLine?.variantId).toBe('v1');
+    expect(state.buyNowLine).toMatchObject({ variantId: 'v1', purchaseUnit: 'pair' });
     expect(push).toHaveBeenCalledWith('/en/checkout');
   });
-});
-
-describe('AddToCart — Rx is decoupled from the product taxonomy (ADR-0010)', () => {
-  // The Rx rules branch on RX_LENS_TYPE, a fixed constant, not on any product
-  // field. No real product line can therefore reach the toric/multifocal
-  // branches: every line must collect sph alone and gate on sph alone.
-  it.each(productLineSchema.options)(
-    'collects sph and no ADD for a %s product, and enables the button on sph alone',
-    async (productLine) => {
-      const product = makeProduct({ requiresRx: true, productLine });
-      render(<AddToCart product={product} locale="en" dict={dict} />);
-
-      expect(screen.queryByLabelText(`${dict.rx.rightEye} ${dict.rx.add}`)).not.toBeInTheDocument();
-      expect(screen.queryByLabelText(`${dict.rx.leftEye} ${dict.rx.add}`)).not.toBeInTheDocument();
-
-      const addButton = screen.getByRole('button', { name: dict.common.addToCart });
-      expect(addButton).toBeDisabled();
-      await fillRightSphAndMirror('-2.5');
-      expect(addButton).toBeEnabled();
-    },
-  );
 });
