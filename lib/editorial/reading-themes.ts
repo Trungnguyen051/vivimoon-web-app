@@ -51,12 +51,29 @@ export const READING_THEME_ENTRIES: ReadingThemeEntry[] = [
   { kind: 'none', readingTheme: 'care' },
 ];
 
-export function readingThemeEntry(readingTheme: ReadingTheme): ReadingThemeEntry {
-  const found = READING_THEME_ENTRIES.find((entry) => entry.readingTheme === readingTheme);
-  // The table is held against the enum by `reading-themes.test.ts`, so this cannot
-  // happen without that test failing first.
-  if (!found) throw new Error(`no Reading Theme entry for "${readingTheme}"`);
-  return found;
+/**
+ * The row for a theme.
+ *
+ * `undefined` cannot happen — `reading-themes.test.ts` holds this table against the
+ * enum, so a seventh Reading Theme fails there first. It is still returned rather than
+ * thrown, because the one page that asks is a server component rendering an article:
+ * a throw there would take the *body* down along with the decoration, and a missing
+ * row should cost a shopper the lens strip, not the piece they came to read.
+ */
+export function readingThemeEntry(readingTheme: ReadingTheme): ReadingThemeEntry | undefined {
+  return READING_THEME_ENTRIES.find((entry) => entry.readingTheme === readingTheme);
+}
+
+/**
+ * The collection a theme opens, or `null` when it opens none.
+ *
+ * The question every caller actually has. Asking for the row and then testing its
+ * `kind` is three lines that were written five times across the page and its tests,
+ * and each copy had to re-derive that `none` and "absent" mean the same thing here.
+ */
+export function readingThemeDestination(readingTheme: ReadingTheme): ReadingThemeDestination | null {
+  const entry = readingThemeEntry(readingTheme);
+  return entry?.kind === 'collection' ? entry : null;
 }
 
 /**

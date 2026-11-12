@@ -6,7 +6,7 @@ import { getDictionary } from '@/lib/i18n/dictionaries';
 import { editorial } from '@/lib/api/resources/editorial';
 import { catalog } from '@/lib/api/resources/catalog';
 import {
-  READING_THEME_ENTRIES, readingThemeHref, readingThemeIncludes,
+  readingThemeDestination, readingThemeHref, readingThemeIncludes,
 } from '@/lib/editorial/reading-themes';
 import { articleDateline } from '@/lib/editorial/dateline';
 import { toIntlLocale } from '@/lib/utils/format';
@@ -45,16 +45,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
 
   const dateline = articleDateline(article, locale, dict.articles.readingTime);
 
-  /* Looked up defensively. `readingThemeEntry` throws when a theme has no row, which
-     `reading-themes.test.ts` makes impossible in CI — but at the top of a server
-     component a throw takes the article's *body* down with the decoration. A seventh
-     Reading Theme added to the enum before the table should cost a shopper the strip,
-     not the page. */
   // English says "1 product", Vietnamese says the same thing either way.
   const plural = new Intl.PluralRules(toIntlLocale(locale));
 
-  const entry = READING_THEME_ENTRIES.find((row) => row.readingTheme === article.readingTheme);
-  const destination = entry?.kind === 'collection' ? entry : null;
+  const destination = readingThemeDestination(article.readingTheme);
 
   /* The banner's count is read from the collection it opens, never written down — the
      design's "18" is invented, and #36 is the regression that says so. Counted inside

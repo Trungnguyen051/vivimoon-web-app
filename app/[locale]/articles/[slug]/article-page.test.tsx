@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import ArticlePage from './page';
 import { articles, collections, products } from '@/content/mock';
-import { countReadingTheme, readingThemeEntry, readingThemeIncludes } from '@/lib/editorial/reading-themes';
+import { countReadingTheme, readingThemeDestination, readingThemeIncludes } from '@/lib/editorial/reading-themes';
 import { readingMinutes } from '@/lib/editorial/reading-time';
 import { vi as viDict } from '@/lib/i18n/dictionaries/vi';
 import { en as enDict } from '@/lib/i18n/dictionaries/en';
@@ -16,8 +16,8 @@ const STRIP_SIZE = 3;
 
 /** How many lenses a theme leads to, counted the way the page counts them. */
 function matchCount(readingTheme: (typeof articles)[number]['readingTheme']): number {
-  const entry = readingThemeEntry(readingTheme);
-  if (entry.kind !== 'collection') return 0;
+  const entry = readingThemeDestination(readingTheme);
+  if (!entry) return 0;
   const collection = collections.find((c) => c.slug === entry.collection)!;
   return countReadingTheme(entry, products.filter((p) => collection.productIds.includes(p.id)));
 }
@@ -91,8 +91,7 @@ describe('an article page', () => {
   it('shows three real lenses with their real prices', async () => {
     await renderArticle(merchandised.slug);
     const strip = screen.getByRole('heading', { name: viDict.articles.inThisArticle }).closest('section')!;
-    const entry = readingThemeEntry(merchandised.readingTheme);
-    if (entry.kind !== 'collection') throw new Error('expected a destination');
+    const entry = readingThemeDestination(merchandised.readingTheme)!;
 
     const collection = collections.find((c) => c.slug === entry.collection)!;
     const expected = products
@@ -112,8 +111,7 @@ describe('an article page', () => {
    */
   it('states a count read from the collection it opens', async () => {
     await renderArticle(bannered.slug);
-    const entry = readingThemeEntry(bannered.readingTheme);
-    if (entry.kind !== 'collection') throw new Error('expected a destination');
+    const entry = readingThemeDestination(bannered.readingTheme)!;
 
     const collection = collections.find((c) => c.slug === entry.collection)!;
     const inCollection = products.filter((p) => collection.productIds.includes(p.id));
@@ -134,7 +132,7 @@ describe('an article page', () => {
    * merchandising at a shopper dishonestly.
    */
   it('ends cleanly when the Reading Theme leads nowhere', async () => {
-    expect(readingThemeEntry('care').kind).not.toBe('collection');
+    expect(readingThemeDestination('care')).toBeNull();
     await renderArticle(careArticle.slug);
 
     expect(screen.queryByRole('heading', { name: viDict.articles.inThisArticle })).not.toBeInTheDocument();
