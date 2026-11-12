@@ -6,16 +6,18 @@ import { cn } from '@/lib/utils/cn';
 /**
  * An article as a card: already resolved to one locale by the page that renders it.
  *
- * `eyebrow` and `dateline` are optional because two surfaces render this and only one
- * of them asks for the full card. The Knowledge index states a Reading Theme and a
- * dateline of author · reading time · date (#129); the homepage's Kiến thức row shows
- * neither, and adding them there would be a design change nobody asked for. Optional
- * beats a second card component that drifts from this one.
+ * `eyebrow`, `dateline` and `excerpt` are optional because two surfaces render this and
+ * neither asks for the whole card. The Knowledge index states a Reading Theme and a
+ * dateline of author · reading time · date, and draws no excerpt (#129); the homepage's
+ * Kiến thức row is the mirror of that — an excerpt, and neither of the other two. They
+ * answer to different frames, and adding either surface's parts to the other would be a
+ * design change nobody asked for. Optional beats a second card component that drifts
+ * from this one.
  */
 export type ArticleCard = {
   slug: string;
   title: string;
-  excerpt: string;
+  excerpt?: string;
   image: string;
   href: string;
   eyebrow?: string;
@@ -67,7 +69,9 @@ export function ArticleCards({
               </p>
             ) : null}
             <p className="text-lg font-medium leading-snug tracking-tight">{article.title}</p>
-            <p className="line-clamp-2 text-sm text-muted-foreground">{article.excerpt}</p>
+            {article.excerpt ? (
+              <p className="line-clamp-2 text-sm text-muted-foreground">{article.excerpt}</p>
+            ) : null}
             {article.dateline ? <p className="text-sm text-muted-foreground">{article.dateline}</p> : null}
           </Link>
         ))}

@@ -111,7 +111,6 @@ export default async function ArticlesPage({
   const toCard = (article: Article) => ({
     slug: article.slug,
     title: article.title[locale],
-    excerpt: article.excerpt[locale],
     image: article.image,
     href: `/${locale}/articles/${article.slug}`,
     eyebrow: dict.articles.readingThemes[article.readingTheme],
@@ -120,7 +119,7 @@ export default async function ArticlesPage({
 
   return (
     <PageContainer>
-      <div className="flex flex-col gap-10 px-4 py-12">
+      <div className="flex flex-col gap-10 py-12">
         <div className="flex flex-col gap-3">
           <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{dict.articles.title}</h1>
           <p className="max-w-2xl text-muted-foreground">{dict.articles.subtitle}</p>
