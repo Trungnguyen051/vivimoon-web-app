@@ -4,6 +4,7 @@ import { BundleOffer } from './bundle-offer';
 import { apiRequest } from '@/lib/api/client';
 import { useCartStore } from '@/features/cart/cart-store';
 import { useBuyBoxStore } from '@/features/cart/buy-box-store';
+import { useMiniCartStore } from '@/features/cart/mini-cart-store';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { products, accessories } from '@/content/mock';
 import type { PriceCartRequest, PricedCart } from '@/lib/api/schemas/cart';
@@ -64,6 +65,7 @@ describe('BundleOffer', () => {
       ['p-aqua-daily-30', lens.id, 1], ['a-nuoc-nho-mat-15', lens.id, 1], ['a-khay-dung-set', lens.id, 1],
     ]);
     expect(lines[0]).toMatchObject({ purchaseUnit: 'single', rx: { sph: -3 } });
+    expect(useMiniCartStore.getState()).toMatchObject({ open: true, added: lines });
   });
 
   it('adds a partial pick as ordinary lines', () => {

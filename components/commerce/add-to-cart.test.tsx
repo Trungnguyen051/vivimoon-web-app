@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AddToCart } from './add-to-cart';
 import { useCartStore } from '@/features/cart/cart-store';
+import { useMiniCartStore } from '@/features/cart/mini-cart-store';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import type { Product } from '@/lib/types';
 
@@ -36,6 +37,7 @@ beforeEach(() => {
   // The store is a module singleton (spec §8); reset it between tests so a
   // line added in one test can't bleed into the next.
   useCartStore.setState({ lines: [], hydrated: false, buyNowLine: null });
+  useMiniCartStore.setState({ open: false, added: [] });
 });
 
 describe('AddToCart — Purchase Unit (ADR-0023)', () => {
@@ -126,5 +128,21 @@ describe('AddToCart — Buy Now (Task 12)', () => {
     expect(state.lines[0].lineKey).toBe('existing');
     expect(state.buyNowLine).toMatchObject({ variantId: 'v1', purchaseUnit: 'pair' });
     expect(push).toHaveBeenCalledWith('/en/checkout');
+  });
+});
+
+describe('AddToCart — mini cart signal (#198)', () => {
+  it('opens the mini cart with the added line on Thêm vào giỏ', async () => {
+    render(<AddToCart product={makeProduct()} locale="en" dict={dict} />);
+    await userEvent.click(addButton());
+    const { open, added } = useMiniCartStore.getState();
+    expect(open).toBe(true);
+    expect(added).toEqual([useCartStore.getState().lines[0]]);
+  });
+
+  it('does not open it on Mua ngay', async () => {
+    render(<AddToCart product={makeProduct()} locale="en" dict={dict} />);
+    await userEvent.click(screen.getByRole('button', { name: dict.common.buyNow }));
+    expect(useMiniCartStore.getState().open).toBe(false);
   });
 });

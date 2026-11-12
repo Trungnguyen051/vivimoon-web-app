@@ -126,6 +126,8 @@ export function CartView({ locale, dict, accessories = [] }: { locale: Locale; d
             subtotal={result?.subtotal ?? null}
             bundleSaving={result?.bundleSaving}
             discount={result?.discount ?? null}
+            tierDiscount={result?.tierDiscount}
+            spendTiers={result?.spendTiers}
             shipping={result?.shipping ?? null}
             total={result?.total ?? null}
             currency={result?.currency ?? currency} locale={locale} dict={dict}

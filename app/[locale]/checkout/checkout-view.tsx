@@ -270,6 +270,8 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
           subtotal={priced?.subtotal ?? null}
           bundleSaving={priced?.bundleSaving}
           discount={priced?.discount ?? null}
+          tierDiscount={priced?.tierDiscount}
+          spendTiers={priced?.spendTiers}
           shipping={priced?.shipping ?? null}
           total={priced?.total ?? null}
           currency={currency} locale={locale} dict={dict}

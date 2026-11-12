@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { ORDER_STATUSES } from '@/lib/orders/statuses';
-import { priceLineInputSchema, pricedLineSchema, pricedCartSchema } from './cart';
+import { giftLineSchema, priceLineInputSchema, pricedLineSchema, pricedCartSchema } from './cart';
 import { currencySchema } from './catalog';
 import { lineRxSchema, purchaseUnitSchema } from './rx';
 import { addressSchema } from './checkout';
@@ -44,6 +44,8 @@ export const orderSchema = z.object({
   totals: pricedCartSchema
     .omit({ lines: true, unavailableLines: true, shippingMethod: true, shippingEtaDays: true })
     .extend({ currency: currencySchema }),
+  // What the order gets at 0₫ (CONTEXT.md "Gift"), as pricing reported it at placement.
+  gifts: z.array(giftLineSchema).optional(),
   address: addressSchema,
   // Id of the shipping option charged at placement (localized for display);
   // optional so upstream and older orders without one stay valid ("—").

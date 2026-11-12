@@ -205,6 +205,28 @@ export const en = {
     unavailableNote: 'Unavailable items are not included in the total.',
     unavailableBlocksCheckout: 'Remove unavailable items to continue.',
     priceError: 'We couldn’t update your total. Please try again.',
+    eyes: { left: 'Left eye', right: 'Right eye' },
+    tierDiscount: 'Orders from {threshold}',
+  },
+  // Spend Tiers (CONTEXT.md): {amount}, {threshold} and {value} are formatted prices.
+  spendTier: {
+    remaining: {
+      freeShipping: 'Spend {amount} more for free shipping',
+      gift: 'Spend {amount} more for a free lens case',
+      discount: 'Spend {amount} more to get {value} off',
+    },
+    caption: {
+      freeShipping: 'Free shipping on orders from {threshold}',
+      gift: 'A free lens case on orders from {threshold}',
+      discount: '{value} off orders from {threshold}',
+    },
+    allReached: 'You have every reward: free shipping, a free lens case and money off',
+  },
+  miniCart: {
+    title: 'Cart ({count})', close: 'Close cart',
+    added: 'Added {item} to your cart', addedMany: 'Added {count} items to your cart',
+    upsell: 'Add these for free shipping', addItem: 'Add {name} to cart',
+    note: 'Shipping and vouchers are applied at checkout', viewCart: 'View cart',
   },
   checkout: {
     shipping: {

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Heart } from 'lucide-react';
 import { apiRequest } from '@/lib/api/client';
 import { useCart } from '@/features/cart/use-cart';
+import { useMiniCartStore } from '@/features/cart/mini-cart-store';
 import { lineKey } from '@/lib/cart/line-key';
 import { PriceTag } from '@/components/commerce/price-tag';
 import { Button } from '@/components/ui/button';
@@ -22,6 +23,7 @@ export function FavoritesGrid({
 }) {
   const router = useRouter();
   const { add } = useCart();
+  const showMiniCart = useMiniCartStore((s) => s.show);
   const [products, setProducts] = useState(initialProducts);
   const [addedId, setAddedId] = useState<string | null>(null);
   const { track } = useAnalytics();
@@ -41,11 +43,13 @@ export function FavoritesGrid({
       return router.push(`/${locale}/product/${p.slug}`);
     }
     const v = p.variants[0];
-    add({
+    const line = {
       lineKey: lineKey(v.id, undefined),
       productId: p.id, variantId: v.id, name: p.name, sku: v.sku,
       color: v.colorLabel, unitPrice: v.price, currency: v.currency, quantity: 1, image: p.images[0],
-    });
+    };
+    add(line);
+    showMiniCart([line]);
     // Analytics snapshot only, as in AddToCart; never shown to the shopper.
     track({ name: 'add_to_cart', params: { currency: v.currency, value: v.price, items: toGa4Items([{ product: p, variant: v, quantity: 1 }]) } });
     setAddedId(p.id);
