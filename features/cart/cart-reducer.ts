@@ -70,7 +70,9 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
       return {
         ...state,
         lines: state.lines.filter((l) => !action.lineKeys.includes(l.lineKey)),
-        unticked: without(...action.lineKeys),
+        // Only an order removes lines in bulk: what it leaves behind is the next cart, so it starts ticked
+        // (otherwise the cart reopens with nothing selected and checkout blocked — review of #219).
+        unticked: [],
       };
     case 'TICK':
       return { ...state, unticked: action.ticked ? without(action.lineKey) : [...without(action.lineKey), action.lineKey] };

@@ -96,7 +96,7 @@ describe('useCartStore — persistence', () => {
     expect(store2.getState().lines[0].quantity).toBe(2);
   });
 
-  it('keeps unticked lines and the picked voucher across a reload', async () => {
+  it('keeps unticked lines across a reload, but not the voucher pick (it may be refused or outgrown)', async () => {
     const store = await freshStore();
     await store.persist.rehydrate();
     store.getState().add(makeLine(rxA));
@@ -107,7 +107,7 @@ describe('useCartStore — persistence', () => {
     await store2.persist.rehydrate();
     expect(store2.getState().lines).toHaveLength(2);
     expect(store2.getState().unticked).toEqual([lineKey('v1', rxA)]);
-    expect(store2.getState().voucherCode).toBe('NEW30');
+    expect(store2.getState().voucherCode ?? null).toBeNull();
   });
 
   it('removes the ordered lines after placement and keeps the unticked one', async () => {

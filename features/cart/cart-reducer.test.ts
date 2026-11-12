@@ -217,9 +217,9 @@ describe('cartReducer — ticked lines (CONTEXT.md "Cart Line")', () => {
     expect(tickedLines(next).map((l) => l.lineKey)).toEqual([atB.lineKey]);
   });
 
-  it('removes only the given lines, keeping the rest and their ticks', () => {
+  it('removes only the given lines, and the rest start ticked as the next cart', () => {
     const next = cartReducer(offA, { type: 'REMOVE_LINES', lineKeys: [atB.lineKey] });
     expect(next.lines.map((l) => l.lineKey)).toEqual([atA.lineKey]);
-    expect(tickedLines(next)).toEqual([]);
+    expect(tickedLines(next).map((l) => l.lineKey)).toEqual([atA.lineKey]);
   });
 });

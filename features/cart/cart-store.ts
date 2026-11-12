@@ -76,7 +76,8 @@ export const useCartStore = create<CartStore>()(
       // unconditionally, so every mutation persists either way.
       skipHydration: true,
       // `hydrated` is runtime-only; persisting it would restore a stale true.
-      partialize: (s) => ({ lines: s.lines, unticked: s.unticked, voucherCode: s.voucherCode }) as CartState,
+      // voucherCode stays in memory only: a refused or outgrown pick must not outlive a reload (review of #219).
+      partialize: (s) => ({ lines: s.lines, unticked: s.unticked }) as CartState,
       onRehydrateStorage: () => () => useCartStore.setState({ hydrated: true }),
       /**
        * zustand's default merge would replace in-memory lines with the stored
