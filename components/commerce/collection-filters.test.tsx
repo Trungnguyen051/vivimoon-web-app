@@ -1,16 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { CollectionFilters, CollectionFiltersSheet, CollectionLoadMore, CollectionSort } from './collection-filters';
+import {
+  CollectionFilters, CollectionFiltersSheet, CollectionLoadMore, CollectionSort, DefaultRxAutoApply, YourRxSheet,
+} from './collection-filters';
+import { useSessionStore } from '@/features/session/session-store';
+import { GUEST_RX_KEY, useGuestRxStore } from '@/features/session/default-rx';
 import { vi as viDict } from '@/lib/i18n/dictionaries/vi';
 import { LENS_FACETS, facetAnchorId } from '@/lib/products/lens-facets';
 import type { FacetCounts } from '@/lib/api/resources/catalog';
 
 const push = vi.fn();
+const replace = vi.fn();
 let search = '';
 
 vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push }),
+  useRouter: () => ({ push, replace }),
   usePathname: () => '/vi/collection/all-lenses',
   useSearchParams: () => new URLSearchParams(search),
 }));
@@ -141,6 +146,12 @@ describe('CollectionFilters (#194)', () => {
     expect(screen.queryByRole('button', { name: t.clearAll })).not.toBeInTheDocument();
   });
 
+  it('does not count a malformed rx as a filter — the server ignores it too (review of #216)', () => {
+    search = 'rx=abc';
+    renderFilters();
+    expect(screen.queryByRole('button', { name: t.clearAll })).not.toBeInTheDocument();
+  });
+
   /**
    * The Sản Phẩm menu links a diameter bucket (`14.3-14.5`) the width chips don't list.
    * It must still show, picked, so the shopper can see and undo what narrowed the grid.
@@ -177,6 +188,100 @@ describe('CollectionFiltersSheet (#194)', () => {
     const sheet = await screen.findByRole('dialog');
     expect(within(sheet).getByRole('button', { name: t.price })).toBeInTheDocument();
     expect(within(sheet).getByRole('button', { name: t.lensLine })).toBeInTheDocument();
+  });
+});
+
+describe('"Độ của bạn" (#196)', () => {
+  const y = t.yourRx;
+  const pickPower = async (eye: string, option: string) => {
+    await userEvent.click(screen.getByRole('combobox', { name: eye }));
+    await userEvent.click(await screen.findByRole('option', { name: option }));
+  };
+
+  beforeEach(() => {
+    push.mockClear();
+    replace.mockClear();
+    search = '';
+    localStorage.clear();
+    sessionStorage.clear();
+    useSessionStore.setState({ user: null, status: 'anonymous' });
+    useGuestRxStore.setState({ rx: null, loaded: false });
+  });
+
+  it('narrows the grid once both eyes are set, and saves a guest’s Default Rx on the device', async () => {
+    search = 'color=brown&show=16';
+    renderFilters();
+    expect(screen.getByRole('heading', { name: y.title })).toBeInTheDocument();
+    await pickPower(viDict.rx.leftEye, '-2.50');
+    expect(push).not.toHaveBeenCalled();
+
+    await pickPower(viDict.rx.rightEye, '-3.00');
+    expect(lastUrl()).toBe('/vi/collection/all-lenses?color=brown&rx=-2.5,-3');
+    expect(JSON.parse(localStorage.getItem(GUEST_RX_KEY)!)).toEqual({ left: -2.5, right: -3 });
+  });
+
+  it('offers "Giống mắt trái" for the right eye, and heads the list with the steps it really uses', async () => {
+    renderFilters();
+    await pickPower(viDict.rx.leftEye, '-7.00');
+    await userEvent.click(screen.getByRole('combobox', { name: viDict.rx.rightEye }));
+    // The left list may still be leaving the DOM, so both headers can be present.
+    expect((await screen.findAllByText('Bước 0.25 · 0.50 dưới -6.00')).length).toBeGreaterThan(0);
+    expect(screen.queryByRole('option', { name: '-7.25' })).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('option', { name: `${viDict.rx.sameAsLeft} (-7.00)` }));
+    expect(lastUrl()).toBe('/vi/collection/all-lenses?rx=-7,-7');
+  });
+
+  it('shows the applied powers from the URL', () => {
+    search = 'rx=-1.5,-2';
+    renderFilters();
+    expect(screen.getByRole('combobox', { name: viDict.rx.leftEye })).toHaveTextContent('-1.50');
+    expect(screen.getByRole('combobox', { name: viDict.rx.rightEye })).toHaveTextContent('-2.00');
+  });
+
+  it('"Xoá tất cả" drops the rx filter but keeps the saved Default Rx', async () => {
+    localStorage.setItem(GUEST_RX_KEY, JSON.stringify({ left: -1, right: -1 }));
+    search = 'rx=-1,-1';
+    renderFilters();
+    await userEvent.click(screen.getByRole('button', { name: t.clearAll }));
+    expect(lastUrl()).toBe('/vi/collection/all-lenses');
+    expect(localStorage.getItem(GUEST_RX_KEY)).not.toBeNull();
+  });
+
+  describe('DefaultRxAutoApply', () => {
+    it('applies a saved Default Rx to a collection opened without one', async () => {
+      localStorage.setItem(GUEST_RX_KEY, JSON.stringify({ left: -1, right: -2 }));
+      search = 'color=brown';
+      render(<DefaultRxAutoApply />);
+      await vi.waitFor(() => expect(replace).toHaveBeenCalledWith('/vi/collection/all-lenses?color=brown&rx=-1%2C-2', { scroll: false }));
+    });
+
+    it('leaves an rx already in the URL alone', async () => {
+      localStorage.setItem(GUEST_RX_KEY, JSON.stringify({ left: -1, right: -2 }));
+      search = 'rx=-3,-3';
+      render(<DefaultRxAutoApply />);
+      await act(async () => {});
+      expect(replace).not.toHaveBeenCalled();
+    });
+
+    it('does not bring it back after "Xoá tất cả" in the same session', async () => {
+      localStorage.setItem(GUEST_RX_KEY, JSON.stringify({ left: -1, right: -2 }));
+      search = 'rx=-1,-2';
+      const { unmount } = renderFilters();
+      await userEvent.click(screen.getByRole('button', { name: t.clearAll }));
+      unmount();
+      search = '';
+      render(<DefaultRxAutoApply />);
+      await act(async () => {});
+      expect(replace).not.toHaveBeenCalled();
+    });
+  });
+
+  it('opens on mobile from "Nhập độ" as a sheet with the guide link', async () => {
+    render(<YourRxSheet dict={viDict} />);
+    await userEvent.click(screen.getByRole('button', { name: y.enter }));
+    const sheet = await screen.findByRole('dialog', { name: y.title });
+    expect(within(sheet).getByRole('combobox', { name: viDict.rx.leftEye })).toBeInTheDocument();
+    expect(within(sheet).getByRole('link', { name: y.guide })).toHaveAttribute('href', '/vi/support/guides/chon-do-can-the-nao');
   });
 });
 

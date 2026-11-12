@@ -1,5 +1,5 @@
 import { products, accessories, collections, reviews, galleries } from '@/content/mock';
-import { diameterMm, parseDiameterRange, PRICE_PRESETS } from '@/lib/api/schemas/catalog';
+import { diameterMm, parseDiameterRange, parseRxPair, PRICE_PRESETS } from '@/lib/api/schemas/catalog';
 import type { Accessory, CatalogItem, Collection, LensGallery, Product, ProductQuery, Review, ReviewFilter, Variant } from '@/lib/api/schemas/catalog';
 import { cheapestVariant } from '@/lib/products/cheapest-variant';
 import { filterReviews } from '@/lib/products/reviews';
@@ -59,6 +59,17 @@ function inPriceRange(p: Product, min: number | undefined, max: number | undefin
   return (min === undefined || price >= min) && (max === undefined || price <= max);
 }
 
+/**
+ * Whether a lens is stocked in both eyes' powers (Default Rx, #196). A lens stating no range
+ * is matched by nothing, the same answer a lens with no makeup styles gets; an unparseable
+ * `rx` can only come from a caller that bypassed the schema.
+ */
+function coversBothEyes(p: Product, rx: string): boolean {
+  const pair = parseRxPair(rx);
+  const range = p.sphRange;
+  return pair !== null && range !== undefined && [pair.left, pair.right].every((sph) => range.min <= sph && sph <= range.max);
+}
+
 /** Whether a lens passes every active facet of the query, except `skip`. */
 function applies(p: Product, query: ProductQuery, skip?: FacetKey): boolean {
   for (const facet of SET_FACET_KEYS) {
@@ -66,6 +77,7 @@ function applies(p: Product, query: ProductQuery, skip?: FacetKey): boolean {
     if (facet === skip || value === undefined) continue;
     if (!value.split(',').some((v) => matchesValue(facet, p, v))) return false;
   }
+  if (query.rx !== undefined && !coversBothEyes(p, query.rx)) return false;
   return skip === 'price' || inPriceRange(p, query.minPrice, query.maxPrice);
 }
 

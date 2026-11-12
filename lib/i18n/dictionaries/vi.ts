@@ -148,6 +148,12 @@ export const vi: Dictionary = {
       occasions: { graduation: 'Kỷ yếu', wedding: 'Đám cưới', party: 'Tiệc', date: 'Hẹn hò', travel: 'Du lịch', photoshoot: 'Chụp ảnh' },
       pricePresets: { 'under-200k': 'Dưới 200K', '200k-300k': '200K – 300K', 'over-300k': 'Trên 300K' },
       sortBy: 'Sắp xếp: {sort}', showing: 'Đang xem {shown} / {total} sản phẩm', loadMore: 'Xem thêm sản phẩm',
+      yourRx: {
+        title: 'Độ của bạn', subtitle: 'Chỉ hiện mẫu có sẵn đúng độ từng mắt', enter: 'Nhập độ', choose: 'Chọn độ',
+        listTitles: { left: 'Độ mắt trái (L)', right: 'Độ mắt phải (R)' },
+        step: 'Bước {fine}', stepCoarse: 'Bước {fine} · {coarse} dưới {below}',
+        autoNote: 'Tự cập nhật khi chọn xong 2 mắt', guide: 'Chưa biết độ? Cách đọc đơn kính',
+      },
     },
   },
   reviews: {

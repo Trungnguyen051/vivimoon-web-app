@@ -1,8 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { AddToCart } from './add-to-cart';
 import { useCartStore } from '@/features/cart/cart-store';
+import { useSessionStore } from '@/features/session/session-store';
+import { GUEST_RX_KEY, useGuestRxStore } from '@/features/session/default-rx';
 import { useMiniCartStore } from '@/features/cart/mini-cart-store';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import type { Product } from '@/lib/types';
@@ -128,6 +130,36 @@ describe('AddToCart — Buy Now (Task 12)', () => {
     expect(state.lines[0].lineKey).toBe('existing');
     expect(state.buyNowLine).toMatchObject({ variantId: 'v1', purchaseUnit: 'pair' });
     expect(push).toHaveBeenCalledWith('/en/checkout');
+  });
+});
+
+describe('AddToCart — Default Rx pre-fill (#196)', () => {
+  beforeEach(() => {
+    useSessionStore.setState({ user: null, status: 'unknown' });
+    useGuestRxStore.setState({ rx: null, loaded: false });
+  });
+
+  it("pre-selects 1 đôi at a member's saved powers when the eyes differ", async () => {
+    useSessionStore.getState().setUser({ id: 'u1', name: 'Mai', phone: '0900000000', defaultRx: { left: -2.5, right: -3 } });
+    render(<AddToCart product={makeProduct()} locale="en" dict={dict} />);
+    expect(unitButton('pair')).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByLabelText(dict.rx.leftEye)).toHaveValue('-2.5');
+    expect(screen.getByLabelText(dict.rx.rightEye)).toHaveValue('-3');
+  });
+
+  it("keeps 1 chiếc at a guest's saved power when both eyes match", async () => {
+    localStorage.setItem(GUEST_RX_KEY, JSON.stringify({ left: -1.75, right: -1.75 }));
+    useSessionStore.getState().setUser(null);
+    render(<AddToCart product={makeProduct()} locale="en" dict={dict} />);
+    expect(await screen.findByRole('combobox', { name: dict.rx.power })).toHaveValue('-1.75');
+    expect(unitButton('single')).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('does not overwrite a power the shopper already picked', async () => {
+    render(<AddToCart product={makeProduct()} locale="en" dict={dict} />);
+    await userEvent.selectOptions(screen.getByRole('combobox', { name: dict.rx.power }), '-4');
+    act(() => useSessionStore.getState().setUser({ id: 'u1', name: 'Mai', phone: '0900000000', defaultRx: { left: -1, right: -1 } }));
+    expect(screen.getByRole('combobox', { name: dict.rx.power })).toHaveValue('-4');
   });
 });
 
