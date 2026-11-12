@@ -111,6 +111,16 @@ describe('CollectionFilters (#194)', () => {
     expect(lastUrl()).toBe('/vi/collection/all-lenses?minPrice=150000&maxPrice=250000');
   });
 
+  it('applies a typed price range when focus leaves the fields (phone number pads have no Enter)', async () => {
+    renderFilters();
+    await userEvent.type(screen.getByRole('textbox', { name: t.priceFrom }), '150000');
+    await userEvent.tab(); // moving between the two fields does not apply yet
+    expect(push).not.toHaveBeenCalled();
+    await userEvent.type(screen.getByRole('textbox', { name: t.priceTo }), '250000');
+    await userEvent.tab();
+    expect(lastUrl()).toBe('/vi/collection/all-lenses?minPrice=150000&maxPrice=250000');
+  });
+
   it('collapses a group as drawn', async () => {
     renderFilters();
     const trigger = screen.getByRole('button', { name: t.occasion });

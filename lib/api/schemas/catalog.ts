@@ -346,7 +346,7 @@ export const productQuerySchema = z.object({
    * value is a filter nothing matches, not malformed input.
    */
   material: blankToUndefined(z.string()),
-  sort:blankToUndefined(z.enum(['newest', 'price-asc', 'price-desc', 'bestselling'])),
+  sort: blankToUndefined(z.enum(['newest', 'price-asc', 'price-desc', 'bestselling'])),
 });
 
 /**

@@ -133,7 +133,9 @@ export function CollectionFilters({ dict, counts }: { dict: Dictionary; counts: 
   const maxPrice = params.get('maxPrice') ?? '';
   const applyTypedPrice = (form: HTMLElement) => {
     const read = (name: string) => (form.querySelector(`[name=${name}]`) as HTMLInputElement).value.replace(/\D/g, '');
-    setPrice(read('minPrice') || undefined, read('maxPrice') || undefined);
+    const [min, max] = [read('minPrice'), read('maxPrice')];
+    if (min === minPrice && max === maxPrice) return;
+    setPrice(min || undefined, max || undefined);
   };
 
   return (
@@ -297,11 +299,15 @@ export function CollectionFilters({ dict, counts }: { dict: Dictionary; counts: 
               })}
             </div>
             {/* Keyed on the URL so the fields follow a preset or a clear rather than keeping stale input. */}
+            {/* Applies on Enter or when focus leaves the pair — phone number pads have no return key. */}
             <div
               key={`${minPrice}-${maxPrice}`}
               className="flex items-center gap-2"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') applyTypedPrice(e.currentTarget);
+              }}
+              onBlur={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node | null)) applyTypedPrice(e.currentTarget);
               }}
             >
               <Input name="minPrice" inputMode="numeric" aria-label={t.priceFrom} placeholder={t.priceFrom} defaultValue={minPrice} className="h-10 rounded-none" />
