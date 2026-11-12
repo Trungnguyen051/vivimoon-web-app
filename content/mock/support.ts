@@ -9,7 +9,13 @@ import type { FaqEntry } from '@/lib/api/schemas/support';
  * one file — the same arrangement `home.trust` already has.
  *
  * Deliberately NOT marked up: an answer is paragraphs, and anything a reader
- * should be able to click is a `links` entry beside the prose (ADR-0019).
+ * should be able to click is a `links` entry beside the prose (`CONTEXT.md` → FAQ
+ * Entry; ADR-0019 is the separate question of a Guide's shape).
+ *
+ * Ticket #119 sized these at 3–5 per Topic and `nguoi-moi-deo-lens` carries six. That
+ * range was guidance for writing fixtures, not an invariant — Vivimoon's own answers
+ * will overrun it the moment they arrive, and six of twenty-six unbalances nothing
+ * (#161). No guard holds it, deliberately.
  */
 export const faqEntries: FaqEntry[] = [
   // ── Người mới đeo lens ──────────────────────────────────────────────────────
