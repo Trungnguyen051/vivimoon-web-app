@@ -101,7 +101,7 @@ export function BundleOffer({
             <span className="text-sm text-muted-foreground">{t.total}</span>
             <span className="flex items-baseline gap-2">
               <span className="text-lg font-semibold tabular-nums lg:text-2xl">
-                {result && ticked.length > 0 ? price(result.subtotal - saving) : '—'}
+                {result && ticked.length > 0 ? price(result.bundledSubtotal ?? result.subtotal) : '—'}
               </span>
               {result && saving > 0 ? (
                 <span className="text-sm tabular-nums text-muted-foreground line-through">{price(result.subtotal)}</span>

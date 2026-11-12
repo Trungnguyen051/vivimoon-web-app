@@ -324,6 +324,7 @@ describe('mockPricing.priceCart — Bundles', () => {
     const result = await mockPricing.priceCart(req([lens(via), drops(via), tray(via)]));
     expect(result.subtotal).toBe(55);
     expect(result.bundleSaving).toBe(3);
+    expect(result.bundledSubtotal).toBe(52);
     expect(result.total).toBe(52 - result.discount);
   });
 

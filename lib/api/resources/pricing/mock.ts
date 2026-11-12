@@ -205,6 +205,7 @@ export const mockPricing = {
       unavailableLines,
       subtotal,
       bundleSaving,
+      bundledSubtotal: payable,
       discount,
       appliedVouchers: applied,
       shipping: shippingFee,

@@ -159,6 +159,8 @@ export const pricedCartSchema = z.object({
   subtotal: z.number().int().nonnegative(),
   // What complete Bundles in the request save off `subtotal`. Absent reads as 0.
   bundleSaving: z.number().int().nonnegative().optional(),
+  // `subtotal - bundleSaving`, so the Bundle block never does money arithmetic (ADR-0003). Absent reads as `subtotal`.
+  bundledSubtotal: z.number().int().nonnegative().optional(),
   discount: z.number().int().nonnegative(),
   appliedVouchers: z.array(voucherSchema),
   shipping: z.number().int().nonnegative(),

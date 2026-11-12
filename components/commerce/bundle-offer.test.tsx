@@ -24,7 +24,7 @@ function priced(body: PriceCartRequest): PricedCart {
   const complete = body.lines.length === 3 && body.lines.every((l) => l.bundle === lens.id);
   const subtotal = { 3: 30, 2: 28 }[body.lines.length] ?? 25;
   return {
-    lines: [], unavailableLines: [], subtotal, bundleSaving: complete ? 3 : 0,
+    lines: [], unavailableLines: [], subtotal, bundleSaving: complete ? 3 : 0, bundledSubtotal: subtotal - (complete ? 3 : 0),
     discount: 0, appliedVouchers: [], shipping: 0, total: subtotal, currency: 'USD',
   };
 }
