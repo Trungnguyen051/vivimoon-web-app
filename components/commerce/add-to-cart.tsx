@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useCart } from '@/features/cart/use-cart';
 import { useBuyNow } from '@/features/cart/use-buy-now';
+import { useBuyBoxStore } from '@/features/cart/buy-box-store';
 import { lineKey } from '@/lib/cart/line-key';
 import { lensesIn } from '@/lib/api/schemas/rx';
 import { useAnalytics } from '@/lib/analytics/use-analytics';
@@ -73,6 +74,13 @@ export function AddToCart({
       ...(unit ? { purchaseUnit: unit, rx } : {}),
     };
   };
+
+  // Hands the Bundle block the lens as set up here, one unit of it.
+  const setBuyBoxLine = useBuyBoxStore((s) => s.setLine);
+  useEffect(() => {
+    setBuyBoxLine({ ...buildLine(), quantity: 1 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [variant, rxDraft]);
 
   const trackAddToCart = () => {
     track({

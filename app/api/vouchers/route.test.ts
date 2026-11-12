@@ -46,7 +46,7 @@ describe('GET /api/vouchers', () => {
       description: expect.any(String),
       type: 'percent',
       value: 10,
-      minSpend: 50,
+      minSpend: 250_000,
       expiresAt: expect.any(String),
     });
   });

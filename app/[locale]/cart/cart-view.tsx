@@ -111,7 +111,7 @@ export function CartView({ locale, dict, accessories = [] }: { locale: Locale; d
             {lines.map((l) => {
               const pricedLine = result?.lines.find((pl) => pl.lineKey === l.lineKey);
               return (
-                <CartLineItem key={l.lineKey} line={l} locale={locale} dict={dict}
+                <CartLineItem key={l.lineKey} line={pricedLine ? { ...l, currency: pricedLine.currency } : l} locale={locale} dict={dict}
                   lineTotal={pricedLine?.lineTotal ?? null}
                   unavailable={unavailableKeys.has(l.lineKey)}
                   onQty={(key, q) => (q < 1 ? handleRemove(key) : updateQty(key, q))}
@@ -124,10 +124,11 @@ export function CartView({ locale, dict, accessories = [] }: { locale: Locale; d
           </div>
           <OrderSummary
             subtotal={result?.subtotal ?? null}
+            bundleSaving={result?.bundleSaving}
             discount={result?.discount ?? null}
             shipping={result?.shipping ?? null}
             total={result?.total ?? null}
-            currency={currency} locale={locale} dict={dict}
+            currency={result?.currency ?? currency} locale={locale} dict={dict}
             ctaHref={`/${locale}/checkout`} ctaLabel={dict.cart.checkout}
             note={unavailableKeys.size > 0 ? dict.cart.unavailableNote : undefined}
             // Checkout is blocked, not silently partial: order placement

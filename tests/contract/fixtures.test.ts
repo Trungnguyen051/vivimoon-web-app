@@ -87,6 +87,19 @@ describe('fixture conformance', () => {
     expect(all.length).toBe(new Set(all).size);
   });
 
+  it('every Bundle names accessories that are for sale, and saves something', () => {
+    const forSale = new Map(accessories.filter((a) => !a.giftOnly).map((a) => [a.id, a]));
+    const withBundle = products.filter((p) => p.bundle);
+    expect(withBundle.length).toBeGreaterThan(0);
+    for (const p of withBundle) {
+      const items = p.bundle!.accessoryIds.map((id) => forSale.get(id));
+      expect(items.every(Boolean), p.id).toBe(true);
+      // The Bundle adds each accessory's first variant; the lens counts as a pair.
+      const apart = p.variants[0].price * 2 + items.reduce((sum, a) => sum + a!.variants[0].price, 0);
+      expect(p.bundle!.price, p.id).toBeLessThan(apart);
+    }
+  });
+
   /** A slug is both the article's route key and its React key, so a duplicate hides one article. */
   it('article slugs are unique', () => {
     const slugs = articles.map((a) => a.slug);
@@ -105,6 +118,14 @@ describe('fixture conformance', () => {
   it('user phones are unique', () => {
     const phones = users.map((u) => u.phone);
     expect(phones.length).toBe(new Set(phones).size);
+  });
+
+  it('prices every fixture in VND (#210)', () => {
+    const currencies = [
+      ...[...products, ...accessories].flatMap((p) => p.variants.map((v) => v.currency)),
+      ...orders.flatMap((o) => [o.totals.currency, ...o.lines.map((l) => l.currency)]),
+    ];
+    expect(new Set(currencies)).toEqual(new Set(['VND']));
   });
 
   it('every voucher satisfies voucherSchema', () => {

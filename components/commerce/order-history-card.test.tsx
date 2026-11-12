@@ -15,17 +15,17 @@ const RX = { sameBothEyes: true as const, right: { sph: -2.5 }, left: { sph: -2.
 
 const product = (n: number) => ({
   id: `p${n}`, slug: `lens-${n}`, name: `Lens ${n}`, image: `/l${n}.jpg`, sku: `S${n}`, color: 'Brown',
-  compareAtPrice: n === 1 ? 30 : undefined, price: 40 + n,
+  compareAtPrice: n === 1 ? 250_000 : undefined, price: 200_000 + n,
 });
 const line = (n: number, extra: Partial<HistoryLine> = {}): HistoryLine => ({
-  lineKey: `k${n}`, variantId: `v${n}`, quantity: n, unitPrice: 25, lineTotal: 25 * n, currency: 'USD',
+  lineKey: `k${n}`, variantId: `v${n}`, quantity: n, unitPrice: 125_000, lineTotal: 125_000 * n, currency: 'VND',
   rx: RX, product: product(n), ...extra,
 });
 
 function order(status: Order['status']): Order {
   return {
     id: 'o1', code: 'VVM-AAA', status, placedAt: '2026-01-01T00:00:00Z', lines: [],
-    totals: { subtotal: 0, discount: 0, appliedVouchers: [], shipping: 0, total: 125, currency: 'USD' },
+    totals: { subtotal: 0, discount: 0, appliedVouchers: [], shipping: 0, total: 625_000, currency: 'VND' },
     address: { recipient: 'a', phone: '0900000000', line1: 'x', ward: 'w', district: 'd', province: 'p', label: 'home' },
     payment: { method: 'qr', status: 'pending' },
   };
@@ -71,7 +71,7 @@ describe('OrderHistoryCard body', () => {
     renderCard('shipped');
     expect(screen.getByText('Lens 1')).toBeInTheDocument();
     expect(screen.queryByText('Lens 2')).not.toBeInTheDocument();
-    expect(screen.getByText(/\$30/)).toHaveClass('line-through');
+    expect(screen.getByText(/250\.000/)).toHaveClass('line-through');
     expect(screen.getByText('Total (6 items)')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Show 2 more items' }));
     expect(screen.getByText('Lens 3')).toBeInTheDocument();
@@ -104,7 +104,7 @@ describe('OrderHistoryCard buy again', () => {
   it('uses the current catalogue price, not the order-time one', async () => {
     renderCard('delivered', [line(1)]);
     await userEvent.click(screen.getByRole('button', { name: dict.orders.buyAgain }));
-    expect(useCartStore.getState().lines[0].unitPrice).toBe(41);
+    expect(useCartStore.getState().lines[0].unitPrice).toBe(200_001);
   });
 
   it('reports an unavailable line instead of dropping it silently', async () => {

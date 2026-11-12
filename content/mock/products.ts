@@ -27,13 +27,15 @@ export const products: Product[] = [
       {
         id: 'p-aqua-daily-30',
         sku: 'AQD-30',
-        price: 25,
-        currency: 'USD',
+        price: 125_000,
+        currency: 'VND',
         stock: 120,
       },
     ],
     rating: 4.6,
     reviewCount: 2,
+    // Pair 50 + drops 3 + tray 2 = 55 apart.
+    bundle: { accessoryIds: ['a-nuoc-nho-mat', 'a-khay-dung'], price: 330_000 }, // PROVISIONAL: 354.000₫ apart
     subtitle: 'Lens trong suốt 1 ngày · Silicone Hydrogel ngậm nước 55%',
     soldCount: 3200,
     comfort: { wearHours: 12, sensitiveEyes: true },
@@ -132,8 +134,8 @@ export const products: Product[] = [
       {
         id: 'p-breeze-daily-30',
         sku: 'BRZ-30',
-        price: 22,
-        currency: 'USD',
+        price: 110_000,
+        currency: 'VND',
         stock: 90,
       },
     ],
@@ -167,8 +169,8 @@ export const products: Product[] = [
       {
         id: 'p-ocean-biweekly-6',
         sku: 'OCB-6',
-        price: 28,
-        currency: 'USD',
+        price: 140_000,
+        currency: 'VND',
         stock: 70,
       },
     ],
@@ -205,9 +207,9 @@ export const products: Product[] = [
         color: 'brown',
         colorLabel: 'Hazel Brown',
         // Collapsed from two pack-size variants (M6.4, #27) — this keeps the
-        // smaller 10-pack's price ($20), not the 30-pack's ($48).
-        price: 20,
-        currency: 'USD',
+        // smaller 10-pack's price, not the 30-pack's.
+        price: 100_000,
+        currency: 'VND',
         stock: 30,
       },
       {
@@ -215,8 +217,8 @@ export const products: Product[] = [
         sku: 'HZM-GR-30',
         color: 'gray',
         colorLabel: 'Storm Gray',
-        price: 20,
-        currency: 'USD',
+        price: 100_000,
+        currency: 'VND',
         stock: 25,
       },
     ],
@@ -305,8 +307,8 @@ export const products: Product[] = [
         sku: 'ONX-BK-30',
         color: 'black',
         colorLabel: 'Natural Black',
-        price: 21,
-        currency: 'USD',
+        price: 105_000,
+        currency: 'VND',
         stock: 26,
       },
     ],
@@ -345,15 +347,17 @@ export const products: Product[] = [
         color: 'violet',
         colorLabel: 'Mystic Violet',
         // Collapsed from two pack-size variants (M6.4, #27) — this keeps the
-        // smaller 10-pack's price ($18 / compareAt $24), not the 30-pack's.
-        price: 18,
-        compareAtPrice: 24,
-        currency: 'USD',
+        // smaller 10-pack's price (and compareAt), not the 30-pack's.
+        price: 90_000,
+        compareAtPrice: 120_000,
+        currency: 'VND',
         stock: 20,
       },
     ],
     rating: 4.5,
     reviewCount: 0,
+    // Pair 36 + drops 3 + tray 2 = 41 apart.
+    bundle: { accessoryIds: ['a-nuoc-nho-mat', 'a-khay-dung'], price: 260_000 }, // PROVISIONAL: 284.000₫ apart
     subtitle: 'Lens vân nhũ 1 ngày · Tím khói ánh nhũ',
     soldCount: 1500,
     comfort: { wearHours: 8, sensitiveEyes: false },
@@ -459,8 +463,9 @@ export const products: Product[] = [
       {
         id: 'p-torica-monthly-6',
         sku: 'TRM-6',
-        price: 38,
-        currency: 'USD',
+        // PROVISIONAL mock price, set above 300K so the "Trên 300K" preset matches a lens.
+        price: 320_000,
+        currency: 'VND',
         stock: 35,
       },
     ],
@@ -497,8 +502,8 @@ export const products: Product[] = [
       {
         id: 'p-torica-biweekly-6',
         sku: 'TRB-6',
-        price: 32,
-        currency: 'USD',
+        price: 160_000,
+        currency: 'VND',
         stock: 40,
       },
     ],
@@ -535,8 +540,8 @@ export const products: Product[] = [
       {
         id: 'p-focalpro-monthly-6',
         sku: 'FPM-6',
-        price: 42,
-        currency: 'USD',
+        price: 210_000,
+        currency: 'VND',
         stock: 30,
       },
     ],
@@ -570,8 +575,8 @@ export const products: Product[] = [
       {
         id: 'p-focalpro-daily-30',
         sku: 'FPD-30',
-        price: 36,
-        currency: 'USD',
+        price: 180_000,
+        currency: 'VND',
         stock: 50,
       },
     ],
@@ -595,9 +600,9 @@ export const products: Product[] = [
     requiresRx: true,
     sphRange: { min: -5, max: 0 },
     variants: [
-      { id: 'p-sandkiss-brown', sku: 'SDK-BR', color: 'brown', colorLabel: 'Sand Brown', price: 19, currency: 'USD', stock: 60 },
-      { id: 'p-sandkiss-gray', sku: 'SDK-GR', color: 'gray', colorLabel: 'Sand Gray', price: 19, currency: 'USD', stock: 40 },
-      { id: 'p-sandkiss-black', sku: 'SDK-BK', color: 'black', colorLabel: 'Sand Black', price: 19, currency: 'USD', stock: 35 },
+      { id: 'p-sandkiss-brown', sku: 'SDK-BR', color: 'brown', colorLabel: 'Sand Brown', price: 95_000, currency: 'VND', stock: 60 },
+      { id: 'p-sandkiss-gray', sku: 'SDK-GR', color: 'gray', colorLabel: 'Sand Gray', price: 95_000, currency: 'VND', stock: 40 },
+      { id: 'p-sandkiss-black', sku: 'SDK-BK', color: 'black', colorLabel: 'Sand Black', price: 95_000, currency: 'VND', stock: 35 },
     ],
     rating: 4.9, reviewCount: 0,
   },
@@ -613,8 +618,8 @@ export const products: Product[] = [
     requiresRx: true,
     sphRange: { min: -8, max: 0 },
     variants: [
-      { id: 'p-shadow-end-black', sku: 'SHE-BK', color: 'black', colorLabel: 'Shadow Black', price: 19, currency: 'USD', stock: 50 },
-      { id: 'p-shadow-end-gray', sku: 'SHE-GR', color: 'gray', colorLabel: 'Shadow Gray', price: 19, currency: 'USD', stock: 30 },
+      { id: 'p-shadow-end-black', sku: 'SHE-BK', color: 'black', colorLabel: 'Shadow Black', price: 95_000, currency: 'VND', stock: 50 },
+      { id: 'p-shadow-end-gray', sku: 'SHE-GR', color: 'gray', colorLabel: 'Shadow Gray', price: 95_000, currency: 'VND', stock: 30 },
     ],
     rating: 4.8, reviewCount: 0,
   },
@@ -630,7 +635,7 @@ export const products: Product[] = [
     requiresRx: true,
     sphRange: { min: -10, max: 0 },
     variants: [
-      { id: 'p-golden-hour-brown', sku: 'GDH-BR', color: 'brown', colorLabel: 'Golden Brown', price: 19, currency: 'USD', stock: 45 },
+      { id: 'p-golden-hour-brown', sku: 'GDH-BR', color: 'brown', colorLabel: 'Golden Brown', price: 95_000, currency: 'VND', stock: 45 },
     ],
     rating: 4.9, reviewCount: 0,
   },
@@ -646,8 +651,8 @@ export const products: Product[] = [
     requiresRx: true,
     sphRange: { min: -8, max: 0 },
     variants: [
-      { id: 'p-olive-air-gray', sku: 'OLA-GR', color: 'gray', colorLabel: 'Olive Gray', price: 19, currency: 'USD', stock: 30 },
-      { id: 'p-olive-air-brown', sku: 'OLA-BR', color: 'brown', colorLabel: 'Olive Brown', price: 19, currency: 'USD', stock: 25 },
+      { id: 'p-olive-air-gray', sku: 'OLA-GR', color: 'gray', colorLabel: 'Olive Gray', price: 95_000, currency: 'VND', stock: 30 },
+      { id: 'p-olive-air-brown', sku: 'OLA-BR', color: 'brown', colorLabel: 'Olive Brown', price: 95_000, currency: 'VND', stock: 25 },
     ],
     rating: 4.7, reviewCount: 0,
   },
@@ -662,7 +667,7 @@ export const products: Product[] = [
     specs: { material: 'Hydrogel', waterContent: '58%', baseCurve: '8.6mm', diameter: '14.2mm', origin: 'South Korea' },
     requiresRx: true,
     sphRange: { min: -6, max: 0 },
-    variants: [{ id: 'p-moisture-clear-1', sku: 'MSC-1', price: 16, currency: 'USD', stock: 80 }],
+    variants: [{ id: 'p-moisture-clear-1', sku: 'MSC-1', price: 80_000, currency: 'VND', stock: 80 }],
     rating: 4.8, reviewCount: 0,
   },
   {
@@ -677,9 +682,9 @@ export const products: Product[] = [
     requiresRx: true,
     sphRange: { min: -10, max: 0 },
     variants: [
-      { id: 'p-savage-gray-gray', sku: 'SVG-GR', color: 'gray', colorLabel: 'Savage Gray', price: 33, currency: 'USD', stock: 40 },
-      { id: 'p-savage-gray-black', sku: 'SVG-BK', color: 'black', colorLabel: 'Savage Black', price: 33, currency: 'USD', stock: 30 },
-      { id: 'p-savage-gray-brown', sku: 'SVG-BR', color: 'brown', colorLabel: 'Savage Brown', price: 33, currency: 'USD', stock: 25 },
+      { id: 'p-savage-gray-gray', sku: 'SVG-GR', color: 'gray', colorLabel: 'Savage Gray', price: 165_000, currency: 'VND', stock: 40 },
+      { id: 'p-savage-gray-black', sku: 'SVG-BK', color: 'black', colorLabel: 'Savage Black', price: 165_000, currency: 'VND', stock: 30 },
+      { id: 'p-savage-gray-brown', sku: 'SVG-BR', color: 'brown', colorLabel: 'Savage Brown', price: 165_000, currency: 'VND', stock: 25 },
     ],
     rating: 4.9, reviewCount: 0,
   },
@@ -695,7 +700,7 @@ export const products: Product[] = [
     requiresRx: true,
     sphRange: { min: -5, max: 0 },
     variants: [
-      { id: 'p-slayed-gray-gray', sku: 'SLG-GR', color: 'gray', colorLabel: 'Slayed Gray', price: 33, currency: 'USD', stock: 35 },
+      { id: 'p-slayed-gray-gray', sku: 'SLG-GR', color: 'gray', colorLabel: 'Slayed Gray', price: 165_000, currency: 'VND', stock: 35 },
     ],
     rating: 4.8, reviewCount: 0,
   },
@@ -711,8 +716,8 @@ export const products: Product[] = [
     requiresRx: true,
     sphRange: { min: -8, max: 0 },
     variants: [
-      { id: 'p-sweetie-black-black', sku: 'SWB-BK', color: 'black', colorLabel: 'Sweetie Black', price: 33, currency: 'USD', stock: 45 },
-      { id: 'p-sweetie-black-brown', sku: 'SWB-BR', color: 'brown', colorLabel: 'Sweetie Brown', price: 33, currency: 'USD', stock: 20 },
+      { id: 'p-sweetie-black-black', sku: 'SWB-BK', color: 'black', colorLabel: 'Sweetie Black', price: 165_000, currency: 'VND', stock: 45 },
+      { id: 'p-sweetie-black-brown', sku: 'SWB-BR', color: 'brown', colorLabel: 'Sweetie Brown', price: 165_000, currency: 'VND', stock: 20 },
     ],
     rating: 4.9, reviewCount: 0,
   },
@@ -728,7 +733,7 @@ export const products: Product[] = [
     requiresRx: true,
     sphRange: { min: -10, max: 0 },
     variants: [
-      { id: 'p-peach-bloom-brown', sku: 'PCB-BR', color: 'brown', colorLabel: 'Peach Brown', price: 14, currency: 'USD', stock: 70 },
+      { id: 'p-peach-bloom-brown', sku: 'PCB-BR', color: 'brown', colorLabel: 'Peach Brown', price: 70_000, currency: 'VND', stock: 70 },
     ],
     rating: 4.7, reviewCount: 0,
   },
@@ -744,7 +749,7 @@ export const products: Product[] = [
     requiresRx: true,
     sphRange: { min: -8, max: 0 },
     variants: [
-      { id: 'p-rosy-mocha-brown', sku: 'RSM-BR', color: 'brown', colorLabel: 'Rosy Mocha', price: 20, compareAtPrice: 25, currency: 'USD', stock: 40 },
+      { id: 'p-rosy-mocha-brown', sku: 'RSM-BR', color: 'brown', colorLabel: 'Rosy Mocha', price: 100_000, compareAtPrice: 125_000, currency: 'VND', stock: 40 },
     ],
     rating: 4.8, reviewCount: 0,
   },
@@ -760,7 +765,7 @@ export const products: Product[] = [
     requiresRx: true,
     sphRange: { min: -6, max: 0 },
     variants: [
-      { id: 'p-ash-veil-gray', sku: 'ASV-GR', color: 'gray', colorLabel: 'Ash Gray', price: 27, currency: 'USD', stock: 30 },
+      { id: 'p-ash-veil-gray', sku: 'ASV-GR', color: 'gray', colorLabel: 'Ash Gray', price: 135_000, currency: 'VND', stock: 30 },
     ],
     rating: 4.6, reviewCount: 0,
   },
@@ -776,8 +781,8 @@ export const products: Product[] = [
     requiresRx: true,
     sphRange: { min: -10, max: 0 },
     variants: [
-      { id: 'p-midnight-glow-violet', sku: 'MNG-VI', color: 'violet', colorLabel: 'Midnight Violet', price: 22, currency: 'USD', stock: 25 },
-      { id: 'p-midnight-glow-black', sku: 'MNG-BK', color: 'black', colorLabel: 'Midnight Black', price: 22, currency: 'USD', stock: 20 },
+      { id: 'p-midnight-glow-violet', sku: 'MNG-VI', color: 'violet', colorLabel: 'Midnight Violet', price: 110_000, currency: 'VND', stock: 25 },
+      { id: 'p-midnight-glow-black', sku: 'MNG-BK', color: 'black', colorLabel: 'Midnight Black', price: 110_000, currency: 'VND', stock: 20 },
     ],
     rating: 4.6, reviewCount: 0,
   },
@@ -792,7 +797,7 @@ export const products: Product[] = [
     specs: { material: 'Silicone Hydrogel', waterContent: '47%', baseCurve: '8.6mm', diameter: '14.0mm', origin: 'South Korea' },
     requiresRx: true,
     sphRange: { min: -5, max: 0 },
-    variants: [{ id: 'p-pure-air-clear-1', sku: 'PAC-1', price: 26, currency: 'USD', stock: 50 }],
+    variants: [{ id: 'p-pure-air-clear-1', sku: 'PAC-1', price: 130_000, currency: 'VND', stock: 50 }],
     rating: 4.5, reviewCount: 0,
   },
   {
@@ -807,7 +812,7 @@ export const products: Product[] = [
     requiresRx: true,
     sphRange: { min: -8, max: 0 },
     variants: [
-      { id: 'p-honey-latte-brown', sku: 'HNL-BR', color: 'brown', colorLabel: 'Honey Latte', price: 27, currency: 'USD', stock: 35 },
+      { id: 'p-honey-latte-brown', sku: 'HNL-BR', color: 'brown', colorLabel: 'Honey Latte', price: 135_000, currency: 'VND', stock: 35 },
     ],
     rating: 4.7, reviewCount: 0,
   },

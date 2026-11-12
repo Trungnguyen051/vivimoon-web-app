@@ -9,7 +9,7 @@ const DEBOUNCE_MS = 300;
 
 /** Only the fields the server needs to price a line — never a price itself. */
 export function toPriceLines(lines: CartLine[]) {
-  return lines.map((l) => ({ lineKey: l.lineKey, variantId: l.variantId, purchaseUnit: l.purchaseUnit, rx: l.rx, quantity: l.quantity }));
+  return lines.map((l) => ({ lineKey: l.lineKey, variantId: l.variantId, purchaseUnit: l.purchaseUnit, rx: l.rx, quantity: l.quantity, bundle: l.bundle }));
 }
 
 export interface UsePricedCartResult {

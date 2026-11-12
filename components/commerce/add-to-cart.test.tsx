@@ -22,7 +22,7 @@ function makeProduct(overrides: Partial<Product> = {}): Product {
     specs: { material: '', waterContent: '', baseCurve: '', diameter: '', origin: '' },
     requiresRx: true,
     variants: [
-      { id: 'v1', sku: 'H-BR-10', price: 22, currency: 'USD', stock: 9 },
+      { id: 'v1', sku: 'H-BR-10', price: 110_000, currency: 'VND', stock: 9 },
     ],
     rating: 4, reviewCount: 0,
     ...overrides,
@@ -43,11 +43,11 @@ beforeEach(() => {
 describe('AddToCart — Purchase Unit (ADR-0023)', () => {
   it('shows the per-lens price "/ lens", and the per-pair price in pair mode', async () => {
     render(<AddToCart product={makeProduct()} locale="en" dict={dict} />);
-    expect(screen.getByText('$22.00')).toBeInTheDocument();
+    expect(screen.getByText('110.000₫')).toBeInTheDocument();
     expect(screen.getByText(dict.pdp.perUnit.single)).toBeInTheDocument();
 
     await userEvent.click(unitButton('pair'));
-    expect(screen.getByText('$44.00')).toBeInTheDocument();
+    expect(screen.getByText('220.000₫')).toBeInTheDocument();
     expect(screen.getByText(dict.pdp.perUnit.pair)).toBeInTheDocument();
   });
 
@@ -64,7 +64,7 @@ describe('AddToCart — Purchase Unit (ADR-0023)', () => {
     await userEvent.click(addButton());
 
     expect(useCartStore.getState().lines).toEqual([
-      expect.objectContaining({ variantId: 'v1', purchaseUnit: 'single', rx: { sph: 0 }, quantity: 1, unitPrice: 22 }),
+      expect.objectContaining({ variantId: 'v1', purchaseUnit: 'single', rx: { sph: 0 }, quantity: 1, unitPrice: 110_000 }),
     ]);
 
     await userEvent.selectOptions(screen.getByRole('combobox', { name: dict.rx.power }), '-2.5');
@@ -83,7 +83,7 @@ describe('AddToCart — Purchase Unit (ADR-0023)', () => {
 
     const [single, pair] = useCartStore.getState().lines;
     expect(single).toMatchObject({ purchaseUnit: 'single', rx: { sph: -2.5 } });
-    expect(pair).toMatchObject({ purchaseUnit: 'pair', rx: { left: { sph: -2.5 }, right: { sph: -3 } }, unitPrice: 44 });
+    expect(pair).toMatchObject({ purchaseUnit: 'pair', rx: { left: { sph: -2.5 }, right: { sph: -3 } }, unitPrice: 220_000 });
     expect(single.lineKey).not.toBe(pair.lineKey);
   });
 
@@ -116,7 +116,7 @@ describe('AddToCart — Buy Now (Task 12)', () => {
   it('sets buyNowLine with the chosen unit and power and navigates to checkout without touching the real cart', async () => {
     useCartStore.getState().add({
       lineKey: 'existing', productId: 'p0', variantId: 'v0', name: 'Existing',
-      sku: 'SKU0', unitPrice: 10, currency: 'USD', quantity: 1,
+      sku: 'SKU0', unitPrice: 50_000, currency: 'VND', quantity: 1,
     });
 
     render(<AddToCart product={makeProduct()} locale="en" dict={dict} />);

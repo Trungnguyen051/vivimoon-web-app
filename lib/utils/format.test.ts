@@ -14,8 +14,10 @@ describe('formatCount', () => {
 });
 
 describe('formatPrice', () => {
-  it('formats VND with no decimals and đ suffix', () => {
-    expect(formatPrice(399000, 'VND', 'vi')).toContain('399.000');
+  it('writes VND the way the storefront does, in both locales', () => {
+    expect(formatPrice(95000, 'VND', 'vi')).toBe('95.000₫');
+    expect(formatPrice(95000, 'VND', 'en')).toBe('95.000₫');
+    expect(formatPrice(1250000, 'VND', 'en')).toBe('1.250.000₫');
   });
   it('formats USD with dollar sign for en', () => {
     expect(formatPrice(25, 'USD', 'en')).toBe('$25.00');

@@ -247,6 +247,11 @@ describe('mockCatalog', () => {
       }
     });
 
+    it('every price preset matches some lens, so the presets narrow the grid (#210)', async () => {
+      const { counts } = await mockCatalog.searchProducts({});
+      for (const preset of PRICE_PRESETS) expect(counts.price[preset.id] ?? 0).toBeGreaterThan(0);
+    });
+
     it('sorts best-selling by sold count', async () => {
       const list = await mockCatalog.listProducts({ sort: 'bestselling' });
       const sold = list.map((p) => p.soldCount ?? 0);

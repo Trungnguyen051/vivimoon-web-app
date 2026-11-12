@@ -121,7 +121,8 @@ export const mockOrders = {
       lines,
       totals: {
         subtotal: priced.subtotal,
-        discount: priced.discount,
+        // A Bundle's saving is money off too, so the order's totals still add up.
+        discount: priced.discount + (priced.bundleSaving ?? 0),
         appliedVouchers: priced.appliedVouchers,
         shipping: priced.shipping,
         total: priced.total,
