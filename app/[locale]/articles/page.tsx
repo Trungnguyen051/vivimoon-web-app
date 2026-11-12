@@ -8,7 +8,7 @@ import {
   articleSortSchema, readingThemeSchema,
   type Article, type ArticleSort, type ReadingTheme,
 } from '@/lib/api/schemas/editorial';
-import { readingMinutes } from '@/lib/editorial/reading-time';
+import { articleDateline } from '@/lib/editorial/dateline';
 import { CARDS_PER_PAGE, knowledgeIndexLayout } from '@/lib/editorial/index-layout';
 import { firstParam } from '@/lib/utils/search-params';
 import { ArticleCards } from '@/components/commerce/article-cards';
@@ -21,7 +21,6 @@ import { PageContainer } from '@/components/layout/page-container';
 import { Empty, EmptyContent, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { buttonVariants } from '@/components/ui/button';
 import { quizSocialProof } from '@/content/quiz';
-import { toIntlLocale } from '@/lib/utils/format';
 import { cn } from '@/lib/utils/cn';
 
 /** The grid's anchor, so showing more lands on the new cards rather than at the top. */
@@ -93,28 +92,13 @@ export default async function ArticlesPage({
      read stay where they are. */
   const showMoreHref = hrefWith({ shown: String(layout.limit + CARDS_PER_PAGE) }, GRID_ANCHOR);
 
-  /* A plain date parses as UTC midnight, so it is formatted in UTC too — in a timezone
-     behind it, a local format would render the day before the one authored.
-
-     Built once: a full page datelines up to thirteen articles, and an `Intl` constructor
-     is among the more expensive calls in a render. */
-  const dateFormat = new Intl.DateTimeFormat(toIntlLocale(locale), { dateStyle: 'long', timeZone: 'UTC' });
-  const publishedOn = (date: string) => dateFormat.format(new Date(date));
-
-  const dateline = (article: Article) =>
-    [
-      article.author,
-      dict.articles.readingTime.replace('{count}', String(readingMinutes(article.body[locale]))),
-      publishedOn(article.publishedAt),
-    ].join(' · ');
-
   const toCard = (article: Article) => ({
     slug: article.slug,
     title: article.title[locale],
     image: article.image,
     href: `/${locale}/articles/${article.slug}`,
     eyebrow: dict.articles.readingThemes[article.readingTheme],
-    dateline: dateline(article),
+    dateline: articleDateline(article, locale, dict.articles.readingTime),
   });
 
   return (
@@ -133,7 +117,7 @@ export default async function ArticlesPage({
             excerpt={layout.lead.excerpt[locale]}
             image={layout.lead.image}
             href={`/${locale}/articles/${layout.lead.slug}`}
-            dateline={dateline(layout.lead)}
+            dateline={articleDateline(layout.lead, locale, dict.articles.readingTime)}
             ctaLabel={dict.common.seeMore}
           />
         ) : null}

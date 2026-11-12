@@ -7,7 +7,7 @@ import { support } from '@/lib/api/resources/support';
 import { editorial } from '@/lib/api/resources/editorial';
 import { catalog } from '@/lib/api/resources/catalog';
 import { readingMinutes } from '@/lib/editorial/reading-time';
-import { toIntlLocale } from '@/lib/utils/format';
+import { formatPublishedDate } from '@/lib/utils/format';
 import { PageContainer } from '@/components/layout/page-container';
 import { ProductGrid } from '@/components/commerce/product-grid';
 import { GuideFeedback } from '@/components/commerce/guide-feedback';
@@ -67,8 +67,6 @@ export default async function GuidePage({
     )
   ).filter((card): card is { href: string; title: string } => card !== null && card !== undefined);
 
-  const dateFormat = new Intl.DateTimeFormat(toIntlLocale(locale), { dateStyle: 'long', timeZone: 'UTC' });
-
   return (
     <PageContainer>
       <div className="flex flex-col gap-10 py-12">
@@ -90,7 +88,7 @@ export default async function GuidePage({
           <p className="text-sm text-muted-foreground">
             {dict.articles.readingTime.replace('{count}', String(readingMinutes(body)))}
             {' · '}
-            {copy.updatedOn} {dateFormat.format(new Date(guide.updatedAt))}
+            {copy.updatedOn} {formatPublishedDate(guide.updatedAt, locale)}
           </p>
         </header>
 

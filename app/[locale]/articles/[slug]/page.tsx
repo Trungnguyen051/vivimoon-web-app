@@ -8,7 +8,7 @@ import { catalog } from '@/lib/api/resources/catalog';
 import {
   READING_THEME_ENTRIES, readingThemeHref, readingThemeIncludes,
 } from '@/lib/editorial/reading-themes';
-import { readingMinutes } from '@/lib/editorial/reading-time';
+import { articleDateline } from '@/lib/editorial/dateline';
 import { toIntlLocale } from '@/lib/utils/format';
 import { PageContainer } from '@/components/layout/page-container';
 import { ProductGrid } from '@/components/commerce/product-grid';
@@ -43,15 +43,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
   const article = await editorial.getArticleBySlug(slug);
   if (!article) notFound();
 
-  // publishedAt is a plain date, which parses as UTC midnight — formatting it in the
-  // server's own zone would show the previous day anywhere west of UTC.
-  const published = new Intl.DateTimeFormat(toIntlLocale(locale), { dateStyle: 'long', timeZone: 'UTC' })
-    .format(new Date(article.publishedAt));
-  const dateline = [
-    article.author,
-    dict.articles.readingTime.replace('{count}', String(readingMinutes(article.body[locale]))),
-    published,
-  ].join(' · ');
+  const dateline = articleDateline(article, locale, dict.articles.readingTime);
 
   /* Looked up defensively. `readingThemeEntry` throws when a theme has no row, which
      `reading-themes.test.ts` makes impossible in CI — but at the top of a server
