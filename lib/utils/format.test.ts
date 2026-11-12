@@ -1,5 +1,17 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { formatPrice, formatPublishedDate } from './format';
+import { formatCount, formatPrice, formatPublishedDate } from './format';
+
+describe('formatCount', () => {
+  it('shortens thousands the way the storefront writes them', () => {
+    expect(formatCount(3200, 'vi')).toBe('3,2k');
+    expect(formatCount(128000, 'en')).toBe('128k');
+    expect(formatCount(2000, 'en')).toBe('2k');
+  });
+
+  it('leaves small counts whole', () => {
+    expect(formatCount(940, 'vi')).toBe('940');
+  });
+});
 
 describe('formatPrice', () => {
   it('formats VND with no decimals and đ suffix', () => {

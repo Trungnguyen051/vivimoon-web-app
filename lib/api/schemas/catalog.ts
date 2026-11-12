@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { EYE_ENLARGEMENT_BANDS } from '@/lib/products/eye-enlargement';
 import { distinctColorVariants } from '@/lib/products/variant-colors';
+import { localizedTextSchema } from './editorial';
 
 /**
  * Vivimoon's own three-way category split — trong suốt (clear), có màu
@@ -12,6 +13,26 @@ export const replacementScheduleSchema = z.enum(['daily', 'monthly', 'threeMonth
 export const productBadgeSchema = z.enum(['new', 'bestseller', 'sale']);
 export const currencySchema = z.enum(['VND', 'USD']);
 export const reviewSourceSchema = z.enum(['shopee', 'tiktok', 'vivimoon']);
+/** The "Xem lens với tone makeup gợi ý" chips — labels live in the dictionary. */
+export const makeupToneSchema = z.enum(['peach', 'terracotta', 'warmNude', 'sunlight', 'indoor']);
+
+/**
+ * "Độ thoải mái khi đeo". Water content is not repeated here: it is already
+ * `specs.waterContent`, and two copies of one number drift.
+ */
+export const comfortSchema = z.object({
+  wearHours: z.number().int().positive(),
+  sensitiveEyes: z.boolean(),
+});
+
+/** One VIVIMOON TV clip of this product (CONTEXT.md). `url` is where it plays. */
+export const productVideoSchema = z.object({
+  id: z.string(),
+  title: localizedTextSchema,
+  poster: z.string(),
+  url: z.string().url(),
+  views: z.number().int().nonnegative(),
+});
 
 export const productSpecsSchema = z.object({
   material: z.string(),
@@ -75,6 +96,14 @@ export const productSchema = z.object({
   variants: z.array(variantSchema).min(1),
   rating: z.number().min(0).max(5),
   reviewCount: z.number().int().nonnegative(),
+  // PDP merchandising (#199). All optional: a section hides when its data is missing.
+  subtitle: z.string().optional(),
+  soldCount: z.number().int().nonnegative().optional(),
+  comfort: comfortSchema.optional(),
+  videos: z.array(productVideoSchema).optional(),
+  makeupTones: z.array(z.object({ tone: makeupToneSchema, image: z.string() })).optional(),
+  /** "Trả lời nhanh cho người mới". */
+  faq: z.array(z.object({ question: localizedTextSchema, answer: localizedTextSchema })).optional(),
 }).superRefine((p, ctx) => {
   // Now that packSize is gone, color is the only thing VariantSelector uses to
   // pick a variant — enforcing these here (construction/validation boundary)
@@ -242,6 +271,9 @@ export const lensGalleryContextsSchema = z.object({
   withMakeup: z.array(z.string()),
   withoutMakeup: z.array(z.string()),
   byEyeColor: z.record(z.string(), z.array(z.string())),
+  // "Cận mắt" and "Dưới nắng" (#199). Optional so an older gallery entry stays valid.
+  closeUp: z.array(z.string()).optional(),
+  sunlight: z.array(z.string()).optional(),
 });
 
 export const lensGallerySchema = z.object({
@@ -345,3 +377,5 @@ export type ComparisonRow = z.infer<typeof comparisonRowSchema>;
 export type ComparisonMatrix = z.infer<typeof comparisonMatrixSchema>;
 export type LensGalleryContexts = z.infer<typeof lensGalleryContextsSchema>;
 export type LensGallery = z.infer<typeof lensGallerySchema>;
+export type MakeupTone = z.infer<typeof makeupToneSchema>;
+export type ProductVideo = z.infer<typeof productVideoSchema>;

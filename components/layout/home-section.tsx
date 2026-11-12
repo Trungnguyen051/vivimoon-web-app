@@ -9,14 +9,16 @@ import { PageContainer } from './page-container';
  * rather than on the content — the same reason the hero does (ADR-0013).
  */
 export function HomeSection({
-  tinted = false, className, children,
+  tinted = false, className, children, id,
 }: {
   tinted?: boolean;
+  /** An anchor other pages link to, e.g. the PDP's "Xem Vivimoon TV". */
+  id?: string;
   className?: string;
   children: ReactNode;
 }) {
   return (
-    <section className={cn(tinted && 'bg-muted', className)}>
+    <section id={id} className={cn(tinted && 'bg-muted', className)}>
       <PageContainer className="space-y-16 py-16 md:space-y-24 md:py-24">{children}</PageContainer>
     </section>
   );

@@ -3,7 +3,7 @@ import type { FaqEntry } from '@/lib/api/schemas/support';
 /**
  * PROVISIONAL — every question, answer and link target below is written to be
  * plausible, not supplied by Vivimoon. The questions themselves come from the
- * design; the answers are ours, and the ones that state a policy ("trong 7 ngày",
+ * design; the answers are ours, and the ones that state a policy ("trong 15 ngày",
  * "2–4 ngày làm việc") state a number nobody has confirmed. Vivimoon's real
  * wording and real windows replace all of it, and doing so is a data edit in this
  * one file — the same arrangement `home.trust` already has.
@@ -438,17 +438,18 @@ export const faqEntries: FaqEntry[] = [
     featured: false,
     question: { vi: 'Điều kiện đổi trả là gì?', en: 'What are the conditions for a return?' },
     shortAnswer: {
-      vi: 'Trong 7 ngày kể từ khi nhận, lens còn nguyên tem và chưa mở vỉ.',
-      en: 'Within 7 days of delivery, sealed and unopened.',
+      vi: 'Đổi 1–1 miễn phí trong 15 ngày kể từ khi nhận hàng, áp dụng lens khoá ẩm & lens cho mắt thở.',
+      en: 'Free 1-for-1 exchange within 15 days of delivery, for moisture-lock and breathable lenses.',
     },
     answer: {
+      // Mirrors the PDP's "Không thích đổi luôn" block (dict.returnPolicy) — keep the two in step.
       vi: [
-        'Vì lý do vệ sinh, lens đã mở vỉ không thể đổi trả — đây là quy định chung với sản phẩm tiếp xúc trực tiếp với mắt.',
-        'Lens còn nguyên vỉ, nguyên tem và trong thời hạn đổi trả thì được đổi sang độ khác hoặc màu khác.',
+        'Không ưng màu hay hiệu ứng khi đeo thì đổi sang mẫu khác. Đeo bị cộm, ngứa hay khó chịu thì được hoàn tiền 100%.',
+        'Chính sách áp dụng cho lens khoá ẩm và lens cho mắt thở, trong 15 ngày kể từ khi nhận hàng.',
       ],
       en: [
-        'For hygiene reasons an opened blister cannot be returned — standard for anything that touches the eye directly.',
-        'Sealed, unopened lenses within the window can be exchanged for a different power or colour.',
+        "Not happy with the colour or effect once worn? Swap it for another style. If the lenses feel gritty, itchy or uncomfortable, you get a 100% refund.",
+        'This covers moisture-lock and breathable lenses, within 15 days of delivery.',
       ],
     },
     links: [],

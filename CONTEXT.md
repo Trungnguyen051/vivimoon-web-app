@@ -88,7 +88,7 @@ A banded visual-effect rating (natural / subtle / noticeable / dramatic) derived
 _Avoid_: Enlargement factor, magnification
 
 **Lens Viewer**:
-The tabbed product-gallery view showing a product across contexts (eye / face / with makeup / without makeup / by natural eye color). Falls back to the standard product gallery for any product lacking gallery entries.
+The PDP gallery: one strip of slides across the views Vân lens (eye), Người mẫu (face), Cận mắt (close-up), Dưới nắng (sunlight) and Video, with a tab per view that has content and "Xem lens với tone makeup gợi ý" chips beneath (#199). A product with no gallery entry shows its own images as the only view. The gallery data still carries with/without makeup and by-eye-color contexts, which the viewer no longer shows.
 _Avoid_: Gallery alone (ambiguous with the standard gallery it falls back to), Multi-Context Viewer (same concept — Lens Viewer is the shorter canonical form used in §10 of the client-scope spec)
 
 **Quiz**:
