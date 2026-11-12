@@ -22,6 +22,8 @@ export const orderLineSchema = pricedLineSchema.extend({
   // Absent on older orders: a lens line without one was a pair (ADR-0023).
   purchaseUnit: purchaseUnitSchema.optional(),
   rx: lineRxSchema.optional(),
+  // An accessory's variant option at placement, e.g. '120ml'.
+  variantLabel: z.string().optional(),
   // The variant's compare-at price as it stood when the order was placed —
   // only when it was above what was charged — so a past order never quotes
   // today's catalogue.

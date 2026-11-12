@@ -39,6 +39,18 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
         ),
       };
     }
+    case 'EDIT': {
+      const key = lineKey(action.line.variantId, action.line.rx);
+      const edited = { ...action.line, lineKey: key };
+      const twin = state.lines.find((l) => l.lineKey === key && l.lineKey !== action.lineKey);
+      if (!twin) return { ...state, lines: state.lines.map((l) => (l.lineKey === action.lineKey ? edited : l)) };
+      return {
+        ...state,
+        lines: state.lines
+          .filter((l) => l.lineKey !== action.lineKey)
+          .map((l) => (l === twin ? { ...l, quantity: Math.min(l.quantity + edited.quantity, MAX_LINE_QUANTITY) } : l)),
+      };
+    }
     case 'REMOVE':
       return { ...state, lines: state.lines.filter((l) => l.lineKey !== action.lineKey) };
     case 'CLEAR':
