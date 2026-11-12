@@ -24,7 +24,13 @@ export const vi: Dictionary = {
     colored: 'Lens màu', daily: 'Lens hằng ngày', allLenses: 'Tất cả lens',
     beginnerFriendly: 'Lens cho người mới',
     productsLabel: 'sản phẩm', noResults: 'Không có sản phẩm phù hợp với bộ lọc.', showAll: 'Xem tất cả sản phẩm',
-    card: { lines: { moisture: 'Khoá ẩm', breathable: 'Mắt thở' } },
+    card: { lines: { moisture: 'Khoá ẩm', breathable: 'Mắt thở' }, moreColors: '+{n} màu' },
+    imageView: 'Xem ảnh:',
+    quizCard: {
+      title: 'Chưa biết chọn mẫu nào?',
+      body: '{count} câu hỏi · 30 giây. Vivimoon gợi ý lens hợp với mắt, phong cách và thời gian đeo của bạn.',
+      cta: 'Làm quiz chọn lens', revisit: 'Xem lại gợi ý cho bạn',
+    },
   },
   home: {
     moments: {
@@ -149,6 +155,12 @@ export const vi: Dictionary = {
       occasions: { graduation: 'Kỷ yếu', wedding: 'Đám cưới', party: 'Tiệc', date: 'Hẹn hò', travel: 'Du lịch', photoshoot: 'Chụp ảnh' },
       pricePresets: { 'under-200k': 'Dưới 200K', '200k-300k': '200K – 300K', 'over-300k': 'Trên 300K' },
       sortBy: 'Sắp xếp: {sort}', showing: 'Đang xem {shown} / {total} sản phẩm', loadMore: 'Xem thêm sản phẩm',
+      yourRx: {
+        title: 'Độ của bạn', subtitle: 'Chỉ hiện mẫu có sẵn đúng độ từng mắt', enter: 'Nhập độ', choose: 'Chọn độ',
+        listTitles: { left: 'Độ mắt trái (L)', right: 'Độ mắt phải (R)' },
+        step: 'Bước {fine}', stepCoarse: 'Bước {fine} · {coarse} dưới {below}',
+        autoNote: 'Tự cập nhật khi chọn xong 2 mắt', guide: 'Chưa biết độ? Cách đọc đơn kính',
+      },
     },
   },
   reviews: {
@@ -170,6 +182,7 @@ export const vi: Dictionary = {
     buyAs: 'Mua theo',
     unitOptions: { single: '1 chiếc (1 bên mắt)', pair: '1 đôi (2 bên mắt)' },
     perUnit: { single: '/ chiếc', pair: '/ đôi' },
+    replacementOnly: 'Mẫu này chỉ có bản {r}',
     stockLeft: { single: 'chiếc · còn {count} chiếc', pair: 'đôi · còn {count} đôi' },
     sold: 'Đã bán {n}', allLenses: 'Mẫu lens', lensesOf: 'Lens {r}',
     promos: { firstOrder: 'Giảm 30K đơn đầu tiên', gift: 'Mua lens 6 tháng tặng Kits Yêu Mắt', freeship: 'Freeship từ 300K' },
@@ -195,6 +208,7 @@ export const vi: Dictionary = {
     noPower: 'Không độ',
     zeroHint: 'Đang chọn lens không độ. Nếu bạn bị cận, hãy chọn đúng độ của mình.',
     unsureHint: 'Chưa biết độ? Chọn "Không độ" hoặc chat với Vivimoon để được tư vấn.',
+    singleNote: 'Sản phẩm được bán lẻ từng chiếc, bạn vui lòng mua 2 chiếc để thành 1 đôi nhé!',
     pairHint: 'Chọn riêng độ từng mắt. Hai mắt cùng độ: chọn “Giống mắt trái” trong ô Mắt phải.',
     units: { single: '1 chiếc', pair: '1 đôi' },
     left: 'L', right: 'R',
@@ -346,7 +360,7 @@ export const vi: Dictionary = {
   },
   favorites: {
     title: 'Yêu thích', empty: 'Bạn chưa có sản phẩm yêu thích nào.',
-    add: 'Thêm vào yêu thích', remove: 'Bỏ yêu thích',
+    add: 'Thêm vào yêu thích', remove: 'Bỏ yêu thích', addNamed: 'Thêm {name} vào yêu thích',
     addToCart: 'Thêm vào giỏ', buyNow: 'Mua ngay', added: 'Đã thêm vào giỏ',
   },
   compare: {
@@ -366,17 +380,21 @@ export const vi: Dictionary = {
     views: 'Kiểu ảnh', tones: 'Xem lens với tone makeup gợi ý',
     toneLabels: { peach: 'Hồng đào', terracotta: 'Cam đất', warmNude: 'Nude ấm', sunlight: 'Dưới nắng', indoor: 'Trong nhà' },
   },
+  quickAdd: {
+    details: 'Xem chi tiết sản phẩm',
+    wearUpTo: 'Đeo tới {n}h', sensitiveOk: 'Hợp mắt nhạy cảm',
+  },
   /** Chính sách đổi trả. `terms` là chuỗi duy nhất nêu thời hạn và dòng lens áp dụng — mọi nơi nhắc tới chính sách đều dùng lại nó. */
   returnPolicy: {
     title: 'Không thích đổi luôn · Không êm hoàn tiền',
     terms: 'Đổi 1–1 miễn phí trong 15 ngày kể từ khi nhận hàng, áp dụng lens khoá ẩm & lens cho mắt thở',
     refund: 'Đeo cộm, ngứa, không êm → hoàn tiền 100%',
     swap: 'Không ưng màu/mẫu → đổi sang mẫu khác',
-    details: 'Xem chi tiết chính sách', howTo: 'Cách gửi yêu cầu đổi trả',
+    details: 'Xem chi tiết chính sách', howTo: 'Cách gửi yêu cầu đổi trả', link: 'Chính sách đổi trả',
   },
   quiz: {
     title: 'Trắc nghiệm chọn lens', next: 'Tiếp theo', back: 'Quay lại', submit: 'Xem kết quả',
-    resultsTitle: 'Gợi ý cho bạn', retake: 'Làm lại bài trắc nghiệm',
+    resultsTitle: 'Gợi ý cho bạn', retake: 'Làm lại bài trắc nghiệm', browseAll: 'Xem tất cả mẫu lens',
     unanswered: 'Chọn một câu trả lời để tiếp tục.',
     error: 'Đã có lỗi khi chấm điểm câu trả lời của bạn. Vui lòng thử lại.',
   },

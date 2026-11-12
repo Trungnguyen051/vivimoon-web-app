@@ -22,8 +22,13 @@ export const en = {
     colored: 'Colored Lenses', daily: 'Daily Lenses', allLenses: 'All Lenses',
     beginnerFriendly: 'Beginner-Friendly Lenses',
     productsLabel: 'products', noResults: 'No products match your filters.', showAll: 'Show all products',
-    // The Dòng lens a lens belongs to, by material: the sidebar's filter, the PLP card and every cart line title.
-    card: { lines: { moisture: 'Moisture-lock', breathable: 'Breathable' } },
+    card: { lines: { moisture: 'Moisture-lock', breathable: 'Breathable' }, moreColors: '+{n} colors' },
+    imageView: 'View:',
+    quizCard: {
+      title: 'Not sure which one to pick?',
+      body: '{count} questions · 30 seconds. Vivimoon suggests lenses that suit your eyes, style and wearing time.',
+      cta: 'Take the lens quiz', revisit: 'See your picks again',
+    },
   },
   home: {
     moments: {
@@ -146,6 +151,13 @@ export const en = {
       occasions: { graduation: 'Yearbook', wedding: 'Wedding', party: 'Party', date: 'Date', travel: 'Travel', photoshoot: 'Photoshoot' },
       pricePresets: { 'under-200k': 'Under 200K', '200k-300k': '200K – 300K', 'over-300k': 'Over 300K' },
       sortBy: 'Sort: {sort}', showing: 'Showing {shown} / {total} products', loadMore: 'See more products',
+      // The pinned Default Rx block (#196).
+      yourRx: {
+        title: 'Your power', subtitle: 'Show only lenses stocked in each eye’s power', enter: 'Enter power', choose: 'Choose power',
+        listTitles: { left: 'Left eye (L) power', right: 'Right eye (R) power' },
+        step: 'Steps of {fine}', stepCoarse: 'Steps of {fine} · {coarse} below {below}',
+        autoNote: 'Updates once both eyes are chosen', guide: 'Not sure of your power? How to read a prescription',
+      },
     },
   },
   reviews: {
@@ -167,6 +179,7 @@ export const en = {
     buyAs: 'Buy as',
     unitOptions: { single: '1 lens (one eye)', pair: '1 pair (both eyes)' },
     perUnit: { single: '/ lens', pair: '/ pair' },
+    replacementOnly: 'Only available as {r}',
     stockLeft: { single: 'lens · {count} left', pair: 'pair · {count} left' },
     sold: '{n} sold', allLenses: 'Lenses', lensesOf: '{r} lenses',
     promos: { firstOrder: '30K off your first order', gift: 'Free Kits Yêu Mắt with any 6-month lens', freeship: 'Free shipping from 300K' },
@@ -192,6 +205,7 @@ export const en = {
     noPower: 'No power',
     zeroHint: "You've picked lenses with no power. If you're short-sighted, choose your own power.",
     unsureHint: 'Not sure of your power? Choose "No power" or chat with Vivimoon for advice.',
+    singleNote: 'Lenses are sold one at a time — buy 2 to make a pair.',
     pairHint: 'Pick a power for each eye. Same power in both? Choose "Same as left eye" in the Right eye box.',
     // The shared line summary (ADR-0023): "1 pair · L −2.50 · R −3.00".
     units: { single: '1 lens', pair: '1 pair' },
@@ -347,7 +361,7 @@ export const en = {
   },
   favorites: {
     title: 'Favorites', empty: 'You have no favorites yet.',
-    add: 'Add to favorites', remove: 'Remove from favorites',
+    add: 'Add to favorites', remove: 'Remove from favorites', addNamed: 'Add {name} to favorites',
     addToCart: 'Add to cart', buyNow: 'Buy now', added: 'Added to cart',
   },
   compare: {
@@ -367,17 +381,21 @@ export const en = {
     views: 'Photo views', tones: 'See the lens with suggested makeup tones',
     toneLabels: { peach: 'Peach', terracotta: 'Terracotta', warmNude: 'Warm nude', sunlight: 'In sunlight', indoor: 'Indoors' },
   },
+  quickAdd: {
+    details: 'View product details',
+    wearUpTo: 'Wear up to {n}h', sensitiveOk: 'Suits sensitive eyes',
+  },
   /** The return policy. `terms` is the one string that states the period and the lenses it covers — every surface that mentions the policy reuses it. */
   returnPolicy: {
     title: 'Exchange if you don’t love it · Refund if it isn’t comfortable',
     terms: 'Free 1-for-1 exchange within 15 days of delivery, for moisture-lock and breathable lenses',
     refund: 'Gritty, itchy or uncomfortable → 100% refund',
     swap: 'Not happy with the colour or style → swap for another',
-    details: 'See the full policy', howTo: 'How to request a return',
+    details: 'See the full policy', howTo: 'How to request a return', link: 'Return policy',
   },
   quiz: {
     title: 'Lens-Matching Quiz', next: 'Next', back: 'Back', submit: 'See my results',
-    resultsTitle: 'Recommended for you', retake: 'Retake the quiz',
+    resultsTitle: 'Recommended for you', retake: 'Retake the quiz', browseAll: 'See all lenses',
     unanswered: 'Select an answer to continue.',
     error: 'Something went wrong scoring your answers. Please try again.',
   },

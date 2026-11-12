@@ -1,16 +1,18 @@
 'use client';
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import type { Product, Variant } from '@/lib/types';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { ShoppingBag } from 'lucide-react';
 import { VariantSelector } from './variant-selector';
-import { RxSelector, defaultRxDraft, draftToRx, type RxDraft } from './rx-selector';
+import { POWER_GUIDE_SLUG, RxSelector, defaultRxDraft, draftFromDefaultRx, draftToRx, type RxDraft } from './rx-selector';
+import { useDefaultRx } from '@/features/session/default-rx';
 import { PriceTag } from './price-tag';
 import { QuantityStepper } from './quantity-stepper';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils/cn';
 import { useCart } from '@/features/cart/use-cart';
 import { useBuyNow } from '@/features/cart/use-buy-now';
 import { useBuyBoxStore } from '@/features/cart/buy-box-store';
@@ -22,17 +24,22 @@ import { toGa4Items } from '@/lib/analytics/events';
 import type { CartLine } from '@/features/cart/cart.types';
 import { lensLineOf } from '@/lib/products/lens-facets';
 
-/** The support guide behind "Hướng dẫn chọn độ" (content/mock/support.ts). */
-const POWER_GUIDE_SLUG = 'chon-do-can-the-nao';
 
 export function AddToCart({
-  product, locale, dict, children, favorite,
+  product, locale, dict, children, favorite, quick = false, onAdded,
 }: {
   product: Product; locale: Locale; dict: Dictionary;
   /** The PDP's promo chips and comfort block, which the frame draws between the price and the options. */
   children?: ReactNode;
   /** The favourite toggle, beside the buttons from md up. */
   favorite?: ReactNode;
+  /**
+   * Quick add (#197): the stepper sits beside Thêm vào giỏ with no Mua ngay, and the line
+   * isn't handed to the PDP's Bundle (the card may sit in the PDP's related carousel).
+   */
+  quick?: boolean;
+  /** Called after Thêm vào giỏ, once the line is in the cart. */
+  onAdded?: () => void;
 }) {
   const { add } = useCart();
   const { setBuyNowLine } = useBuyNow();
@@ -44,6 +51,17 @@ export function AddToCart({
   // Every power defaults to 0.00, so the draft is always a valid Rx and the
   // buttons are never gated on it (designer note "Dev: default độ cận").
   const [rxDraft, setRxDraft] = useState<RxDraft>(defaultRxDraft);
+  // A saved Default Rx pre-fills the powers once it has loaded, unless the shopper has already picked.
+  const { defaultRx } = useDefaultRx();
+  const picked = useRef(false);
+  const onRxChange = (next: RxDraft) => {
+    picked.current = true;
+    setRxDraft(next);
+  };
+  useEffect(() => {
+    if (defaultRx && !picked.current) setRxDraft(draftFromDefaultRx(defaultRx));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultRx?.left, defaultRx?.right]);
 
   useEffect(() => {
     track({ name: 'view_item', params: { items: toGa4Items([{ product, variant: product.variants[0] }]) } });
@@ -72,7 +90,7 @@ export function AddToCart({
   // Hands the Bundle block the lens as set up here, one unit of it.
   const setBuyBoxLine = useBuyBoxStore((s) => s.setLine);
   useEffect(() => {
-    setBuyBoxLine({ ...buildLine(), quantity: 1 });
+    if (!quick) setBuyBoxLine({ ...buildLine(), quantity: 1 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [variant, rxDraft]);
 
@@ -95,6 +113,7 @@ export function AddToCart({
     add(line);
     trackAddToCart();
     showMiniCart([line]);
+    onAdded?.();
   };
 
   // Buy Now (spec §10): same line as Add to Cart, but it goes into the store's
@@ -107,49 +126,71 @@ export function AddToCart({
     router.push(`/${locale}/checkout`);
   };
 
+  const replacement = dict.filters.replacements[product.replacement];
+  const stepper = (
+    <QuantityStepper
+      value={qty}
+      onChange={(next) => setQty(Math.max(1, next))}
+      decreaseLabel={dict.common.decreaseQty}
+      increaseLabel={dict.common.increaseQty}
+    />
+  );
+  const addButton = (
+    <Button onClick={onAdd} size="xl" className={quick ? 'flex-1' : 'w-full md:flex-1'}>
+      <ShoppingBag className="size-4.5" aria-hidden />
+      {dict.common.addToCart}
+    </Button>
+  );
+
   return (
-    <div className="flex flex-col gap-6">
+    <div className={cn('flex flex-col', quick ? 'gap-5' : 'gap-6')}>
       <div className="flex items-baseline gap-2">
         <PriceTag
           price={variant.price * lenses}
           compareAtPrice={variant.compareAtPrice === undefined ? undefined : variant.compareAtPrice * lenses}
           currency={variant.currency}
           locale={locale}
-          className="text-3xl"
+          className={quick ? 'text-2xl' : 'text-3xl'}
         />
         {unit ? <span className="text-base text-muted-foreground">{dict.pdp.perUnit[unit]}</span> : null}
       </div>
       {children}
-      <Separator />
+      {quick ? null : <Separator />}
       <VariantSelector product={product} dict={dict} onVariantChange={setVariant} />
+      {/* Hạn sử dụng (PDP 56:179, Quick add 61:648): a product comes in one replacement, so it shows as chosen. */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-2.5">
+        <p className="text-sm text-muted-foreground md:basis-full">{dict.filters.replacement}</p>
+        <span className="inline-flex h-11 items-center rounded-md border border-primary bg-primary px-4 text-sm text-primary-foreground">
+          {replacement}
+        </span>
+        <p className="text-xs text-muted-foreground md:basis-full">{dict.pdp.replacementOnly.replace('{r}', replacement)}</p>
+      </div>
       {product.requiresRx ? (
-        <RxSelector value={rxDraft} onChange={setRxDraft} guideHref={`/${locale}/support/guides/${POWER_GUIDE_SLUG}`} dict={dict} />
+        <RxSelector value={rxDraft} onChange={onRxChange} guideHref={`/${locale}/support/guides/${POWER_GUIDE_SLUG}`} dict={dict} />
       ) : null}
-      <div className="flex flex-wrap items-center gap-4">
-        <span className="text-sm text-muted-foreground">{dict.pdp.quantity}</span>
-        <QuantityStepper
-          value={qty}
-          onChange={(next) => setQty(Math.max(1, next))}
-          decreaseLabel={dict.common.decreaseQty}
-          increaseLabel={dict.common.increaseQty}
-        />
-        {unit ? (
-          // Stock counts lenses; a pair takes two.
-          <span className="text-sm text-muted-foreground/80">
-            {dict.pdp.stockLeft[unit].replace('{count}', String(Math.floor(variant.stock / lenses)))}
-          </span>
-        ) : null}
-      </div>
-      <div className="flex flex-col gap-2 md:flex-row md:gap-3">
-        <Button onClick={onAdd} size="xl" className="w-full md:flex-1">
-          <ShoppingBag className="size-4.5" aria-hidden />
-          {dict.common.addToCart}
-        </Button>
-        <Button onClick={onBuyNow} variant="outline" size="xl" className="w-full md:flex-1">
-          {dict.common.buyNow}
-        </Button>
-        {favorite ? <div className="hidden md:flex">{favorite}</div> : null}
-      </div>
+      {quick ? (
+        <div className="flex items-center gap-3">{stepper}{addButton}</div>
+      ) : (
+        <>
+          <div className="flex flex-wrap items-center gap-4">
+            <span className="text-sm text-muted-foreground">{dict.pdp.quantity}</span>
+            {stepper}
+            {unit ? (
+              // Stock counts lenses; a pair takes two.
+              <span className="text-sm text-muted-foreground/80">
+                {dict.pdp.stockLeft[unit].replace('{count}', String(Math.floor(variant.stock / lenses)))}
+              </span>
+            ) : null}
+          </div>
+          <div className="flex flex-col gap-2 md:flex-row md:gap-3">
+            {addButton}
+            <Button onClick={onBuyNow} variant="outline" size="xl" className="w-full md:flex-1">
+              {dict.common.buyNow}
+            </Button>
+            {favorite ? <div className="hidden md:flex">{favorite}</div> : null}
+          </div>
+        </>
+      )}
     </div>
   );
 }
