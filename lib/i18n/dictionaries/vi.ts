@@ -182,6 +182,7 @@ export const vi: Dictionary = {
     buyAs: 'Mua theo',
     unitOptions: { single: '1 chiếc (1 bên mắt)', pair: '1 đôi (2 bên mắt)' },
     perUnit: { single: '/ chiếc', pair: '/ đôi' },
+    replacementOnly: 'Mẫu này chỉ có bản {r}',
     stockLeft: { single: 'chiếc · còn {count} chiếc', pair: 'đôi · còn {count} đôi' },
     sold: 'Đã bán {n}', allLenses: 'Mẫu lens', lensesOf: 'Lens {r}',
     promos: { firstOrder: 'Giảm 30K đơn đầu tiên', gift: 'Mua lens 6 tháng tặng Kits Yêu Mắt', freeship: 'Freeship từ 300K' },
@@ -207,6 +208,7 @@ export const vi: Dictionary = {
     noPower: 'Không độ',
     zeroHint: 'Đang chọn lens không độ. Nếu bạn bị cận, hãy chọn đúng độ của mình.',
     unsureHint: 'Chưa biết độ? Chọn "Không độ" hoặc chat với Vivimoon để được tư vấn.',
+    singleNote: 'Sản phẩm được bán lẻ từng chiếc, bạn vui lòng mua 2 chiếc để thành 1 đôi nhé!',
     pairHint: 'Chọn riêng độ từng mắt. Hai mắt cùng độ: chọn “Giống mắt trái” trong ô Mắt phải.',
     units: { single: '1 chiếc', pair: '1 đôi' },
     left: 'L', right: 'R',
@@ -354,13 +356,17 @@ export const vi: Dictionary = {
     views: 'Kiểu ảnh', tones: 'Xem lens với tone makeup gợi ý',
     toneLabels: { peach: 'Hồng đào', terracotta: 'Cam đất', warmNude: 'Nude ấm', sunlight: 'Dưới nắng', indoor: 'Trong nhà' },
   },
+  quickAdd: {
+    details: 'Xem chi tiết sản phẩm',
+    wearUpTo: 'Đeo tới {n}h', sensitiveOk: 'Hợp mắt nhạy cảm',
+  },
   /** Chính sách đổi trả. `terms` là chuỗi duy nhất nêu thời hạn và dòng lens áp dụng — mọi nơi nhắc tới chính sách đều dùng lại nó. */
   returnPolicy: {
     title: 'Không thích đổi luôn · Không êm hoàn tiền',
     terms: 'Đổi 1–1 miễn phí trong 15 ngày kể từ khi nhận hàng, áp dụng lens khoá ẩm & lens cho mắt thở',
     refund: 'Đeo cộm, ngứa, không êm → hoàn tiền 100%',
     swap: 'Không ưng màu/mẫu → đổi sang mẫu khác',
-    details: 'Xem chi tiết chính sách', howTo: 'Cách gửi yêu cầu đổi trả',
+    details: 'Xem chi tiết chính sách', howTo: 'Cách gửi yêu cầu đổi trả', link: 'Chính sách đổi trả',
   },
   quiz: {
     title: 'Trắc nghiệm chọn lens', next: 'Tiếp theo', back: 'Quay lại', submit: 'Xem kết quả',

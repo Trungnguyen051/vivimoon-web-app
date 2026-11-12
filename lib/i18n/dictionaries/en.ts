@@ -179,6 +179,7 @@ export const en = {
     buyAs: 'Buy as',
     unitOptions: { single: '1 lens (one eye)', pair: '1 pair (both eyes)' },
     perUnit: { single: '/ lens', pair: '/ pair' },
+    replacementOnly: 'Only available as {r}',
     stockLeft: { single: 'lens · {count} left', pair: 'pair · {count} left' },
     sold: '{n} sold', allLenses: 'Lenses', lensesOf: '{r} lenses',
     promos: { firstOrder: '30K off your first order', gift: 'Free Kits Yêu Mắt with any 6-month lens', freeship: 'Free shipping from 300K' },
@@ -204,6 +205,7 @@ export const en = {
     noPower: 'No power',
     zeroHint: "You've picked lenses with no power. If you're short-sighted, choose your own power.",
     unsureHint: 'Not sure of your power? Choose "No power" or chat with Vivimoon for advice.',
+    singleNote: 'Lenses are sold one at a time — buy 2 to make a pair.',
     pairHint: 'Pick a power for each eye. Same power in both? Choose "Same as left eye" in the Right eye box.',
     // The shared line summary (ADR-0023): "1 pair · L −2.50 · R −3.00".
     units: { single: '1 lens', pair: '1 pair' },
@@ -353,13 +355,17 @@ export const en = {
     views: 'Photo views', tones: 'See the lens with suggested makeup tones',
     toneLabels: { peach: 'Peach', terracotta: 'Terracotta', warmNude: 'Warm nude', sunlight: 'In sunlight', indoor: 'Indoors' },
   },
+  quickAdd: {
+    details: 'View product details',
+    wearUpTo: 'Wear up to {n}h', sensitiveOk: 'Suits sensitive eyes',
+  },
   /** The return policy. `terms` is the one string that states the period and the lenses it covers — every surface that mentions the policy reuses it. */
   returnPolicy: {
     title: 'Exchange if you don’t love it · Refund if it isn’t comfortable',
     terms: 'Free 1-for-1 exchange within 15 days of delivery, for moisture-lock and breathable lenses',
     refund: 'Gritty, itchy or uncomfortable → 100% refund',
     swap: 'Not happy with the colour or style → swap for another',
-    details: 'See the full policy', howTo: 'How to request a return',
+    details: 'See the full policy', howTo: 'How to request a return', link: 'Return policy',
   },
   quiz: {
     title: 'Lens-Matching Quiz', next: 'Next', back: 'Back', submit: 'See my results',

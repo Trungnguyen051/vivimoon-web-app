@@ -18,11 +18,16 @@ export function cardImage(product: Product, gallery: LensGalleryContexts | undef
 
 const mm = (spec: string) => spec.replace(/\s*mm$/i, '');
 
+/** The Dòng lens the sidebar filters on ("Khoá ẩm"), if the material maps to one. */
+export function lineLabel(product: Product, dict: Dictionary): string | undefined {
+  const line = MATERIAL_VALUES.find((m) => m.material === product.specs.material);
+  return line ? dict.collection.card.lines[line.id] : undefined;
+}
+
 /** "Khoá ẩm · 1 tháng · DIA 14.2 · GDIA 13.3" — the Dòng lens the sidebar filters on, then replacement, DIA, GDIA. */
 export function specLine(product: Product, dict: Dictionary): string {
-  const line = MATERIAL_VALUES.find((m) => m.material === product.specs.material);
   return [
-    line ? dict.collection.card.lines[line.id] : undefined,
+    lineLabel(product, dict),
     dict.filters.replacements[product.replacement],
     product.specs.diameter ? `DIA ${mm(product.specs.diameter)}` : undefined,
     product.specs.graphicDiameter ? `GDIA ${mm(product.specs.graphicDiameter)}` : undefined,

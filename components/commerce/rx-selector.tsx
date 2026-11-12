@@ -137,6 +137,8 @@ export function RxSelector({
           </div>
         )}
         <p className="text-xs text-muted-foreground/80">{value.unit === 'single' ? dict.rx.unsureHint : dict.rx.pairHint}</p>
+        {/* Only while buying singly — the Figma note; in "1 đôi" it would contradict the choice. */}
+        {value.unit === 'single' ? <p className="text-xs text-muted-foreground">{dict.rx.singleNote}</p> : null}
       </div>
     </div>
   );

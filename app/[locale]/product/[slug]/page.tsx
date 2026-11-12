@@ -11,7 +11,7 @@ import { AddToCart } from '@/components/commerce/add-to-cart';
 import { FavoriteButton } from '@/components/commerce/favorite-button';
 import { CompareToggle } from '@/components/commerce/compare-toggle';
 import { ComfortHighlight } from '@/components/commerce/comfort-highlight';
-import { ProductReassurance } from '@/components/commerce/product-reassurance';
+import { ProductReassurance, RETURNS_FAQ } from '@/components/commerce/product-reassurance';
 import { BeginnerFaq } from '@/components/commerce/beginner-faq';
 import { SpecTable } from '@/components/commerce/spec-table';
 import { ProductVideos } from '@/components/commerce/product-videos';
@@ -26,7 +26,6 @@ import { PageContainer } from '@/components/layout/page-container';
 /** Where the PDP's links lead: articles, guides and FAQ entries in content/mock. */
 const WHY_COMFORTABLE_ARTICLE = 'silicone-hydrogel-vs-lens-thuong';
 const WEAR_GUIDE = 'cach-deo-va-thao-lens';
-const RETURNS_FAQ = 'faq?category=doi-tra-va-bao-hanh';
 
 /**
  * Section order follows the PDP frames (Figma 56:2 desktop, 195:431 mobile): gallery,
