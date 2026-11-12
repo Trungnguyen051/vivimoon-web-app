@@ -6,7 +6,7 @@ import { getDictionary } from '@/lib/i18n/dictionaries';
 import { readSessionUserId } from '@/lib/auth/cookie';
 import { fetchViaSelf } from '@/lib/api/server-fetch';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
-import { ProductGrid } from '@/components/commerce/product-grid';
+import { FavoritesGrid } from './favorites-grid';
 import type { ApiResult } from '@/lib/api/client';
 import type { Product } from '@/lib/api/schemas/catalog';
 
@@ -47,7 +47,7 @@ export default async function FavoritesPage({ params }: { params: Promise<{ loca
             </EmptyHeader>
           </Empty>
         ) : (
-          <ProductGrid products={products} locale={locale} dict={dict} listId="favorites" />
+          <FavoritesGrid initialProducts={products} locale={locale} dict={dict.favorites} />
         )}
 
         <Link href={`/${locale}/account`} className="text-sm text-muted-foreground underline underline-offset-4">
