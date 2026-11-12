@@ -310,3 +310,52 @@ describe('mockPricing.priceCart', () => {
     });
   });
 });
+
+// p-aqua-daily's Bundle (content/mock/products.ts): Nước nhỏ mắt 15ml (3) and
+// Khay đựng + dụng cụ (2) at 52 with the lens as a pair (2 x 25): 55 apart, saving 3.
+describe('mockPricing.priceCart — Bundles', () => {
+  const PAIR = { purchaseUnit: 'pair', rx: { left: { sph: -2 }, right: { sph: -2 } } } as const;
+  const lens = (extra: object = {}) => ({ lineKey: 'lens', variantId: 'p-aqua-daily-30', quantity: 1, ...PAIR, ...extra });
+  const drops = (extra: object = {}) => ({ lineKey: 'drops', variantId: 'a-nuoc-nho-mat-15', quantity: 1, ...extra });
+  const tray = (extra: object = {}) => ({ lineKey: 'tray', variantId: 'a-khay-dung-set', quantity: 1, ...extra });
+  const via = { bundle: 'p-aqua-daily' };
+
+  it('applies the Bundle price when the whole Bundle was added together', async () => {
+    const result = await mockPricing.priceCart(req([lens(via), drops(via), tray(via)]));
+    expect(result.subtotal).toBe(354_000);
+    expect(result.bundleSaving).toBe(24_000);
+    expect(result.bundledSubtotal).toBe(330_000);
+    expect(result.total).toBe(330_000 - result.discount);
+  });
+
+  it('saves the same with a single lens: the combo less one lens', async () => {
+    const result = await mockPricing.priceCart(req([lens({ ...SINGLE, ...via }), drops(via), tray(via)]));
+    expect(result.subtotal).toBe(229_000);
+    expect(result.bundleSaving).toBe(24_000);
+  });
+
+  it('applies nothing to a partial Bundle', async () => {
+    const result = await mockPricing.priceCart(req([lens(via), drops(via)]));
+    expect(result.bundleSaving).toBe(0);
+    expect(result.total).toBe(result.subtotal - result.discount);
+  });
+
+  it('applies nothing to the same items bought separately', async () => {
+    const result = await mockPricing.priceCart(req([lens(), drops(), tray()]));
+    expect(result.bundleSaving).toBe(0);
+  });
+
+  it('saves once per complete set', async () => {
+    const two = { quantity: 2, ...via };
+    expect((await mockPricing.priceCart(req([lens(two), drops(two), tray(two)]))).bundleSaving).toBe(48_000);
+    expect((await mockPricing.priceCart(req([lens(two), drops(via), tray(two)]))).bundleSaving).toBe(24_000);
+  });
+
+  it('ignores a tag naming a lens that has no Bundle', async () => {
+    const result = await mockPricing.priceCart(req([
+      { lineKey: 'l', variantId: 'p-hazel-monthly-brown-30', quantity: 1, ...SINGLE, bundle: 'p-hazel-monthly' },
+      drops({ bundle: 'p-hazel-monthly' }),
+    ]));
+    expect(result.bundleSaving).toBe(0);
+  });
+});

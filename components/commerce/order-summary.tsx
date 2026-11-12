@@ -8,13 +8,15 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Separator } from '@/components/ui/separator';
 
 export function OrderSummary({
-  subtotal, discount, shipping, total, currency, locale, dict, ctaHref, ctaLabel,
+  subtotal, bundleSaving, discount, shipping, total, currency, locale, dict, ctaHref, ctaLabel,
   note, ctaBlockedReason, children,
 }: {
   /** What is being bought, above the totals (checkout's line list). */
   children?: React.ReactNode;
   /** Null until POST /api/cart/price answers. Money is server-owned (spec §7). */
   subtotal: number | null;
+  /** What complete Bundles save, already subtracted server-side. A row renders only when > 0. */
+  bundleSaving?: number | null;
   /** Positive amount already subtracted server-side. A row renders only when > 0. */
   discount?: number | null;
   /** `null`/`undefined` = pending (not yet quoted); `0` = free; `>0` = the server's fee. */
@@ -49,6 +51,12 @@ export function OrderSummary({
           <span className="text-muted-foreground">{dict.cart.subtotal}</span>
           <span className="tabular-nums">{price(subtotal)}</span>
         </div>
+        {bundleSaving ? (
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">{dict.cart.bundleSaving}</span>
+            <span className="tabular-nums">-{formatPrice(bundleSaving, currency, locale)}</span>
+          </div>
+        ) : null}
         {discount != null && discount > 0 ? (
           <div className="flex justify-between">
             <span className="text-muted-foreground">{dict.cart.discount}</span>

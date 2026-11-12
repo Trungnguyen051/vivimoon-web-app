@@ -179,6 +179,10 @@ export const en = {
       title: 'Lenses on real eyes', subtitle: 'Makeup and review videos from customers', more: 'See Vivimoon TV',
       views: '@vivimoon.official · {n} views', play: 'Play video: {title}',
     },
+    bundle: {
+      title: 'Buy together and save', subtitle: 'Shoppers who buy this lens often add',
+      total: 'Bundle total', totalSome: 'Total', add: 'Add the whole bundle to cart', addSome: 'Add to cart',
+    },
   },
   rx: {
     power: 'Power', guide: 'How to choose your power',
@@ -196,7 +200,7 @@ export const en = {
     checkout: 'Checkout', remove: 'Remove',
     accessoryOptions: { volume: 'Volume', type: 'Type' },
     orderSummary: 'Order summary', shipping: 'Shipping', free: 'Free', total: 'Total',
-    discount: 'Discount',
+    discount: 'Discount', bundleSaving: 'Bundle saving',
     unavailable: 'No longer available',
     unavailableNote: 'Unavailable items are not included in the total.',
     unavailableBlocksCheckout: 'Remove unavailable items to continue.',

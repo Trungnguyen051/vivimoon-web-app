@@ -140,4 +140,26 @@ describe('POST /api/cart/price', () => {
       }
     });
   });
+
+  describe('Bundles', () => {
+    // p-aqua-daily's Bundle: the lens as a pair (50), drops (3) and tray (2) at 52.
+    const set = (bundle?: string) => [
+      { lineKey: 'lens', variantId: 'p-aqua-daily-30', quantity: 1, rx: RX, bundle },
+      { lineKey: 'drops', variantId: 'a-nuoc-nho-mat-15', quantity: 1, bundle },
+      { lineKey: 'tray', variantId: 'a-khay-dung-set', quantity: 1, bundle },
+    ];
+
+    it('charges the Bundle price for a complete Bundle and reports the saving', async () => {
+      const { data } = await (await POST(req({ lines: set('p-aqua-daily') }))).json();
+      expect(data.subtotal).toBe(354_000);
+      expect(data.bundleSaving).toBe(24_000);
+      expect(data.total).toBe(330_000 - data.discount);
+    });
+
+    it('charges separate prices for a partial Bundle', async () => {
+      const { data } = await (await POST(req({ lines: set('p-aqua-daily').slice(0, 2) }))).json();
+      expect(data.bundleSaving).toBe(0);
+      expect(data.total).toBe(data.subtotal - data.discount);
+    });
+  });
 });

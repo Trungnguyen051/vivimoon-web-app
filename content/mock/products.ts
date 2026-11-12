@@ -33,6 +33,8 @@ export const products: Product[] = [
     ],
     rating: 4.6,
     reviewCount: 2,
+    // Pair 50 + drops 3 + tray 2 = 55 apart.
+    bundle: { accessoryIds: ['a-nuoc-nho-mat', 'a-khay-dung'], price: 330_000 }, // PROVISIONAL: 354.000₫ apart
     subtitle: 'Lens trong suốt 1 ngày · Silicone Hydrogel ngậm nước 55%',
     soldCount: 3200,
     comfort: { wearHours: 12, sensitiveEyes: true },
@@ -348,6 +350,8 @@ export const products: Product[] = [
     ],
     rating: 4.5,
     reviewCount: 0,
+    // Pair 36 + drops 3 + tray 2 = 41 apart.
+    bundle: { accessoryIds: ['a-nuoc-nho-mat', 'a-khay-dung'], price: 260_000 }, // PROVISIONAL: 284.000₫ apart
     subtitle: 'Lens vân nhũ 1 ngày · Tím khói ánh nhũ',
     soldCount: 1500,
     comfort: { wearHours: 8, sensitiveEyes: false },
