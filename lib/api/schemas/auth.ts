@@ -52,21 +52,12 @@ export const userSchema = z.object({
  */
 const passwordSchema = z.string().min(8, 'Use at least 8 characters');
 
-export const registerSchema = z
-  .object({
-    identifier: identifierSchema,
-    name: z.string().trim().min(1, 'Enter your name'),
-    password: passwordSchema.optional(),
-    confirmPassword: z.string().optional(),
-  })
-  .superRefine((v, ctx) => {
-    if (v.password === undefined) return;
-    if (v.confirmPassword === undefined) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['confirmPassword'], message: 'Confirm your password' });
-    } else if (v.confirmPassword !== v.password) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ['confirmPassword'], message: 'Passwords do not match' });
-    }
-  });
+/** Phone sign-up only (ADR-0021): no email, and the password is required. */
+export const registerSchema = z.object({
+  name: z.string().trim().min(1, 'Enter your name'),
+  phone: z.string().trim().regex(VN_PHONE, 'Enter a valid phone number'),
+  password: passwordSchema,
+});
 
 export const loginSchema = z.object({
   identifier: identifierSchema,

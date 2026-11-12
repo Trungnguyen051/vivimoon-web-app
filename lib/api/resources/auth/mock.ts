@@ -1,5 +1,5 @@
 import { users as seedUsers, type MockUser } from '@/content/mock';
-import { isPhone, normalizePhone, type LoginInput, type OtpChallenge, type OtpPurpose, type OtpRequestInput, type OtpVerifyInput, type OtpVerifyResult, type PasswordResetInput, type RegisterInput, type User } from '@/lib/api/schemas/auth';
+import { normalizePhone, type LoginInput, type OtpChallenge, type OtpPurpose, type OtpRequestInput, type OtpVerifyInput, type OtpVerifyResult, type PasswordResetInput, type RegisterInput, type User } from '@/lib/api/schemas/auth';
 
 /** Thrown by the mock so route handlers can map to an error code. */
 export class AuthError extends Error {
@@ -16,12 +16,15 @@ interface ResetRecord { userId: string; expiresAt: number }
 let store: MockUser[] = seedUsers.map((u) => ({ ...u }));
 const otps = new Map<string, OtpRecord>();
 const resets = new Map<string, ResetRecord>();
+/** Registrations awaiting their OTP, by normalized phone. Not accounts until verified (ADR-0021). */
+const pendingSignups = new Map<string, RegisterInput>();
 
 /** Test helper — restores the fixture state between cases. */
 export function resetMockAuthState(): void {
   store = seedUsers.map((u) => ({ ...u }));
   otps.clear();
   resets.clear();
+  pendingSignups.clear();
 }
 
 const OTP_TTL_MS = 5 * 60 * 1000;
@@ -48,21 +51,13 @@ function randomCode(): string {
 }
 
 export const mockAuth = {
-  async register(input: RegisterInput): Promise<User> {
-    if (findByIdentifier(input.identifier)) {
+  /** Holds the registration and issues a `signup` challenge; the account exists only once it is verified. */
+  async register(input: RegisterInput): Promise<OtpChallenge> {
+    if (findByIdentifier(input.phone)) {
       throw new AuthError('That phone or email is already registered', 'conflict');
     }
-    const phoneLike = isPhone(input.identifier);
-    const user: MockUser = {
-      id: randomId('u'),
-      phone: phoneLike ? normalizePhone(input.identifier) : '',
-      email: phoneLike ? undefined : input.identifier,
-      name: input.name,
-      createdAt: new Date().toISOString(),
-      password: input.password,
-    };
-    store.push(user);
-    return publicUser(user);
+    pendingSignups.set(normalizePhone(input.phone), input);
+    return this.requestOtp({ identifier: input.phone, purpose: 'signup' });
   },
 
   async login({ identifier, password }: LoginInput): Promise<User> {
@@ -121,6 +116,17 @@ export const mockAuth = {
       throw new AuthError('That code is invalid or has expired', 'unauthorized');
     }
     otps.delete(otpId); // single use — no replay
+
+    const pending = record.purpose === 'signup' ? pendingSignups.get(normalizePhone(record.identifier)) : undefined;
+    if (pending) {
+      pendingSignups.delete(normalizePhone(record.identifier));
+      const created: MockUser = {
+        id: randomId('u'), phone: normalizePhone(pending.phone), name: pending.name,
+        createdAt: new Date().toISOString(), password: pending.password,
+      };
+      store.push(created);
+      return { kind: 'session', user: publicUser(created) };
+    }
 
     const user = findByIdentifier(record.identifier);
     if (!user) throw new AuthError('That code is invalid or has expired', 'unauthorized');

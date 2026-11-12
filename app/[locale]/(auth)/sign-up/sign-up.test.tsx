@@ -1,13 +1,18 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { SignUpForm } from './sign-up-form';
 
 const push = vi.fn();
-vi.mock('next/navigation', () => ({ useRouter: () => ({ push, refresh: vi.fn() }) }));
+let search = '';
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push, refresh: vi.fn() }),
+  useSearchParams: () => new URLSearchParams(search),
+}));
 
 const dict = getDictionary('en').auth;
+const user = { id: 'u1', name: 'Mai', phone: '0912345678' };
 
 function ok(data: unknown) {
   return new Response(JSON.stringify({ ok: true, data }), {
@@ -20,131 +25,129 @@ function fail(code: string, message: string, status: number) {
   });
 }
 
-async function fillBaseForm(password = 'vivimoon123', confirmPassword = password) {
+async function submitForm() {
   await userEvent.type(screen.getByLabelText('Full name'), 'Mai');
-  await userEvent.type(screen.getByLabelText('Phone or email'), '0912345678');
-  await userEvent.type(screen.getByLabelText('Password'), password);
-  await userEvent.type(screen.getByLabelText('Confirm password'), confirmPassword);
+  await userEvent.type(screen.getByLabelText('Phone'), '0912345678');
+  await userEvent.type(screen.getByLabelText('Password'), 'vivimoon123');
+  await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
 }
 
-beforeEach(() => { push.mockReset(); });
-afterEach(() => { vi.unstubAllGlobals(); });
+function typeCode(code: string) {
+  [...code].forEach((c, i) => {
+    fireEvent.change(screen.getByLabelText(`Digit ${i + 1}`), { target: { value: c } });
+  });
+}
+
+beforeEach(() => { push.mockReset(); search = ''; });
+afterEach(() => { vi.unstubAllGlobals(); vi.useRealTimers(); });
 
 describe('SignUpForm', () => {
-  it('shows a mismatch error and never calls the API when passwords differ', async () => {
-    vi.stubGlobal('fetch', vi.fn());
+  it('has exactly name, phone, password, submit, sign-in link, Google and Apple', () => {
     render(<SignUpForm locale="en" dict={dict} />);
-    await fillBaseForm('vivimoon123', 'somethingelse');
-    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
-    expect(await screen.findByText(dict.errors.confirmPassword)).toBeInTheDocument();
-    expect(global.fetch).not.toHaveBeenCalled();
+    expect(screen.getAllByRole('textbox')).toHaveLength(2);
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
+    expect(screen.queryByLabelText(/confirm/i)).toBeNull();
+    expect(screen.getByRole('link', { name: 'Sign in now' })).toHaveAttribute('href', '/en/sign-in');
+    expect(screen.getAllByRole('button').map((b) => b.getAttribute('aria-label') ?? b.textContent)).toEqual([
+      'Create account', dict.continueWithGoogle, dict.continueWithApple,
+    ]);
   });
 
-  it('registers, then completing sign-up without OTP still lands on account', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(
-      ok({ user: { id: 'u1', name: 'Mai', phone: '0912345678' } }),
-    ));
-    render(<SignUpForm locale="en" dict={dict} />);
-    await fillBaseForm();
-    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
-
-    expect(await screen.findByText(dict.verifyPrompt)).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Skip for now' }));
-    await waitFor(() => expect(push).toHaveBeenCalledWith('/en/account'));
-  });
-
-  it('registers, then completing OTP verification also lands on account', async () => {
-    const fetchMock = vi.fn()
-      .mockResolvedValueOnce(ok({ user: { id: 'u1', name: 'Mai', phone: '0912345678' } }))
-      .mockResolvedValueOnce(ok({ otpId: 'o1', expiresAt: 'x', devCode: '123456' }))
-      .mockResolvedValueOnce(ok({ kind: 'session', user: { id: 'u1', name: 'Mai', phone: '0912345678' } }));
+  it('registers, shows the OTP stage with the dev code, and starts no session or navigation', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(ok({ otpId: 'o1', expiresAt: 'x', devCode: '123456' }));
     vi.stubGlobal('fetch', fetchMock);
-
     render(<SignUpForm locale="en" dict={dict} />);
-    await fillBaseForm();
-    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
+    await submitForm();
 
-    await userEvent.click(await screen.findByRole('button', { name: 'Verify now' }));
-    const code = await screen.findByLabelText('Verification code');
-    await userEvent.type(code, '123456');
-    await userEvent.click(screen.getByRole('button', { name: 'Verify' }));
-
-    await waitFor(() => expect(push).toHaveBeenCalledWith('/en/account'));
+    expect(await screen.findByRole('heading', { name: 'OTP verification' })).toBeInTheDocument();
+    expect(screen.getByText(/0912345678/)).toBeInTheDocument();
+    expect(screen.getByText(/your code is 123456/)).toBeInTheDocument();
+    expect(screen.getByText('Expires in 60s')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /skip/i })).toBeNull();
     expect(fetchMock.mock.calls[0][0]).toBe('/api/auth/register');
-    expect(fetchMock.mock.calls[1][0]).toBe('/api/auth/otp/request');
-    expect(fetchMock.mock.calls[2][0]).toBe('/api/auth/otp/verify');
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ name: 'Mai', phone: '0912345678', password: 'vivimoon123' });
+    expect(push).not.toHaveBeenCalled();
   });
 
-  it('stays on the code stage and never navigates when the OTP is rejected', async () => {
+  it('verifies the typed code and lands on account', async () => {
     const fetchMock = vi.fn()
-      .mockResolvedValueOnce(ok({ user: { id: 'u1', name: 'Mai', phone: '0912345678' } }))
       .mockResolvedValueOnce(ok({ otpId: 'o1', expiresAt: 'x' }))
-      .mockResolvedValueOnce(fail('unauthorized', 'That code is invalid or has expired', 401));
+      .mockResolvedValueOnce(ok({ kind: 'session', user }));
     vi.stubGlobal('fetch', fetchMock);
-
     render(<SignUpForm locale="en" dict={dict} />);
-    await fillBaseForm();
-    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
-    await userEvent.click(await screen.findByRole('button', { name: 'Verify now' }));
-    await userEvent.type(await screen.findByLabelText('Verification code'), '000000');
-    await userEvent.click(screen.getByRole('button', { name: 'Verify' }));
+    await submitForm();
+    await screen.findByText('Expires in 60s');
+    typeCode('123456');
+    await userEvent.click(screen.getByRole('button', { name: 'Continue' }));
 
+    await waitFor(() => expect(push).toHaveBeenCalledWith('/en/account'));
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ otpId: 'o1', code: '123456' });
+  });
+
+  it('respects ?next after verifying', async () => {
+    search = 'next=/en/checkout';
+    vi.stubGlobal('fetch', vi.fn()
+      .mockResolvedValueOnce(ok({ otpId: 'o1', expiresAt: 'x' }))
+      .mockResolvedValueOnce(ok({ kind: 'session', user })));
+    render(<SignUpForm locale="en" dict={dict} />);
+    await submitForm();
+    await screen.findByText('Expires in 60s');
+    typeCode('123456');
+    await userEvent.click(screen.getByRole('button', { name: 'Continue' }));
+    await waitFor(() => expect(push).toHaveBeenCalledWith('/en/checkout'));
+  });
+
+  it('accepts a pasted code across the boxes', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValueOnce(ok({ otpId: 'o1', expiresAt: 'x' })));
+    render(<SignUpForm locale="en" dict={dict} />);
+    await submitForm();
+    await screen.findByText('Expires in 60s');
+    fireEvent.paste(screen.getByLabelText('Digit 1'), { clipboardData: { getData: () => '654321' } });
+    expect([1, 2, 3, 4, 5, 6].map((n) => (screen.getByLabelText(`Digit ${n}`) as HTMLInputElement).value).join('')).toBe('654321');
+  });
+
+  it('auto-advances on a digit and steps back on Backspace from an empty box', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValueOnce(ok({ otpId: 'o1', expiresAt: 'x' })));
+    render(<SignUpForm locale="en" dict={dict} />);
+    await submitForm();
+    await screen.findByText('Expires in 60s');
+    fireEvent.change(screen.getByLabelText('Digit 1'), { target: { value: '7' } });
+    expect(screen.getByLabelText('Digit 2')).toHaveFocus();
+    fireEvent.keyDown(screen.getByLabelText('Digit 2'), { key: 'Backspace' });
+    expect(screen.getByLabelText('Digit 1')).toHaveFocus();
+  });
+
+  it('stays on the OTP stage when the code is rejected', async () => {
+    vi.stubGlobal('fetch', vi.fn()
+      .mockResolvedValueOnce(ok({ otpId: 'o1', expiresAt: 'x' }))
+      .mockResolvedValueOnce(fail('unauthorized', 'That code is invalid or has expired', 401)));
+    render(<SignUpForm locale="en" dict={dict} />);
+    await submitForm();
+    await screen.findByText('Expires in 60s');
+    typeCode('000000');
+    await userEvent.click(screen.getByRole('button', { name: 'Continue' }));
     expect(await screen.findByText('That code is invalid or has expired')).toBeInTheDocument();
     expect(push).not.toHaveBeenCalled();
   });
 
-  it('a rapid double-click on Verify now fires only one otp/request', async () => {
+  it('turns the countdown into Resend, which requests a new signup challenge', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
     const fetchMock = vi.fn()
-      .mockResolvedValueOnce(ok({ user: { id: 'u1', name: 'Mai', phone: '0912345678' } }))
-      .mockResolvedValue(ok({ otpId: 'o1', expiresAt: 'x', devCode: '123456' }));
+      .mockResolvedValueOnce(ok({ otpId: 'o1', expiresAt: 'x' }))
+      .mockResolvedValueOnce(ok({ otpId: 'o2', expiresAt: 'y', devCode: '999999' }));
     vi.stubGlobal('fetch', fetchMock);
     render(<SignUpForm locale="en" dict={dict} />);
-    await fillBaseForm();
-    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
+    await submitForm();
+    await screen.findByText('Expires in 60s');
+    expect(screen.queryByRole('button', { name: 'Resend code' })).toBeNull();
 
-    const verifyNowButton = await screen.findByRole('button', { name: 'Verify now' });
-    // Two clicks in the same synchronous tick (fireEvent, not userEvent) —
-    // the ref guard, not just the `busy` state, must catch the second one
-    // before any re-render commits the disabled attribute.
-    fireEvent.click(verifyNowButton);
-    fireEvent.click(verifyNowButton);
+    await act(async () => { await vi.advanceTimersByTimeAsync(60_000); });
+    fireEvent.click(await screen.findByRole('button', { name: 'Resend code' }));
 
-    await screen.findByLabelText('Verification code');
-    expect(fetchMock).toHaveBeenCalledTimes(2); // register + a single otp/request
-  });
-
-  it('a rapid double-click on Verify fires only one otp/verify request', async () => {
-    const fetchMock = vi.fn()
-      .mockResolvedValueOnce(ok({ user: { id: 'u1', name: 'Mai', phone: '0912345678' } }))
-      .mockResolvedValueOnce(ok({ otpId: 'o1', expiresAt: 'x', devCode: '123456' }))
-      .mockResolvedValue(ok({ kind: 'session', user: { id: 'u1', name: 'Mai', phone: '0912345678' } }));
-    vi.stubGlobal('fetch', fetchMock);
-    render(<SignUpForm locale="en" dict={dict} />);
-    await fillBaseForm();
-    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
-    await userEvent.click(await screen.findByRole('button', { name: 'Verify now' }));
-    await userEvent.type(await screen.findByLabelText('Verification code'), '123456');
-
-    const verifyButton = screen.getByRole('button', { name: 'Verify' });
-    fireEvent.click(verifyButton);
-    fireEvent.click(verifyButton);
-
-    await waitFor(() => expect(push).toHaveBeenCalledWith('/en/account'));
-    expect(fetchMock).toHaveBeenCalledTimes(3); // register + otp/request + a single otp/verify
-  });
-
-  it('shows an error and stays on the prompt when otp/request fails, without navigating away', async () => {
-    vi.stubGlobal('fetch', vi.fn()
-      .mockResolvedValueOnce(ok({ user: { id: 'u1', name: 'Mai', phone: '0912345678' } }))
-      .mockResolvedValueOnce(fail('internal', 'Something went wrong. Please try again.', 500)));
-    render(<SignUpForm locale="en" dict={dict} />);
-    await fillBaseForm();
-    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
-    await userEvent.click(await screen.findByRole('button', { name: 'Verify now' }));
-
-    expect(await screen.findByText('Something went wrong. Please try again.')).toBeInTheDocument();
-    expect(push).not.toHaveBeenCalled();
-    expect(screen.getByRole('button', { name: 'Verify now' })).toBeInTheDocument();
+    expect(await screen.findByText(/999999/)).toBeInTheDocument();
+    expect(fetchMock.mock.calls[1][0]).toBe('/api/auth/otp/request');
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toEqual({ identifier: '0912345678', purpose: 'signup' });
+    expect(screen.getByText('Expires in 60s')).toBeInTheDocument();
   });
 
   it('surfaces a server error on registration without leaving the form', async () => {
@@ -152,9 +155,19 @@ describe('SignUpForm', () => {
       fail('conflict', 'That phone or email is already registered', 409),
     ));
     render(<SignUpForm locale="en" dict={dict} />);
-    await fillBaseForm();
-    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
+    await submitForm();
     expect(await screen.findByText('That phone or email is already registered')).toBeInTheDocument();
-    expect(push).not.toHaveBeenCalled();
+    expect(screen.queryByRole('heading', { name: 'OTP verification' })).toBeNull();
+  });
+
+  it('shows a phone error and never calls the API for an invalid phone', async () => {
+    vi.stubGlobal('fetch', vi.fn());
+    render(<SignUpForm locale="en" dict={dict} />);
+    await userEvent.type(screen.getByLabelText('Full name'), 'Mai');
+    await userEvent.type(screen.getByLabelText('Phone'), '123');
+    await userEvent.type(screen.getByLabelText('Password'), 'vivimoon123');
+    await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
+    expect(await screen.findByText(dict.errors.phone)).toBeInTheDocument();
+    expect(global.fetch).not.toHaveBeenCalled();
   });
 });

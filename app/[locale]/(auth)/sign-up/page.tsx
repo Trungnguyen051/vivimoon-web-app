@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { isLocale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
@@ -8,10 +9,10 @@ export default async function SignUpPage({ params }: { params: Promise<{ locale:
   if (!isLocale(locale)) notFound();
   const dict = getDictionary(locale);
 
+  // useSearchParams() in SignUpForm needs a Suspense boundary for static prerendering.
   return (
-    <div className="flex flex-col gap-8">
-      <h1 className="text-3xl font-semibold uppercase tracking-tight">{dict.auth.signUpTitle}</h1>
+    <Suspense>
       <SignUpForm locale={locale} dict={dict.auth} />
-    </div>
+    </Suspense>
   );
 }
