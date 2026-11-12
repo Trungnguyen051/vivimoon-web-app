@@ -182,6 +182,12 @@ describe('mockPricing.priceCart', () => {
       ).rejects.toMatchObject({ name: 'PricingError', code: 'validation_failed' });
     });
 
+    it('rejects a gift-only accessory as a paid line', async () => {
+      await expect(
+        mockPricing.priceCart(req([{ lineKey: 'g1', variantId: 'a-kits-yeu-mat-1', quantity: 1 }])),
+      ).rejects.toMatchObject({ name: 'PricingError', code: 'validation_failed' });
+    });
+
     it('rejects an accessory line that carries a Purchase Unit', async () => {
       await expect(
         mockPricing.priceCart(req([{ lineKey: 'a1', variantId: 'a-nuoc-ngam-120', quantity: 1, purchaseUnit: 'pair' }])),

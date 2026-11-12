@@ -117,6 +117,7 @@ export function CartView({ locale, dict, accessories = [] }: { locale: Locale; d
                   onQty={(key, q) => (q < 1 ? handleRemove(key) : updateQty(key, q))}
                   onRemove={handleRemove}
                   accessory={accessories.find((a) => a.id === l.productId)}
+                  // unitPrice is a display snapshot only; pricing re-reads the variant (ADR-0003).
                   onVariant={(key, v) => edit(key, { ...l, variantId: v.id, sku: v.sku, variantLabel: v.label, unitPrice: v.price })} />
               );
             })}

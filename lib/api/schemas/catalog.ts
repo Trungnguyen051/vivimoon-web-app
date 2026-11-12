@@ -332,8 +332,6 @@ export type ReviewSource = z.infer<typeof reviewSourceSchema>;
 export type ProductSpecs = z.infer<typeof productSpecsSchema>;
 export type Variant = z.infer<typeof variantSchema>;
 export type Product = z.infer<typeof productSchema>;
-export type ProductKind = z.infer<typeof productKindSchema>;
-export type AccessoryOption = z.infer<typeof accessoryOptionSchema>;
 export type Accessory = z.infer<typeof accessorySchema>;
 /** Anything the catalogue can price: a lens or an accessory. */
 export type CatalogItem = Product | Accessory;

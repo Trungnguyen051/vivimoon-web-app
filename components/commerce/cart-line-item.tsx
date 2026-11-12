@@ -38,7 +38,7 @@ export function CartLineItem({
           <div>
             <p className="font-medium leading-snug">{line.name}</p>
             {accessory ? (
-              <AccessoryOption line={line} accessory={accessory} dict={dict} disabled={unavailable} onVariant={onVariant} />
+              <AccessoryOptionPicker line={line} accessory={accessory} dict={dict} disabled={unavailable} onVariant={onVariant} />
             ) : (
               <p className="mt-1 text-sm text-muted-foreground">{line.color || line.sku}</p>
             )}
@@ -76,7 +76,7 @@ export function CartLineItem({
 }
 
 /** "Dung tích 120ml": a picker when the accessory has more than one variant, plain text otherwise. */
-function AccessoryOption({ line, accessory, dict, disabled, onVariant }: {
+function AccessoryOptionPicker({ line, accessory, dict, disabled, onVariant }: {
   line: CartLine; accessory: Accessory; dict: Dictionary; disabled: boolean;
   onVariant?: (lineKey: string, variant: Variant) => void;
 }) {
