@@ -68,6 +68,25 @@ describe('CartPage', () => {
     expect(screen.getByText('4.995.000₫')).toBeInTheDocument();
   });
 
+  it('formats in the server’s currency, not a stale one saved on the line (#210)', async () => {
+    // A cart persisted before the catalogue moved to VND still says USD on its lines.
+    const stale = makeLine({ unitPrice: 25, currency: 'USD' });
+    mockedApiRequest.mockResolvedValue({
+      ok: true,
+      data: {
+        lines: [{ lineKey: 'k1', variantId: 'v1', quantity: 1, unitPrice: 125_000, lineTotal: 125_000, currency: 'VND' }],
+        unavailableLines: [],
+        subtotal: 125_000, discount: 0, appliedVouchers: [], shipping: 0, total: 125_000, currency: 'VND',
+      } satisfies PricedCart,
+    });
+    useCartStore.setState({ lines: [stale], hydrated: true });
+
+    await renderCartPage();
+
+    await waitFor(() => expect(screen.getAllByText('125.000₫').length).toBeGreaterThan(0), { timeout: 2000 });
+    expect(screen.queryByText(/US\$|\$/)).toBeNull();
+  });
+
   // ADR-0012 / issue #29. A cart persisted in localStorage outlives a
   // catalogue change, so one stale line used to blank out every total and
   // leave the shopper stuck with no explanation.

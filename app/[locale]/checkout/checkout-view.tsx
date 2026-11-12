@@ -47,7 +47,6 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
   // resolving) would otherwise abort and needlessly re-debounce the
   // in-flight price request.
   const lines = useMemo(() => (isBuyNow ? [buyNowLine] : cartLines), [isBuyNow, buyNowLine, cartLines]);
-  const currency = lines[0]?.currency ?? 'VND';
   const [submitError, setSubmitError] = useState<string | null>(null);
   // Defaults to the first configured method, same posture as VariantSelector
   // pre-selecting a pack — Task 10 (order placement) reads this on submit.
@@ -130,6 +129,8 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
     ? { province: watchedProvince, district: watchedDistrict }
     : null;
   const { result: priced, isPending: pricePending, isError: priceFailed } = usePricedCart(lines, hydrated || isBuyNow, sessionStatus, shippingAddress);
+  // The server's currency, not the line snapshot: a cart saved before a catalogue currency change still says the old one.
+  const currency = priced?.currency ?? lines[0]?.currency ?? 'VND';
   // The delivery promise is withheld while a re-quote is in flight or failed — the hook keeps the last
   // good result for the summary, but an old option must not read as current.
   // shortcut: the hook's 300ms debounce isn't reported as pending, so an address edit can show the
