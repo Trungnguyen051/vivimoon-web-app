@@ -185,7 +185,7 @@ export const vi: Dictionary = {
     },
     bundle: {
       title: 'Mua kèm tiết kiệm hơn', subtitle: 'Người mua lens này thường mua thêm',
-      total: 'Tổng combo', add: 'Thêm cả combo vào giỏ', addSome: 'Thêm vào giỏ',
+      total: 'Tổng combo', totalSome: 'Tổng', add: 'Thêm cả combo vào giỏ', addSome: 'Thêm vào giỏ',
     },
   },
   rx: {

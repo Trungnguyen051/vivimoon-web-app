@@ -181,7 +181,7 @@ export const en = {
     },
     bundle: {
       title: 'Buy together and save', subtitle: 'Shoppers who buy this lens often add',
-      total: 'Bundle total', add: 'Add the whole bundle to cart', addSome: 'Add to cart',
+      total: 'Bundle total', totalSome: 'Total', add: 'Add the whole bundle to cart', addSome: 'Add to cart',
     },
   },
   rx: {
