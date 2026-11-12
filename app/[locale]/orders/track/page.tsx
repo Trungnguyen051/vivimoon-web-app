@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Search, X } from 'lucide-react';
@@ -8,6 +9,10 @@ import type { ApiResult } from '@/lib/api/client';
 import { normalizeOrderCode, type Order } from '@/lib/api/schemas/orders';
 import { OrderDetailView } from '@/components/commerce/order-detail-view';
 import { OrderLookupForm } from '@/components/commerce/order-lookup-form';
+
+// The Order Code is the credential (ADR-0022) and sits in this page's URL —
+// keep it out of the Referer header of anything the page links to or loads.
+export const metadata: Metadata = { referrer: 'no-referrer' };
 
 /**
  * Through the same-origin route rather than the orders resource directly: an

@@ -10,4 +10,4 @@ So anyone holding an order code can read that order. What keeps this tolerable i
 
 ## Consequences
 
-The emailed tracking link, its token route and its token page are removed; checkout still collects an email (order confirmation needs it). A not-found answer now distinguishes "no such code" from "found", which is accepted. Rate limiting the lookup is the first mitigation to add once anything is upstream.
+The emailed tracking link, its token route and its token page are removed; checkout still collects an email (order confirmation needs it). A not-found answer now distinguishes "no such code" from "found", which is accepted. The result lives at `?code=` (shareable, refreshable), so the code also lands in browser history and server logs — accepted; the page sets `referrer: no-referrer` so it never leaks through a Referer header. Rate limiting the lookup is the first mitigation to add once anything is upstream.
