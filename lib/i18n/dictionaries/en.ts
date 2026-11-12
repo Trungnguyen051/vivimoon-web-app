@@ -164,7 +164,8 @@ export const en = {
   checkout: {
     shipping: {
       title: 'Delivery', pending: 'Enter your address to see the delivery option.',
-      days: '{n} days', arrivesBy: 'Estimated arrival {date}', free: 'Free',
+      day: '{n} day', days: '{n} days', arrivesBy: 'Estimated arrival {date}', free: 'Free',
+      failed: 'We could not quote delivery just now. It will be priced when you place the order.',
     },
     title: 'Checkout', recipient: 'Recipient name', email: 'Email', line1: 'Address',
     ward: 'Ward', district: 'District', province: 'Province',

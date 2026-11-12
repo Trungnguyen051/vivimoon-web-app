@@ -1,48 +1,58 @@
+import { useId, useState } from 'react';
 import { Truck } from 'lucide-react';
-import { formatPrice, toIntlLocale } from '@/lib/utils/format';
+import { formatPrice } from '@/lib/utils/format';
 import type { Currency } from '@/lib/api/schemas/catalog';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 
+/** A shipping option id in the shopper's language; an id the dictionary doesn't know shows as-is. */
+export function shippingMethodName(id: string, dict: Dictionary): string {
+  const names: Record<string, string> = dict.orderDetail.shippingMethods;
+  return Object.hasOwn(names, id) ? names[id] : id;
+}
+
+// Arrival is the shop's calendar (Vietnam), written dd/mm in both locales as on the wireframe.
+const ARRIVAL_FORMAT = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: '2-digit', timeZone: 'Asia/Ho_Chi_Minh' });
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+export type ShippingQuote = { method: string; etaDays: number; fee: number };
+
 /**
  * Checkout's "Vận chuyển" block: the option pricing will charge, shown, never
- * chosen — shipping auto-selects the cheapest quote (#21). `method` is absent
- * until the address can be quoted.
+ * chosen — shipping auto-selects the cheapest quote (#21). `quote` is null
+ * until the address can be quoted, and while a re-quote is in flight or failed,
+ * so an old option is never presented as the current one.
  */
-export function ShippingBlock({ method, etaDays, fee, currency, locale, dict }: {
-  method: string | undefined; etaDays: number | undefined; fee: number | null;
-  currency: Currency; locale: Locale; dict: Dictionary;
+export function ShippingBlock({ quote, failed, currency, locale, dict }: {
+  quote: ShippingQuote | null; failed: boolean; currency: Currency; locale: Locale; dict: Dictionary;
 }) {
   const t = dict.checkout.shipping;
-  const names: Record<string, string> = dict.orderDetail.shippingMethods;
-  const quoted = method !== undefined && etaDays !== undefined && fee !== null;
+  const headingId = useId();
+  // Read once per mount: render must stay pure, and checkout is a short visit.
+  const [now] = useState(() => Date.now());
 
   return (
-    <section aria-labelledby="checkout-shipping" className="flex flex-col gap-4">
-      <h2 id="checkout-shipping" className="font-heading text-2xl">{t.title}</h2>
-      {quoted ? (
+    <section aria-labelledby={headingId} className="flex flex-col gap-4">
+      <h2 id={headingId} className="font-heading text-2xl">{t.title}</h2>
+      {quote ? (
         <div className="flex items-center gap-4 border border-foreground p-5">
           <span aria-hidden className="flex size-5 shrink-0 items-center justify-center rounded-full border border-foreground">
             <span className="size-2.5 rounded-full bg-foreground" />
           </span>
           <Truck aria-hidden className="size-6 shrink-0" />
           <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-            <p className="font-medium">{names[method] ?? method} · {t.days.replace('{n}', String(etaDays))}</p>
-            <p className="text-sm text-muted-foreground">{t.arrivesBy.replace('{date}', arrival(etaDays, locale))}</p>
+            <p className="font-medium">
+              {shippingMethodName(quote.method, dict)} · {(quote.etaDays === 1 ? t.day : t.days).replace('{n}', String(quote.etaDays))}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {t.arrivesBy.replace('{date}', ARRIVAL_FORMAT.format(new Date(now + quote.etaDays * DAY_MS)))}
+            </p>
           </div>
-          <p className="font-semibold">{fee === 0 ? t.free : formatPrice(fee, currency, locale)}</p>
+          <p className="font-semibold">{quote.fee === 0 ? t.free : formatPrice(quote.fee, currency, locale)}</p>
         </div>
       ) : (
-        <p className="border border-dashed p-5 text-sm text-muted-foreground">{t.pending}</p>
+        <p className="border border-dashed p-5 text-sm text-muted-foreground">{failed ? t.failed : t.pending}</p>
       )}
     </section>
   );
-}
-
-function arrival(etaDays: number, locale: Locale): string {
-  const date = new Date();
-  date.setDate(date.getDate() + etaDays);
-  // vi-VN's day+month format is "02-10"; Vietnamese shoppers (and the wireframe) write "02/10".
-  if (locale === 'vi') return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}`;
-  return new Intl.DateTimeFormat(toIntlLocale(locale), { day: '2-digit', month: '2-digit' }).format(date);
 }

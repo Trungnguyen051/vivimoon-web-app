@@ -168,7 +168,8 @@ export const vi: Dictionary = {
   checkout: {
     shipping: {
       title: 'Vận chuyển', pending: 'Nhập địa chỉ để xem phương thức vận chuyển.',
-      days: '{n} ngày', arrivesBy: 'Dự kiến nhận {date}', free: 'Miễn phí',
+      day: '{n} ngày', days: '{n} ngày', arrivesBy: 'Dự kiến nhận {date}', free: 'Miễn phí',
+      failed: 'Chưa tính được phí vận chuyển lúc này. Phí sẽ được tính khi bạn đặt hàng.',
     },
     title: 'Thanh toán', recipient: 'Tên người nhận', email: 'Email', line1: 'Địa chỉ',
     ward: 'Phường/Xã', district: 'Quận/Huyện', province: 'Tỉnh/Thành phố',

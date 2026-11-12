@@ -396,15 +396,15 @@
     "semantic_hash": "e337dcc7b7b3cc468e1af0f5c17aca4f"
   },
   "lib/i18n/dictionaries/en.ts": {
-    "mtime": 1794480375.685687,
-    "seen": 1794480489.052212,
-    "ast_hash": "930ad5f2cdbf44a9e9bbb1c15f225186",
+    "mtime": 1794480583.1812005,
+    "seen": 1794480663.1477702,
+    "ast_hash": "c3ff9512bde1734d6f9f48bf6fcd23a1",
     "semantic_hash": ""
   },
   "lib/i18n/dictionaries/vi.ts": {
-    "mtime": 1794480375.6862092,
-    "seen": 1794480489.052213,
-    "ast_hash": "6507bf6bcda2a3c1df4882c51ced2f8e",
+    "mtime": 1794480583.1826775,
+    "seen": 1794480663.147771,
+    "ast_hash": "195e816ed59bcc45120dd9d62614aad7",
     "semantic_hash": ""
   },
   "lib/types/collection.ts": {
@@ -1602,9 +1602,9 @@
     "semantic_hash": ""
   },
   "components/commerce/order-detail-view.tsx": {
-    "mtime": 1794479963.4283555,
-    "seen": 1794480489.052018,
-    "ast_hash": "44ddf62e5c277ce60c7a95eec50fe8d1",
+    "mtime": 1794480583.1800168,
+    "seen": 1794480663.147582,
+    "ast_hash": "f697ea32e1178c8bace409e9e7b0999c",
     "semantic_hash": ""
   },
   "components/commerce/order-status-timeline.tsx": {
@@ -2838,9 +2838,9 @@
     "semantic_hash": ""
   },
   "app/[locale]/checkout/checkout-view.tsx": {
-    "mtime": 1794480381.8159502,
-    "seen": 1794480489.051899,
-    "ast_hash": "a861571501b2228600e0c9804e46ff2d",
+    "mtime": 1794480583.1795487,
+    "seen": 1794480663.147464,
+    "ast_hash": "97541a11e933030efbe74761ab1a182c",
     "semantic_hash": ""
   },
   "app/[locale]/checkout/success/success-view.tsx": {
@@ -3030,15 +3030,15 @@
     "semantic_hash": ""
   },
   "components/commerce/shipping-block.test.tsx": {
-    "mtime": 1794480358.9820023,
-    "seen": 1794480489.052045,
-    "ast_hash": "135172f15445d7d55b50e6c4c9aaa6d3",
+    "mtime": 1794480583.1850657,
+    "seen": 1794480663.147609,
+    "ast_hash": "6afcc85ba3305d66136dd7ed4a6a3e9a",
     "semantic_hash": ""
   },
   "components/commerce/shipping-block.tsx": {
-    "mtime": 1794480402.9590702,
-    "seen": 1794480489.052046,
-    "ast_hash": "b5ed20a7676694e83df2df31a405f50b",
+    "mtime": 1794480636.1474142,
+    "seen": 1794480663.147609,
+    "ast_hash": "9d5bbe4ef88062b35f58904c1ccfb73c",
     "semantic_hash": ""
   }
 }
