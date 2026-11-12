@@ -245,6 +245,7 @@ export const vi: Dictionary = {
   favorites: {
     title: 'Yêu thích', empty: 'Bạn chưa có sản phẩm yêu thích nào.',
     add: 'Thêm vào yêu thích', remove: 'Bỏ yêu thích',
+    addToCart: 'Thêm vào giỏ', buyNow: 'Mua ngay',
   },
   compare: {
     add: 'Thêm vào so sánh', remove: 'Bỏ khỏi so sánh', full: 'Danh sách so sánh đã đầy (tối đa 4)',

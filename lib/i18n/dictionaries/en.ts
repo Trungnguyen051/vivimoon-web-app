@@ -241,6 +241,7 @@ export const en = {
   favorites: {
     title: 'Favorites', empty: 'You have no favorites yet.',
     add: 'Add to favorites', remove: 'Remove from favorites',
+    addToCart: 'Add to cart', buyNow: 'Buy now',
   },
   compare: {
     add: 'Add to compare', remove: 'Remove from compare', full: 'Compare list is full (max 4)',
