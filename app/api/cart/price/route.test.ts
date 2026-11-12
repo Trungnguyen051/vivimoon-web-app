@@ -23,7 +23,7 @@ function req(body: unknown): Request {
 }
 
 // Same two known variants as lib/api/resources/pricing/mock.test.ts:
-//   p-aqua-daily-30 (25 per lens) x2 pairs + p-hazel-monthly-brown-30 (20 per lens) x1 pair = 140
+//   p-aqua-daily-30 (125.000 per lens) x2 pairs + p-hazel-monthly-brown-30 (100.000 per lens) x1 pair = 700.000
 const BASELINE_LINES = [
   { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, rx: RX },
   { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1, rx: RX },
@@ -40,7 +40,7 @@ describe('POST /api/cart/price', () => {
 
   it('prices a non-trivial baseline from the catalogue, then ignores a posted unitPrice claiming otherwise', async () => {
     const clean = await (await POST(req({ lines: BASELINE_LINES }))).json();
-    expect(clean.data.subtotal).toBe(140);
+    expect(clean.data.subtotal).toBe(700_000);
 
     // Every line claims unitPrice: 1 — an untyped JSON body, exactly what a
     // hand-crafted client request could send. priceLineInputSchema does not
@@ -52,7 +52,7 @@ describe('POST /api/cart/price', () => {
         }),
       )
     ).json();
-    expect(rigged.data.subtotal).toBe(140);
+    expect(rigged.data.subtotal).toBe(700_000);
   });
 
   it('rejects a malformed body with 400 validation_failed', async () => {
@@ -91,8 +91,8 @@ describe('POST /api/cart/price', () => {
     );
     const body = await res.json();
     expect(res.status).toBe(200);
-    expect(body.data.shipping).toBe(3);
-    expect(body.data.total).toBe(140 + 3 - body.data.discount);
+    expect(body.data.shipping).toBe(30_000);
+    expect(body.data.total).toBe(700_000 + 30_000 - body.data.discount);
   });
 
   it('404s a tampered shipping optionId, not a silent 0 fee', async () => {
@@ -109,7 +109,7 @@ describe('POST /api/cart/price', () => {
 
   describe('Purchase Unit (ADR-0023)', () => {
     it('prices a pair at twice the per-lens price, and a single at the lens price', async () => {
-      // p-hazel-monthly-brown-30 lists at 20 per lens.
+      // p-hazel-monthly-brown-30 lists at 100.000 per lens.
       const res = await POST(req({
         lines: [
           { lineKey: 'single', variantId: 'p-hazel-monthly-brown-30', quantity: 1, purchaseUnit: 'single', rx: { sph: -2.5 } },
@@ -119,14 +119,14 @@ describe('POST /api/cart/price', () => {
       const body = await res.json();
       expect(res.status).toBe(200);
       const [single, pair] = body.data.lines;
-      expect(single).toMatchObject({ unitPrice: 20, lineTotal: 20 });
-      expect(pair).toMatchObject({ unitPrice: 40, lineTotal: 120 });
-      expect(body.data.subtotal).toBe(140);
+      expect(single).toMatchObject({ unitPrice: 100_000, lineTotal: 100_000 });
+      expect(pair).toMatchObject({ unitPrice: 200_000, lineTotal: 600_000 });
+      expect(body.data.subtotal).toBe(700_000);
     });
 
     it('reads a line with no unit as a pair', async () => {
       const res = await POST(req({ lines: [{ lineKey: 'l', variantId: 'p-hazel-monthly-brown-30', quantity: 1, rx: RX }] }));
-      expect((await res.json()).data.lines[0].unitPrice).toBe(40);
+      expect((await res.json()).data.lines[0].unitPrice).toBe(200_000);
     });
 
     it('rejects a unit whose Rx has the wrong shape', async () => {
@@ -151,9 +151,9 @@ describe('POST /api/cart/price', () => {
 
     it('charges the Bundle price for a complete Bundle and reports the saving', async () => {
       const { data } = await (await POST(req({ lines: set('p-aqua-daily') }))).json();
-      expect(data.subtotal).toBe(55);
-      expect(data.bundleSaving).toBe(3);
-      expect(data.total).toBe(52 - data.discount);
+      expect(data.subtotal).toBe(354_000);
+      expect(data.bundleSaving).toBe(24_000);
+      expect(data.total).toBe(330_000 - data.discount);
     });
 
     it('charges separate prices for a partial Bundle', async () => {

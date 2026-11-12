@@ -30,7 +30,7 @@ function json(body: unknown, status = 200) {
 function makeLine(overrides: Partial<CartLine> = {}): CartLine {
   return {
     lineKey: 'existing', productId: 'p0', variantId: 'p-aqua-daily-30', name: 'Existing',
-    sku: 'SKU0', unitPrice: 25, currency: 'USD', quantity: 1,
+    sku: 'SKU0', unitPrice: 125_000, currency: 'VND', quantity: 1,
     ...overrides,
   };
 }
@@ -42,9 +42,9 @@ const DEFAULT_ADDRESS = {
 };
 
 const PRICED_RESPONSE = {
-  lines: [{ lineKey: 'existing', variantId: 'p-aqua-daily-30', quantity: 1, unitPrice: 25, lineTotal: 25, currency: 'USD' }],
+  lines: [{ lineKey: 'existing', variantId: 'p-aqua-daily-30', quantity: 1, unitPrice: 125_000, lineTotal: 125_000, currency: 'VND' }],
   unavailableLines: [],
-  subtotal: 25, discount: 0, appliedVouchers: [], shipping: 3, total: 28, currency: 'USD',
+  subtotal: 125_000, discount: 0, appliedVouchers: [], shipping: 15_000, total: 140_000, currency: 'VND',
 };
 
 function fetchRoutingTo(addresses: unknown[], account: unknown = {}) {
@@ -133,6 +133,6 @@ describe('CheckoutPage — logged-in checkout personalization (M5.5, issue #22)'
     await renderCheckoutPage();
 
     await waitFor(() => expect(screen.getByText('Total').nextElementSibling).not.toHaveTextContent('—'));
-    expect(screen.getByText('Shipping').nextElementSibling).toHaveTextContent('$3.00');
+    expect(screen.getByText('Shipping').nextElementSibling).toHaveTextContent('15.000₫');
   });
 });

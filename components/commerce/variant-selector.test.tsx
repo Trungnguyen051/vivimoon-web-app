@@ -12,15 +12,15 @@ const coloredProduct: Product = {
   specs: { material: '', waterContent: '', baseCurve: '', diameter: '', origin: '' },
   requiresRx: true,
   variants: [
-    { id: 'v1', sku: 'H-BR', color: '#8a5a2b', colorLabel: 'Brown', price: 55, currency: 'USD', stock: 5 },
-    { id: 'v2', sku: 'H-GR', color: '#777777', colorLabel: 'Gray', price: 55, currency: 'USD', stock: 5 },
+    { id: 'v1', sku: 'H-BR', color: '#8a5a2b', colorLabel: 'Brown', price: 275_000, currency: 'VND', stock: 5 },
+    { id: 'v2', sku: 'H-GR', color: '#777777', colorLabel: 'Gray', price: 275_000, currency: 'VND', stock: 5 },
   ],
   rating: 4, reviewCount: 0,
 };
 const colorlessProduct: Product = {
   ...coloredProduct,
   id: 'p2', slug: 'aqua', name: 'Aqua', productLine: 'trongSuot',
-  variants: [{ id: 'v3', sku: 'AQ-1', price: 25, currency: 'USD', stock: 10 }],
+  variants: [{ id: 'v3', sku: 'AQ-1', price: 125_000, currency: 'VND', stock: 10 }],
 };
 
 describe('VariantSelector', () => {

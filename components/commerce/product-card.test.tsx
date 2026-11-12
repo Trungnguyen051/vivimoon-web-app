@@ -10,7 +10,7 @@ const product: Product = {
   productLine: 'trongSuot', replacement: 'daily', description: '', images: ['/a.jpg', '/b.jpg'], badges: ['sale'],
   specs: { material: '', waterContent: '', baseCurve: '', diameter: '', origin: '' },
   requiresRx: true,
-  variants: [{ id: 'v1', sku: 'S1', price: 20, compareAtPrice: 25, currency: 'USD', stock: 5 }],
+  variants: [{ id: 'v1', sku: 'S1', price: 100_000, compareAtPrice: 125_000, currency: 'VND', stock: 5 }],
   rating: 4, reviewCount: 3,
 };
 
@@ -18,8 +18,8 @@ describe('ProductCard', () => {
   it('renders name, sale badge, discounted price, and a link to the PDP', () => {
     render(<ProductCard product={product} locale="en" dict={en} />);
     expect(screen.getByText('Aqua Daily')).toBeInTheDocument();
-    expect(screen.getByText('$20.00')).toBeInTheDocument();
-    expect(screen.getByText('$25.00')).toBeInTheDocument();
+    expect(screen.getByText('100.000₫')).toBeInTheDocument();
+    expect(screen.getByText('125.000₫')).toBeInTheDocument();
     const link = screen.getByRole('link', { name: /Aqua Daily/i });
     expect(link).toHaveAttribute('href', '/en/product/aqua');
   });

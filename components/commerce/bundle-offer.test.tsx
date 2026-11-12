@@ -16,16 +16,16 @@ const lens = products.find((p) => p.id === 'p-aqua-daily')!;
 const bundleAccessories = accessories.filter((a) => lens.bundle!.accessoryIds.includes(a.id));
 const singleLens = {
   lineKey: 'p-aqua-daily-30~single~sph.-3.00', productId: lens.id, variantId: 'p-aqua-daily-30', name: lens.name,
-  sku: 'AQD-30', unitPrice: 25, currency: 'USD' as const, quantity: 1, purchaseUnit: 'single' as const, rx: { sph: -3 },
+  sku: 'AQD-30', unitPrice: 125_000, currency: 'VND' as const, quantity: 1, purchaseUnit: 'single' as const, rx: { sph: -3 },
 };
 
 // The server's answer, keyed off what was asked: the full tagged set saves 3.
 function priced(body: PriceCartRequest): PricedCart {
   const complete = body.lines.length === 3 && body.lines.every((l) => l.bundle === lens.id);
-  const subtotal = { 3: 30, 2: 28 }[body.lines.length] ?? 25;
+  const subtotal = { 3: 229_000, 2: 190_000 }[body.lines.length] ?? 125_000;
   return {
-    lines: [], unavailableLines: [], subtotal, bundleSaving: complete ? 3 : 0, bundledSubtotal: subtotal - (complete ? 3 : 0),
-    discount: 0, appliedVouchers: [], shipping: 0, total: subtotal, currency: 'USD',
+    lines: [], unavailableLines: [], subtotal, bundleSaving: complete ? 24_000 : 0, bundledSubtotal: subtotal - (complete ? 24_000 : 0),
+    discount: 0, appliedVouchers: [], shipping: 0, total: subtotal, currency: 'VND',
   };
 }
 
@@ -41,16 +41,16 @@ const show = () => render(<BundleOffer product={lens} accessories={bundleAccesso
 describe('BundleOffer', () => {
   it('shows the Bundle price against the separate total while every item is ticked', async () => {
     show();
-    expect(await screen.findByText('$27.00')).toBeTruthy();
-    expect(screen.getByText('$30.00').className).toContain('line-through');
+    expect(await screen.findByText('205.000₫')).toBeTruthy();
+    expect(screen.getByText('229.000₫').className).toContain('line-through');
   });
 
   it('drops to separate prices when an item is unticked', async () => {
     show();
-    await screen.findByText('$27.00');
+    await screen.findByText('205.000₫');
     fireEvent.click(screen.getByRole('checkbox', { name: /Nước nhỏ mắt/ }));
-    expect(await screen.findByText('$28.00')).toBeTruthy();
-    expect(screen.queryByText('$30.00')).toBeNull();
+    expect(await screen.findByText('190.000₫')).toBeTruthy();
+    expect(screen.queryByText('229.000₫')).toBeNull();
     const last = mockedApiRequest.mock.calls.at(-1)![1]!.body as PriceCartRequest;
     expect(last.lines.map((l) => l.variantId)).toEqual(['p-aqua-daily-30', 'a-khay-dung-set']);
     expect(last.lines.every((l) => !l.bundle)).toBe(true);
