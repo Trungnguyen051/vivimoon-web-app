@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { ChevronDown, Trash2, X } from 'lucide-react';
+import { ChevronDown, Trash2 } from 'lucide-react';
 import type { ReactNode } from 'react';
 import type { CartLine } from '@/features/cart/cart.types';
 import type { Accessory, Variant } from '@/lib/api/schemas/catalog';
@@ -9,16 +9,19 @@ import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { formatPrice } from '@/lib/utils/format';
 import { cn } from '@/lib/utils/cn';
 import { QuantityStepper } from './quantity-stepper';
-import { LineSummary, formatPower } from './line-summary';
+import { LineSummary, formatPower, lineTitle } from './line-summary';
 import { STEPS } from './rx-selector';
 import { formatSph } from '@/lib/products/rx-ranges';
 import { editLens, powersOf, type Eye } from '@/lib/cart/edit-line';
 import { purchaseUnitOf, type PurchaseUnit } from '@/lib/api/schemas/rx';
 
 export function CartLineItem({
-  line, locale, dict, lineTotal = null, unavailable = false, onQty, onRemove, accessory, onVariant, onEdit, compact = false,
+  line, locale, dict, lineTotal = null, unavailable = false, onQty, onRemove, accessory, onVariant, onEdit, compact = false, ticked, onTick,
 }: {
   line: CartLine; locale: Locale; dict: Dictionary;
+  /** The cart page's checkbox (CONTEXT.md "Cart Line"): set both to render it beside the line. */
+  ticked?: boolean;
+  onTick?: (lineKey: string, ticked: boolean) => void;
   /** Set to make a lens line's unit and powers editable in place; the cart re-keys and merges it. */
   onEdit?: (lineKey: string, line: CartLine) => void;
   /** The mini cart's tighter layout (Figma 57:2). */
@@ -38,19 +41,16 @@ export function CartLineItem({
   onRemove: (lineKey: string) => void;
 }) {
   const editable = Boolean(onEdit && line.rx && !unavailable);
-  return (
-    <div className={cn('flex gap-4 border-b', compact ? 'py-5' : 'py-6 first:pt-0', unavailable && 'opacity-60')}>
-      <div className={cn('relative shrink-0 overflow-hidden rounded-lg bg-muted', compact ? 'size-[72px] sm:size-[88px]' : 'size-24')}>
+  const title = lineTitle(line, dict);
+  const item = (
+    <div className={cn('flex min-w-0 flex-1 gap-4 border-b py-5', unavailable && 'opacity-60')}>
+      <div className={cn('relative shrink-0 overflow-hidden rounded-lg bg-muted', compact ? 'size-[72px] sm:size-[88px]' : 'size-20 sm:size-28')}>
         {line.image ? <Image src={line.image} alt={line.name} fill className="object-cover" sizes="96px" /> : null}
       </div>
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <p className="font-medium leading-snug">
-              {compact && line.productLine && line.replacement
-                ? `${line.name} · ${dict.filters.productLines[line.productLine]} ${dict.filters.replacements[line.replacement]}`
-                : line.name}
-            </p>
+            <p className="font-medium leading-snug">{title}</p>
             {accessory ? (
               <AccessoryOptionPicker line={line} accessory={accessory} dict={dict} disabled={unavailable} onVariant={onVariant} />
             ) : compact ? null : (
@@ -58,7 +58,10 @@ export function CartLineItem({
             )}
             {/* Two lines can share a variantId and differ only by prescription
                 (spec §7) — without this they'd read as a duplicate-line bug. */}
-            {editable ? null : <LineSummary line={line} dict={dict} />}
+            {editable ? (
+              // The phone frame (206:1043) repeats the summary above the chips.
+              compact ? null : <div className="sm:hidden"><LineSummary line={line} dict={dict} /></div>
+            ) : <LineSummary line={line} dict={dict} />}
             {unavailable ? (
               <p className="mt-2 text-sm font-medium text-destructive">{dict.cart.unavailable}</p>
             ) : null}
@@ -68,7 +71,7 @@ export function CartLineItem({
             aria-label={dict.cart.remove}
             className="-mr-1 flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
-            {compact ? <Trash2 className="size-4" /> : <X className="size-4" />}
+            <Trash2 className="size-4" />
           </button>
         </div>
         {/* Below the name row, full width, so a pair's three chips fit beside the image on a phone. */}
@@ -87,6 +90,19 @@ export function CartLineItem({
           </p>
         </div>
       </div>
+    </div>
+  );
+  if (!onTick) return item;
+  return (
+    <div className="flex items-start gap-3 sm:items-center sm:gap-4">
+      <input
+        type="checkbox"
+        checked={ticked}
+        onChange={(e) => onTick(line.lineKey, e.target.checked)}
+        aria-label={dict.cart.selectLine.replace('{name}', title)}
+        className="mt-5 size-5 shrink-0 cursor-pointer accent-foreground sm:mt-0"
+      />
+      {item}
     </div>
   );
 }

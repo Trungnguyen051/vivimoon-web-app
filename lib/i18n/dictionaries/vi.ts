@@ -24,6 +24,7 @@ export const vi: Dictionary = {
     colored: 'Lens màu', daily: 'Lens hằng ngày', allLenses: 'Tất cả lens',
     beginnerFriendly: 'Lens cho người mới',
     productsLabel: 'sản phẩm', noResults: 'Không có sản phẩm phù hợp với bộ lọc.', showAll: 'Xem tất cả sản phẩm',
+    card: { lines: { moisture: 'Khoá ẩm', breathable: 'Mắt thở' } },
   },
   home: {
     moments: {
@@ -202,7 +203,7 @@ export const vi: Dictionary = {
     title: 'Giỏ hàng', empty: 'Giỏ hàng trống', subtotal: 'Tạm tính',
     checkout: 'Thanh toán', remove: 'Xóa',
     accessoryOptions: { volume: 'Dung tích', type: 'Loại' },
-    orderSummary: 'Tóm tắt đơn hàng', shipping: 'Vận chuyển', free: 'Miễn phí', total: 'Tổng cộng',
+    orderSummary: 'Tóm tắt đơn hàng', shipping: 'Phí vận chuyển', free: 'Miễn phí', total: 'Tổng thanh toán',
     discount: 'Giảm giá', bundleSaving: 'Tiết kiệm combo',
     unavailable: 'Sản phẩm không còn bán',
     unavailableNote: 'Sản phẩm không còn bán không được tính vào tổng cộng.',
@@ -210,6 +211,25 @@ export const vi: Dictionary = {
     priceError: 'Không cập nhật được tổng tiền. Vui lòng thử lại.',
     eyes: { left: 'Mắt trái', right: 'Mắt phải' },
     tierDiscount: 'Ưu đãi đơn từ {threshold}',
+    titleCount: 'Giỏ hàng ({count})', continueShopping: 'Tiếp tục mua sắm', continueShort: 'Mua tiếp',
+    selectAll: 'Chọn tất cả ({count})', selectLine: 'Chọn {name}', nothingSelected: 'Chọn ít nhất một sản phẩm để thanh toán.',
+    gift: 'Quà tặng: {name}', giftWith: 'Quà tặng: {name} (kèm {product})',
+    giftRows: { product: 'Quà tặng lens 6 tháng', spendTier: 'Quà tặng đơn từ {threshold}' },
+    moveToFavorites: 'Chuyển sản phẩm chưa mua vào Yêu thích', movedToFavorites: 'Đã chuyển {count} sản phẩm vào Yêu thích',
+    subtotalCount: 'Tạm tính ({count})', voucherRow: 'Voucher {code}',
+    saved: 'Tiết kiệm {amount} · Đã gồm VAT', vatIncluded: 'Đã gồm VAT',
+    proceed: 'Tiến hành thanh toán', paymentMethods: 'Phương thức thanh toán chấp nhận',
+    payments: { cod: 'COD', transfer: 'Chuyển khoản / QR', ewallet: 'Ví điện tử' },
+    voucher: {
+      label: 'Mã ưu đãi', placeholder: 'Nhập mã giảm giá', apply: 'Áp dụng', list: 'Voucher khả dụng',
+      minSpend: 'Đơn từ {amount}', expires: 'HSD {date}',
+      errors: {
+        unknown: 'Mã {code} không tồn tại.',
+        expired: 'Mã {code} đã hết hạn.',
+        memberOnly: 'Mã {code} chỉ dành cho thành viên. Đăng nhập để dùng.',
+        minSpend: 'Đơn hàng chưa đủ giá trị tối thiểu để dùng mã {code}.',
+      },
+    },
   },
   spendTier: {
     remaining: {
@@ -223,6 +243,11 @@ export const vi: Dictionary = {
       discount: 'Giảm {value} cho đơn từ {threshold}',
     },
     allReached: 'Bạn đã nhận đủ ưu đãi: Freeship, tặng Khay đựng và giảm giá',
+    reached: 'Bạn đã được {rewards}!', and: ' & ',
+    rewards: { freeShipping: 'Freeship', gift: 'quà Khay đựng', discount: 'giảm {value}' },
+    marks: { freeShipping: 'Freeship', gift: 'Tặng khay', discount: 'Giảm {value}' },
+    upsell: { freeShipping: 'Mua thêm để được Freeship', gift: 'Mua thêm để được tặng Khay đựng', discount: 'Mua thêm để được giảm {value}' },
+    upsellDone: 'Có thể bạn cũng cần',
   },
   miniCart: {
     title: 'Giỏ hàng ({count})', close: 'Đóng giỏ hàng',

@@ -28,7 +28,8 @@ import { PageContainer } from '@/components/layout/page-container';
 
 export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const router = useRouter();
-  const { lines: cartLines, hydrated } = useCart();
+  // Only the ticked lines go to checkout; unticked ones stay in the cart (CONTEXT.md "Cart Line").
+  const { tickedLines: cartLines, hydrated, voucherCode } = useCart();
   const { clearBuyNowLine } = useBuyNow();
   // Buy Now (spec §10): snapshot whatever buyNowLine was set on mount, then
   // clear it immediately — so a *later* visit to this page (real checkout,
@@ -128,7 +129,7 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
   const shippingAddress = watchedProvince && watchedDistrict
     ? { province: watchedProvince, district: watchedDistrict }
     : null;
-  const { result: priced, isPending: pricePending, isError: priceFailed } = usePricedCart(lines, hydrated || isBuyNow, sessionStatus, shippingAddress);
+  const { result: priced, isPending: pricePending, isError: priceFailed } = usePricedCart(lines, hydrated || isBuyNow, sessionStatus, shippingAddress, voucherCode);
   // The server's currency, not the line snapshot: a cart saved before a catalogue currency change still says the old one.
   const currency = priced?.currency ?? lines[0]?.currency ?? 'VND';
   // The delivery promise is withheld while a re-quote is in flight or failed — the hook keeps the last
@@ -169,6 +170,7 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
         },
         email: data.email,
         paymentMethod,
+        ...(voucherCode ? { voucherCode } : {}),
       },
     });
     if (!result.ok) {

@@ -16,9 +16,19 @@ import type { Voucher } from '@/lib/api/schemas/cart';
  * session rather than replaying a cached guest quote).
  */
 export const vouchers: Voucher[] = [
+  // The wireframe's voucher (Figma 57:807). PROVISIONAL: "first order" is not modelled; open to every cart.
+  {
+    code: 'NEW30',
+    title: 'Giảm 30K đơn đầu tiên',
+    description: 'Giảm 30.000₫ cho đơn đầu tiên',
+    type: 'fixed',
+    value: 30_000,
+    expiresAt: '2099-10-30T00:00:00.000Z',
+    status: 'active',
+  },
   {
     code: 'SUMMER10',
-    title: '10% off',
+    title: 'Giảm 10% đơn từ 250K',
     description: '10% off orders over 250.000₫',
     type: 'percent',
     value: 10,
@@ -28,7 +38,7 @@ export const vouchers: Voucher[] = [
   },
   {
     code: 'SAVE15',
-    title: '75.000₫ off',
+    title: 'Giảm 75K đơn từ 250K',
     description: '75.000₫ off orders over 250.000₫',
     type: 'fixed',
     value: 75_000,
@@ -38,7 +48,7 @@ export const vouchers: Voucher[] = [
   },
   {
     code: 'BIGSPEND',
-    title: '150.000₫ off',
+    title: 'Giảm 150K đơn từ 1 triệu',
     description: '150.000₫ off orders over 1.000.000₫',
     type: 'fixed',
     value: 150_000,
@@ -76,7 +86,7 @@ export const vouchers: Voucher[] = [
   },
   {
     code: 'FREESHIP',
-    title: 'Free shipping',
+    title: 'Miễn phí vận chuyển',
     description: 'No minimum. Worth 0₫ until shipping is quoted (Task 8).',
     type: 'shipping',
     value: 50_000,
@@ -85,7 +95,7 @@ export const vouchers: Voucher[] = [
   },
   {
     code: 'MEMBER20',
-    title: '100.000₫ off for members',
+    title: 'Giảm 100K cho thành viên',
     description: '100.000₫ off orders over 250.000₫ — signed-in shoppers only',
     type: 'fixed',
     value: 100_000,

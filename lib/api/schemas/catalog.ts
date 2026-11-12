@@ -200,6 +200,8 @@ export const accessorySchema = z.object({
   variants: z.array(variantSchema).min(1),
   // Only ever given as a Gift, never sold on its own.
   giftOnly: z.boolean().optional(),
+  // What is in it, shown under a Gift line ("Khăn ướt làm sạch · sticker ghi hạn · …").
+  description: z.string().optional(),
 }).superRefine((a, ctx) => {
   if (a.variants.some((v) => !v.label || v.color)) {
     ctx.addIssue({ code: 'custom', message: 'an accessory variant carries a label and no color', path: ['variants'] });

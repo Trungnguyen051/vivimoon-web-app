@@ -28,6 +28,21 @@ export function formatPowers(rx: LineRx, dict: Dictionary): string {
 /** One power as the summary shows it, "−2.50" or "Không độ". */
 export const formatPower = (sph: number, dict: Dictionary): string => (sph === 0 ? dict.rx.noPower : power(sph));
 
+/**
+ * A cart line's title, the same on every cart surface: "Sandkiss · Khoá ẩm 1 tháng" — the
+ * name, then the Dòng lens the PLP card labels (`collection.card.lines`) and the replacement.
+ */
+export function lineTitle(
+  line: { name: string; lensLine?: 'moisture' | 'breathable'; replacement?: keyof Dictionary['filters']['replacements'] },
+  dict: Dictionary,
+): string {
+  const spec = [
+    line.lensLine && dict.collection.card.lines[line.lensLine],
+    line.replacement && dict.filters.replacements[line.replacement],
+  ].filter(Boolean).join(' ');
+  return spec ? `${line.name} · ${spec}` : line.name;
+}
+
 /** Tells two lines of one variant apart by unit and power (spec §7). */
 export function LineSummary({ line, dict }: { line: SummaryLine; dict: Dictionary }) {
   const text = formatLineSummary(line, dict);

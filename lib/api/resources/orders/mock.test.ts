@@ -48,6 +48,11 @@ describe('mockOrders.place', () => {
     expect(order.totals.currency).toBe('VND');
   });
 
+  it('charges the Voucher picked in the cart, not the best one', async () => {
+    const order = await mockOrders.place(req({ voucherCode: 'NEW30' }), null);
+    expect(order.totals.discount).toBe(30_000);
+  });
+
   it('carries the resolved rx and lineKey on each order line', async () => {
     // Direct-call fixture, so this is the post-parse Rx shape (left filled) —
     // priceLineInputSchema's actual parse (via parseBody) is what does that

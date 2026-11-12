@@ -95,6 +95,30 @@ describe('useCartStore — persistence', () => {
     expect(store2.getState().lines).toHaveLength(1);
     expect(store2.getState().lines[0].quantity).toBe(2);
   });
+
+  it('keeps unticked lines and the picked voucher across a reload', async () => {
+    const store = await freshStore();
+    await store.persist.rehydrate();
+    store.getState().add(makeLine(rxA));
+    store.getState().add(makeLine(rxB));
+    store.getState().tick(lineKey('v1', rxA), false);
+    store.getState().setVoucherCode('NEW30');
+    const store2 = await freshStore();
+    await store2.persist.rehydrate();
+    expect(store2.getState().lines).toHaveLength(2);
+    expect(store2.getState().unticked).toEqual([lineKey('v1', rxA)]);
+    expect(store2.getState().voucherCode).toBe('NEW30');
+  });
+
+  it('removes the ordered lines after placement and keeps the unticked one', async () => {
+    const store = await freshStore();
+    await store.persist.rehydrate();
+    store.getState().add(makeLine(rxA));
+    store.getState().add(makeLine(rxB));
+    store.getState().tick(lineKey('v1', rxA), false);
+    store.getState().removeLines([lineKey('v1', rxB)]);
+    expect(store.getState().lines.map((l) => l.lineKey)).toEqual([lineKey('v1', rxA)]);
+  });
 });
 
 describe('useCartStore — hydration gating', () => {

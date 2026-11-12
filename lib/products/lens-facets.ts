@@ -59,6 +59,9 @@ export const MATERIAL_VALUES = [
   { id: 'breathable', material: 'Silicone Hydrogel' },
 ] as const;
 
+/** A lens's Dòng lens, read off its material; undefined for a material no line covers. */
+export const lensLineOf = (material: string | undefined) => MATERIAL_VALUES.find((m) => m.material === material)?.id;
+
 /**
  * One value under a facet. A union rather than one shape with optional fields: a colour
  * value has an entry and swatches, a diameter value has a range, and neither has to

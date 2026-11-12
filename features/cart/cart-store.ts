@@ -25,7 +25,14 @@ export interface CartStore extends CartState {
   updateQty: (lineKey: string, quantity: number) => void;
   remove: (lineKey: string) => void;
   edit: (lineKey: string, line: CartLine) => void;
+  tick: (lineKey: string, ticked: boolean) => void;
+  tickAll: (ticked: boolean) => void;
+  /** Drops the lines an order was placed with, keeping the unticked ones. */
+  removeLines: (lineKeys: string[]) => void;
   clear: () => void;
+  /** The Voucher the shopper picked or typed in the cart; absent = the server's best (CONTEXT.md "Voucher"). */
+  voucherCode?: string;
+  setVoucherCode: (code: string | undefined) => void;
   /**
    * Buy Now (spec §10): a single line held outside `lines`, so checkout can
    * read it without ever touching the real cart. Deliberately excluded from
@@ -38,11 +45,8 @@ export interface CartStore extends CartState {
 }
 
 /** Folds any lines already in memory into the persisted cart. */
-function mergeLines(persistedLines: CartLine[], currentLines: CartLine[]): CartLine[] {
-  return currentLines.reduce<CartState>(
-    (state, line) => cartReducer(state, { type: 'ADD', line }),
-    { lines: persistedLines },
-  ).lines;
+function mergeLines(persisted: CartState, currentLines: CartLine[]): CartState {
+  return currentLines.reduce<CartState>((state, line) => cartReducer(state, { type: 'ADD', line }), persisted);
 }
 
 export const useCartStore = create<CartStore>()(
@@ -54,7 +58,12 @@ export const useCartStore = create<CartStore>()(
       updateQty: (lineKey, quantity) => set((s) => cartReducer(s, { type: 'UPDATE_QTY', lineKey, quantity })),
       remove: (lineKey) => set((s) => cartReducer(s, { type: 'REMOVE', lineKey })),
       edit: (lineKey, line) => set((s) => cartReducer(s, { type: 'EDIT', lineKey, line })),
-      clear: () => set((s) => cartReducer(s, { type: 'CLEAR' })),
+      tick: (lineKey, ticked) => set((s) => cartReducer(s, { type: 'TICK', lineKey, ticked })),
+      tickAll: (ticked) => set((s) => cartReducer(s, { type: 'TICK_ALL', ticked })),
+      removeLines: (lineKeys) => set((s) => cartReducer(s, { type: 'REMOVE_LINES', lineKeys })),
+      clear: () => set((s) => ({ ...cartReducer(s, { type: 'CLEAR' }), voucherCode: undefined })),
+      voucherCode: undefined,
+      setVoucherCode: (voucherCode) => set({ voucherCode }),
       buyNowLine: null,
       setBuyNowLine: (line) => set({ buyNowLine: line }),
       clearBuyNowLine: () => set({ buyNowLine: null }),
@@ -67,7 +76,7 @@ export const useCartStore = create<CartStore>()(
       // unconditionally, so every mutation persists either way.
       skipHydration: true,
       // `hydrated` is runtime-only; persisting it would restore a stale true.
-      partialize: (s) => ({ lines: s.lines }) as CartState,
+      partialize: (s) => ({ lines: s.lines, unticked: s.unticked, voucherCode: s.voucherCode }) as CartState,
       onRehydrateStorage: () => () => useCartStore.setState({ hydrated: true }),
       /**
        * zustand's default merge would replace in-memory lines with the stored
@@ -87,12 +96,15 @@ export const useCartStore = create<CartStore>()(
        * to whatever this one was holding.
        */
       merge: (persisted, current) => {
-        const stored = (persisted as Partial<CartState> | undefined)?.lines;
+        const saved = persisted as (Partial<CartState> & { voucherCode?: unknown }) | undefined;
+        const stored = saved?.lines;
         const persistedLines = Array.isArray(stored)
           ? stored.map(readPersistedLine).filter((line) => line !== null)
           : [];
-        if (current.hydrated) return { ...current, lines: persistedLines };
-        return { ...current, lines: mergeLines(persistedLines, current.lines) };
+        const unticked = Array.isArray(saved?.unticked) ? saved.unticked.filter((k): k is string => typeof k === 'string') : [];
+        const voucherCode = typeof saved?.voucherCode === 'string' ? saved.voucherCode : current.voucherCode;
+        if (current.hydrated) return { ...current, lines: persistedLines, unticked, voucherCode };
+        return { ...current, ...mergeLines({ lines: persistedLines, unticked }, current.lines), voucherCode };
       },
     },
   ),

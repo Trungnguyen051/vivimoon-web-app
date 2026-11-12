@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cartReducer, cartCount, readPersistedLine } from './cart-reducer';
+import { cartReducer, cartCount, readPersistedLine, tickedLines } from './cart-reducer';
 import { lineKey } from '@/lib/cart/line-key';
 import { MAX_LINE_QUANTITY } from '@/lib/api/schemas/cart';
 import type { RxInput } from '@/lib/api/schemas/rx';
@@ -186,5 +186,40 @@ describe('Purchase Unit (ADR-0023)', () => {
     expect(readPersistedLine(JSON.parse(JSON.stringify(plain)))?.purchaseUnit).toBeUndefined();
     expect(readPersistedLine({ lineKey: 'x' })).toBeNull();
     expect(readPersistedLine({ ...JSON.parse(JSON.stringify(atA)), purchaseUnit: 'single' })).toBeNull();
+  });
+});
+
+describe('cartReducer — ticked lines (CONTEXT.md "Cart Line")', () => {
+  const two = cartReducer(cartReducer(empty, { type: 'ADD', line: atA }), { type: 'ADD', line: atB });
+  const offA = cartReducer(two, { type: 'TICK', lineKey: atA.lineKey, ticked: false });
+
+  it('ticks every line by default, and unticks and re-ticks one', () => {
+    expect(tickedLines(two)).toHaveLength(2);
+    expect(tickedLines(offA).map((l) => l.lineKey)).toEqual([atB.lineKey]);
+    expect(offA.lines).toHaveLength(2);
+    expect(tickedLines(cartReducer(offA, { type: 'TICK', lineKey: atA.lineKey, ticked: true }))).toHaveLength(2);
+  });
+
+  it('ticks and unticks all at once', () => {
+    const none = cartReducer(two, { type: 'TICK_ALL', ticked: false });
+    expect(tickedLines(none)).toEqual([]);
+    expect(tickedLines(cartReducer(none, { type: 'TICK_ALL', ticked: true }))).toHaveLength(2);
+  });
+
+  it('ticks a line again when the shopper adds it again', () => {
+    expect(tickedLines(cartReducer(offA, { type: 'ADD', line: atA }))).toHaveLength(2);
+  });
+
+  it('keeps an unticked line unticked when an edit re-keys it', () => {
+    const rxC: RxInput = { sameBothEyes: true, right: { sph: -4 }, left: { sph: -4 } };
+    const next = cartReducer(offA, { type: 'EDIT', lineKey: atA.lineKey, line: makeLine({ rx: rxC as never }) });
+    expect(next.lines).toHaveLength(2);
+    expect(tickedLines(next).map((l) => l.lineKey)).toEqual([atB.lineKey]);
+  });
+
+  it('removes only the given lines, keeping the rest and their ticks', () => {
+    const next = cartReducer(offA, { type: 'REMOVE_LINES', lineKeys: [atB.lineKey] });
+    expect(next.lines.map((l) => l.lineKey)).toEqual([atA.lineKey]);
+    expect(tickedLines(next)).toEqual([]);
   });
 });
