@@ -4,12 +4,7 @@ import { formatPrice } from '@/lib/utils/format';
 import type { Currency } from '@/lib/api/schemas/catalog';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
-
-/** A shipping option id in the shopper's language; an id the dictionary doesn't know shows as-is. */
-export function shippingMethodName(id: string, dict: Dictionary): string {
-  const names: Record<string, string> = dict.orderDetail.shippingMethods;
-  return Object.hasOwn(names, id) ? names[id] : id;
-}
+import { shippingMethodName } from '@/lib/orders/shipping-method-name';
 
 // Arrival is the shop's calendar (Vietnam), written dd/mm in both locales as on the wireframe.
 const ARRIVAL_FORMAT = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: '2-digit', timeZone: 'Asia/Ho_Chi_Minh' });

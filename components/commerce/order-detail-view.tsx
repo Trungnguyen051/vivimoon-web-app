@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { withProducts } from './history-lines';
-import { shippingMethodName } from './shipping-block';
+import { shippingMethodName } from '@/lib/orders/shipping-method-name';
 import { RxSummary } from './rx-summary';
 import { OrderStatusTimeline } from './order-status-timeline';
 import { OrderActions } from './order-actions';
