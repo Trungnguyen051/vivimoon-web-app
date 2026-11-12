@@ -20,8 +20,14 @@ export const RX_LENS_TYPE = 'clear' as const satisfies LensType;
 const SPH_STEPS = sphSteps();
 const AXIS_STEPS = axisSteps();
 
+const sphSchema = z.number().refine((v) => SPH_STEPS.includes(v), 'sph is not a stocked step');
+
+/** A shopper's saved starting point per eye (CONTEXT.md "Default Rx"): myopia only, in 0.25 steps. */
+const defaultSphSchema = sphSchema.refine((v) => v <= 0 && Number.isInteger(v * 4), 'Use a value of 0 or below in 0.25 steps');
+export const defaultRxSchema = z.object({ left: defaultSphSchema, right: defaultSphSchema });
+
 export const rxEyeSchema = z.object({
-  sph: z.number().refine((v) => SPH_STEPS.includes(v), 'sph is not a stocked step'),
+  sph: sphSchema,
   /** Multifocal only. Banded LOW/MID/HIGH — contact multifocals are not numeric ADD. */
   add: z.enum(addBands).optional(),
   /** Toric. Deferred past M2 (spec §15) — validated if present, rendered by no

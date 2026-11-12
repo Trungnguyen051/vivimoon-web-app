@@ -204,6 +204,13 @@ export const en = {
       summary: 'Please fix the following before continuing.',
     },
   },
+  welcome: {
+    title: 'Welcome to Vivimoon', subtitle: 'Tell us a little about you so we can start your lens picks closer to right.',
+    dob: 'Birthday', gender: 'Gender', male: 'Male', female: 'Female', other: 'Other',
+    defaultRx: 'Default Rx', leftEye: 'Left eye', rightEye: 'Right eye',
+    increase: 'Increase', decrease: 'Decrease',
+    skip: 'Skip', done: 'Done', error: 'We could not save that. Please try again.',
+  },
   account: {
     accountInfo: 'Account info', memberSince: 'Member since {date}', backToAccount: 'Account',
     title: 'My account', infoTitle: 'Account information',

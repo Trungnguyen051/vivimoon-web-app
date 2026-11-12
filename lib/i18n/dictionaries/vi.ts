@@ -208,6 +208,13 @@ export const vi: Dictionary = {
       summary: 'Vui lòng sửa các mục sau để tiếp tục.',
     },
   },
+  welcome: {
+    title: 'Chào mừng đến Vivimoon', subtitle: 'Cho chúng tôi biết đôi chút về bạn để gợi ý lens phù hợp hơn.',
+    dob: 'Ngày sinh', gender: 'Giới tính', male: 'Nam', female: 'Nữ', other: 'Khác',
+    defaultRx: 'Độ cận mặc định', leftEye: 'Mắt trái', rightEye: 'Mắt phải',
+    increase: 'Tăng', decrease: 'Giảm',
+    skip: 'Bỏ qua', done: 'Xong', error: 'Chưa lưu được. Vui lòng thử lại.',
+  },
   account: {
     accountInfo: 'Thông tin tài khoản', memberSince: 'Thành viên từ {date}', backToAccount: 'Tài khoản',
     title: 'Tài khoản của tôi', infoTitle: 'Thông tin tài khoản',

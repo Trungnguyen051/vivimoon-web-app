@@ -122,4 +122,16 @@ describe('account routes', () => {
     jar.set('vivimoon_session', 'u-001.deadbeef');
     expect((await GET()).status).toBe(401);
   });
+
+  it('round-trips gender, Default Rx and onboardedAt', async () => {
+    signIn();
+    const fields = { gender: 'female', defaultRx: { left: -2.25, right: -3 }, onboardedAt: '2026-01-01T00:00:00.000Z' };
+    expect((await (await PATCH(patch(fields))).json()).data).toMatchObject(fields);
+    expect((await (await GET()).json()).data).toMatchObject(fields);
+  });
+
+  it.each([{ left: 1, right: -1 }, { left: -1, right: 0.5 }, { left: -1.1, right: -1 }])('rejects Default Rx %j', async (defaultRx) => {
+    signIn();
+    expect((await PATCH(patch({ defaultRx }))).status).toBe(400);
+  });
 });
