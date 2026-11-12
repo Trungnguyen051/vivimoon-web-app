@@ -5,22 +5,31 @@ import { RatingStars } from './rating-stars';
 import { ReviewSourceBadge } from './review-source-badge';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 
-export function ReviewsList({ reviews, dict }: { reviews: Review[]; dict: Dictionary }) {
-  const average =
-    reviews.length > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length : 0;
+/**
+ * Stars, average and count, read from the reviews themselves. The product page's header
+ * uses this too, so it can never disagree with the list below it the way the product's
+ * stored `rating`/`reviewCount` did. Nothing at all when there are no reviews.
+ */
+export function ReviewsSummary({ reviews, dict }: { reviews: Review[]; dict: Dictionary }) {
+  if (reviews.length === 0) return null;
+  const average = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
 
+  return (
+    <div className="flex items-center gap-2">
+      <RatingStars label={dict.common.rating} outOfLabel={dict.common.outOf} rating={average} />
+      <span className="text-sm text-muted-foreground">
+        {average.toFixed(1)} · {reviews.length}
+      </span>
+    </div>
+  );
+}
+
+export function ReviewsList({ reviews, dict }: { reviews: Review[]; dict: Dictionary }) {
   return (
     <section className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-2xl font-semibold tracking-tight">{dict.pdp.reviews}</h2>
-        {reviews.length > 0 ? (
-          <div className="flex items-center gap-2">
-            <RatingStars label={dict.common.rating} outOfLabel={dict.common.outOf} rating={average} />
-            <span className="text-sm text-muted-foreground">
-              {average.toFixed(1)} · {reviews.length}
-            </span>
-          </div>
-        ) : null}
+        <ReviewsSummary reviews={reviews} dict={dict} />
       </div>
 
       {reviews.length === 0 ? (

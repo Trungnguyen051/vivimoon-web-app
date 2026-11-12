@@ -139,6 +139,7 @@ export const en = {
     color: 'Color', quantity: 'Quantity', freeship: 'Freeship',
     noReviews: 'No reviews yet.',
     reviewSource: { shopee: 'Shopee', tiktok: 'TikTok', vivimoon: 'Vivimoon' },
+    badges: { new: 'New', bestseller: 'Bestseller', sale: 'Sale' },
   },
   rx: {
     rightEye: 'Right eye (OD)', leftEye: 'Left eye (OS)',
@@ -205,6 +206,7 @@ export const en = {
     title: 'My account', infoTitle: 'Account information',
     phone: 'Phone', phoneLocked: 'Your phone number cannot be changed.',
     email: 'Email', name: 'Full name', dob: 'Date of birth',
+    currentPassword: 'Current password',
     newPassword: 'New password',
     passwordHint: 'Leave blank to keep your current password.',
     preferredPaymentMethod: 'Preferred payment method',
@@ -214,6 +216,7 @@ export const en = {
       email: 'Enter a valid email address',
       name: 'Enter your name',
       password: 'Use at least 8 characters',
+      currentPassword: 'Enter your current password',
       summary: 'Please fix the following before saving.',
     },
   },
@@ -277,7 +280,7 @@ export const en = {
   footer: {
     policies: 'Policies', about: 'About Vivimoon', customerCare: 'Customer Care',
     tagline: 'Vivimoon — high-quality contact lenses.',
-    shipping: 'Shipping', returns: 'Returns', privacy: 'Privacy',
+    shipping: 'Shipping', returns: 'Returns',
     hotline: 'Hotline', rights: '© 2026 Vivimoon',
   },
   support: {

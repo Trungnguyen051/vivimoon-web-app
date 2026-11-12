@@ -40,6 +40,44 @@ describe('session cookie', () => {
     expect(verifySession(a)).toBeNull();
   });
 
+  it('verifies to null rather than throwing when the secret is unset', () => {
+    const token = signSession('u-001');
+    delete process.env.AUTH_COOKIE_SECRET;
+    expect(() => verifySession(token)).not.toThrow();
+    expect(verifySession(token)).toBeNull();
+  });
+
+  it('still refuses to sign without a secret', () => {
+    delete process.env.AUTH_COOKIE_SECRET;
+    expect(() => signSession('u-001')).toThrow(/AUTH_COOKIE_SECRET/);
+  });
+
+  describe('in a production build', () => {
+    beforeEach(() => { vi.stubEnv('NODE_ENV', 'production'); });
+    afterEach(() => { vi.unstubAllEnvs(); });
+
+    it('refuses the example secret from .env.example', () => {
+      process.env.AUTH_COOKIE_SECRET = 'dev-only-not-a-real-secret';
+      expect(() => signSession('u-001')).toThrow(/AUTH_COOKIE_SECRET/);
+    });
+
+    it('refuses a secret shorter than 32 characters', () => {
+      process.env.AUTH_COOKIE_SECRET = 'x'.repeat(31);
+      expect(() => signSession('u-001')).toThrow(/AUTH_COOKIE_SECRET/);
+    });
+
+    it('accepts a secret of 32 characters or more', () => {
+      process.env.AUTH_COOKIE_SECRET = 'x'.repeat(32);
+      expect(verifySession(signSession('u-001'))).toBe('u-001');
+    });
+
+    it('verifies to null rather than throwing under a refused secret', () => {
+      process.env.AUTH_COOKIE_SECRET = 'dev-only-not-a-real-secret';
+      expect(() => verifySession('u-001.1.deadbeef')).not.toThrow();
+      expect(verifySession('u-001.1.deadbeef')).toBeNull();
+    });
+  });
+
   it('names the cookie', () => {
     expect(SESSION_COOKIE).toBe('vivimoon_session');
   });

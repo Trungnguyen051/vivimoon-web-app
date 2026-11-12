@@ -7,7 +7,7 @@ import { LENS_FACETS, facetValueHref } from '@/lib/products/lens-facets';
 import { valueLabel } from './facet-value';
 
 // The drawer also mounts LocaleSwitcher, which reaches for the router.
-vi.mock('next/navigation', () => ({ usePathname: () => '/vi', useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }) }));
+vi.mock('next/navigation', () => ({ usePathname: () => '/vi', useSearchParams: () => new URLSearchParams(), useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }) }));
 
 /** A label may carry regex metacharacters — `14.0mm`, `Giá: thấp` — so it is matched literally. */
 const escapeRegExp = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

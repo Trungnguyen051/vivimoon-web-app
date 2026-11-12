@@ -74,6 +74,40 @@ describe('account routes', () => {
     expect(body.data.phone).toBe('0912345678');
   });
 
+  it('409s an email change to an email another account already uses', async () => {
+    signIn();
+    const res = await PATCH(patch({ email: 'linh@example.vn' }));
+    expect(res.status).toBe(409);
+    expect((await res.json()).error.code).toBe('conflict');
+  });
+
+  it('lets an account keep its own email', async () => {
+    signIn();
+    expect((await PATCH(patch({ email: 'mai@example.vn' }))).status).toBe(200);
+  });
+
+  it('400s a new password sent without the current one', async () => {
+    signIn();
+    const res = await PATCH(patch({ password: 'brandnew1' }));
+    expect(res.status).toBe(400);
+    expect((await res.json()).error.field).toBe('currentPassword');
+  });
+
+  it('401s a new password with the wrong current password', async () => {
+    signIn();
+    const res = await PATCH(patch({ password: 'brandnew1', currentPassword: 'wrongwrong' }));
+    expect(res.status).toBe(401);
+    expect((await res.json()).error.code).toBe('unauthorized');
+  });
+
+  it('changes the password given the right current password', async () => {
+    signIn();
+    const res = await PATCH(patch({ password: 'brandnew1', currentPassword: 'vivimoon123' }));
+    expect(res.status).toBe(200);
+    const { mockAuth } = await import('@/lib/api/resources/auth/mock');
+    expect((await mockAuth.login({ identifier: '0912345678', password: 'brandnew1' })).id).toBe('u-001');
+  });
+
   it('401s a tampered session cookie', async () => {
     jar.set('vivimoon_session', 'u-001.deadbeef');
     expect((await GET()).status).toBe(401);

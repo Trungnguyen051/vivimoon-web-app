@@ -1,5 +1,5 @@
 import { users as seedUsers, type MockUser } from '@/content/mock';
-import { isPhone, type LoginInput, type OtpChallenge, type OtpPurpose, type OtpRequestInput, type OtpVerifyInput, type OtpVerifyResult, type PasswordResetInput, type RegisterInput, type User } from '@/lib/api/schemas/auth';
+import { isPhone, normalizePhone, type LoginInput, type OtpChallenge, type OtpPurpose, type OtpRequestInput, type OtpVerifyInput, type OtpVerifyResult, type PasswordResetInput, type RegisterInput, type User } from '@/lib/api/schemas/auth';
 
 /** Thrown by the mock so route handlers can map to an error code. */
 export class AuthError extends Error {
@@ -9,7 +9,7 @@ export class AuthError extends Error {
   }
 }
 
-interface OtpRecord { identifier: string; code: string; purpose: OtpPurpose; expiresAt: number }
+interface OtpRecord { identifier: string; code: string; purpose: OtpPurpose; expiresAt: number; attempts: number }
 interface ResetRecord { userId: string; expiresAt: number }
 
 // In-memory state. Resets on every server restart, which is correct for a mock.
@@ -26,6 +26,8 @@ export function resetMockAuthState(): void {
 
 const OTP_TTL_MS = 5 * 60 * 1000;
 const RESET_TTL_MS = 15 * 60 * 1000;
+/** Wrong codes a challenge survives; six digits fall to an unlimited guesser. */
+const OTP_MAX_ATTEMPTS = 5;
 
 function publicUser(u: MockUser): User {
   const { password: _password, ...rest } = u;
@@ -33,8 +35,8 @@ function publicUser(u: MockUser): User {
 }
 
 function findByIdentifier(identifier: string): MockUser | undefined {
-  const v = identifier.trim().toLowerCase();
-  return store.find((u) => u.phone.toLowerCase() === v || u.email?.toLowerCase() === v);
+  const v = normalizePhone(identifier.trim().toLowerCase());
+  return store.find((u) => normalizePhone(u.phone) === v || u.email?.toLowerCase() === v);
 }
 
 function randomId(prefix: string): string {
@@ -53,7 +55,7 @@ export const mockAuth = {
     const phoneLike = isPhone(input.identifier);
     const user: MockUser = {
       id: randomId('u'),
-      phone: phoneLike ? input.identifier : '',
+      phone: phoneLike ? normalizePhone(input.identifier) : '',
       email: phoneLike ? undefined : input.identifier,
       name: input.name,
       createdAt: new Date().toISOString(),
@@ -94,7 +96,7 @@ export const mockAuth = {
     const otpId = randomId('otp');
     const code = randomCode();
     const expiresAt = Date.now() + OTP_TTL_MS;
-    otps.set(otpId, { identifier, code, purpose, expiresAt });
+    otps.set(otpId, { identifier, code, purpose, expiresAt, attempts: 0 });
     return {
       otpId,
       expiresAt: new Date(expiresAt).toISOString(),
@@ -104,6 +106,9 @@ export const mockAuth = {
 
   async verifyOtp({ otpId, code }: OtpVerifyInput): Promise<OtpVerifyResult> {
     const record = otps.get(otpId);
+    if (record && record.code !== code && ++record.attempts >= OTP_MAX_ATTEMPTS) {
+      otps.delete(otpId); // burnt — the right code no longer works either
+    }
     if (!record || record.code !== code || record.expiresAt < Date.now()) {
       throw new AuthError('That code is invalid or has expired', 'unauthorized');
     }
@@ -137,10 +142,25 @@ export const mockAuth = {
     return user ? publicUser(user) : null;
   },
 
-  /** Used by the account resource, which shares this store. */
-  async updateUser(id: string, patch: Partial<Pick<MockUser, 'name' | 'email' | 'dob' | 'password' | 'preferredPaymentMethod'>>): Promise<User> {
+  /**
+   * Used by the account resource, which shares this store. A `password`
+   * change must carry the `currentPassword` it replaces.
+   */
+  async updateUser(
+    id: string,
+    { currentPassword, ...patch }: Partial<Pick<MockUser, 'name' | 'email' | 'dob' | 'password' | 'preferredPaymentMethod'>> & { currentPassword?: string },
+  ): Promise<User> {
     const user = store.find((u) => u.id === id);
     if (!user) throw new AuthError('Account not found', 'not_found');
+    if (patch.email !== undefined) {
+      const email = patch.email.toLowerCase();
+      if (store.some((u) => u.id !== id && u.email?.toLowerCase() === email)) {
+        throw new AuthError('That phone or email is already registered', 'conflict');
+      }
+    }
+    if (patch.password !== undefined && currentPassword !== user.password) {
+      throw new AuthError('Your current password is incorrect', 'unauthorized');
+    }
     Object.assign(user, patch);
     return publicUser(user);
   },

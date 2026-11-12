@@ -2,7 +2,8 @@ import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { Suspense } from 'react';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import CheckoutPage from './page';
+import { CheckoutView } from './checkout-view';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 import { useCartStore } from '@/features/cart/cart-store';
 import { useSessionStore } from '@/features/session/session-store';
 import type { CartLine } from '@/features/cart/cart.types';
@@ -14,7 +15,7 @@ async function renderCheckoutPage() {
   await act(async () => {
     utils = render(
       <Suspense fallback={null}>
-        <CheckoutPage params={Promise.resolve({ locale: 'en' })} />
+        <CheckoutView locale="en" dict={getDictionary('en')} />
       </Suspense>,
     );
     await Promise.resolve();

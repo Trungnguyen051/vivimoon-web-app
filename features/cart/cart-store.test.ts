@@ -211,4 +211,13 @@ describe('useCartStore — resilience', () => {
     await store.persist.rehydrate();
     expect(Array.isArray(store.getState().lines)).toBe(true);
   });
+
+  it('drops a malformed stored line and keeps the valid ones', async () => {
+    const good = makeLine();
+    const bad = { lineKey: 'broken', quantity: 'lots' };
+    localStorage.setItem(KEY, JSON.stringify({ state: { lines: [bad, good] }, version: 0 }));
+    const store = await freshStore();
+    await store.persist.rehydrate();
+    expect(store.getState().lines).toEqual([good]);
+  });
 });

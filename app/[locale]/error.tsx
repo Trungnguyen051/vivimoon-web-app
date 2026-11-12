@@ -1,9 +1,7 @@
 'use client';
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { defaultLocale, isLocale, type Locale } from '@/lib/i18n/config';
-import { getDictionary } from '@/lib/i18n/dictionaries';
+import { useBoundaryStrings } from '@/components/layout/boundary-strings';
 import { PageContainer } from '@/components/layout/page-container';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
@@ -27,10 +25,8 @@ export default function LocaleError({
   error: Error & { digest?: string };
   retry: () => void;
 }) {
-  const pathname = usePathname();
-  const segment = pathname.split('/')[1] ?? '';
-  const locale: Locale = isLocale(segment) ? segment : defaultLocale;
-  const dict = getDictionary(locale);
+  // From the locale layout, not the dictionaries module, which would ship every locale.
+  const { locale, errorPage } = useBoundaryStrings();
 
   useEffect(() => {
     console.error(error);
@@ -39,12 +35,12 @@ export default function LocaleError({
   return (
     <PageContainer>
       <div className="mx-auto flex w-full max-w-md flex-col items-center gap-6 py-20 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">{dict.errorPage.title}</h1>
-        <p className="text-muted-foreground">{dict.errorPage.body}</p>
+        <h1 className="text-2xl font-semibold tracking-tight">{errorPage.title}</h1>
+        <p className="text-muted-foreground">{errorPage.body}</p>
         <div className="flex flex-wrap items-center justify-center gap-3">
-          <Button onClick={() => retry()}>{dict.errorPage.retry}</Button>
+          <Button onClick={() => retry()}>{errorPage.retry}</Button>
           <Link href={`/${locale}`} className={cn(buttonVariants({ variant: 'outline' }))}>
-            {dict.errorPage.back}
+            {errorPage.back}
           </Link>
         </div>
         {/* The only thing that ties a shopper's "it broke" to a line in the logs. */}

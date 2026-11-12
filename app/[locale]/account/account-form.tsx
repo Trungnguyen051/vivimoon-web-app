@@ -16,6 +16,7 @@ export function AccountForm({ user, dict }: { user: User; dict: Dictionary['acco
   const [email, setEmail] = useState(user.email ?? '');
   const [dob, setDob] = useState(user.dob ?? '');
   const [password, setPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
   const [preferredPaymentMethod, setPreferredPaymentMethod] = useState<string | undefined>(user.preferredPaymentMethod);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [serverError, setServerError] = useState<string | null>(null);
@@ -30,6 +31,7 @@ export function AccountForm({ user, dict }: { user: User; dict: Dictionary['acco
     const next: Record<string, string> = {};
     if (!name.trim()) next.name = dict.errors.name;
     if (password && password.length < 8) next.password = dict.errors.password;
+    if (password && !currentPassword) next.currentPassword = dict.errors.currentPassword;
     setErrors(next);
     if (Object.keys(next).length > 0) return;
 
@@ -38,7 +40,10 @@ export function AccountForm({ user, dict }: { user: User; dict: Dictionary['acco
     const patch: Record<string, string> = { name: name.trim() };
     if (email) patch.email = email;
     if (dob) patch.dob = dob;
-    if (password) patch.password = password;
+    if (password) {
+      patch.password = password;
+      patch.currentPassword = currentPassword;
+    }
     if (preferredPaymentMethod) patch.preferredPaymentMethod = preferredPaymentMethod;
 
     setBusy(true);
@@ -50,6 +55,7 @@ export function AccountForm({ user, dict }: { user: User; dict: Dictionary['acco
     }
     setUser(result.data);
     setPassword('');
+    setCurrentPassword('');
     setSaved(true);
   }
 
@@ -94,6 +100,17 @@ export function AccountForm({ user, dict }: { user: User; dict: Dictionary['acco
             id="dob" type="date" autoComplete="bday" className="h-11"
             value={dob} onChange={(e) => setDob(e.target.value)}
           />
+        </Field>
+
+        <Field data-invalid={Boolean(errors.currentPassword) || undefined}>
+          <FieldLabel htmlFor="current-password">{dict.currentPassword}</FieldLabel>
+          <Input
+            id="current-password" type="password" autoComplete="current-password" className="h-11"
+            value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)}
+            aria-invalid={Boolean(errors.currentPassword)}
+            aria-describedby={errors.currentPassword ? 'current-password-error' : undefined}
+          />
+          {errors.currentPassword ? <FieldError id="current-password-error">{errors.currentPassword}</FieldError> : null}
         </Field>
 
         <Field data-invalid={Boolean(errors.password) || undefined}>

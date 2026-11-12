@@ -2,11 +2,15 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { mockOrders, resetMockOrdersState, OrderError } from './mock';
 import type { PlaceOrderRequest } from '@/lib/api/schemas/orders';
 
+// Every catalogue product is `requiresRx`, and pricing refuses a line for one
+// without a prescription — so every real-variant fixture line carries this.
+const RX = { sameBothEyes: true, right: { sph: -2.5 }, left: { sph: -2.5 } };
+
 // Same two known variants as lib/api/resources/pricing/mock.test.ts:
 //   p-aqua-daily-30 (price 25 USD) x2 + p-hazel-monthly-brown-30 (price 20 USD) x1
 const BASELINE_LINES = [
-  { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2 },
-  { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1 },
+  { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, rx: RX },
+  { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1, rx: RX },
 ];
 
 // Known district (content/mock/shipping-rates.ts).
@@ -94,6 +98,12 @@ describe('mockOrders.place', () => {
     expect(order.address).toEqual(ADDRESS);
   });
 
+  it('refuses a prescription product line that carries no rx', async () => {
+    await expect(
+      mockOrders.place(req({ lines: [{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1 }] }), null),
+    ).rejects.toMatchObject({ code: 'validation_failed' });
+  });
+
   // ADR-0012: pricing reports an unknown variant rather than throwing, so
   // placement is the layer that must refuse — never place a smaller order
   // than the cart the shopper submitted.
@@ -108,7 +118,7 @@ describe('mockOrders.place', () => {
       mockOrders.place(
         req({
           lines: [
-            { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1 },
+            { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1, rx: RX },
             { lineKey: 'l2', variantId: 'ghost', quantity: 1 },
           ],
         }),

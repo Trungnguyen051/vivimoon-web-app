@@ -1,11 +1,14 @@
-import { describe, it, expect, vi } from 'vitest';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Header } from './header';
 import { vi as viDict } from '@/lib/i18n/dictionaries/vi';
 
+const nav = vi.hoisted(() => ({ pathname: '/vi', search: '' }));
+
 vi.mock('next/navigation', () => ({
-  usePathname: () => '/vi',
+  usePathname: () => nav.pathname,
+  useSearchParams: () => new URLSearchParams(nav.search),
   useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
 }));
 
@@ -18,6 +21,11 @@ vi.mock('next/navigation', () => ({
  * is here to stop, and it is invisible on screen (#74).
  */
 describe('Header', () => {
+  afterEach(() => {
+    nav.pathname = '/vi';
+    nav.search = '';
+  });
+
   it('opens the search field focused, and closes it on Escape', async () => {
     render(<Header locale="vi" dict={viDict} />);
 
@@ -68,6 +76,19 @@ describe('Header', () => {
     expect(en).not.toHaveAttribute('aria-current');
     // The switch preserves where you are rather than dropping you on the homepage.
     expect(en).toHaveAttribute('href', '/en');
+  });
+
+  it('keeps the query string when switching locale', () => {
+    nav.pathname = '/vi/collection/all-lenses';
+    nav.search = 'color=brown&sort=newest';
+    render(<Header locale="vi" dict={viDict} />);
+
+    const group = screen.getByRole('group', { name: viDict.common.language });
+    // A filtered collection stays filtered in the other language.
+    expect(within(group).getByRole('link', { name: 'en' })).toHaveAttribute(
+      'href',
+      '/en/collection/all-lenses?color=brown&sort=newest',
+    );
   });
 
   it('shows the cart as a cart, and keeps the count on it', () => {

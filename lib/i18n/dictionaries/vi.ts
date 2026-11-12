@@ -143,6 +143,7 @@ export const vi: Dictionary = {
     color: 'Màu', quantity: 'Số lượng', freeship: 'Miễn phí ship',
     noReviews: 'Chưa có đánh giá.',
     reviewSource: { shopee: 'Shopee', tiktok: 'TikTok', vivimoon: 'Vivimoon' },
+    badges: { new: 'Mới', bestseller: 'Bán chạy', sale: 'Giảm giá' },
   },
   rx: {
     rightEye: 'Mắt phải (OD)', leftEye: 'Mắt trái (OS)',
@@ -209,6 +210,7 @@ export const vi: Dictionary = {
     title: 'Tài khoản của tôi', infoTitle: 'Thông tin tài khoản',
     phone: 'Số điện thoại', phoneLocked: 'Không thể thay đổi số điện thoại.',
     email: 'Email', name: 'Họ và tên', dob: 'Ngày sinh',
+    currentPassword: 'Mật khẩu hiện tại',
     newPassword: 'Mật khẩu mới',
     passwordHint: 'Để trống nếu bạn muốn giữ mật khẩu hiện tại.',
     preferredPaymentMethod: 'Phương thức thanh toán ưu tiên',
@@ -218,6 +220,7 @@ export const vi: Dictionary = {
       email: 'Nhập địa chỉ email hợp lệ',
       name: 'Nhập họ và tên',
       password: 'Dùng ít nhất 8 ký tự',
+      currentPassword: 'Nhập mật khẩu hiện tại',
       summary: 'Vui lòng sửa các mục sau để lưu.',
     },
   },
@@ -282,7 +285,7 @@ export const vi: Dictionary = {
   footer: {
     policies: 'Chính sách', about: 'Về Vivimoon', customerCare: 'Chăm sóc khách hàng',
     tagline: 'Vivimoon — kính áp tròng chất lượng cao.',
-    shipping: 'Vận chuyển', returns: 'Đổi trả', privacy: 'Bảo mật',
+    shipping: 'Vận chuyển', returns: 'Đổi trả',
     hotline: 'Đường dây nóng', rights: '© 2026 Vivimoon',
   },
   support: {

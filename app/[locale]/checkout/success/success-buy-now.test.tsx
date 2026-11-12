@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { Suspense } from 'react';
 import { act, render, waitFor } from '@testing-library/react';
-import SuccessPage from './page';
+import { SuccessView } from './success-view';
+import { getDictionary } from '@/lib/i18n/dictionaries';
 import { useCartStore } from '@/features/cart/cart-store';
 import type { CartLine } from '@/features/cart/cart.types';
 
@@ -11,7 +12,7 @@ async function renderSuccessPage() {
   await act(async () => {
     render(
       <Suspense fallback={null}>
-        <SuccessPage params={Promise.resolve({ locale: 'en' })} />
+        <SuccessView locale="en" dict={getDictionary('en')} />
       </Suspense>,
     );
     await Promise.resolve();

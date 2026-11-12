@@ -1,0 +1,66 @@
+'use client';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { CheckCircle2 } from 'lucide-react';
+import { buttonVariants } from '@/components/ui/button';
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import type { Locale } from '@/lib/i18n/config';
+import type { Dictionary } from '@/lib/i18n/dictionaries';
+import { useCart } from '@/features/cart/use-cart';
+import { useAnalytics } from '@/lib/analytics/use-analytics';
+import { cartLinesToGa4Items } from '@/lib/analytics/events';
+import { PageContainer } from '@/components/layout/page-container';
+
+export function SuccessView({ locale, dict }: { locale: Locale; dict: Dictionary }) {
+  const { clear } = useCart();
+  const { track } = useAnalytics();
+  const [orderId, setOrderId] = useState('');
+
+  useEffect(() => {
+    const raw = sessionStorage.getItem('vivimoon-last-order');
+    if (raw) {
+      const order = JSON.parse(raw) as {
+        orderId: string; currency: string; value: number | null;
+        lines: { sku: string; name: string; unitPrice: number; quantity: number }[];
+        isBuyNow?: boolean;
+      };
+      // Reading sessionStorage must happen post-hydration (SSR has no sessionStorage and
+      // an eager read would mismatch the server-rendered empty state), so the setState here
+      // is an intentional one-time sync of external storage into render state.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setOrderId(order.orderId);
+      // `value` comes from the placed order's server-computed total
+      // (app/[locale]/checkout/page.tsx) — a purchase event without it would
+      // misreport revenue, so this only fires once a real order exists.
+      if (order.value !== null) {
+        track({ name: 'purchase', params: { transaction_id: order.orderId, currency: order.currency, value: order.value, items: cartLinesToGa4Items(order.lines) } });
+      }
+      sessionStorage.removeItem('vivimoon-last-order');
+      // A buy-now order never drew from the real cart (spec §10) — clearing
+      // it here would wipe items the shopper never checked out with.
+      if (!order.isBuyNow) clear();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <PageContainer>
+      <Empty className="py-24">
+        <EmptyHeader>
+          <EmptyMedia variant="icon" className="bg-primary/10 text-primary">
+            <CheckCircle2 />
+          </EmptyMedia>
+          <EmptyTitle>{dict.checkout.success}</EmptyTitle>
+          {orderId ? (
+            <EmptyDescription>{dict.checkout.orderId}: {orderId}</EmptyDescription>
+          ) : null}
+        </EmptyHeader>
+        <EmptyContent>
+          <Link href={`/${locale}`} className={buttonVariants({ size: 'xl' })}>
+            {dict.common.shopNow}
+          </Link>
+        </EmptyContent>
+      </Empty>
+    </PageContainer>
+  );
+}

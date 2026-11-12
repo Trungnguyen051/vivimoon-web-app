@@ -3,6 +3,10 @@ import { POST } from './route';
 import { envelopeSchema } from '@/lib/api/schemas/common';
 import { pricedCartSchema } from '@/lib/api/schemas/cart';
 
+// Every catalogue product is `requiresRx`, and pricing refuses a line for one
+// without a prescription — so every real-variant fixture line carries this.
+const RX = { sameBothEyes: true, right: { sph: -2.5 }, left: { sph: -2.5 } };
+
 // No session cookie for any test in this file — every case here is a guest
 // request. The signed-in / memberOnly-voucher path is covered separately in
 // route.session.test.ts, which needs a real jar to sign a session into.
@@ -21,8 +25,8 @@ function req(body: unknown): Request {
 // Same two known variants as lib/api/resources/pricing/mock.test.ts:
 //   p-aqua-daily-30 (price 25) x2 + p-hazel-monthly-brown-30 (price 20) x1
 const BASELINE_LINES = [
-  { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2 },
-  { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1 },
+  { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 2, rx: RX },
+  { lineKey: 'l2', variantId: 'p-hazel-monthly-brown-30', quantity: 1, rx: RX },
 ];
 
 describe('POST /api/cart/price', () => {
@@ -52,7 +56,7 @@ describe('POST /api/cart/price', () => {
   });
 
   it('rejects a malformed body with 400 validation_failed', async () => {
-    const res = await POST(req({ lines: [{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 0 }] }));
+    const res = await POST(req({ lines: [{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 0, rx: RX }] }));
     const body = await res.json();
     expect(res.status).toBe(400);
     expect(body.ok).toBe(false);

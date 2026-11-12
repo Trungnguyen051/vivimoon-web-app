@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { QuizFlow } from './quiz-flow';
 import { apiRequest } from '@/lib/api/client';
 import { en } from '@/lib/i18n/dictionaries/en';
+import { vi as viDict } from '@/lib/i18n/dictionaries/vi';
 import type { QuizDefinition } from '@/lib/api/schemas/discovery';
 import type { Product } from '@/lib/types';
 
@@ -14,18 +15,18 @@ const definition: QuizDefinition = {
   questions: [
     {
       id: 'q1',
-      prompt: 'First question?',
+      prompt: { en: 'First question?', vi: 'Câu hỏi thứ nhất?' },
       options: [
-        { id: 'q1-a', label: 'Option A', tags: { 'productLine:coMau': 2 } },
-        { id: 'q1-b', label: 'Option B', tags: { 'productLine:trongSuot': 2 } },
+        { id: 'q1-a', label: { en: 'Option A', vi: 'Lựa chọn A' }, tags: { 'productLine:coMau': 2 } },
+        { id: 'q1-b', label: { en: 'Option B', vi: 'Lựa chọn B' }, tags: { 'productLine:trongSuot': 2 } },
       ],
     },
     {
       id: 'q2',
-      prompt: 'Second question?',
+      prompt: { en: 'Second question?', vi: 'Câu hỏi thứ hai?' },
       options: [
-        { id: 'q2-a', label: 'Option C', tags: { 'replacement:daily': 2 } },
-        { id: 'q2-b', label: 'Option D', tags: { 'replacement:monthly': 2 } },
+        { id: 'q2-a', label: { en: 'Option C', vi: 'Lựa chọn C' }, tags: { 'replacement:daily': 2 } },
+        { id: 'q2-b', label: { en: 'Option D', vi: 'Lựa chọn D' }, tags: { 'replacement:monthly': 2 } },
       ],
     },
   ],
@@ -124,5 +125,26 @@ describe('QuizFlow', () => {
     expect(screen.getByText('First question?')).toBeInTheDocument();
     expect(screen.getByText('1 / 2')).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: 'Option A' })).toHaveAttribute('aria-checked', 'false');
+  });
+
+  it('asks in the locale it is rendered in', () => {
+    render(<QuizFlow definition={definition} locale="vi" dict={viDict} />);
+    expect(screen.getByRole('heading', { name: 'Câu hỏi thứ nhất?' })).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: 'Lựa chọn A' })).toBeInTheDocument();
+    expect(screen.queryByText('First question?')).not.toBeInTheDocument();
+  });
+
+  it('shows the dictionary error, never the server message, when submit fails', async () => {
+    mockedApiRequest.mockResolvedValue({ ok: false, error: { code: 'validation', message: 'Unknown option id q2-z' } });
+    const user = userEvent.setup();
+    render(<QuizFlow definition={definition} locale="en" dict={en} />);
+
+    await user.click(screen.getByRole('radio', { name: 'Option A' }));
+    await user.click(screen.getByRole('button', { name: en.quiz.next }));
+    await user.click(screen.getByRole('radio', { name: 'Option C' }));
+    await user.click(screen.getByRole('button', { name: en.quiz.submit }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(en.quiz.error);
+    expect(screen.queryByText(/Unknown option/)).not.toBeInTheDocument();
   });
 });

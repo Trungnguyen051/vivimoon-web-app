@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { cartReducer, cartCount } from './cart-reducer';
 import { lineKey } from '@/lib/cart/line-key';
+import { MAX_LINE_QUANTITY } from '@/lib/api/schemas/cart';
 import type { RxInput } from '@/lib/api/schemas/rx';
 import type { CartLine, CartState } from './cart.types';
 
@@ -29,6 +30,19 @@ const atA = makeLine({ rx: rxA as never });
 const atB = makeLine({ rx: rxB as never });
 
 describe('cartReducer', () => {
+  it('clamps a merge at MAX_LINE_QUANTITY', () => {
+    const s1 = cartReducer(empty, { type: 'ADD', line: { ...atA, quantity: 90 } });
+    const s2 = cartReducer(s1, { type: 'ADD', line: { ...atA, quantity: 20 } });
+    expect(s2.lines[0].quantity).toBe(MAX_LINE_QUANTITY);
+  });
+
+  it('clamps a new line and a quantity update at MAX_LINE_QUANTITY', () => {
+    const s1 = cartReducer(empty, { type: 'ADD', line: { ...plain, quantity: 150 } });
+    expect(s1.lines[0].quantity).toBe(MAX_LINE_QUANTITY);
+    const s2 = cartReducer(s1, { type: 'UPDATE_QTY', lineKey: plain.lineKey, quantity: 100 });
+    expect(s2.lines[0].quantity).toBe(MAX_LINE_QUANTITY);
+  });
+
   it('adds a new line', () => {
     expect(cartReducer(empty, { type: 'ADD', line: plain }).lines).toHaveLength(1);
   });

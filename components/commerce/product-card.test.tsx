@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { ProductCard } from './product-card';
 import type { Product } from '@/lib/types';
 import { en } from '@/lib/i18n/dictionaries/en';
+import { vi } from '@/lib/i18n/dictionaries/vi';
 
 const product: Product = {
   id: 'p1', slug: 'aqua', name: 'Aqua Daily', brandId: 'v', brandName: 'Vivimoon',
@@ -21,5 +22,12 @@ describe('ProductCard', () => {
     expect(screen.getByText('$25.00')).toBeInTheDocument();
     const link = screen.getByRole('link', { name: /Aqua Daily/i });
     expect(link).toHaveAttribute('href', '/en/product/aqua');
+  });
+
+  it("prints the badge in the shopper's language, not its code", () => {
+    render(<ProductCard product={product} locale="vi" dict={vi} />);
+    expect(screen.getByText(vi.pdp.badges.sale)).toBeInTheDocument();
+    expect(vi.pdp.badges.sale).toBe('Giảm giá');
+    expect(screen.queryByText('sale')).not.toBeInTheDocument();
   });
 });

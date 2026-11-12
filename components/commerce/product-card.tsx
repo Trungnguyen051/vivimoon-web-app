@@ -49,7 +49,7 @@ export function ProductCard({
           ) : null}
           {product.badges[0] ? (
             <span className="absolute left-3 top-3 rounded-full bg-background/90 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide text-foreground backdrop-blur-sm">
-              {product.badges[0]}
+              {dict.pdp.badges[product.badges[0]]}
             </span>
           ) : null}
         </Link>

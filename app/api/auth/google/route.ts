@@ -1,9 +1,14 @@
 import { auth } from '@/lib/api/resources/auth';
 import { googleLoginSchema } from '@/lib/api/schemas/auth';
-import { apiOk } from '@/lib/api/response';
+import { apiFail, apiOk } from '@/lib/api/response';
 import { authErrorResponse, parseBody, startSession } from '@/lib/api/route-helpers';
 
 export async function POST(request: Request) {
+  // The mock reads the token as a bare email and verifies nothing, so in any
+  // production build it would hand a session to whoever names an address.
+  if (process.env.NODE_ENV === 'production') {
+    return apiFail('unauthorized', 'Google sign-in is not available');
+  }
   const parsed = await parseBody(request, googleLoginSchema);
   if (!parsed.ok) return parsed.response;
   try {

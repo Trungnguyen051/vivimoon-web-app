@@ -1,8 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { defaultLocale, isLocale, type Locale } from '@/lib/i18n/config';
-import { getDictionary } from '@/lib/i18n/dictionaries';
+import { useBoundaryStrings } from '@/components/layout/boundary-strings';
 import { PageContainer } from '@/components/layout/page-container';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
@@ -13,25 +11,22 @@ import { cn } from '@/lib/utils/cn';
  * browsing instead of reaching for the back button.
  *
  * A client component on purpose. `not-found` receives no `params`, so the locale
- * has to come from the path, and `usePathname` is what the Next docs point at for
- * exactly this. The dictionary is a static import, so there is nothing to fetch.
+ * and strings come from the locale layout through context rather than from the
+ * dictionaries module, which would ship every locale to the browser.
  */
 export default function LocaleNotFound() {
-  const pathname = usePathname();
-  const segment = pathname.split('/')[1] ?? '';
   // An invalid locale never reaches here — the layout rejects it before this
   // renders, and that 404 comes from the root boundary instead.
-  const locale: Locale = isLocale(segment) ? segment : defaultLocale;
-  const dict = getDictionary(locale);
+  const { locale, notFound } = useBoundaryStrings();
 
   return (
     <PageContainer>
       <div className="mx-auto flex w-full max-w-md flex-col items-center gap-6 py-20 text-center">
         <p className="text-6xl font-semibold tracking-tight">404</p>
-        <h1 className="text-2xl font-semibold tracking-tight">{dict.notFound.title}</h1>
-        <p className="text-muted-foreground">{dict.notFound.body}</p>
+        <h1 className="text-2xl font-semibold tracking-tight">{notFound.title}</h1>
+        <p className="text-muted-foreground">{notFound.body}</p>
         <Link href={`/${locale}`} className={cn(buttonVariants())}>
-          {dict.notFound.back}
+          {notFound.back}
         </Link>
       </div>
     </PageContainer>

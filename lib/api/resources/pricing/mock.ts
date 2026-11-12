@@ -104,6 +104,12 @@ export const mockPricing = {
         continue;
       }
 
+      // The PDP refuses to add a prescription product without an rx, but
+      // that is the client's check; this is the one a crafted request meets.
+      if (found.product.requiresRx && !line.rx) {
+        throw new PricingError(`line "${line.lineKey}" requires a prescription`, 'validation_failed');
+      }
+
       lines.push({
         lineKey: line.lineKey,
         variantId: line.variantId,

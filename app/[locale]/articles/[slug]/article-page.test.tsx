@@ -6,6 +6,7 @@ import { countReadingTheme, readingThemeDestination, readingThemeIncludes } from
 import { readingMinutes } from '@/lib/editorial/reading-time';
 import { vi as viDict } from '@/lib/i18n/dictionaries/vi';
 import { en as enDict } from '@/lib/i18n/dictionaries/en';
+import { catalog } from '@/lib/api/resources/catalog';
 
 vi.mock('next/navigation', async (orig) => ({
   ...(await orig<typeof import('next/navigation')>()),
@@ -181,6 +182,20 @@ describe('an article page', () => {
 
     expect(screen.getByRole('heading', { name: viDict.articles.inThisArticle })).toBeInTheDocument();
     expect(screen.getByText(viDict.articles.collectionBannerTitle)).toBeInTheDocument();
+  });
+
+  /** A destination that holds nothing is not a destination: no "0 products" banner. */
+  it('drops the banner when the collection matches no lens', async () => {
+    const spy = vi.spyOn(catalog, 'getProductsByIds').mockResolvedValue([]);
+    try {
+      await renderArticle(merchandised.slug);
+    } finally {
+      spy.mockRestore();
+    }
+
+    expect(screen.queryByText(viDict.articles.collectionBannerTitle)).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: viDict.articles.backToIndex }))
+      .toHaveAttribute('href', '/vi/articles');
   });
 
   /** Every article offers a way onward, banner or not. */
