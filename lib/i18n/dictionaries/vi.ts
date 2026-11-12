@@ -24,6 +24,13 @@ export const vi: Dictionary = {
     colored: 'Lens màu', daily: 'Lens hằng ngày', allLenses: 'Tất cả lens',
     beginnerFriendly: 'Lens cho người mới',
     productsLabel: 'sản phẩm', noResults: 'Không có sản phẩm phù hợp với bộ lọc.', showAll: 'Xem tất cả sản phẩm',
+    card: { lines: { moisture: 'Khoá ẩm', breathable: 'Mắt thở' }, moreColors: '+{n} màu' },
+    imageView: 'Xem ảnh:',
+    quizCard: {
+      title: 'Chưa biết chọn mẫu nào?',
+      body: '{count} câu hỏi · 30 giây. Vivimoon gợi ý lens hợp với mắt, phong cách và thời gian đeo của bạn.',
+      cta: 'Làm quiz chọn lens', revisit: 'Xem lại gợi ý cho bạn',
+    },
   },
   home: {
     moments: {

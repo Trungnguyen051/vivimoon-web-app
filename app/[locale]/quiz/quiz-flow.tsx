@@ -7,6 +7,7 @@ import type { Product } from '@/lib/types';
 import { apiRequest } from '@/lib/api/client';
 import { Button } from '@/components/ui/button';
 import { ProductGrid } from '@/components/commerce/product-grid';
+import { markQuizTaken } from '@/components/commerce/quiz-card';
 import { cn } from '@/lib/utils/cn';
 
 /**
@@ -62,7 +63,10 @@ export function QuizFlow({
     });
     isSubmittingRef.current = false;
     setIsPending(false);
-    if (res.ok) setResults(res.data.recommendations);
+    if (res.ok) {
+      setResults(res.data.recommendations);
+      markQuizTaken();
+    }
     // The server's message is for logs, not shoppers, and it is English either way.
     else setError(dict.quiz.error);
   }

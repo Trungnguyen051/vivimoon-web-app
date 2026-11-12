@@ -22,6 +22,13 @@ export const en = {
     colored: 'Colored Lenses', daily: 'Daily Lenses', allLenses: 'All Lenses',
     beginnerFriendly: 'Beginner-Friendly Lenses',
     productsLabel: 'products', noResults: 'No products match your filters.', showAll: 'Show all products',
+    card: { lines: { moisture: 'Moisture-lock', breathable: 'Breathable' }, moreColors: '+{n} colors' },
+    imageView: 'View:',
+    quizCard: {
+      title: 'Not sure which one to pick?',
+      body: '{count} questions · 30 seconds. Vivimoon suggests lenses that suit your eyes, style and wearing time.',
+      cta: 'Take the lens quiz', revisit: 'See your picks again',
+    },
   },
   home: {
     moments: {

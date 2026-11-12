@@ -9,6 +9,7 @@ import type { QuizDefinition } from '@/lib/api/schemas/discovery';
 import type { Product } from '@/lib/types';
 
 vi.mock('@/lib/api/client', () => ({ apiRequest: vi.fn() }));
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn() }), usePathname: () => '/en/quiz' }));
 const mockedApiRequest = vi.mocked(apiRequest);
 
 const definition: QuizDefinition = {
@@ -45,6 +46,7 @@ function product(id: string): Product {
 
 beforeEach(() => {
   mockedApiRequest.mockReset();
+  localStorage.clear();
 });
 
 describe('QuizFlow', () => {
@@ -88,6 +90,21 @@ describe('QuizFlow', () => {
     });
     expect(await screen.findByText('Product rec-1')).toBeInTheDocument();
     expect(screen.getByText('Product rec-2')).toBeInTheDocument();
+  });
+
+  it('remembers on this device that the Quiz was taken, so the PLP card can offer the picks again', async () => {
+    mockedApiRequest.mockResolvedValue({ ok: true, data: { recommendations: [product('rec-1')] } });
+    const user = userEvent.setup();
+    render(<QuizFlow definition={definition} locale="en" dict={en} />);
+
+    await user.click(screen.getByRole('radio', { name: 'Option A' }));
+    await user.click(screen.getByRole('button', { name: en.quiz.next }));
+    await user.click(screen.getByRole('radio', { name: 'Option C' }));
+    expect(localStorage.getItem('vivimoon:quiz-taken')).toBeNull();
+    await user.click(screen.getByRole('button', { name: en.quiz.submit }));
+
+    await screen.findByText('Product rec-1');
+    expect(localStorage.getItem('vivimoon:quiz-taken')).toBe('1');
   });
 
   it('a rapid double-click on submit fires only one request, not two', async () => {

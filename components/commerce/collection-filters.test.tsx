@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { CollectionFilters, CollectionFiltersSheet, CollectionLoadMore, CollectionSort } from './collection-filters';
+import { CollectionFilters, CollectionFiltersSheet, CollectionImageView, CollectionLoadMore, CollectionSort } from './collection-filters';
 import { vi as viDict } from '@/lib/i18n/dictionaries/vi';
 import { LENS_FACETS, facetAnchorId } from '@/lib/products/lens-facets';
 import type { FacetCounts } from '@/lib/api/resources/catalog';
@@ -219,5 +219,30 @@ describe('CollectionLoadMore (#194)', () => {
     render(<CollectionLoadMore dict={viDict} shown={20} total={20} />);
     expect(within(document.body).getByText('Đang xem 20 / 20 sản phẩm')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: t.loadMore })).not.toBeInTheDocument();
+  });
+});
+
+describe('CollectionImageView (#195)', () => {
+  beforeEach(() => {
+    push.mockClear();
+    search = '';
+  });
+
+  it('defaults to Người mẫu and writes the chosen view to the URL, keeping the paging', async () => {
+    search = 'show=16';
+    render(<CollectionImageView dict={viDict} />);
+    expect(screen.getByRole('button', { name: 'Người mẫu' })).toHaveAttribute('aria-pressed', 'true');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Cận mắt' }));
+    expect(lastUrl()).toBe('/vi/collection/all-lenses?show=16&view=closeUp');
+  });
+
+  it('drops the param when going back to the default', async () => {
+    search = 'view=eye';
+    render(<CollectionImageView dict={viDict} />);
+    expect(screen.getByRole('button', { name: 'Vân lens' })).toHaveAttribute('aria-pressed', 'true');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Người mẫu' }));
+    expect(lastUrl()).toBe('/vi/collection/all-lenses');
   });
 });
