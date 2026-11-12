@@ -277,7 +277,9 @@ export const en = {
     empty: 'No loyalty activity yet.',
   },
   orderDetail: {
-    status: 'Status', lineItems: 'Items', address: 'Shipping address', payment: 'Payment',
+    title: 'Order', placedOn: 'Placed on', status: 'Order status',
+    steps: { placed: 'Ordered', confirmed: 'Confirmed', packed: 'Packing', shipping: 'On the way', delivered: 'Received' },
+    lineItems: 'Items', address: 'Shipping address', payment: 'Payment',
     backToOrders: 'Back to order history',
   },
   tracking: {

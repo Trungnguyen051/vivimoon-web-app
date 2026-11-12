@@ -281,7 +281,9 @@ export const vi: Dictionary = {
     empty: 'Chưa có hoạt động tích điểm.',
   },
   orderDetail: {
-    status: 'Trạng thái', lineItems: 'Sản phẩm', address: 'Địa chỉ giao hàng', payment: 'Thanh toán',
+    title: 'Đơn hàng', placedOn: 'Ngày đặt', status: 'Trạng thái đơn hàng',
+    steps: { placed: 'Đã đặt hàng', confirmed: 'Đã xác nhận', packed: 'Đang đóng gói', shipping: 'Đang giao', delivered: 'Đã nhận' },
+    lineItems: 'Sản phẩm', address: 'Địa chỉ giao hàng', payment: 'Thanh toán',
     backToOrders: 'Quay lại lịch sử đơn hàng',
   },
   tracking: {
