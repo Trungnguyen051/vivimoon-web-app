@@ -145,6 +145,12 @@ export const mockAuth = {
     return publicUser(user);
   },
 
+  async deleteUser(id: string): Promise<void> {
+    const i = store.findIndex((u) => u.id === id);
+    if (i === -1) throw new AuthError('Account not found', 'not_found');
+    store.splice(i, 1);
+  },
+
   async getUserById(id: string): Promise<User | null> {
     const user = store.find((u) => u.id === id);
     return user ? publicUser(user) : null;

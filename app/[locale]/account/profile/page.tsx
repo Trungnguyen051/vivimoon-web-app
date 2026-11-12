@@ -5,7 +5,7 @@ import { readSessionUserId } from '@/lib/auth/cookie';
 import { fetchViaSelf } from '@/lib/api/server-fetch';
 import type { ApiResult } from '@/lib/api/client';
 import type { User } from '@/lib/api/schemas/auth';
-import { AccountForm } from '../account-form';
+import { AccountInfo } from '../account-info';
 
 /**
  * Goes through the same-origin route handler rather than importing the
@@ -35,12 +35,8 @@ export default async function AccountPage({ params }: { params: Promise<{ locale
   const user = await fetchAccount(locale);
 
   return (
-    <>
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 px-4 py-12">
-        <h1 className="text-3xl font-semibold tracking-tight">{dict.account.title}</h1>
-        <h2 className="text-lg font-medium">{dict.account.infoTitle}</h2>
-        <AccountForm user={user} dict={dict.account} />
-      </div>
-    </>
+    <div className="w-full max-w-2xl">
+      <AccountInfo user={user} locale={locale} dict={dict.account} welcome={dict.welcome} />
+    </div>
   );
 }

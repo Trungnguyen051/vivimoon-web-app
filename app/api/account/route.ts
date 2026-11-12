@@ -1,7 +1,7 @@
 import { account } from '@/lib/api/resources/account';
 import { accountPatchSchema } from '@/lib/api/schemas/account';
 import { apiOk, apiFail } from '@/lib/api/response';
-import { authErrorResponse, parseBody } from '@/lib/api/route-helpers';
+import { authErrorResponse, endSession, parseBody } from '@/lib/api/route-helpers';
 import { readSessionUserId } from '@/lib/auth/cookie';
 
 export async function GET() {
@@ -28,4 +28,16 @@ export async function PATCH(request: Request) {
   } catch (error) {
     return authErrorResponse(error);
   }
+}
+
+export async function DELETE() {
+  const userId = await readSessionUserId();
+  if (!userId) return apiFail('unauthorized', 'Sign in to delete your account');
+  try {
+    await account.delete(userId);
+  } catch (error) {
+    return authErrorResponse(error);
+  }
+  await endSession();
+  return apiOk({ ok: true });
 }
