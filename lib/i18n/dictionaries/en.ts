@@ -279,7 +279,9 @@ export const en = {
   orderDetail: {
     title: 'Order', placedOn: 'Placed on', status: 'Order status',
     steps: { placed: 'Ordered', confirmed: 'Confirmed', packed: 'Packing', shipping: 'On the way', delivered: 'Received' },
-    lineItems: 'Items', totalLabel: 'Order total', items: 'items', address: 'Shipping address', payment: 'Payment',
+    lineItems: 'Items', totalLabel: 'Order total', items: 'items',
+    delivery: 'Delivery details', recipient: 'Recipient', phone: 'Phone number', address: 'Address',
+    shippingMethod: 'Shipping method', carrierTrackingCode: 'Carrier tracking code',
     backToOrders: 'Back to order history',
   },
   tracking: {

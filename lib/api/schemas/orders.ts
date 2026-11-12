@@ -38,9 +38,14 @@ export const orderSchema = z.object({
   // always-empty array, and `currency` is narrowed back to required: an
   // order that priced nothing cannot exist.
   totals: pricedCartSchema
-    .omit({ lines: true, unavailableLines: true })
+    .omit({ lines: true, unavailableLines: true, shippingMethod: true })
     .extend({ currency: currencySchema }),
   address: addressSchema,
+  // Label of the shipping option charged at placement; optional so upstream
+  // and older orders without one stay valid (shown as "—").
+  shippingMethod: z.string().optional(),
+  // The carrier's own waybill number — set once the order ships.
+  carrierTrackingCode: z.string().optional(),
   payment: z.object({ method: paymentMethodTypeSchema, status: paymentStatusSchema }),
   // Exactly one of the two: a logged-in shopper's order attaches their user id,
   // a guest's carries the email its order confirmation goes to.

@@ -117,6 +117,7 @@ export const mockOrders = {
         currency: priced.currency!,
       },
       address: input.address,
+      ...(priced.shippingMethod ? { shippingMethod: priced.shippingMethod } : {}),
       payment: { method: input.paymentMethod, status: 'pending' },
       ...(userId ? { userId } : { guestEmail: input.email }),
     };

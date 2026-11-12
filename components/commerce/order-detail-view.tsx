@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import { catalog } from '@/lib/api/resources/catalog';
-import { paymentMethods } from '@/lib/payments/methods';
 import { RxSummary } from './rx-summary';
 import { OrderStatusTimeline } from './order-status-timeline';
 import { formatPrice, toIntlLocale } from '@/lib/utils/format';
@@ -37,7 +36,14 @@ export async function OrderDetailView({ order, locale, dict }: { order: Order; l
     order.lines.map(async (line) => ({ line, found: await catalog.getVariantById(line.variantId) })),
   );
   const itemCount = order.lines.reduce((sum, l) => sum + l.quantity, 0);
-  const methodLabel = paymentMethods.find((m) => m.type === order.payment.method)?.label ?? order.payment.method;
+  const { address } = order;
+  const delivery: [string, string | undefined][] = [
+    [dict.orderDetail.recipient, address.recipient],
+    [dict.orderDetail.phone, address.phone],
+    [dict.orderDetail.address, [address.line1, address.ward, address.district, address.province].join(', ')],
+    [dict.orderDetail.shippingMethod, order.shippingMethod],
+    [dict.orderDetail.carrierTrackingCode, order.carrierTrackingCode],
+  ];
 
   return (
     <div className="flex flex-col gap-6">
@@ -97,21 +103,16 @@ export async function OrderDetailView({ order, locale, dict }: { order: Order; l
         </p>
       </section>
 
-      <section className="grid gap-6 sm:grid-cols-2">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-lg font-medium">{dict.orderDetail.address}</h2>
-          <p className="text-sm text-muted-foreground">
-            {order.address.recipient}
-            <br />
-            {order.address.phone}
-            <br />
-            {order.address.line1}, {order.address.ward}, {order.address.district}, {order.address.province}
-          </p>
-        </div>
-        <div className="flex flex-col gap-2">
-          <h2 className="text-lg font-medium">{dict.orderDetail.payment}</h2>
-          <p className="text-sm text-muted-foreground">{methodLabel}</p>
-        </div>
+      <section aria-labelledby="order-delivery" className="border">
+        <h3 id="order-delivery" className="border-b px-4 py-3 text-[13px] font-medium leading-5">{dict.orderDetail.delivery}</h3>
+        <dl className="grid gap-x-6 gap-y-3 p-4 sm:grid-cols-2">
+          {delivery.map(([label, value]) => (
+            <div key={label} className="flex flex-col gap-0.5">
+              <dt className="text-xs leading-4 text-muted-foreground">{label}</dt>
+              <dd className="text-[13px] leading-5">{value || '—'}</dd>
+            </div>
+          ))}
+        </dl>
       </section>
     </div>
   );

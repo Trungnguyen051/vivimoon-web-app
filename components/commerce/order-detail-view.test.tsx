@@ -105,3 +105,24 @@ describe('OrderDetailView products panel', () => {
     expect(footer.parentElement).toHaveTextContent(/71/);
   });
 });
+
+describe('OrderDetailView delivery info', () => {
+  const field = (label: string) => screen.getByText(label, { selector: 'dt' }).nextElementSibling;
+
+  it('shows recipient, phone, address, shipping method and Carrier Tracking Code', async () => {
+    await renderView(order({ status: 'shipped', shippingMethod: 'Giao hàng nhanh', carrierTrackingCode: 'SPX2330404994944' }));
+    const d = dict.orderDetail;
+    expect(field(d.recipient)).toHaveTextContent('Nguyễn Thị Thu Hà');
+    expect(field(d.phone)).toHaveTextContent('0909000000');
+    expect(field(d.address)).toHaveTextContent('123 Nguyễn Huệ, Bến Nghé, Quận 1, TP.HCM');
+    expect(field(d.shippingMethod)).toHaveTextContent('Giao hàng nhanh');
+    expect(field(d.carrierTrackingCode)).toHaveTextContent('SPX2330404994944');
+  });
+
+  it('shows "—" for details the order does not have yet, and no payment method', async () => {
+    await renderView(order());
+    expect(field(dict.orderDetail.shippingMethod)).toHaveTextContent('—');
+    expect(field(dict.orderDetail.carrierTrackingCode)).toHaveTextContent('—');
+    expect(screen.queryByText('Thanh toán')).not.toBeInTheDocument(); // the wireframe drops payment method
+  });
+});
