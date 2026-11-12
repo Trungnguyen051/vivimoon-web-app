@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Search, SearchX } from 'lucide-react';
+import { SearchX } from 'lucide-react';
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { editorial } from '@/lib/api/resources/editorial';
@@ -11,6 +11,7 @@ import {
 import { articleDateline } from '@/lib/editorial/dateline';
 import { CARDS_PER_PAGE, knowledgeIndexLayout } from '@/lib/editorial/index-layout';
 import { firstParam } from '@/lib/utils/search-params';
+import { SearchForm } from '@/components/commerce/search-form';
 import { ArticleCards } from '@/components/commerce/article-cards';
 import { MakeupLooks } from '@/components/commerce/makeup-looks';
 import { NewsletterSignup } from '@/components/commerce/newsletter-signup';
@@ -140,23 +141,19 @@ export default async function ArticlesPage({
           ]}
         />
 
-        {/* A GET form, so searching works with JavaScript disabled — the same URL-as-state
-            the collection filters use. The other two controls ride along as hidden fields
-            rather than being dropped on submit. */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <form action={`/${locale}/articles`} className="flex items-center gap-2 rounded-md border px-3 sm:w-80">
-            <Search className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-            <input
-              type="search"
-              name="q"
-              defaultValue={q}
-              aria-label={dict.articles.searchLabel}
-              placeholder={dict.articles.searchPlaceholder}
-              className="h-11 flex-1 bg-transparent text-sm outline-none"
-            />
+          {/* The other two controls ride along as hidden fields rather than being
+              dropped on submit. */}
+          <SearchForm
+            action={`/${locale}/articles`}
+            label={dict.articles.searchLabel}
+            placeholder={dict.articles.searchPlaceholder}
+            defaultValue={q}
+            className="sm:w-80"
+          >
             {readingTheme ? <input type="hidden" name="theme" value={readingTheme} /> : null}
             {sort !== 'newest' ? <input type="hidden" name="sort" value={sort} /> : null}
-          </form>
+          </SearchForm>
 
           {/* Links rather than a select: the sort has two options and no JavaScript has to
               run for either of them to work. */}

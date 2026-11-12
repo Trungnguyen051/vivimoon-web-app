@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
-  CreditCard, Eye, Glasses, RotateCcw, Search, Truck, UserRound,
+  CreditCard, Eye, Glasses, RotateCcw, Truck, UserRound,
   MessageCircle, Phone, Mail, MessagesSquare, type LucideIcon,
 } from 'lucide-react';
 import { isLocale, type Locale } from '@/lib/i18n/config';
@@ -13,6 +13,7 @@ import { TrackingRequestForm } from '@/components/commerce/tracking-request-form
 import {
   Accordion, AccordionItem, AccordionTrigger, AccordionContent,
 } from '@/components/ui/accordion';
+import { SearchForm } from '@/components/commerce/search-form';
 import { PageContainer } from '@/components/layout/page-container';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
@@ -74,16 +75,13 @@ export default async function SupportPage({ params }: { params: Promise<{ locale
           <h1 className="font-heading max-w-3xl text-3xl md:text-4xl">{hub.heroTitle}</h1>
           <p className="max-w-2xl text-muted-foreground">{hub.heroSubtitle}</p>
 
-          <form action={faqHref} className="flex w-full max-w-xl items-center gap-2 rounded-md border px-3">
-            <Search className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-            <input
-              type="search"
-              name="q"
-              aria-label={hub.searchLabel}
-              placeholder={hub.searchPlaceholder}
-              className="h-12 flex-1 bg-transparent text-sm outline-none"
-            />
-          </form>
+          <SearchForm
+            action={faqHref}
+            label={hub.searchLabel}
+            placeholder={hub.searchPlaceholder}
+            size="lg"
+            className="w-full max-w-xl"
+          />
 
           {/* Links, not buttons: each carries its own query and needs nothing to run. */}
           <nav aria-label={hub.commonSearches} className="flex flex-wrap items-center justify-center gap-2">
