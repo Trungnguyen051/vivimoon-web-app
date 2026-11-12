@@ -146,6 +146,12 @@ describe('CollectionFilters (#194)', () => {
     expect(screen.queryByRole('button', { name: t.clearAll })).not.toBeInTheDocument();
   });
 
+  it('does not count a malformed rx as a filter — the server ignores it too (review of #216)', () => {
+    search = 'rx=abc';
+    renderFilters();
+    expect(screen.queryByRole('button', { name: t.clearAll })).not.toBeInTheDocument();
+  });
+
   /**
    * The Sản Phẩm menu links a diameter bucket (`14.3-14.5`) the width chips don't list.
    * It must still show, picked, so the shopper can see and undo what narrowed the grid.
