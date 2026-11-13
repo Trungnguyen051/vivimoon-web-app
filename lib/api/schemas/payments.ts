@@ -7,10 +7,11 @@ export const paymentMethodTypeSchema = z.enum(['qr', 'cod', 'ewallet']);
 export const intentMethodSchema = paymentMethodTypeSchema.exclude(['cod']);
 
 /**
- * No real payment is processed in M2 (spec §11) — every intent the mock
- * creates just sits `pending` for the UI to render against.
+ * No real payment is processed (spec §11): a QR order is `pending` (awaiting the
+ * transfer) until "Tôi đã chuyển khoản" marks it `paid` in the mock, or its 15-minute
+ * hold runs out and it is `expired` (#205). COD stays `pending` until the door.
  */
-export const paymentStatusSchema = z.enum(['pending']);
+export const paymentStatusSchema = z.enum(['pending', 'paid', 'expired']);
 
 export const paymentIntentRequestSchema = z.object({
   method: intentMethodSchema,

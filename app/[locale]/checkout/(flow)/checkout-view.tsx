@@ -42,13 +42,12 @@ const ADDRESS_FIELDS = ['recipient', 'phone', 'line1', 'ward', 'district', 'prov
 type FieldName = 'recipient' | 'phone' | 'email' | 'province' | 'district' | 'ward' | 'line1' | 'note';
 
 /**
- * Where placing an order lands (ADR-0025). COD goes to success. E-wallet keeps its
- * redirect intent on the order, but the mock's `redirectUrl` is a placeholder host,
- * so it lands on success until a real gateway is wired.
+ * Where placing an order lands (ADR-0025). QR goes to its transfer page (#205), COD to
+ * success. E-wallet keeps its redirect intent on the order, but the mock's `redirectUrl`
+ * is a placeholder host, so it lands on success until a real gateway is wired.
  */
 function placedOrderPath(order: Order, locale: Locale): string {
-  // #205: point this at the QR transfer page, `/${locale}/checkout/qr/${order.code}`, once it exists.
-  if (order.payment.method === 'qr') return `/${locale}/checkout/success`;
+  if (order.payment.intent?.qrCode) return `/${locale}/checkout/qr/${order.code}`;
   return `/${locale}/checkout/success`;
 }
 

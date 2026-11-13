@@ -271,6 +271,19 @@ export const en = {
     upsell: 'Add these for free shipping', addItem: 'Add {name} to cart',
     note: 'Shipping and vouchers are applied at checkout', viewCart: 'View cart',
   },
+  qrPayment: {
+    title: 'Scan to pay', subtitle: 'Open any banking app and scan the code. Your order is confirmed automatically.',
+    expiresIn: 'QR expires in', qrLabel: 'VietQR code for order {code}', saveQr: 'Save QR image',
+    bank: 'Bank', accountNumber: 'Account number', accountHolder: 'Account holder', amount: 'Amount',
+    reference: 'Transfer reference', copy: 'Copy {label}', copied: '{label} copied',
+    note: 'Please keep the transfer reference unchanged so we can confirm it automatically in 1–2 minutes. Your order is held for {n} minutes.',
+    switchToCod: 'Switch to COD', paid: "I've made the transfer",
+    expiredTitle: 'This QR has expired',
+    expiredBody: 'Your order is no longer held for a transfer. Pay on delivery instead, or get a new QR.',
+    newQr: 'Get a new QR', failed: 'Something went wrong. Please try again.',
+    order: 'Order #{code}', awaiting: 'Awaiting payment', expired: 'Payment expired',
+    total: 'Total', deliverTo: 'Deliver to: {address}', help: 'Having trouble? Chat with Vivimoon',
+  },
   checkout: {
     shipping: {
       title: 'Delivery', pending: 'Enter your address to see the delivery option.',

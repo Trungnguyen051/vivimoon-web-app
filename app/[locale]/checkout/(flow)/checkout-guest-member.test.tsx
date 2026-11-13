@@ -135,6 +135,29 @@ describe('Checkout — guest', () => {
     await waitFor(() => expect(push).toHaveBeenCalledWith('/en/checkout/success'));
   });
 
+  it('sends a QR order to its transfer page (#205)', async () => {
+    const fetchMock = api([]);
+    fetchMock.mockImplementation((path: string) => Promise.resolve(json({
+      ok: true,
+      data: path === '/api/orders'
+        ? { ...ORDER, code: 'VVM-QR1', payment: { method: 'qr', status: 'pending', intent: { id: 'pi-1', method: 'qr', status: 'pending', qrCode: 'vivimoon-qr:pi-1' } } }
+        : path === '/api/cart/price' ? PRICED : {},
+    })));
+    vi.stubGlobal('fetch', fetchMock);
+    await renderCheckoutPage();
+
+    await userEvent.type(screen.getByLabelText('Full name'), 'Alice Nguyen');
+    await userEvent.type(screen.getByLabelText('Phone'), '0912345678');
+    await userEvent.type(screen.getByLabelText('Province / City'), 'Ho Chi Minh City');
+    await userEvent.type(screen.getByLabelText('District'), 'District 1');
+    await userEvent.type(screen.getByLabelText('Ward'), 'Ben Nghe');
+    await userEvent.type(screen.getByLabelText('Street address'), '1 Le Loi');
+    await userEvent.click(screen.getByRole('radio', { name: /Scan QR/ }));
+    await userEvent.click(screen.getByRole('button', { name: /Place order/ }));
+
+    await waitFor(() => expect(push).toHaveBeenCalledWith('/en/checkout/qr/VVM-QR1'));
+  });
+
   it('asks for an email when the shopper picks the email channel', async () => {
     vi.stubGlobal('fetch', api([]));
     await renderCheckoutPage();
