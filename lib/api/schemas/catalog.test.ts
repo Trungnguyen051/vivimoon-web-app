@@ -162,7 +162,23 @@ describe('reviewSchema', () => {
     expect(r.source).toBe('vivimoon');
     expect(r.tags).toEqual([]);
     expect(r.media).toEqual([]);
-    expect(r.helpfulCount).toBe(0);
+    expect(r.marketplaceHelpfulCount).toBe(0);
+    expect(r.helpfulVoteCount).toBe(0);
+  });
+
+  it('is pending until moderated, so an unlabelled review never goes public', () => {
+    const r = reviewSchema.parse({ id: 'r1', productId: 'p1', author: 'A', rating: 5, body: 'b', createdAt: '2026-01-01' });
+    expect(r.status).toBe('pending');
+    expect(r.title).toBeUndefined();
+  });
+
+  it('carries a rejection reason', () => {
+    const r = reviewSchema.parse({
+      id: 'r1', productId: 'p1', author: 'A', rating: 5, body: 'b', createdAt: '2026-01-01',
+      status: 'rejected', reason: 'Off-topic',
+    });
+    expect(r.reason).toBe('Off-topic');
+    expect(() => reviewSchema.parse({ ...r, status: 'hidden' })).toThrow();
   });
 
   it('accepts a mirrored marketplace review', () => {

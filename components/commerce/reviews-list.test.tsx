@@ -10,7 +10,7 @@ const reviews = [
   reviewSchema.parse({
     ...base, id: 'r1', author: 'Mai', rating: 5, body: 'Comfortable all day.',
     source: 'shopee', sourceUrl: 'https://shopee.vn/item/123',
-    variantLabel: 'Sandkiss 1 month', tags: ['allDay', 'myopic'], helpfulCount: 24,
+    variantLabel: 'Sandkiss 1 month', tags: ['allDay', 'myopic'], marketplaceHelpfulCount: 20, helpfulVoteCount: 4,
     media: [{ type: 'image', url: '/a.jpg' }, { type: 'video', url: 'https://tiktok.com/v/1' }],
     subRatings: { comfort: 5, colorMatch: 4, easeOfWear: 5 },
   }),
@@ -71,6 +71,11 @@ describe('ReviewsList', () => {
     expect(within(card).getByRole('link', { name: 'Review photo 1' })).toHaveAttribute('href', '/a.jpg');
     expect(within(card).getByRole('link', { name: en.reviews.video })).toHaveAttribute('href', 'https://tiktok.com/v/1');
     expect(within(card).getByText('Helpful (24)')).toBeInTheDocument();
+  });
+
+  it('shows a review without a title as just its body', () => {
+    renderList([reviewSchema.parse({ ...base, title: undefined, id: 'r9', author: 'Vy', rating: 5, body: 'No title here.' })]);
+    expect(within(screen.getByRole('article')).getByText('No title here.').textContent).toBe('No title here.');
   });
 
   it('renders a source badge per review, linked when sourceUrl is present', () => {

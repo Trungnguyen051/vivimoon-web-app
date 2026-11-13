@@ -15,7 +15,8 @@ async function renderProduct(slug: string) {
   return render(await ProductPage({ params: Promise.resolve({ locale: 'en', slug }) }));
 }
 
-const reviewsOf = (productId: string) => reviews.filter((r) => r.productId === productId);
+// Only approved reviews are public; the seed also holds pending and rejected ones.
+const reviewsOf = (productId: string) => reviews.filter((r) => r.productId === productId && r.status === 'approved');
 
 /**
  * The product's stored `rating`/`reviewCount` and the reviews below it are two sources
@@ -33,6 +34,15 @@ describe('a product page', () => {
     expect(screen.getByText(`${average.toFixed(1)} · ${own.length}`)).toBeInTheDocument();
     expect(screen.getByText(average.toFixed(1))).toBeInTheDocument();
     expect(screen.queryByText(`${product.rating.toFixed(1)} · ${product.reviewCount}`)).not.toBeInTheDocument();
+  });
+
+  it('leaves pending and rejected reviews out of the list and the summary', async () => {
+    const product = products.find((p) => reviews.some((r) => r.productId === p.id && r.status !== 'approved'))!;
+    const hidden = reviews.filter((r) => r.productId === product.id && r.status !== 'approved');
+    await renderProduct(product.slug);
+
+    expect(screen.getByText(new RegExp(`^${reviewsOf(product.id).length} reviews · `))).toBeInTheDocument();
+    for (const r of hidden) expect(screen.queryByText(r.body)).not.toBeInTheDocument();
   });
 
   it('shows no stars at all for a product nobody has reviewed', async () => {

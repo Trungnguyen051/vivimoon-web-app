@@ -229,7 +229,7 @@ export const reviewSchema = z.object({
   productId: z.string(),
   author: z.string(),
   rating: z.number().min(0).max(5),
-  title: z.string(),
+  title: z.string().optional(),
   body: z.string(),
   createdAt: z.string(),
   // Free text, as the marketplace shows it ("Sandkiss 1 tháng") — not a variant id.
@@ -246,7 +246,12 @@ export const reviewSchema = z.object({
     colorMatch: subRatingSchema,
     easeOfWear: subRatingSchema,
   }).optional(),
-  helpfulCount: z.number().int().nonnegative().default(0),
+  // Shown as their sum. The marketplace's own count is a Mirrored Review's only; votes are Vivimoon's Helpful Votes.
+  marketplaceHelpfulCount: z.number().int().nonnegative().default(0),
+  helpfulVoteCount: z.number().int().nonnegative().default(0),
+  // Review Moderation: only approved Reviews are public. Defaults to pending so an unlabelled Review never shows.
+  status: z.enum(['pending', 'approved', 'rejected']).default('pending'),
+  reason: z.string().optional(),
   // Reviews are mirrored from marketplace listings; provenance drives the badge.
   source: reviewSourceSchema.default('vivimoon'),
   sourceUrl: z.string().url().optional(),
