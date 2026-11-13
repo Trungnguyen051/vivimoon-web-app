@@ -241,10 +241,11 @@ export const reviewSchema = z.object({
     url: z.string(),
     poster: z.string().optional(),
   })).default([]),
+  // Each one optional: a member may rate some and skip the rest.
   subRatings: z.object({
-    comfort: subRatingSchema,
-    colorMatch: subRatingSchema,
-    easeOfWear: subRatingSchema,
+    comfort: subRatingSchema.optional(),
+    colorMatch: subRatingSchema.optional(),
+    easeOfWear: subRatingSchema.optional(),
   }).optional(),
   // Shown as their sum. The marketplace's own count is a Mirrored Review's only; votes are Vivimoon's Helpful Votes.
   marketplaceHelpfulCount: z.number().int().nonnegative().default(0),
@@ -252,6 +253,9 @@ export const reviewSchema = z.object({
   // Review Moderation: only approved Reviews are public. Defaults to pending so an unlabelled Review never shows.
   status: z.enum(['pending', 'approved', 'rejected']).default('pending'),
   reason: z.string().optional(),
+  // The order line a Review written on Vivimoon is about. Server-only, like `authorUserId`.
+  orderId: z.string().optional(),
+  lineKey: z.string().optional(),
   // Reviews are mirrored from marketplace listings; provenance drives the badge.
   source: reviewSourceSchema.default('vivimoon'),
   sourceUrl: z.string().url().optional(),
@@ -266,6 +270,24 @@ export const reviewSchema = z.object({
 export const reviewFilterSchema = z.object({
   tag: reviewTagSchema.optional(),
   hasMedia: z.enum(['true', 'false']).transform((v) => v === 'true').optional(),
+});
+
+/** `POST /api/orders/:id/reviews`: a member's Review of one line of their order. */
+export const reviewCreateSchema = z.object({
+  lineKey: z.string().min(1),
+  rating: z.number().int().min(1).max(5),
+  subRatings: reviewSchema.shape.subRatings,
+  tags: z.array(reviewTagSchema).max(3).refine((t) => new Set(t).size === t.length, 'tags must not repeat').default([]),
+  title: z.string().trim().max(120).optional().transform((v) => v || undefined),
+  body: z.string().trim().min(20).max(1000),
+});
+
+/** A line's Review as its writer sees it on the order detail; `none` means the line can be reviewed. */
+export const lineReviewSchema = z.object({
+  status: z.enum(['none', 'pending', 'approved', 'rejected']),
+  reviewId: z.string().optional(),
+  reason: z.string().optional(),
+  productSlug: z.string().optional(),
 });
 
 // Comparison (spec §4 endpoint, §10 feature note). Request is capped at 4
@@ -453,6 +475,8 @@ export type Collection = z.infer<typeof collectionSchema>;
 export type Review = z.infer<typeof reviewSchema>;
 export type ReviewTag = z.infer<typeof reviewTagSchema>;
 export type ReviewFilter = z.infer<typeof reviewFilterSchema>;
+export type ReviewCreate = z.infer<typeof reviewCreateSchema>;
+export type LineReview = z.infer<typeof lineReviewSchema>;
 export type ProductQuery = z.infer<typeof productQuerySchema>;
 export type CompareRequest = z.infer<typeof compareRequestSchema>;
 export type ComparisonRow = z.infer<typeof comparisonRowSchema>;

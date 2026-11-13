@@ -24,7 +24,7 @@ describe('GET /api/products/:slug/reviews', () => {
       const { body } = await get(query);
       expect(body.data.every((r: Review) => r.status === 'approved')).toBe(true);
     }
-    // The seed holds a pending and a rejected review on this product.
+    // The seed holds a pending (Hazel) and a rejected (this product) review.
     const ids = ((await get()).body.data as Review[]).map((r) => r.id);
     expect(ids).not.toContain('r11');
     expect(ids).not.toContain('r12');

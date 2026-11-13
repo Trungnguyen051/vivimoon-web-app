@@ -143,4 +143,21 @@ export const orders: Order[] = [
     payment: { method: 'cod', status: 'paid' },
     guestEmail: 'mai@example.vn',
   },
+  {
+    // Delivered and paid, for writing Reviews: l1 carries rejected Review r12, l2 has none yet.
+    id: 'order-seed-10',
+    code: 'VVM-SEED0010',
+    status: 'delivered',
+    placedAt: '2026-07-28T08:15:00.000Z',
+    lines: [
+      { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1, unitPrice: 125_000, lineTotal: 125_000, currency: 'VND' },
+      { lineKey: 'l2', variantId: 'p-breeze-daily-30', quantity: 1, unitPrice: 110_000, lineTotal: 110_000, currency: 'VND' },
+    ],
+    totals: { subtotal: 235_000, discount: 0, appliedVouchers: [], shipping: 30_000, total: 265_000, currency: 'VND' },
+    address: HOME_ADDRESS,
+    shippingMethod: 'standard',
+    carrierTrackingCode: 'SPX2330409915502',
+    payment: { method: 'cod', status: 'paid' },
+    userId: 'u-001',
+  },
 ];

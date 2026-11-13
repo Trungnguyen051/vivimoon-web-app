@@ -1,6 +1,7 @@
 import { orders } from '@/lib/api/resources/orders';
 import { apiOk, apiFail } from '@/lib/api/response';
 import { readSessionUserId } from '@/lib/auth/cookie';
+import { lineReview } from '@/lib/orders/line-review';
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const userId = await readSessionUserId();
@@ -12,5 +13,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   // order id must not become an oracle for what other shoppers have bought.
   if (!order || order.userId !== userId) return apiFail('not_found', 'Order not found');
 
-  return apiOk(order);
+  // Each line's Review state, for the order detail's "Viết đánh giá" and its moderation states.
+  const lines = await Promise.all(order.lines.map(async (line) => {
+    const review = await lineReview(order, line);
+    return review ? { ...line, review } : line;
+  }));
+  return apiOk({ ...order, lines });
 }

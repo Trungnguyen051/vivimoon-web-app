@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import { products, accessories, collections, reviews, galleries } from '@/content/mock';
 import { diameterMm, parseDiameterRange, parseRxPair, PRICE_PRESETS } from '@/lib/api/schemas/catalog';
 import type { Accessory, CatalogItem, Collection, LensGallery, Product, ProductQuery, Review, ReviewFilter, Variant } from '@/lib/api/schemas/catalog';
@@ -133,12 +134,13 @@ function facetCounts(scope: Product[], query: ProductQuery): FacetCounts {
 
 export const mockCatalog = {
   async getProductBySlug(slug: string): Promise<Product | null> {
-    return products.find((p) => p.slug === slug) ?? null;
+    const product = products.find((p) => p.slug === slug);
+    return product ? withWrittenReviews(product) : null;
   },
 
   /** Lenses only: accessories are never listed (Product Kind). */
   async listProducts(query: ProductQuery = {}): Promise<Product[]> {
-    return sortProducts(products.filter((p) => applies(p, query)), query.sort);
+    return sortProducts(products.filter((p) => applies(p, query)).map(withWrittenReviews), query.sort);
   },
 
   /**
@@ -150,7 +152,7 @@ export const mockCatalog = {
     { ids, offset = 0, limit = Infinity }: { ids?: string[]; offset?: number; limit?: number } = {},
   ): Promise<{ products: Product[]; total: number; counts: FacetCounts }> {
     const scope = ids ? products.filter((p) => ids.includes(p.id)) : products;
-    const result = sortProducts(scope.filter((p) => applies(p, query)), query.sort);
+    const result = sortProducts(scope.filter((p) => applies(p, query)).map(withWrittenReviews), query.sort);
     return { products: result.slice(offset, offset + limit), total: result.length, counts: facetCounts(scope, query) };
   },
 
@@ -170,7 +172,8 @@ export const mockCatalog = {
   async getProductsByIds(ids: string[]): Promise<Product[]> {
     return ids
       .map((id) => products.find((p) => p.id === id))
-      .filter((p): p is Product => Boolean(p));
+      .filter((p): p is Product => Boolean(p))
+      .map(withWrittenReviews);
   },
 
   async getRelatedProducts(product: Product, limit = 8): Promise<Product[]> {
@@ -180,7 +183,8 @@ export const mockCatalog = {
           p.id !== product.id &&
           (p.productLine === product.productLine || p.replacement === product.replacement),
       )
-      .slice(0, limit);
+      .slice(0, limit)
+      .map(withWrittenReviews);
   },
 
   /** Approved Reviews only. With `viewerId`, each carries whether it's theirs and whether they voted. */
@@ -205,6 +209,29 @@ export const mockCatalog = {
     return galleries.find((g) => g.productId === productId) ?? null;
   },
 
+  /** The Review written about one order line, as its writer sees it: the latest that wasn't deleted. */
+  async getLineReview(orderId: string, lineKey: string): Promise<Review | null> {
+    return reviews.findLast((r) => r.orderId === orderId && r.lineKey === lineKey) ?? null;
+  },
+
+  /** A member's new Review, pending Review Moderation. The caller has checked the line may be reviewed. */
+  async createReview(input: Omit<Review, 'id' | 'createdAt' | 'status' | 'source' | 'marketplaceHelpfulCount' | 'helpfulVoteCount' | 'reason'>): Promise<Review> {
+    const review: Review = {
+      ...input, id: `r-${randomUUID()}`, createdAt: new Date().toISOString(),
+      status: 'pending', source: 'vivimoon', marketplaceHelpfulCount: 0, helpfulVoteCount: 0,
+    };
+    reviews.push(keepPrivate(pendingUntil(review, Date.now() + AUTO_APPROVE_MS)));
+    return review;
+  },
+
+  /** Deletes the member's own Review; false when there is none by that id that they wrote. */
+  async deleteReview(id: string, userId: string): Promise<boolean> {
+    const index = reviews.findIndex((r) => r.id === id && r.authorUserId === userId);
+    if (index === -1) return false;
+    reviews.splice(index, 1);
+    return true;
+  },
+
   /**
    * Finds a variant by id across the whole catalogue, and the product it
    * belongs to. This is the server-side price lookup pricing/mock.ts uses —
@@ -220,3 +247,56 @@ export const mockCatalog = {
 };
 
 export type Catalog = typeof mockCatalog;
+
+// Review Moderation in the mock: the seed list is the store, mutated in place so every read above sees writes.
+const seedReviews = structuredClone(reviews);
+reviews.forEach(keepPrivate);
+const AUTO_APPROVE_MS = 60_000;
+
+/** Test helper: restores the seeded Reviews. */
+export function resetMockReviewsState(): void {
+  reviews.splice(0, reviews.length, ...structuredClone(seedReviews).map(keepPrivate));
+}
+
+/** Test-only hook standing in for the upstream moderation queue: approves or rejects at once. */
+export function moderateReview(id: string, status: 'approved' | 'rejected', reason?: string): void {
+  const review = reviews.find((r) => r.id === id);
+  if (!review) throw new Error(`No review ${id}`);
+  Object.assign(review, { status, reason: status === 'rejected' ? reason : undefined });
+}
+
+/**
+ * A new Review reads as approved once `at` passes, evaluated on read since the mock has no scheduler.
+ * A status set explicitly (the moderation hook) sticks. Seeded pending Reviews have no clock and stay pending.
+ */
+function pendingUntil(review: Review, at: number): Review {
+  let status: Review['status'] = 'pending';
+  return Object.defineProperty(review, 'status', {
+    get: () => (status === 'pending' && Date.now() >= at ? 'approved' : status),
+    set: (next: Review['status']) => { status = next; },
+    enumerable: true, configurable: true,
+  });
+}
+
+/**
+ * Who wrote a Review and about which order line never leave the server: non-enumerable, so a spread or
+ * JSON response drops them while the mock can still read them.
+ */
+function keepPrivate(review: Review): Review {
+  for (const key of ['authorUserId', 'orderId', 'lineKey'] as const) {
+    if (key in review) Object.defineProperty(review, key, { value: review[key], enumerable: false, writable: true, configurable: true });
+  }
+  return review;
+}
+
+/**
+ * Cards read a lens's stored rating and count; approved Reviews tied to an order line add to them (#224,
+ * story 34). The seeded approved Reviews have none, so they're already in the stored numbers.
+ */
+function withWrittenReviews(product: Product): Product {
+  const written = reviews.filter((r) => r.productId === product.id && r.orderId && r.status === 'approved');
+  if (written.length === 0) return product;
+  const reviewCount = product.reviewCount + written.length;
+  const rating = (product.rating * product.reviewCount + written.reduce((sum, r) => sum + r.rating, 0)) / reviewCount;
+  return { ...product, reviewCount, rating };
+}

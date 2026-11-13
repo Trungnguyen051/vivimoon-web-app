@@ -8,7 +8,8 @@ import { getDictionary } from '@/lib/i18n/dictionaries';
 import { OrderDetailView } from './order-detail-view';
 
 const push = vi.fn();
-vi.mock('next/navigation', () => ({ useRouter: () => ({ push, refresh: vi.fn() }) }));
+const refresh = vi.fn();
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push, refresh }) }));
 
 const dict = getDictionary('vi');
 
@@ -151,5 +152,51 @@ describe('OrderDetailView actions', () => {
     await renderView(order(), true);
     expect(screen.getByRole('link', { name: dict.orderDetail.backToOrders })).toHaveAttribute('href', '/vi/account/orders');
     expect(screen.getByRole('button', { name: dict.orders.buyAgain })).toBeInTheDocument();
+  });
+});
+
+describe('OrderDetailView line Review states', () => {
+  const l = dict.writeReview.line;
+  const withReview = (review: NonNullable<Order['lines'][number]['review']>) =>
+    order({ status: 'delivered', lines: [{ ...order().lines[0], review }] });
+
+  it('shows nothing on a line that cannot be reviewed', async () => {
+    await renderView(order({ status: 'delivered' }), true);
+    expect(screen.queryByText(l.write)).toBeNull();
+  });
+
+  it('links a reviewable line to its Review form', async () => {
+    await renderView(withReview({ status: 'none', productSlug: 'aqua-daily-clear' }), true);
+    expect(screen.getByRole('link', { name: l.write })).toHaveAttribute('href', '/vi/account/orders/o1/review/l1');
+  });
+
+  it('shows a pending Review as under review', async () => {
+    await renderView(withReview({ status: 'pending', reviewId: 'r-1', productSlug: 'aqua-daily-clear' }), true);
+    expect(screen.getByText(l.pending)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: l.delete })).toBeInTheDocument();
+  });
+
+  it('links an approved Review to the product page', async () => {
+    await renderView(withReview({ status: 'approved', reviewId: 'r-1', productSlug: 'aqua-daily-clear' }), true);
+    expect(screen.getByRole('link', { name: l.approved })).toHaveAttribute('href', '/vi/product/aqua-daily-clear#reviews');
+  });
+
+  it('shows a rejected Review with its reason and a way to write it again', async () => {
+    await renderView(withReview({ status: 'rejected', reviewId: 'r-1', reason: 'Có số điện thoại', productSlug: 'aqua-daily-clear' }), true);
+    expect(screen.getByText(l.rejected)).toBeInTheDocument();
+    expect(screen.getByText('Lý do: Có số điện thoại')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: l.rewrite })).toHaveAttribute('href', '/vi/account/orders/o1/review/l1');
+  });
+
+  it('deletes the Review after confirming, then refreshes', async () => {
+    const fetch = vi.fn().mockResolvedValue(new Response(JSON.stringify({ ok: true, data: { id: 'r-1' } })));
+    vi.stubGlobal('fetch', fetch);
+    await renderView(withReview({ status: 'approved', reviewId: 'r-1', productSlug: 'aqua-daily-clear' }), true);
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', { name: l.delete }));
+    await user.click(screen.getByRole('button', { name: l.confirm }));
+    expect(fetch).toHaveBeenCalledWith('/api/reviews/r-1', expect.objectContaining({ method: 'DELETE' }));
+    expect(refresh).toHaveBeenCalled();
+    vi.unstubAllGlobals();
   });
 });
