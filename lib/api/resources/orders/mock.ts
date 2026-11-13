@@ -76,6 +76,7 @@ export const mockOrders = {
         lines: input.lines,
         shipping: { province: input.address.province, district: input.address.district },
         voucherCode: input.voucherCode,
+        usePoints: input.usePoints,
       },
       userId,
     );
@@ -123,11 +124,14 @@ export const mockOrders = {
       lines,
       totals: {
         subtotal: priced.subtotal,
-        // A Bundle's saving and a Spend Tier's amount off are money off too, so the order's totals still add up.
-        discount: priced.discount + (priced.bundleSaving ?? 0) + (priced.tierDiscount ?? 0),
+        // A Bundle's saving, a Spend Tier's amount off and points spent are money off too, so the order's totals still add up.
+        discount: priced.discount + (priced.bundleSaving ?? 0) + (priced.tierDiscount ?? 0) + (priced.pointsValue ?? 0),
         appliedVouchers: priced.appliedVouchers,
         shipping: priced.shipping,
         total: priced.total,
+        pointsUsed: priced.pointsUsed ?? 0,
+        pointsValue: priced.pointsValue ?? 0,
+        pointsToEarn: priced.pointsToEarn ?? 0,
         // Present whenever any line priced, and the guard above means at
         // least one did — an all-unavailable cart never reaches here.
         currency: priced.currency!,

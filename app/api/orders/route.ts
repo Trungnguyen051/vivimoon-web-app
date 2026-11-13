@@ -32,8 +32,8 @@ export async function POST(request: Request) {
     throw error;
   }
 
-  // Awarded here, not inside orders.place() — a guest has no loyalty
-  // account to award to, and M2's placement tests must stay unaffected by a
+  // Awarded here, not inside orders.place() — a guest's points are held by
+  // phone instead (ADR-0024), and M2's placement tests must stay unaffected by a
   // side effect they were never written to expect (issue #10). Run
   // concurrently with the preferred-payment-method update below (issue #20)
   // — neither depends on the other's result — via allSettled rather than
@@ -45,6 +45,9 @@ export async function POST(request: Request) {
       loyalty.award(userId, order),
       account.update(userId, { preferredPaymentMethod: order.payment.method }),
     ]);
+  } else {
+    // Never turn a placed order into an error the shopper might retry into a duplicate.
+    await loyalty.hold(order.address.phone, order).catch(() => {});
   }
 
   return apiOk(order);

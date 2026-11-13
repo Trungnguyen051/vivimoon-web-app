@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach } from 'vitest';
 import { mockPricing, PricingError } from './mock';
+import { mockLoyalty } from '@/lib/api/resources/loyalty/mock';
 import type { PriceCartRequest } from '@/lib/api/schemas/cart';
 
 // Every catalogue product is `requiresRx`, and pricing refuses a line for one
@@ -360,6 +361,52 @@ describe('mockPricing.priceCart', () => {
       const codes = result.appliedVouchers.map((v) => v.code);
       expect(codes).not.toContain('MEMBER20');
     });
+  });
+});
+
+// CONTEXT.md "Loyalty": earn 1 point per 10.000₫ paid; spend at 100₫ a point, up to 10% of the subtotal.
+describe('mockPricing.priceCart — Loyalty', () => {
+  afterEach(() => { vi.restoreAllMocks(); });
+
+  it('tells a guest what the order earns and what signing in could spend, but never spends', async () => {
+    // 350.000 less SAVE15's 75.000 = 275.000 paid → 27 points; 10% of 350.000 = 35.000₫ = 350 points.
+    const result = await mockPricing.priceCart({ lines: BASELINE_LINES, usePoints: true });
+    expect(result.total).toBe(275_000);
+    expect(result.pointsToEarn).toBe(27);
+    expect(result.pointsUsable).toBe(350);
+    expect(result.pointsUsed).toBe(0);
+    expect(result.pointsValue).toBe(0);
+    expect(result.pointsBalance).toBeUndefined();
+  });
+
+  it('spends nothing for a member who has not switched points on', async () => {
+    vi.spyOn(mockLoyalty, 'get').mockResolvedValue({ balance: 1_000, history: [] });
+    const result = await mockPricing.priceCart(req(BASELINE_LINES), 'user-1');
+    expect(result.pointsBalance).toBe(1_000);
+    expect(result.pointsUsed).toBe(0);
+    expect(result.total).toBe(250_000);
+    expect(result.pointsToEarn).toBe(25);
+  });
+
+  it('caps the points spent at 10% of the subtotal and earns on the amount paid', async () => {
+    vi.spyOn(mockLoyalty, 'get').mockResolvedValue({ balance: 1_000, history: [] });
+    const result = await mockPricing.priceCart({ lines: BASELINE_LINES, usePoints: true }, 'user-1');
+    expect(result.pointsUsable).toBe(350);
+    expect(result.pointsUsed).toBe(350);
+    expect(result.pointsValue).toBe(35_000);
+    // 350.000 - MEMBER20's 100.000 - 35.000 = 215.000 paid → 21 points, not 25.
+    expect(result.total).toBe(215_000);
+    expect(result.pointsToEarn).toBe(21);
+  });
+
+  it("caps the points spent at the member's balance", async () => {
+    vi.spyOn(mockLoyalty, 'get').mockResolvedValue({ balance: 40, history: [] });
+    const result = await mockPricing.priceCart({ lines: BASELINE_LINES, usePoints: true }, 'user-1');
+    expect(result.pointsUsable).toBe(40);
+    expect(result.pointsUsed).toBe(40);
+    expect(result.pointsValue).toBe(4_000);
+    expect(result.total).toBe(246_000);
+    expect(result.pointsToEarn).toBe(24);
   });
 });
 

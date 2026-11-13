@@ -76,6 +76,8 @@ export function usePricedCart(
   shipping?: { province: string; district: string } | null,
   /** The Voucher the shopper picked or typed; absent prices with the best one. A change re-prices like a line edit. */
   voucherCode?: string,
+  /** A member's "Dùng N điểm" toggle. A change re-prices like a line edit. */
+  usePoints?: boolean,
 ): UsePricedCartResult {
   const [result, setResult] = useState<PricedCart | null>(null);
   const [isPending, setIsPending] = useState(false);
@@ -113,7 +115,7 @@ export function usePricedCart(
       setIsPending(true);
       apiRequest<PricedCart>('/api/cart/price', {
         method: 'POST',
-        body: { lines: toPriceLines(lines), ...(shipping ? { shipping } : {}), ...(voucherCode ? { voucherCode } : {}) },
+        body: { lines: toPriceLines(lines), ...(shipping ? { shipping } : {}), ...(voucherCode ? { voucherCode } : {}), ...(usePoints ? { usePoints } : {}) },
         signal: controller.signal,
       }).then((res) => {
         if (cancelled) return; // superseded by a newer request — drop this response
@@ -137,7 +139,7 @@ export function usePricedCart(
       clearTimeout(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- shippingKey stands in for `shipping` (an object literal, unstable across renders)
-  }, [lines, hydrated, isEmpty, sessionStatus, shippingPending, shippingKey, voucherCode]);
+  }, [lines, hydrated, isEmpty, sessionStatus, shippingPending, shippingKey, voucherCode, usePoints]);
 
   const pending = isEmpty || shippingPending;
   return {

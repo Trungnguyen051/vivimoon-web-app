@@ -70,7 +70,7 @@ export default async function LoyaltyPage({ params }: { params: Promise<{ locale
                       <span className="font-medium">{entry.description}</span>
                       <span className="text-sm text-muted-foreground">{formatDate(entry.createdAt, locale)}</span>
                     </div>
-                    <span className="font-medium text-primary">+{entry.points}</span>
+                    <span className={entry.points > 0 ? 'font-medium text-primary' : 'font-medium'}>{entry.points > 0 ? '+' : ''}{entry.points}</span>
                   </CardContent>
                 </Card>
               </li>

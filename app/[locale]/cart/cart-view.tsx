@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ChevronLeft, Heart, Lock, RefreshCw, ShoppingBag } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Heart, Lock, RefreshCw, ShoppingBag, Sparkles } from 'lucide-react';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import type { Accessory, Product } from '@/lib/api/schemas/catalog';
@@ -294,7 +294,20 @@ export function CartView({ locale, dict, accessories = [], lenses = [] }: {
               onChoose={setVoucherCode}
               currency={result?.currency ?? currency} locale={locale} dict={dict}
             />
-            {/* The guest points prompt, "Đăng nhập để dùng N điểm", goes here (#204). */}
+            {sessionStatus === 'anonymous' && result?.pointsUsable ? (
+              <Link
+                href={`/${locale}/sign-in?next=${encodeURIComponent(`/${locale}/cart`)}`}
+                className="flex items-center gap-3 rounded-lg bg-background px-4 py-3 text-sm"
+              >
+                <Sparkles aria-hidden className="size-4.5 shrink-0" strokeWidth={1.5} />
+                <span className="min-w-0 flex-1">
+                  {dict.cart.pointsPrompt
+                    .replace('{points}', String(result.pointsUsable))
+                    .replace('{earn}', String(result.pointsToEarn ?? 0))}
+                </span>
+                <ChevronRight aria-hidden className="size-4 shrink-0" />
+              </Link>
+            ) : null}
           </OrderSummary>
         </div>
       </PageContainer>

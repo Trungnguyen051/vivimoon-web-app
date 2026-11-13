@@ -11,8 +11,10 @@ import { cn } from '@/lib/utils/cn';
 
 export function OrderSummary({
   subtotal, bundleSaving, discount, tierDiscount, spendTiers, shipping, total, currency, locale, dict, ctaHref, ctaLabel,
-  note, ctaBlockedReason, children, title, subtotalLabel, discountLabel, gifts, saved, ctaIcon, footer, className,
+  note, ctaBlockedReason, children, title, subtotalLabel, discountLabel, gifts, saved, ctaIcon, footer, className, pointsValue,
 }: {
+  /** Loyalty points spent, already subtracted server-side: "Điểm thưởng −Y". A row renders only when > 0. */
+  pointsValue?: number;
   /** Replaces the header's plain "Tóm tắt đơn hàng", e.g. checkout's "Đơn hàng (3) · Sửa giỏ". */
   title?: React.ReactNode;
   /** "Tạm tính (3)". Defaults to the plain label. */
@@ -98,6 +100,12 @@ export function OrderSummary({
               ))}
             </span>
             <span className="tabular-nums">-{formatPrice(tierDiscount, currency, locale)}</span>
+          </div>
+        ) : null}
+        {pointsValue ? (
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">{dict.cart.pointsRow}</span>
+            <span className="tabular-nums">-{formatPrice(pointsValue, currency, locale)}</span>
           </div>
         ) : null}
         <div className="flex justify-between">
