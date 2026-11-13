@@ -290,6 +290,15 @@ export const lineReviewSchema = z.object({
   productSlug: z.string().optional(),
 });
 
+/** `GET /api/products/:slug/reviews/eligibility`: one order line the member may review, as the product page's picker shows it. */
+export const eligibleLineSchema = z.object({
+  orderId: z.string(),
+  orderCode: z.string(),
+  placedAt: z.string(),
+  lineKey: z.string(),
+  variantLabel: z.string(),
+});
+
 // Comparison (spec §4 endpoint, §10 feature note). Request is capped at 4
 // products — the same cap `useCompareStore` enforces client-side; enforced
 // again here since the store cap is not a guarantee about the request body.
@@ -477,6 +486,7 @@ export type ReviewTag = z.infer<typeof reviewTagSchema>;
 export type ReviewFilter = z.infer<typeof reviewFilterSchema>;
 export type ReviewCreate = z.infer<typeof reviewCreateSchema>;
 export type LineReview = z.infer<typeof lineReviewSchema>;
+export type EligibleLine = z.infer<typeof eligibleLineSchema>;
 export type ProductQuery = z.infer<typeof productQuerySchema>;
 export type CompareRequest = z.infer<typeof compareRequestSchema>;
 export type ComparisonRow = z.infer<typeof comparisonRowSchema>;

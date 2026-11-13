@@ -1,7 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { MessageSquare, Play } from 'lucide-react';
 import type { Review, ReviewFilter, ReviewTag } from '@/lib/types';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
@@ -12,9 +11,10 @@ import { BadgeCheck } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { RatingStars } from './rating-stars';
 import { ReviewSourceBadge } from './review-source-badge';
-import { Button, buttonVariants } from '@/components/ui/button';
-import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { Button } from '@/components/ui/button';
+import { Empty, EmptyContent, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { HelpfulButton } from './helpful-button';
+import { WriteReviewButton } from './write-review-button';
 import { apiRequest } from '@/lib/api/client';
 import { useSessionStore } from '@/features/session/session-store';
 
@@ -47,8 +47,8 @@ const fill = (template: string, values: Record<string, string | number>) =>
 
 export function ReviewsList({ reviews, dict, locale, productSlug }: {
   reviews: Review[]; dict: Dictionary; locale: Locale;
-  /** Where a signed-in member's per-Review flags (voted, own) are read from; without it, everyone reads as a guest. */
-  productSlug?: string;
+  /** Where a signed-in member's per-Review flags (voted, own) and Review eligibility are read from. */
+  productSlug: string;
 }) {
   const viewer = useViewerReviews(productSlug);
   const [filter, setFilter] = useState<ReviewFilter>({});
@@ -67,6 +67,9 @@ export function ReviewsList({ reviews, dict, locale, productSlug }: {
             </EmptyMedia>
             <EmptyTitle>{dict.pdp.noReviews}</EmptyTitle>
           </EmptyHeader>
+          <EmptyContent className="w-full max-w-xs">
+            <WriteReviewButton productSlug={productSlug} locale={locale} dict={dict} />
+          </EmptyContent>
         </Empty>
       </section>
     );
@@ -127,10 +130,7 @@ export function ReviewsList({ reviews, dict, locale, productSlug }: {
             </dl>
           )}
 
-          {/* The orders page sends a guest to sign-in and back, so one link serves both. */}
-          <Link href={`/${locale}/account/orders`} className={cn(buttonVariants({ variant: 'outline', size: 'xl' }), 'w-full')}>
-            {t.write}
-          </Link>
+          <WriteReviewButton productSlug={productSlug} locale={locale} dict={dict} />
         </div>
 
         <div className="min-w-0">
@@ -172,11 +172,11 @@ export function ReviewsList({ reviews, dict, locale, productSlug }: {
 }
 
 /** The signed-in member's view of the list, by Review id: their votes and which Review is theirs. */
-function useViewerReviews(productSlug?: string) {
+function useViewerReviews(productSlug: string) {
   const status = useSessionStore((s) => s.status);
   const [viewer, setViewer] = useState<Map<string, Review> | null>(null);
   useEffect(() => {
-    if (status !== 'authenticated' || !productSlug) return;
+    if (status !== 'authenticated') return;
     let cancelled = false;
     apiRequest<Review[]>(`/api/products/${productSlug}/reviews`).then((result) => {
       if (!cancelled && result.ok) setViewer(new Map(result.data.map((r) => [r.id, r])));

@@ -172,6 +172,14 @@ export const vi: Dictionary = {
     noMatch: 'Chưa có đánh giá nào ở mục này.', photo: 'Ảnh đánh giá {n}', video: 'Video đánh giá',
     helpfulFailed: 'Chưa lưu được lượt bình chọn. Vui lòng thử lại.',
   },
+  reviewPicker: {
+    title: 'Bạn muốn đánh giá đơn nào?',
+    subtitle: 'Bạn đã nhận sản phẩm này ở nhiều đơn. Chọn đơn hàng bạn muốn đánh giá.',
+    order: 'Đơn {code}',
+    notYet: 'Bạn cần mua và nhận sản phẩm này để đánh giá.',
+    myOrders: 'Xem đơn hàng của tôi',
+    failed: 'Chưa kiểm tra được đơn hàng. Vui lòng thử lại.',
+  },
   pdp: {
     specs: 'Thông số', related: 'Có thể bạn cũng thích', reviews: 'Đánh giá',
     material: 'Chất liệu', waterContent: 'Độ ẩm', baseCurve: 'Độ cong',
