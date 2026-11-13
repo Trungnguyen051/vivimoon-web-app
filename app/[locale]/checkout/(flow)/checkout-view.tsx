@@ -72,7 +72,7 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
   const [submitError, setSubmitError] = useState<string | null>(null);
   // Loyalty (CONTEXT.md): a member's "Dùng N điểm" toggle, and a guest's pre-ticked
   // "Tạo tài khoản" box, which only tells the success page which path to highlight (ADR-0024).
-  const [usePoints, setUsePoints] = useState(false);
+  const [usePoints, setUsePoints] = useState(true); // on by default, per the Figma member frame (58:2); only members ever send it
   const [createAccount, setCreateAccount] = useState(true);
 
   const sessionStatus = useSessionStore((s) => s.status);

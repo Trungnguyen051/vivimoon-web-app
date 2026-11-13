@@ -254,24 +254,26 @@ describe('Checkout — Loyalty (CONTEXT.md)', () => {
     ? { ...PRICED, total: 127_500, pointsBalance: 320, pointsUsable: 125, pointsUsed: 125, pointsValue: 12_500, pointsToEarn: 12 }
     : { ...PRICED, pointsBalance: 320, pointsUsable: 125, pointsUsed: 0, pointsValue: 0, pointsToEarn: 14 });
 
-  it('lets a member switch points on, re-pricing with them and placing the order with them', async () => {
+  it('starts a member with points on, and lets them switch off and back on', async () => {
     const fetchMock = api([HOME], MEMBER_PRICE);
     vi.stubGlobal('fetch', fetchMock);
     signIn();
     await renderCheckoutPage();
 
     const toggle = await screen.findByRole('switch', { name: 'Use 125 points' });
-    expect(toggle).toHaveAttribute('aria-checked', 'false');
-    expect(screen.getByText('You have 320 points · 1 point = 100₫')).toBeInTheDocument();
-    expect(screen.getByText('This order earns 14 points')).toBeInTheDocument();
-    expect(screen.queryByText('Reward points')).not.toBeInTheDocument();
-
-    await userEvent.click(toggle);
     expect(toggle).toHaveAttribute('aria-checked', 'true');
+    expect(screen.getByText('You have 320 points · 1 point = 100₫')).toBeInTheDocument();
     expect(await screen.findByText('Reward points')).toBeInTheDocument();
     expect(screen.getByText('-12.500₫')).toBeInTheDocument();
     expect(screen.getByText('This order earns 12 points')).toBeInTheDocument();
 
+    await userEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-checked', 'false');
+    await waitFor(() => expect(screen.queryByText('Reward points')).not.toBeInTheDocument());
+    expect(screen.getByText('This order earns 14 points')).toBeInTheDocument();
+
+    await userEvent.click(toggle);
+    expect(await screen.findByText('Reward points')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: /Place order/ }));
     await waitFor(() => expect(fetchMock.mock.calls.some((c) => c[0] === '/api/orders')).toBe(true));
     expect(orderBody(fetchMock)).toMatchObject({ usePoints: true });
