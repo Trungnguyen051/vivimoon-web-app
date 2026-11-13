@@ -138,6 +138,12 @@ describe('SuccessView (#206)', () => {
     expect(screen.getByText('Bài viết · 2 phút')).toBeInTheDocument();
   });
 
+  it('never shows a leftover snapshot\'s code when the URL\'s order is unknown', async () => {
+    seedSnapshot({ orderId: 'VVM-OTHER' });
+    await renderView(null);
+    expect(screen.queryByText('#VVM-OTHER')).not.toBeInTheDocument();
+  });
+
   it('falls back to a plain thank-you for a missing or unknown code', async () => {
     await renderView(null);
     expect(screen.getByRole('heading', { level: 1, name: 'Đặt hàng thành công!' })).toBeInTheDocument();

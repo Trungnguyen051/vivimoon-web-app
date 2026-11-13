@@ -17,7 +17,7 @@ import { formatPrice } from '@/lib/utils/format';
 import { cn } from '@/lib/utils/cn';
 import { maskEmail, maskPhone } from '@/lib/orders/mask-contact';
 import { shippingMethodName } from '@/lib/orders/shipping-method-name';
-import { ARRIVAL_FORMAT } from '@/components/commerce/shipping-block';
+import { arrivalDate } from '@/components/commerce/shipping-block';
 import { CopyButton } from '@/components/commerce/copy-button';
 import { OrderStatusTimeline } from '@/components/commerce/order-status-timeline';
 
@@ -35,8 +35,6 @@ type LastOrder = {
   createAccount?: boolean;
   email?: string;
 };
-
-const DAY_MS = 24 * 60 * 60 * 1000;
 
 export function SuccessView({ order, etaDays, reads, locale, dict }: {
   order: PaymentOrder | null; etaDays?: number; reads: FirstWearRead[]; locale: Locale; dict: Dictionary;
@@ -75,8 +73,8 @@ export function SuccessView({ order, etaDays, reads, locale, dict }: {
 
   // The snapshot only describes this order if it is the one in the URL.
   const snapshot = lastOrder && order && lastOrder.orderId === order.code ? lastOrder : null;
-  const code = order?.code ?? lastOrder?.orderId;
-  const price = (n: number) => formatPrice(n, order?.totals.currency ?? 'VND', locale);
+  // Only the order the URL found: a leftover snapshot may belong to another one.
+  const code = order?.code;
 
   return (
     <div className="flex w-full flex-col">
@@ -117,7 +115,7 @@ export function SuccessView({ order, etaDays, reads, locale, dict }: {
       {order ? (
         <div className="flex flex-col gap-4 px-4 pb-10 md:px-10 md:pb-20 lg:grid lg:grid-cols-[minmax(0,1fr)_520px] lg:items-start lg:gap-10">
           <PointsBlock order={order} createAccount={snapshot?.createAccount ?? false} locale={locale} dict={dict} />
-          <OrderInfo order={order} etaDays={etaDays} price={price} dict={dict} />
+          <OrderInfo order={order} etaDays={etaDays} locale={locale} dict={dict} />
         </div>
       ) : null}
 
@@ -209,26 +207,26 @@ function PointsBlock({ order, createAccount, locale, dict }: {
   );
 }
 
-function OrderInfo({ order, etaDays, price, dict }: {
-  order: PaymentOrder; etaDays?: number; price: (n: number) => string; dict: Dictionary;
+function OrderInfo({ order, etaDays, locale, dict }: {
+  order: PaymentOrder; etaDays?: number; locale: Locale; dict: Dictionary;
 }) {
   const t = dict.orderSuccess;
   const { address, payment } = order;
   const shipping = order.shippingMethod
     ? [
         shippingMethodName(order.shippingMethod, dict),
-        etaDays ? t.info.eta.replace('{date}', ARRIVAL_FORMAT.format(new Date(Date.parse(order.placedAt) + etaDays * DAY_MS))) : null,
+        etaDays ? t.info.eta.replace('{date}', arrivalDate(Date.parse(order.placedAt), etaDays)) : null,
       ].filter(Boolean).join(' · ')
     : '—';
   // COD is settled at the door, so it has no status to report.
-  const paid = payment.method === 'cod' ? t.methods.cod : `${t.methods[payment.method]} · ${t.paymentStatus[payment.status]}`;
+  const paymentLine = payment.method === 'cod' ? t.methods.cod : `${t.methods[payment.method]} · ${t.paymentStatus[payment.status]}`;
   const rows: [string, string, boolean?][] = [
     [t.info.recipient, address.recipient],
     [t.info.address, [address.ward, address.district, address.province].join(', ')],
     [t.info.shipping, shipping],
-    [t.info.payment, paid],
+    [t.info.payment, paymentLine],
     ...(order.gifts?.length ? [[t.info.gifts, order.gifts.map((g) => g.name).join(', ')] as [string, string]] : []),
-    [t.info.total, price(order.totals.total), true],
+    [t.info.total, formatPrice(order.totals.total, order.totals.currency, locale), true],
   ];
 
   return (
