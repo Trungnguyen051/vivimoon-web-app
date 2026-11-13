@@ -63,7 +63,7 @@ export function QrTransferView({
       setBusy(false);
       return;
     }
-    router.push(`/${locale}/checkout/success`);
+    router.push(`/${locale}/checkout/success?code=${encodeURIComponent(order.code)}`);
   };
 
   // shortcut: the mock's `qrCode` is not a VietQR payload, so this draws a placeholder mark

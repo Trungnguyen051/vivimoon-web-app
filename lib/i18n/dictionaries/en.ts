@@ -271,6 +271,29 @@ export const en = {
     upsell: 'Add these for free shipping', addItem: 'Add {name} to cart',
     note: 'Shipping and vouchers are applied at checkout', viewCart: 'View cart',
   },
+  /** The order success page (#206). */
+  orderSuccess: {
+    title: 'Order placed!', orderCode: 'Order code:',
+    copyCode: 'Copy order code', copied: 'Order code copied',
+    sentVia: 'Your confirmation was sent via {channel} to {contact}.', sentViaChannel: 'Your confirmation was sent via {channel}.', lookupHint: 'Use the order code to look your order up any time.',
+    track: 'Track order', continue: 'Continue shopping',
+    guest: {
+      title: 'You just earned {points} points',
+      body: 'Your points are held against {phone}. Create an account to use them, get a 30K voucher for next time and see your order history.',
+      zalo: 'Continue with Zalo', google: 'Google', otp: 'Use phone (OTP)',
+    },
+    member: { earned: 'You earned +{points} points', total: 'You earned +{points} points, {total} in total', link: 'See your points' },
+    info: {
+      title: 'Order details', recipient: 'Recipient', address: 'Deliver to', shipping: 'Delivery',
+      eta: 'arrives {date}', payment: 'Payment', total: 'Total paid', gifts: 'Gifts',
+    },
+    methods: { qr: 'Bank transfer', cod: 'Cash on delivery', ewallet: 'E-wallet' },
+    paymentStatus: { paid: 'Received', pending: 'Awaiting payment', expired: 'Payment expired' },
+    reads: {
+      title: 'Get ready for your first wear', subtitle: 'Read while your lenses are on the way – 3 minutes is enough',
+      video: 'Video {duration}', article: 'Article · {minutes} min',
+    },
+  },
   qrPayment: {
     title: 'Scan to pay', subtitle: 'Open any banking app and scan the code. Your order is confirmed automatically.',
     expiresIn: 'QR expires in', qrLabel: 'VietQR code for order {code}', saveQr: 'Save QR image',
@@ -465,6 +488,7 @@ export const en = {
   orderDetail: {
     title: 'Order', placedOn: 'Placed on', status: 'Order status',
     steps: { placed: 'Ordered', confirmed: 'Confirmed', packed: 'Packing', shipping: 'On the way', delivered: 'Received' },
+    paid: 'Paid', payOnDelivery: 'Pay on delivery',
     lineItems: 'Items', totalLabel: 'Order total', items: 'items',
     delivery: 'Delivery details', recipient: 'Recipient', phone: 'Phone number', address: 'Address',
     shippingMethod: 'Shipping method', shippingMethods: { standard: 'Standard delivery', express: 'Express delivery' }, carrierTrackingCode: 'Carrier tracking code',

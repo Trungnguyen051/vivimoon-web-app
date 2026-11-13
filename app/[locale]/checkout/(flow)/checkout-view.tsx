@@ -48,7 +48,7 @@ type FieldName = 'recipient' | 'phone' | 'email' | 'province' | 'district' | 'wa
  */
 function placedOrderPath(order: Order, locale: Locale): string {
   if (order.payment.intent?.qrCode) return `/${locale}/checkout/qr/${order.code}`;
-  return `/${locale}/checkout/success`;
+  return `/${locale}/checkout/success?code=${encodeURIComponent(order.code)}`;
 }
 
 export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionary }) {
@@ -286,6 +286,8 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
         lines,
         isBuyNow,
         ...(isMember ? {} : { createAccount }),
+        // The order hides who placed it (ADR-0022), so the success page masks the email from here.
+        ...(email ? { email } : {}),
       }),
     );
     router.push(placedOrderPath(result.data, locale));

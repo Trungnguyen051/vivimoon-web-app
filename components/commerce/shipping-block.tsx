@@ -8,7 +8,7 @@ import { shippingMethodName } from '@/lib/orders/shipping-method-name';
 import { StepHeading } from './step-heading';
 
 // Arrival is the shop's calendar (Vietnam), written dd/mm in both locales as on the wireframe.
-const ARRIVAL_FORMAT = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: '2-digit', timeZone: 'Asia/Ho_Chi_Minh' });
+export const ARRIVAL_FORMAT = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: '2-digit', timeZone: 'Asia/Ho_Chi_Minh' });
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 export type ShippingQuote = { method: string; etaDays: number; fee: number };

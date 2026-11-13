@@ -270,6 +270,29 @@ export const vi: Dictionary = {
     upsell: 'Thêm để đủ Freeship', addItem: 'Thêm {name} vào giỏ',
     note: 'Phí vận chuyển & voucher áp dụng ở bước thanh toán', viewCart: 'Xem giỏ hàng',
   },
+  /** Trang đặt hàng thành công (#206). */
+  orderSuccess: {
+    title: 'Đặt hàng thành công!', orderCode: 'Mã đơn hàng:',
+    copyCode: 'Sao chép mã đơn hàng', copied: 'Đã sao chép mã đơn hàng',
+    sentVia: 'Xác nhận đơn đã được gửi qua {channel} {contact}.', sentViaChannel: 'Xác nhận đơn đã được gửi qua {channel}.', lookupHint: 'Dùng mã đơn để tra cứu bất cứ lúc nào.',
+    track: 'Theo dõi đơn hàng', continue: 'Tiếp tục mua sắm',
+    guest: {
+      title: 'Bạn vừa tích {points} điểm',
+      body: 'Điểm đang được giữ theo SĐT {phone}. Tạo tài khoản để dùng điểm, nhận voucher 30K cho lần mua sau và xem lịch sử đơn hàng.',
+      zalo: 'Tiếp tục với Zalo', google: 'Google', otp: 'Dùng SĐT (OTP)',
+    },
+    member: { earned: 'Bạn nhận +{points} điểm', total: 'Bạn nhận +{points} điểm, tổng {total} điểm', link: 'Xem điểm thưởng' },
+    info: {
+      title: 'Thông tin đơn hàng', recipient: 'Người nhận', address: 'Giao tới', shipping: 'Vận chuyển',
+      eta: 'dự kiến {date}', payment: 'Thanh toán', total: 'Tổng thanh toán', gifts: 'Quà tặng',
+    },
+    methods: { qr: 'Chuyển khoản', cod: 'Thanh toán khi nhận hàng', ewallet: 'Ví điện tử' },
+    paymentStatus: { paid: 'Đã nhận', pending: 'Chờ thanh toán', expired: 'Hết hạn thanh toán' },
+    reads: {
+      title: 'Chuẩn bị cho lần đeo đầu tiên', subtitle: 'Đọc trong lúc chờ lens tới tay – 3 phút là đủ',
+      video: 'Video {duration}', article: 'Bài viết · {minutes} phút',
+    },
+  },
   qrPayment: {
     title: 'Quét mã để thanh toán', subtitle: 'Mở app ngân hàng bất kỳ và quét mã. Đơn sẽ được xác nhận tự động.',
     expiresIn: 'Mã QR hết hạn sau', qrLabel: 'Mã VietQR cho đơn {code}', saveQr: 'Lưu ảnh QR',
@@ -464,6 +487,7 @@ export const vi: Dictionary = {
   orderDetail: {
     title: 'Đơn hàng', placedOn: 'Ngày đặt', status: 'Trạng thái đơn hàng',
     steps: { placed: 'Đã đặt hàng', confirmed: 'Đã xác nhận', packed: 'Đang đóng gói', shipping: 'Đang giao', delivered: 'Đã nhận' },
+    paid: 'Đã thanh toán', payOnDelivery: 'Thanh toán khi nhận',
     lineItems: 'Sản phẩm', totalLabel: 'Tổng số tiền', items: 'sản phẩm',
     delivery: 'Thông tin giao hàng', recipient: 'Người nhận', phone: 'Số điện thoại', address: 'Địa chỉ',
     shippingMethod: 'Phương thức vận chuyển', shippingMethods: { standard: 'Giao hàng tiêu chuẩn', express: 'Giao hàng nhanh' }, carrierTrackingCode: 'Mã vận đơn của bên giao hàng',

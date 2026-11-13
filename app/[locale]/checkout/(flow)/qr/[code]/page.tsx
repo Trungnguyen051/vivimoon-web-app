@@ -26,7 +26,7 @@ export default async function QrTransferPage({ params }: { params: Promise<{ loc
   if (!result.ok) throw new Error(`QR order lookup failed: ${result.error.message}`);
   const order = result.data;
   // Nothing left to transfer: a paid or COD order belongs on success.
-  if (order.payment.method !== 'qr' || order.payment.status === 'paid') redirect(`/${locale}/checkout/success`);
+  if (order.payment.method !== 'qr' || order.payment.status === 'paid') redirect(`/${locale}/checkout/success?code=${encodeURIComponent(order.code)}`);
 
   const lines: QrLine[] = await Promise.all(
     order.lines.map(async (line) => {
