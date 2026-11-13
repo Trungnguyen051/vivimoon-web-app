@@ -170,6 +170,7 @@ export const vi: Dictionary = {
     tags: { sensitiveEyes: 'Mắt nhạy cảm', allDay: 'Đeo cả ngày', beginner: 'Người mới đeo', myopic: 'Người cận' },
     bought: 'Đã mua {variant}', helpful: 'Hữu ích ({n})', seeAll: 'Xem tất cả {n} đánh giá',
     noMatch: 'Chưa có đánh giá nào ở mục này.', photo: 'Ảnh đánh giá {n}', video: 'Video đánh giá',
+    helpfulFailed: 'Chưa lưu được lượt bình chọn. Vui lòng thử lại.',
   },
   pdp: {
     specs: 'Thông số', related: 'Có thể bạn cũng thích', reviews: 'Đánh giá',

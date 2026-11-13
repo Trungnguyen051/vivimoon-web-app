@@ -255,6 +255,11 @@ export const reviewSchema = z.object({
   // Reviews are mirrored from marketplace listings; provenance drives the badge.
   source: reviewSourceSchema.default('vivimoon'),
   sourceUrl: z.string().url().optional(),
+  // The writer's account, for a Review written on Vivimoon. Server-only: public reads strip it.
+  authorUserId: z.string().optional(),
+  // Per-viewer flags, present only when the reader is signed in.
+  isOwn: z.boolean().optional(),
+  hasVoted: z.boolean().optional(),
 });
 
 /** `GET /api/products/:slug/reviews` query — both filters optional, and they combine. */

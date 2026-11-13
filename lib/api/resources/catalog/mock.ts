@@ -4,6 +4,24 @@ import type { Accessory, CatalogItem, Collection, LensGallery, Product, ProductQ
 import { cheapestVariant } from '@/lib/products/cheapest-variant';
 import { filterReviews } from '@/lib/products/reviews';
 
+/** Helpful Votes cast here, per Review id: the voting members. Seeded `helpfulVoteCount` is the base they add to. */
+let helpfulVotes = new Map<string, Set<string>>();
+
+export function resetMockHelpfulVotes(): void {
+  helpfulVotes = new Map();
+}
+
+export type HelpfulVoteResult = 'not_found' | 'own_review' | { hasVoted: boolean; helpfulVoteCount: number };
+
+/** What a shopper may see: never the writer's account; with a viewer, their per-Review flags. */
+function toPublicReview({ authorUserId, ...review }: Review, viewerId?: string | null): Review {
+  const voters = helpfulVotes.get(review.id);
+  const counted = { ...review, helpfulVoteCount: review.helpfulVoteCount + (voters?.size ?? 0) };
+  return viewerId
+    ? { ...counted, isOwn: authorUserId === viewerId, hasVoted: voters?.has(viewerId) ?? false }
+    : counted;
+}
+
 /** Lowest variant price, used for sorting. */
 export function minPrice(product: Product): number {
   return cheapestVariant(product).price;
@@ -165,8 +183,21 @@ export const mockCatalog = {
       .slice(0, limit);
   },
 
-  async getReviews(productId: string, filter: ReviewFilter = {}): Promise<Review[]> {
-    return filterReviews(reviews.filter((r) => r.productId === productId && r.status === 'approved'), filter);
+  /** Approved Reviews only. With `viewerId`, each carries whether it's theirs and whether they voted. */
+  async getReviews(productId: string, filter: ReviewFilter = {}, viewerId?: string | null): Promise<Review[]> {
+    return filterReviews(reviews.filter((r) => r.productId === productId && r.status === 'approved'), filter)
+      .map((r) => toPublicReview(r, viewerId));
+  },
+
+  /** Casts (`on`) or takes back a Helpful Vote. Idempotent, so a repeat never counts twice. */
+  async setHelpfulVote(reviewId: string, userId: string, on: boolean): Promise<HelpfulVoteResult> {
+    const review = reviews.find((r) => r.id === reviewId && r.status === 'approved');
+    if (!review) return 'not_found';
+    if (review.authorUserId === userId) return 'own_review';
+    const voters = helpfulVotes.get(reviewId) ?? new Set<string>();
+    if (on) voters.add(userId); else voters.delete(userId);
+    helpfulVotes.set(reviewId, voters);
+    return { hasVoted: on, helpfulVoteCount: review.helpfulVoteCount + voters.size };
   },
 
   /** `null` when the product has no gallery entry — the fallback signal the PDP branches on to render the plain `ProductGallery` instead. */

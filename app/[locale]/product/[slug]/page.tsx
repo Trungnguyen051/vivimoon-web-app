@@ -187,7 +187,7 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
           <BundleOffer product={product} accessories={bundleAccessories} locale={l} dict={dict} />
         ) : null}
 
-        <ReviewsList reviews={reviews} dict={dict} locale={l} />
+        <ReviewsList reviews={reviews} dict={dict} locale={l} productSlug={product.slug} />
 
         <CollectionCarousel title={t.related} products={related} locale={l} dict={dict} seeMoreHref={`/${l}/collection/bestsellers`} seeMoreLabel={dict.common.seeMore} />
       </div>

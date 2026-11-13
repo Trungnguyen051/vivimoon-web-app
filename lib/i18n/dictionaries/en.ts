@@ -167,6 +167,7 @@ export const en = {
     tags: { sensitiveEyes: 'Sensitive eyes', allDay: 'All-day wear', beginner: 'First-time wearers', myopic: 'Short-sighted' },
     bought: 'Bought {variant}', helpful: 'Helpful ({n})', seeAll: 'See all {n} reviews',
     noMatch: 'No reviews here yet.', photo: 'Review photo {n}', video: 'Review video',
+    helpfulFailed: 'Couldn’t save your vote. Please try again.',
   },
   pdp: {
     specs: 'Specifications', related: 'You might also like', reviews: 'Reviews',

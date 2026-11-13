@@ -1,6 +1,9 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { GET } from './route';
 import type { Review } from '@/lib/types';
+
+// A guest: the route reads the session for per-viewer flags.
+vi.mock('next/headers', () => ({ cookies: async () => ({ get: () => undefined }) }));
 
 async function get(query = '') {
   const res = await GET(new Request(`http://localhost/api/products/aqua-daily-clear/reviews${query}`), {

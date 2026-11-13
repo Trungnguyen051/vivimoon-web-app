@@ -1,8 +1,8 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { MessageSquare, Play, ThumbsUp } from 'lucide-react';
+import { MessageSquare, Play } from 'lucide-react';
 import type { Review, ReviewFilter, ReviewTag } from '@/lib/types';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import type { Locale } from '@/lib/i18n/config';
@@ -13,6 +13,9 @@ import { RatingStars } from './rating-stars';
 import { ReviewSourceBadge } from './review-source-badge';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { HelpfulButton } from './helpful-button';
+import { apiRequest } from '@/lib/api/client';
+import { useSessionStore } from '@/features/session/session-store';
 
 /**
  * Stars, average and count, read from the reviews themselves. The product page's header
@@ -41,7 +44,12 @@ const FIRST_PAGE = 4;
 const fill = (template: string, values: Record<string, string | number>) =>
   template.replace(/\{(\w+)\}/g, (_, key: string) => String(values[key]));
 
-export function ReviewsList({ reviews, dict, locale }: { reviews: Review[]; dict: Dictionary; locale: Locale }) {
+export function ReviewsList({ reviews, dict, locale, productSlug }: {
+  reviews: Review[]; dict: Dictionary; locale: Locale;
+  /** Where a signed-in member's per-Review flags (voted, own) are read from; without it, everyone reads as a guest. */
+  productSlug?: string;
+}) {
+  const viewer = useViewerReviews(productSlug);
   const [filter, setFilter] = useState<ReviewFilter>({});
   const [expanded, setExpanded] = useState(false);
   const t = dict.reviews;
@@ -148,7 +156,7 @@ export function ReviewsList({ reviews, dict, locale }: { reviews: Review[]; dict
           {shown.length === 0 ? (
             <p className="border-t py-8 text-sm text-muted-foreground">{t.noMatch}</p>
           ) : (
-            visible.map((r) => <ReviewCard key={r.id} review={r} dict={dict} />)
+            visible.map((r) => <ReviewCard key={r.id} review={viewer?.get(r.id) ?? r} dict={dict} locale={locale} />)
           )}
 
           {!expanded && shown.length > FIRST_PAGE && (
@@ -162,7 +170,22 @@ export function ReviewsList({ reviews, dict, locale }: { reviews: Review[]; dict
   );
 }
 
-function ReviewCard({ review: r, dict }: { review: Review; dict: Dictionary }) {
+/** The signed-in member's view of the list, by Review id: their votes and which Review is theirs. */
+function useViewerReviews(productSlug?: string) {
+  const status = useSessionStore((s) => s.status);
+  const [viewer, setViewer] = useState<Map<string, Review> | null>(null);
+  useEffect(() => {
+    if (status !== 'authenticated' || !productSlug) return;
+    let cancelled = false;
+    apiRequest<Review[]>(`/api/products/${productSlug}/reviews`).then((result) => {
+      if (!cancelled && result.ok) setViewer(new Map(result.data.map((r) => [r.id, r])));
+    });
+    return () => { cancelled = true; };
+  }, [status, productSlug]);
+  return status === 'authenticated' ? viewer : null;
+}
+
+function ReviewCard({ review: r, dict, locale }: { review: Review; dict: Dictionary; locale: Locale }) {
   const t = dict.reviews;
   return (
     <article className="flex flex-col gap-3 border-t py-6">
@@ -215,10 +238,15 @@ function ReviewCard({ review: r, dict }: { review: Review; dict: Dictionary }) {
         </ul>
       )}
 
-      <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
-        <ThumbsUp className="size-4" />
-        {fill(t.helpful, { n: r.marketplaceHelpfulCount + r.helpfulVoteCount })}
-      </p>
+      <HelpfulButton
+        reviewId={r.id}
+        marketplaceCount={r.marketplaceHelpfulCount}
+        voteCount={r.helpfulVoteCount}
+        hasVoted={r.hasVoted ?? false}
+        isOwn={r.isOwn}
+        locale={locale}
+        dict={t}
+      />
     </article>
   );
 }

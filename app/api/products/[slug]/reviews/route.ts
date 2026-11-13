@@ -1,6 +1,7 @@
 import { catalog } from '@/lib/api/resources/catalog';
 import { reviewFilterSchema } from '@/lib/api/schemas/catalog';
 import { apiOk, apiFail } from '@/lib/api/response';
+import { readSessionUserId } from '@/lib/auth/cookie';
 
 export async function GET(
   request: Request,
@@ -14,5 +15,5 @@ export async function GET(
   }
   const product = await catalog.getProductBySlug(slug);
   if (!product) return apiFail('not_found', `No product with slug "${slug}"`);
-  return apiOk(await catalog.getReviews(product.id, parsed.data));
+  return apiOk(await catalog.getReviews(product.id, parsed.data, await readSessionUserId()));
 }
