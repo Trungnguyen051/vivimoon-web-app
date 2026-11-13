@@ -186,7 +186,7 @@ function ReviewCard({ review: r, dict }: { review: Review; dict: Dictionary }) {
         <p className="text-xs text-muted-foreground">{r.tags.map((tag) => t.tags[tag]).join(' · ')}</p>
       )}
       <p className="leading-relaxed">
-        <span className="font-medium">{r.title}. </span>
+        {r.title && <span className="font-medium">{r.title}. </span>}
         {r.body}
       </p>
 
@@ -217,7 +217,7 @@ function ReviewCard({ review: r, dict }: { review: Review; dict: Dictionary }) {
 
       <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
         <ThumbsUp className="size-4" />
-        {fill(t.helpful, { n: r.helpfulCount })}
+        {fill(t.helpful, { n: r.marketplaceHelpfulCount + r.helpfulVoteCount })}
       </p>
     </article>
   );

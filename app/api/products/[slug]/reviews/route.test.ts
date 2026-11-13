@@ -16,6 +16,17 @@ describe('GET /api/products/:slug/reviews', () => {
     expect(body.data.length).toBeGreaterThan(2);
   });
 
+  it('never returns a pending or rejected review, with or without a filter', async () => {
+    for (const query of ['', '?tag=sensitiveEyes', '?hasMedia=true']) {
+      const { body } = await get(query);
+      expect(body.data.every((r: Review) => r.status === 'approved')).toBe(true);
+    }
+    // The seed holds a pending and a rejected review on this product.
+    const ids = ((await get()).body.data as Review[]).map((r) => r.id);
+    expect(ids).not.toContain('r11');
+    expect(ids).not.toContain('r12');
+  });
+
   it('filters by wearer tag', async () => {
     const all = (await get()).body.data as Review[];
     const { body } = await get('?tag=sensitiveEyes');

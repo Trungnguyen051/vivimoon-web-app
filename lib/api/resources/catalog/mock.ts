@@ -166,7 +166,7 @@ export const mockCatalog = {
   },
 
   async getReviews(productId: string, filter: ReviewFilter = {}): Promise<Review[]> {
-    return filterReviews(reviews.filter((r) => r.productId === productId), filter);
+    return filterReviews(reviews.filter((r) => r.productId === productId && r.status === 'approved'), filter);
   },
 
   /** `null` when the product has no gallery entry — the fallback signal the PDP branches on to render the plain `ProductGallery` instead. */
