@@ -15,8 +15,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
   // Each line's Review state, for the order detail's "Viết đánh giá" and its moderation states.
   const lines = await Promise.all(order.lines.map(async (line) => {
-    const review = await lineReview(order, line);
-    return review ? { ...line, review } : line;
+    const reviewable = await lineReview(order, line);
+    return reviewable ? { ...line, review: reviewable.review } : line;
   }));
   return apiOk({ ...order, lines });
 }

@@ -16,7 +16,7 @@ const { DELETE } = await import('@/app/api/reviews/[id]/route');
 const { GET: getOrder } = await import('@/app/api/orders/[id]/route');
 const { GET: getProductReviews } = await import('@/app/api/products/[slug]/reviews/route');
 const { signSession } = await import('@/lib/auth/cookie');
-const { resetMockOrdersState } = await import('@/lib/api/resources/orders/mock');
+const { resetMockOrdersState, mockOrders } = await import('@/lib/api/resources/orders/mock');
 const { resetMockReviewsState, moderateReview, mockCatalog } = await import('@/lib/api/resources/catalog/mock');
 
 function signIn(userId = 'u-001') { jar.set('vivimoon_session', signSession(userId)); }
@@ -80,7 +80,7 @@ describe('POST /api/orders/:id/reviews', () => {
 
   it('refuses a second live Review of the same line, pending or approved', async () => {
     signIn();
-    expect((await create('order-seed-9', { ...VALID, lineKey: 'l1' })).res.status).toBe(409); // seeded pending r11
+    expect((await create('order-seed-10', { ...VALID, lineKey: 'l3' })).res.status).toBe(409); // seeded pending r11
     const { body } = await create('order-seed-10', { ...VALID, lineKey: 'l2' });
     expect((await create('order-seed-10', { ...VALID, lineKey: 'l2' })).res.status).toBe(409);
     moderateReview(body.data.id, 'approved');
@@ -94,6 +94,15 @@ describe('POST /api/orders/:id/reviews', () => {
     expect((await lineStates('order-seed-10')).l1).toMatchObject({ status: 'pending' });
   });
 
+  it('cannot review a Gift: it is no order line, so it has no Review state and no line to name', async () => {
+    signIn();
+    const order = (await mockOrders.get('order-seed-10'))!;
+    order.gifts = [{ productId: 'p-aqua-daily', variantId: 'p-aqua-daily-30', name: 'Aqua Daily', quantity: 1, lineTotal: 0, reason: 'spendTier' }];
+    const detail = (await (await getOrder(new Request('http://x'), { params: Promise.resolve({ id: 'order-seed-10' }) })).json()).data;
+    expect(detail.gifts[0]).not.toHaveProperty('review');
+    expect((await create('order-seed-10', { ...VALID, lineKey: 'p-aqua-daily-30' })).res.status).toBe(404);
+  });
+
   it('marks a line that cannot be reviewed with no Review state', async () => {
     signIn();
     expect((await lineStates('order-seed-4')).l1).toBeUndefined();
@@ -102,9 +111,11 @@ describe('POST /api/orders/:id/reviews', () => {
 
   it.each([
     ['no rating', { rating: undefined }, 'rating'],
+    ['a rating of 0', { rating: 0 }, 'rating'],
     ['a rating over 5', { rating: 6 }, 'rating'],
     ['a sub-rating of 0', { subRatings: { comfort: 0 } }, 'subRatings.comfort'],
     ['text under 20 characters', { body: 'Quá ngắn' }, 'body'],
+    ['text of 19 characters', { body: 'a'.repeat(19) }, 'body'],
     ['text over 1000 characters', { body: 'a'.repeat(1001) }, 'body'],
     ['four wearer tags', { tags: ['allDay', 'myopic', 'beginner', 'sensitiveEyes'] }, 'tags'],
     ['an unknown tag', { tags: ['sleepy'] }, 'tags.0'],
@@ -137,8 +148,10 @@ describe('Review Moderation (mock)', () => {
 
     const shown = (await publicReviews('breeze-daily-clear')).find((r) => r.id === body.data.id)!;
     expect(shown).toMatchObject({ author: 'Mai N.', source: 'vivimoon', rating: 5, body: VALID.body });
-    // Never who wrote it, nor their order.
+    // Never who wrote it, nor their order: stripped at the boundary, not left to how the store holds them.
     expect(JSON.stringify(shown)).not.toMatch(/u-001|order-seed-10|Nguyễn|0912/);
+    for (const key of ['authorUserId', 'orderId', 'lineKey']) expect(shown).not.toHaveProperty(key);
+    expect(await mockCatalog.getLineReview('order-seed-10', 'l2')).toMatchObject({ authorUserId: 'u-001', orderId: 'order-seed-10', lineKey: 'l2' });
   });
 
   it('counts an approved Review on the product card numbers', async () => {

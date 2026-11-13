@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { CircleCheck, Star } from 'lucide-react';
 import { apiRequest } from '@/lib/api/client';
-import type { ReviewCreate, ReviewTag } from '@/lib/api/schemas/catalog';
+import { REVIEW_TEXT_LIMITS, type ReviewCreate, type ReviewTag } from '@/lib/api/schemas/catalog';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { cn } from '@/lib/utils/cn';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -15,9 +15,7 @@ import { ReviewMediaField, type MediaState } from './review-media-field';
 const TAGS: ReviewTag[] = ['sensitiveEyes', 'allDay', 'beginner', 'myopic'];
 const SUB_RATINGS = ['comfort', 'colorMatch', 'easeOfWear'] as const;
 type SubRatingKey = (typeof SUB_RATINGS)[number];
-const BODY_MIN = 20;
-const BODY_MAX = 1000;
-const MAX_TAGS = 3;
+const { bodyMin: BODY_MIN, bodyMax: BODY_MAX, maxTags: MAX_TAGS, titleMax: TITLE_MAX } = REVIEW_TEXT_LIMITS;
 
 const fill = (template: string, values: Record<string, string | number>) =>
   template.replace(/\{(\w+)\}/g, (_, key: string) => String(values[key]));
@@ -182,7 +180,7 @@ export function ReviewForm({ orderId, lineKey, orderHref, productHref, dict }: {
             {t.titleLabel} <span className="font-normal text-muted-foreground">{t.optional}</span>
           </FieldLabel>
           <Input
-            id="review-title" value={title} maxLength={120} placeholder={t.titlePlaceholder}
+            id="review-title" value={title} maxLength={TITLE_MAX} placeholder={t.titlePlaceholder}
             onChange={(e) => setTitle(e.target.value)} onBlur={() => setTouched((s) => ({ ...s, any: true }))}
           />
         </Field>
