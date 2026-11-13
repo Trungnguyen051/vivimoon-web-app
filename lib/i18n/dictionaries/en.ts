@@ -223,6 +223,7 @@ export const en = {
     priceError: 'We couldn’t update your total. Please try again.',
     eyes: { left: 'Left eye', right: 'Right eye' },
     tierDiscount: 'Orders from {threshold}',
+    pointsRow: 'Reward points', pointsPrompt: 'Sign in to use {points} points & earn {earn} more',
     titleCount: 'Your Cart ({count})', continueShopping: 'Continue shopping', continueShort: 'Shop more',
     selectAll: 'Select all ({count})', selectLine: 'Select {name}', nothingSelected: 'Select at least one item to check out.',
     gift: 'Gift: {name}', giftWith: 'Gift: {name} (with {product})',
@@ -290,6 +291,12 @@ export const en = {
     member: {
       greeting: 'Hi, {name}', points: '{points} points', prefilled: 'Filled in from your last order',
       notYou: 'Not you?',
+    },
+    loyalty: {
+      use: 'Use {points} points', balance: 'You have {balance} points · 1 point = {value}',
+      earn: 'This order earns {points} points', earnHeld: 'This order earns {points} points · held against your phone',
+      createAccount: 'Create an account with this phone to earn {points} points & get a 30K voucher next time',
+      createAccountHint: 'No password needed – sign in with OTP',
     },
     contact: {
       title: 'Delivery details', phoneHint: 'For delivery, order lookup and earning points',

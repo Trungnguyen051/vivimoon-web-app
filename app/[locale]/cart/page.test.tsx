@@ -306,6 +306,18 @@ describe('CartPage — vouchers (#202)', () => {
   });
 });
 
+describe('CartPage — Loyalty (#204)', () => {
+  it('tells a guest what signing in would let them spend and earn', async () => {
+    realPricing();
+    useSessionStore.setState({ status: 'anonymous' });
+    useCartStore.setState({ lines: [lens('Aqua', 'p-aqua-daily-30', 2), lens('Hazel', 'p-hazel-monthly-brown-30')], hydrated: true });
+    await renderCartPage();
+    // 350.000 subtotal: 10% = 350 points; 275.000 paid after SAVE15 earns 27.
+    const prompt = await screen.findByRole('link', { name: 'Sign in to use 350 points & earn 27 more' }, { timeout: 2000 });
+    expect(prompt).toHaveAttribute('href', '/en/sign-in?next=%2Fen%2Fcart');
+  });
+});
+
 describe('CartPage — move to Favorites (#202)', () => {
   it('asks a guest to sign in', async () => {
     realPricing();

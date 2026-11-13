@@ -127,6 +127,8 @@ export const priceCartRequestSchema = z.object({
   shipping: shippingSelectionSchema.optional(),
   // The Voucher the shopper picked or typed. Absent = the best valid one (CONTEXT.md "Voucher").
   voucherCode: z.string().trim().min(1).max(40).optional(),
+  // The member's "Dùng N điểm" toggle (CONTEXT.md "Loyalty"). Ignored for a guest.
+  usePoints: z.boolean().optional(),
 });
 
 /** Why a requested voucher code did not apply. The rest of the price is unaffected. */
@@ -227,6 +229,15 @@ export const pricedCartSchema = z.object({
   // That option's quoted delivery time, in days.
   shippingEtaDays: z.number().int().positive().optional(),
   total: z.number().int().nonnegative(),
+  // Loyalty (CONTEXT.md). All absent read as 0. The member's balance; absent for a guest.
+  pointsBalance: z.number().int().nonnegative().optional(),
+  // The most this cart may spend: the 10% cap, and for a member their balance too ("Dùng N điểm").
+  pointsUsable: z.number().int().nonnegative().optional(),
+  // Spent by `usePoints`, and their value in the cart's currency, already taken off `total`.
+  pointsUsed: z.number().int().nonnegative().optional(),
+  pointsValue: z.number().int().nonnegative().optional(),
+  // What paying `total` earns: "Đơn này tích N điểm".
+  pointsToEarn: z.number().int().nonnegative().optional(),
   // Absent only when NO line could be priced: currency is read off the
   // catalogue variants, so a cart with nothing priceable has no currency to
   // report rather than a zero in some arbitrary one. Every total is 0 in

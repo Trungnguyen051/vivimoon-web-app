@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-/** One balance movement (M3.6, issue #10) — currently earn-only, from a placed order. */
+/** One balance movement (M3.6, issue #10): points earned (positive) or spent (negative) by an order. */
 export const loyaltyEntrySchema = z.object({
   id: z.string(),
   points: z.number().int(),

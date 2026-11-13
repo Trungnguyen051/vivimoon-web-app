@@ -25,6 +25,9 @@ const { POST: otpRequest } = await import('./otp/request/route');
 const { POST: otpVerify } = await import('./otp/verify/route');
 const { POST: passwordReset } = await import('./password/reset/route');
 const { resetMockAuthState } = await import('@/lib/api/resources/auth/mock');
+const { resetMockLoyaltyState } = await import('@/lib/api/resources/loyalty/mock');
+const { loyalty } = await import('@/lib/api/resources/loyalty');
+type Order = import('@/lib/api/schemas/orders').Order;
 
 function post(body: unknown): Request {
   return new Request('http://localhost/api/auth', {
@@ -40,6 +43,7 @@ describe('auth routes', () => {
   beforeEach(() => {
     jar.clear();
     resetMockAuthState();
+    resetMockLoyaltyState();
   });
 
   afterEach(() => {
@@ -110,6 +114,24 @@ describe('auth routes', () => {
     const res = await otpVerify(post({ otpId: data.otpId, code: data.devCode }));
     expect((await res.json()).data.user.name).toBe('Mới');
     expect(jar.get(SESSION_COOKIE)).toBeTruthy();
+  });
+
+  it('verifying a sign-up credits the Held Points for that phone, exactly once (ADR-0024)', async () => {
+    const order = { id: 'order-guest', code: 'VVM-GUEST', totals: { total: 580_000, pointsToEarn: 58 } } as Order;
+    await loyalty.hold('0900 000 004', order); // typed with spaces at checkout
+    await loyalty.hold('0999999999', order); // someone else's number stays held
+
+    const { data } = await (await register(post({ phone: '+84900000004', name: 'Mới', password: 'abcdefgh' }))).json();
+    const { data: verified } = await (await otpVerify(post({ otpId: data.otpId, code: data.devCode }))).json();
+    const userId = verified.user.id;
+    expect((await loyalty.get(userId)).balance).toBe(58);
+    expect((await loyalty.get(userId)).history[0].orderId).toBe('order-guest');
+
+    // A later OTP sign-in verifies the phone again but has nothing left to credit.
+    const challenge = await (await otpRequest(post({ identifier: '0900000004', purpose: 'login' }))).json();
+    await otpVerify(post({ otpId: challenge.data.otpId, code: challenge.data.devCode }));
+    expect((await loyalty.get(userId)).balance).toBe(58);
+    expect(await loyalty.claimHeld('0999999999', 'u-other')).toBe(58);
   });
 
   it('400s a registration without a password', async () => {

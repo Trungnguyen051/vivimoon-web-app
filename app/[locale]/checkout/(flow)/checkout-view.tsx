@@ -23,6 +23,7 @@ import type { User } from '@/lib/api/schemas/auth';
 import type { LoyaltyBalance } from '@/lib/api/schemas/loyalty';
 import type { SavedAddress } from '@/lib/api/schemas/account';
 import { formatPrice } from '@/lib/utils/format';
+import { POINT_VALUE } from '@/lib/loyalty/rules';
 import { cn } from '@/lib/utils/cn';
 import { ShippingBlock } from '@/components/commerce/shipping-block';
 import { OrderSummary } from '@/components/commerce/order-summary';
@@ -69,6 +70,10 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
   // Memoized: `lines` is a dependency of usePricedCart's price-fetch effect.
   const lines = useMemo(() => (isBuyNow ? [buyNowLine] : cartLines), [isBuyNow, buyNowLine, cartLines]);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  // Loyalty (CONTEXT.md): a member's "Dùng N điểm" toggle, and a guest's pre-ticked
+  // "Tạo tài khoản" box, which only tells the success page which path to highlight (ADR-0024).
+  const [usePoints, setUsePoints] = useState(false);
+  const [createAccount, setCreateAccount] = useState(true);
 
   const sessionStatus = useSessionStore((s) => s.status);
   const user = useSessionStore((s) => s.user);
@@ -182,7 +187,7 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
   const shippingAddress = watchedProvince && watchedDistrict
     ? { province: watchedProvince, district: watchedDistrict }
     : null;
-  const { result: priced, isPending: pricePending, isError: priceFailed } = usePricedCart(lines, hydrated || isBuyNow, sessionStatus, shippingAddress, voucherCode);
+  const { result: priced, isPending: pricePending, isError: priceFailed } = usePricedCart(lines, hydrated || isBuyNow, sessionStatus, shippingAddress, voucherCode, isMember && usePoints);
   // The server's currency, not the line snapshot (a catalogue currency change).
   const currency = priced?.currency ?? lines[0]?.currency ?? 'VND';
   const price = (n: number) => formatPrice(n, currency, locale);
@@ -263,6 +268,7 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
         ...(note ? { note } : {}),
         paymentMethod,
         ...(voucherCode ? { voucherCode } : {}),
+        ...(isMember && usePoints ? { usePoints: true } : {}),
       },
     });
     if (!result.ok) {
@@ -280,6 +286,7 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
         value: result.data.totals.total,
         lines,
         isBuyNow,
+        ...(isMember ? {} : { createAccount }),
       }),
     );
     router.push(placedOrderPath(result.data, locale));
@@ -290,6 +297,10 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
   const giftLabel = (g: GiftLine) =>
     g.reason === 'product' ? dict.cart.giftRows.product : dict.cart.giftRows.spendTier.replace('{threshold}', price(giftThreshold));
   const appliedVoucher = priced?.appliedVouchers[0];
+  // "Đơn này tích N điểm" under the total; a guest's are held against their phone (ADR-0024).
+  const earnNote = priced?.pointsToEarn
+    ? (isMember ? t.loyalty.earn : t.loyalty.earnHeld).replace('{points}', String(priced.pointsToEarn))
+    : undefined;
   const [voucherOpen, setVoucherOpen] = useState(false);
   const showVoucherPicker = voucherOpen || Boolean(priced?.voucherError);
   const itemCount = lines.reduce((sum, l) => sum + l.quantity, 0);
@@ -423,10 +434,22 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
             onChange={(type) => { paymentMethodTouched.current = true; setRemembered(false); setPaymentMethod(type); }}
             dict={dict}
           />
-          {/* #204: the points toggle, "Dùng N điểm", goes here for members. */}
         </section>
 
-        {/* #204: guests' "Tạo tài khoản bằng SĐT này để tích N điểm" checkbox goes here. */}
+        {!isMember && priced?.pointsToEarn ? (
+          <label className="flex cursor-pointer items-start gap-4 bg-background p-5 md:px-6">
+            <input
+              type="checkbox"
+              checked={createAccount}
+              onChange={(e) => setCreateAccount(e.target.checked)}
+              className="mt-0.5 size-5 shrink-0 cursor-pointer accent-foreground"
+            />
+            <span className="flex flex-col gap-0.5">
+              <span className="font-medium">{t.loyalty.createAccount.replace('{points}', String(priced.pointsToEarn))}</span>
+              <span className="text-sm text-muted-foreground">{t.loyalty.createAccountHint}</span>
+            </span>
+          </label>
+        ) : null}
       </form>
 
       {/* `contents` below lg lets the place-order bar stick to the bottom of the whole page. */}
@@ -449,7 +472,8 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
           shipping={priced?.shipping ?? null}
           total={priced?.total ?? null}
           currency={currency} locale={locale} dict={dict}
-          note={hasUnavailableLines ? dict.cart.unavailableNote : undefined}
+          pointsValue={priced?.pointsValue}
+          note={hasUnavailableLines ? dict.cart.unavailableNote : earnNote}
         >
           <ul className="flex flex-col divide-y max-lg:border-b lg:gap-1 lg:divide-y-0">
             {lines.map((l) => {
@@ -496,9 +520,29 @@ export function CheckoutView({ locale, dict }: { locale: Locale; dict: Dictionar
               ) : null}
             </div>
           ) : null}
-          {/* #204: members' "Dùng N điểm" toggle and its "Điểm thưởng" row go here. */}
+          {isMember && priced?.pointsUsable ? (
+            <div className="flex items-center gap-3 border border-foreground px-4 py-3">
+              <Sparkles aria-hidden className="size-5 shrink-0" strokeWidth={1.5} />
+              <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                <p id="checkout-use-points" className="font-medium">
+                  {t.loyalty.use.replace('{points}', String(usePoints && priced.pointsUsed ? priced.pointsUsed : priced.pointsUsable))}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {t.loyalty.balance
+                    .replace('{balance}', (priced.pointsBalance ?? 0).toLocaleString(locale))
+                    .replace('{value}', price(POINT_VALUE))}
+                </p>
+              </div>
+              <button
+                type="button" role="switch" aria-checked={usePoints} aria-labelledby="checkout-use-points"
+                onClick={() => setUsePoints((on) => !on)}
+                className="relative h-7 w-12 shrink-0 cursor-pointer rounded-full bg-input transition-colors outline-none focus-visible:ring-3 focus-visible:ring-ring/50 aria-checked:bg-foreground"
+              >
+                <span className={cn('absolute top-1 left-1 size-5 rounded-full bg-background shadow-sm transition-transform', usePoints && 'translate-x-5')} />
+              </button>
+            </div>
+          ) : null}
         </OrderSummary>
-        {/* #204: "Đơn này tích N điểm" goes here, under the total. */}
         <div className="sticky bottom-0 z-10 -mx-4 flex flex-col gap-2 bg-muted/95 px-4 py-3 backdrop-blur-sm md:-mx-10 md:px-10 lg:static lg:mx-0 lg:bg-transparent lg:px-8 lg:pt-5 lg:pb-0 lg:backdrop-blur-none">
           {hasUnavailableLines ? (
             <p className="text-sm font-medium text-destructive">{dict.cart.unavailableBlocksCheckout}</p>

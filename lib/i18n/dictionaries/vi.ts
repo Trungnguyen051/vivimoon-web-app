@@ -225,6 +225,7 @@ export const vi: Dictionary = {
     priceError: 'Không cập nhật được tổng tiền. Vui lòng thử lại.',
     eyes: { left: 'Mắt trái', right: 'Mắt phải' },
     tierDiscount: 'Ưu đãi đơn từ {threshold}',
+    pointsRow: 'Điểm thưởng', pointsPrompt: 'Đăng nhập để dùng {points} điểm & tích thêm {earn} điểm',
     titleCount: 'Giỏ hàng ({count})', continueShopping: 'Tiếp tục mua sắm', continueShort: 'Mua tiếp',
     selectAll: 'Chọn tất cả ({count})', selectLine: 'Chọn {name}', nothingSelected: 'Chọn ít nhất một sản phẩm để thanh toán.',
     gift: 'Quà tặng: {name}', giftWith: 'Quà tặng: {name} (kèm {product})',
@@ -289,6 +290,12 @@ export const vi: Dictionary = {
     member: {
       greeting: 'Xin chào, {name}', points: '{points} điểm', prefilled: 'Đã tự điền thông tin theo lần mua trước',
       notYou: 'Không phải bạn?',
+    },
+    loyalty: {
+      use: 'Dùng {points} điểm', balance: 'Bạn có {balance} điểm · 1 điểm = {value}',
+      earn: 'Đơn này tích {points} điểm', earnHeld: 'Đơn này tích {points} điểm · giữ theo SĐT của bạn',
+      createAccount: 'Tạo tài khoản bằng SĐT này để tích {points} điểm & nhận voucher 30K lần sau',
+      createAccountHint: 'Không cần mật khẩu – đăng nhập bằng OTP',
     },
     contact: {
       title: 'Thông tin nhận hàng', phoneHint: 'Dùng để giao hàng, tra cứu đơn và tích điểm',

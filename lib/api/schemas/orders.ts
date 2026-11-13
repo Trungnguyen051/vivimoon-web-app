@@ -22,6 +22,7 @@ export const placeOrderRequestSchema = z
     paymentMethod: paymentMethodTypeSchema,
     // The Voucher picked in the cart, priced exactly as the preview was; a refused one falls back to the best.
     voucherCode: priceCartRequestSchema.shape.voucherCode,
+    usePoints: priceCartRequestSchema.shape.usePoints,
   })
   .refine((v) => v.notificationChannel !== 'email' || v.email, {
     message: 'The email channel needs an email address',
@@ -53,7 +54,7 @@ export const orderSchema = z.object({
   // always-empty array, and `currency` is narrowed back to required: an
   // order that priced nothing cannot exist.
   totals: pricedCartSchema
-    .omit({ lines: true, unavailableLines: true, shippingMethod: true, shippingEtaDays: true })
+    .omit({ lines: true, unavailableLines: true, shippingMethod: true, shippingEtaDays: true, pointsBalance: true, pointsUsable: true })
     .extend({ currency: currencySchema }),
   // What the order gets at 0₫ (CONTEXT.md "Gift"), as pricing reported it at placement.
   gifts: z.array(giftLineSchema).optional(),

@@ -1,5 +1,7 @@
 import { catalog } from '@/lib/api/resources/catalog';
 import { shipping } from '@/lib/api/resources/shipping';
+import { loyalty } from '@/lib/api/resources/loyalty';
+import { POINT_VALUE, pointsEarnedFor, spendablePoints } from '@/lib/loyalty/rules';
 import { vouchers as voucherFixtures } from '@/content/mock';
 import type { Currency } from '@/lib/api/schemas/catalog';
 import { lensesIn, purchaseUnitOf } from '@/lib/api/schemas/rx';
@@ -256,7 +258,13 @@ export const mockPricing = {
     // A refused code leaves the rest of the price intact: the best Voucher applies instead.
     const chosen = input.voucherCode ? chosenVoucher(input.voucherCode, payable, shippingFee, isMember) : null;
     const { discount, applied } = chosen && !('error' in chosen) ? chosen : bestVoucher(payable, shippingFee, isMember);
-    const total = Math.max(0, payable + shippingFee - discount - tiers.discount);
+    const beforePoints = Math.max(0, payable + shippingFee - discount - tiers.discount);
+    // Points come off last, so they never push the total below zero; a guest's are Held Points and can't be spent.
+    const pointsBalance = userId ? (await loyalty.get(userId)).balance : undefined;
+    const pointsUsable = spendablePoints(subtotal, pointsBalance);
+    const pointsUsed = userId && input.usePoints ? Math.min(pointsUsable, Math.floor(beforePoints / POINT_VALUE)) : 0;
+    const pointsValue = pointsUsed * POINT_VALUE;
+    const total = beforePoints - pointsValue;
 
     return {
       lines,
@@ -276,6 +284,11 @@ export const mockPricing = {
       shipping: shippingFee,
       ...(shippingMethod ? { shippingMethod, shippingEtaDays } : {}),
       total,
+      ...(pointsBalance !== undefined ? { pointsBalance } : {}),
+      pointsUsable,
+      pointsUsed,
+      pointsValue,
+      pointsToEarn: pointsEarnedFor(total),
       currency,
     };
   },

@@ -57,7 +57,7 @@ const PRICED = {
 const ORDER = { id: 'o1', code: 'VVM-X', status: 'placed', payment: { method: 'cod', status: 'pending' }, totals: { total: 140_000, currency: 'VND' } };
 
 /** Routes each request by path and method; `book` is the address book the API holds. */
-function api(book: unknown[]) {
+function api(book: unknown[], price: (body: { usePoints?: boolean }) => unknown = () => PRICED) {
   return vi.fn().mockImplementation((path: string, init?: RequestInit) => {
     const method = init?.method ?? 'GET';
     if (path === '/api/account/addresses' && method === 'POST') return Promise.resolve(json({ ok: true, data: [...book, NEW] }));
@@ -68,7 +68,7 @@ function api(book: unknown[]) {
     if (path === '/api/account/addresses') return Promise.resolve(json({ ok: true, data: book }));
     if (path === '/api/account') return Promise.resolve(json({ ok: true, data: { preferredPaymentMethod: 'cod' } }));
     if (path === '/api/loyalty') return Promise.resolve(json({ ok: true, data: { balance: 320, history: [] } }));
-    if (path === '/api/cart/price') return Promise.resolve(json({ ok: true, data: PRICED }));
+    if (path === '/api/cart/price') return Promise.resolve(json({ ok: true, data: price(JSON.parse(init!.body as string)) }));
     if (path === '/api/orders') return Promise.resolve(json({ ok: true, data: ORDER }));
     if (path === '/api/auth/logout') return Promise.resolve(json({ ok: true, data: null }));
     return Promise.resolve(json({ ok: true, data: {} }));
@@ -245,5 +245,60 @@ describe('Checkout — member', () => {
     expect(fetchMock.mock.calls.some((c) => c[0] === '/api/auth/logout')).toBe(true);
     expect(await screen.findByText('Optional - you can still order right away')).toBeInTheDocument();
     expect(screen.getByLabelText('Full name')).toHaveValue('');
+  });
+});
+
+describe('Checkout — Loyalty (CONTEXT.md)', () => {
+  // 125.000 subtotal: 10% is 12.500₫, so 125 points could be spent.
+  const MEMBER_PRICE = ({ usePoints }: { usePoints?: boolean }) => (usePoints
+    ? { ...PRICED, total: 127_500, pointsBalance: 320, pointsUsable: 125, pointsUsed: 125, pointsValue: 12_500, pointsToEarn: 12 }
+    : { ...PRICED, pointsBalance: 320, pointsUsable: 125, pointsUsed: 0, pointsValue: 0, pointsToEarn: 14 });
+
+  it('lets a member switch points on, re-pricing with them and placing the order with them', async () => {
+    const fetchMock = api([HOME], MEMBER_PRICE);
+    vi.stubGlobal('fetch', fetchMock);
+    signIn();
+    await renderCheckoutPage();
+
+    const toggle = await screen.findByRole('switch', { name: 'Use 125 points' });
+    expect(toggle).toHaveAttribute('aria-checked', 'false');
+    expect(screen.getByText('You have 320 points · 1 point = 100₫')).toBeInTheDocument();
+    expect(screen.getByText('This order earns 14 points')).toBeInTheDocument();
+    expect(screen.queryByText('Reward points')).not.toBeInTheDocument();
+
+    await userEvent.click(toggle);
+    expect(toggle).toHaveAttribute('aria-checked', 'true');
+    expect(await screen.findByText('Reward points')).toBeInTheDocument();
+    expect(screen.getByText('-12.500₫')).toBeInTheDocument();
+    expect(screen.getByText('This order earns 12 points')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: /Place order/ }));
+    await waitFor(() => expect(fetchMock.mock.calls.some((c) => c[0] === '/api/orders')).toBe(true));
+    expect(orderBody(fetchMock)).toMatchObject({ usePoints: true });
+  });
+
+  it('shows a guest their held points and a pre-ticked account box that creates no account', async () => {
+    const fetchMock = api([], () => ({ ...PRICED, pointsUsable: 125, pointsToEarn: 14 }));
+    vi.stubGlobal('fetch', fetchMock);
+    await renderCheckoutPage();
+
+    await userEvent.type(screen.getByLabelText('Full name'), 'Alice Nguyen');
+    await userEvent.type(screen.getByLabelText('Phone'), '0912345678');
+    await userEvent.type(screen.getByLabelText('Province / City'), 'Ho Chi Minh City');
+    await userEvent.type(screen.getByLabelText('District'), 'District 1');
+    await userEvent.type(screen.getByLabelText('Ward'), 'Ben Nghe');
+    await userEvent.type(screen.getByLabelText('Street address'), '1 Le Loi');
+
+    expect(await screen.findByText('This order earns 14 points · held against your phone')).toBeInTheDocument();
+    expect(screen.queryByRole('switch')).not.toBeInTheDocument();
+    const box = screen.getByRole('checkbox', { name: /Create an account with this phone to earn 14 points/ });
+    expect(box).toBeChecked();
+    await userEvent.click(box);
+
+    await userEvent.click(screen.getByRole('button', { name: /Place order/ }));
+    await waitFor(() => expect(push).toHaveBeenCalled());
+    expect(orderBody(fetchMock)).not.toHaveProperty('usePoints');
+    expect(fetchMock.mock.calls.some((c) => String(c[0]).startsWith('/api/auth/register'))).toBe(false);
+    expect(JSON.parse(sessionStorage.getItem('vivimoon-last-order')!)).toMatchObject({ createAccount: false });
   });
 });
