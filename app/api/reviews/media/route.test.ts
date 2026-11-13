@@ -47,6 +47,10 @@ const file = (data: Uint8Array, name: string, type: string): Upload => ({ data, 
 
 /** Encoded by hand: jsdom's FormData and File don't survive a Node Request body, and the route reads Node's. */
 async function send(...files: Upload[]) {
+  return sendRaw(files, true);
+}
+
+async function sendRaw(files: Upload[], withLength: boolean) {
   const boundary = 'review-media-boundary';
   const body = Buffer.concat([
     ...files.flatMap((f) => [
@@ -57,7 +61,8 @@ async function send(...files: Upload[]) {
     Buffer.from(`--${boundary}--\r\n`),
   ]);
   const res = await upload(new Request('http://x/api/reviews/media', {
-    method: 'POST', body, headers: { 'content-type': `multipart/form-data; boundary=${boundary}` },
+    method: 'POST', body,
+    headers: { 'content-type': `multipart/form-data; boundary=${boundary}`, ...(withLength ? { 'content-length': String(body.length) } : {}) },
   }));
   return { res, body: await res.json() };
 }
@@ -122,6 +127,20 @@ describe('POST /api/reviews/media', () => {
     expect((await send(file(JPEG(), 'a.jpg', 'image/jpeg'), file(PNG(), 'b.png', 'image/png'))).res.status).toBe(400);
   });
 
+  it('refuses an upload without a Content-Length rather than reading it unbounded', async () => {
+    signIn();
+    expect((await sendRaw([file(JPEG(), 'a.jpg', 'image/jpeg')], false)).res.status).toBe(400);
+  });
+
+  it('caps how many files one member can hold', async () => {
+    signIn();
+    for (let i = 0; i < 30; i++) expect((await send(file(JPEG(), `${i}.jpg`, 'image/jpeg'))).res.status).toBe(201);
+    const over = await send(file(JPEG(), 'over.jpg', 'image/jpeg'));
+    expect(over.res.status).toBe(409);
+    signIn('u-002');
+    expect((await send(file(JPEG(), 'theirs.jpg', 'image/jpeg'))).res.status).toBe(201);
+  });
+
   it('404s an unknown reference', async () => {
     const res = await serve(new Request('http://x/api/reviews/media/m-nope'), { params: Promise.resolve({ id: 'm-nope' }) });
     expect(res.status).toBe(404);
@@ -145,6 +164,7 @@ describe('media on a Review', () => {
     );
     return (await res.json()).data;
   }
+  const fetchMedia = (id: string) => serve(new Request(`http://x/api/reviews/media/${id}`), { params: Promise.resolve({ id }) });
   const ids = async (...files: Upload[]) => Promise.all(files.map(async (f) => (await send(f)).body.data.id as string));
 
   it('attaches uploaded photos and a video, shown once approved and found by the media filter', async () => {
@@ -154,6 +174,8 @@ describe('media on a Review', () => {
     moderateReview(body.data.id, 'approved');
 
     const shown = (await publicReviews('?hasMedia=true')).find((r) => r.id === body.data.id);
+    jar.clear();
+    expect((await fetchMedia(photo)).status).toBe(200);
     expect(shown?.media).toEqual([
       { type: 'image', url: `/api/reviews/media/${photo}` },
       { type: 'video', url: `/api/reviews/media/${video}` },
@@ -176,5 +198,25 @@ describe('media on a Review', () => {
     signIn();
     expect((await create({ media: [theirs] })).res.status).toBe(400);
     expect((await create({ media: ['m-nope'] })).res.status).toBe(400);
+  });
+
+  it('keeps a file private to its uploader until its Review is approved', async () => {
+    const [photo] = await ids(file(JPEG(), 'a.jpg', 'image/jpeg'));
+    const { body } = await create({ media: [photo] });
+    const seenByUploader = await fetchMedia(photo);
+    expect(seenByUploader.status).toBe(200);
+    expect(seenByUploader.headers.get('cache-control')).toBe('private, no-store');
+
+    signIn('u-002');
+    expect((await fetchMedia(photo)).status).toBe(404);
+    jar.clear();
+    expect((await fetchMedia(photo)).status).toBe(404);
+
+    moderateReview(body.data.id, 'rejected');
+    expect((await fetchMedia(photo)).status).toBe(404);
+    moderateReview(body.data.id, 'approved');
+    const seenByGuest = await fetchMedia(photo);
+    expect(seenByGuest.status).toBe(200);
+    expect(seenByGuest.headers.get('cache-control')).toContain('public');
   });
 });

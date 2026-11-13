@@ -16,8 +16,11 @@ export async function POST(request: Request) {
   const userId = await readSessionUserId();
   if (!userId) return apiFail('unauthorized', 'Sign in to upload');
 
-  // Refuse an oversized body before buffering it; the per-type caps below are the real rule.
-  if (Number(request.headers.get('content-length')) > video.maxBytes + 1024 * 1024) return fail('A video can be up to 50 MB', 'file.size');
+  // Refuse an oversized or unsized body before buffering it; the per-type caps below are the real rule.
+  // Browsers always send a length with a FormData upload, so a missing one is refused rather than read unbounded.
+  const length = Number(request.headers.get('content-length'));
+  if (!length) return fail('Send the upload with a Content-Length');
+  if (length > video.maxBytes + 1024 * 1024) return fail('A video can be up to 50 MB', 'file.size');
 
   let form: FormData;
   try {
@@ -41,5 +44,7 @@ export async function POST(request: Request) {
     if (seconds !== null && seconds > video.maxSeconds) return fail('A video can be up to 30 seconds', 'file.duration');
   }
 
-  return apiOk(await catalog.saveReviewMedia(userId, type, contentType, bytes), { status: 201 });
+  const saved = await catalog.saveReviewMedia(userId, type, contentType, bytes);
+  if (!saved) return apiFail('conflict', 'Too many uploads. Send or delete a review first');
+  return apiOk(saved, { status: 201 });
 }
