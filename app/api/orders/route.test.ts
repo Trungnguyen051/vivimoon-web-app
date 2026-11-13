@@ -47,7 +47,10 @@ function req(body: unknown): Request {
 }
 
 function validBody(overrides: Record<string, unknown> = {}) {
-  return { lines: BASELINE_LINES, address: ADDRESS, email: 'alice@example.com', paymentMethod: 'qr', ...overrides };
+  return {
+    lines: BASELINE_LINES, address: ADDRESS, email: 'alice@example.com', paymentMethod: 'qr', notificationChannel: 'zalo',
+    ...overrides,
+  };
 }
 
 describe('GET /api/orders', () => {
@@ -123,5 +126,51 @@ describe('POST /api/orders', () => {
     const body = await res.json();
     expect(res.status).toBe(400);
     expect(body.error.code).toBe('validation_failed');
+  });
+
+  // ADR-0025: QR / COD / e-wallet; COD needs no payment intent.
+  it('places a COD order with no payment intent', async () => {
+    const body = await (await POST(req(validBody({ paymentMethod: 'cod' })))).json();
+    expect(body.ok).toBe(true);
+    expect(body.data.payment.method).toBe('cod');
+    expect(body.data.payment.intent).toBeUndefined();
+  });
+
+  it('gives a QR order the QR intent and an e-wallet order the redirect intent', async () => {
+    const qr = await (await POST(req(validBody({ paymentMethod: 'qr' })))).json();
+    expect(qr.data.payment.intent.qrCode).toBeTruthy();
+    expect(qr.data.payment.intent.redirectUrl).toBeUndefined();
+    const ewallet = await (await POST(req(validBody({ paymentMethod: 'ewallet' })))).json();
+    expect(ewallet.data.payment.intent.redirectUrl).toBeTruthy();
+    expect(ewallet.data.payment.intent.qrCode).toBeUndefined();
+  });
+
+  it('refuses SePay, which has left the picker', async () => {
+    const res = await POST(req(validBody({ paymentMethod: 'sepay' })));
+    expect(res.status).toBe(400);
+  });
+
+  it('places a guest order without an email', async () => {
+    const { email: _email, ...noEmail } = validBody();
+    const body = await (await POST(req(noEmail))).json();
+    expect(body.ok).toBe(true);
+    expect(body.data.guestEmail).toBeUndefined();
+  });
+
+  it('requires a notification channel and stores it on the order', async () => {
+    const { notificationChannel: _c, ...noChannel } = validBody();
+    expect((await POST(req(noChannel))).status).toBe(400);
+    const body = await (await POST(req(validBody({ notificationChannel: 'sms' })))).json();
+    expect(body.data.notificationChannel).toBe('sms');
+  });
+
+  it('refuses the email channel without an email to send to', async () => {
+    const { email: _email, ...noEmail } = validBody({ notificationChannel: 'email' });
+    expect((await POST(req(noEmail))).status).toBe(400);
+  });
+
+  it('stores the order note', async () => {
+    const body = await (await POST(req(validBody({ note: 'Giao giờ hành chính' })))).json();
+    expect(body.data.note).toBe('Giao giờ hành chính');
   });
 });

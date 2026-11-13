@@ -2,6 +2,7 @@ import { randomBytes } from 'node:crypto';
 import { orders as seedOrders } from '@/content/mock';
 import { pricing } from '@/lib/api/resources/pricing';
 import { catalog } from '@/lib/api/resources/catalog';
+import { payments } from '@/lib/api/resources/payments';
 import type { Order, PlaceOrderRequest } from '@/lib/api/schemas/orders';
 import { normalizeOrderCode } from '@/lib/api/schemas/orders';
 import { lensesIn, purchaseUnitOf } from '@/lib/api/schemas/rx';
@@ -134,8 +135,15 @@ export const mockOrders = {
       ...(priced.gifts?.length ? { gifts: priced.gifts } : {}),
       address: input.address,
       ...(priced.shippingMethod ? { shippingMethod: priced.shippingMethod } : {}),
-      payment: { method: input.paymentMethod, status: 'pending' },
-      ...(userId ? { userId } : { guestEmail: input.email }),
+      payment: {
+        method: input.paymentMethod,
+        status: 'pending',
+        // COD places with no intent (ADR-0025).
+        ...(input.paymentMethod === 'cod' ? {} : { intent: await payments.createIntent({ method: input.paymentMethod }) }),
+      },
+      notificationChannel: input.notificationChannel,
+      ...(input.note ? { note: input.note } : {}),
+      ...(userId ? { userId } : input.email ? { guestEmail: input.email } : {}),
     };
     store.set(order.id, order);
     return order;

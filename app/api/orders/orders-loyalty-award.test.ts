@@ -44,7 +44,7 @@ function req(body: unknown): Request {
 }
 
 function validBody(overrides: Record<string, unknown> = {}) {
-  return { lines: LINES, address: ADDRESS, email: 'alice@example.com', paymentMethod: 'qr', ...overrides };
+  return { lines: LINES, address: ADDRESS, email: 'alice@example.com', paymentMethod: 'qr', notificationChannel: 'zalo', ...overrides };
 }
 
 describe('order placement awards loyalty points (issue #10)', () => {

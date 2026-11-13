@@ -1,6 +1,10 @@
 import { z } from 'zod';
 
-export const paymentMethodTypeSchema = z.enum(['qr', 'zalopay', 'sepay']);
+// ADR-0025: QR transfer, cash on delivery, and one e-wallet row. SePay left the picker.
+export const paymentMethodTypeSchema = z.enum(['qr', 'cod', 'ewallet']);
+
+/** The methods that pay through an intent; COD is settled at the door and has none. */
+export const intentMethodSchema = paymentMethodTypeSchema.exclude(['cod']);
 
 /**
  * No real payment is processed in M2 (spec §11) — every intent the mock
@@ -9,7 +13,7 @@ export const paymentMethodTypeSchema = z.enum(['qr', 'zalopay', 'sepay']);
 export const paymentStatusSchema = z.enum(['pending']);
 
 export const paymentIntentRequestSchema = z.object({
-  method: paymentMethodTypeSchema,
+  method: intentMethodSchema,
 });
 
 /**
@@ -22,7 +26,7 @@ export const paymentIntentRequestSchema = z.object({
 export const paymentIntentSchema = z
   .object({
     id: z.string(),
-    method: paymentMethodTypeSchema,
+    method: intentMethodSchema,
     status: paymentStatusSchema,
     qrCode: z.string().optional(),
     redirectUrl: z.string().optional(),
@@ -37,5 +41,6 @@ export const paymentIntentSchema = z
   });
 
 export type PaymentMethodType = z.infer<typeof paymentMethodTypeSchema>;
+export type IntentMethod = z.infer<typeof intentMethodSchema>;
 export type PaymentIntentRequest = z.infer<typeof paymentIntentRequestSchema>;
 export type PaymentIntent = z.infer<typeof paymentIntentSchema>;

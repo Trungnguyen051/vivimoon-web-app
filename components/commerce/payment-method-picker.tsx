@@ -1,46 +1,52 @@
 'use client';
+import { Banknote, CreditCard, History, QrCode, type LucideIcon } from 'lucide-react';
 import { paymentMethods, type PaymentMethodOption } from '@/lib/payments/methods';
-import { cn } from '@/lib/utils/cn';
+import type { PaymentMethodType } from '@/lib/api/schemas/payments';
+import type { Dictionary } from '@/lib/i18n/dictionaries';
+import { RadioCard } from './radio-card';
+
+const ICONS: Partial<Record<PaymentMethodType, LucideIcon>> = { qr: QrCode, cod: Banknote, ewallet: CreditCard };
 
 /**
- * Renders whatever `methods` holds — never a hardcoded list. Defaults to
- * `lib/payments/methods.ts` so a caller needs no wiring change when that
- * config grows; `methods` exists so tests can inject a stub list without
- * touching this component (spec §11). Takes a plain `label` rather than a
- * `Dictionary` slice — checkout and Account Settings each have their own
- * copy for it (M5.3, issue #20), so the picker itself stays agnostic to
- * which dictionary section a caller draws that string from.
+ * Checkout's "Thanh toán" radio cards (Figma 58:126, ADR-0025). Renders whatever
+ * `methods` holds — never a hardcoded list; `methods` exists so tests can inject a
+ * stub without touching this component (spec §11). `remembered` adds the member's
+ * "Đã chọn sẵn theo lần mua trước" tag.
  */
 export function PaymentMethodPicker({
-  value, onChange, label, methods = paymentMethods,
+  value, onChange, dict, remembered = false, methods = paymentMethods,
 }: {
-  value: string | undefined;
-  onChange: (type: string) => void;
-  label: string;
+  value: string;
+  onChange: (type: PaymentMethodType) => void;
+  dict: Dictionary;
+  remembered?: boolean;
   methods?: PaymentMethodOption[];
 }) {
+  const t = dict.checkout.payment;
   return (
-    <div>
-      <p className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-        {label}
-      </p>
-      <div className="flex flex-wrap gap-2">
-        {methods.map((m) => (
-          <button
-            key={m.type}
-            type="button"
-            aria-pressed={value === m.type}
-            onClick={() => onChange(m.type)}
-            className={cn(
-              'min-h-11 rounded-lg border px-4 text-sm font-medium transition-colors',
-              value === m.type
-                ? 'border-primary bg-primary/5 text-foreground'
-                : 'border-input text-muted-foreground hover:border-foreground/30 hover:text-foreground',
-            )}
-          >
-            {m.label}
-          </button>
-        ))}
+    <div className="flex flex-col gap-3">
+      {remembered ? (
+        <p className="flex w-fit items-center gap-2 bg-muted px-3 py-2 text-xs text-muted-foreground">
+          <History aria-hidden className="size-4" />
+          {t.remembered}
+        </p>
+      ) : null}
+      <div role="radiogroup" aria-label={t.title} className="flex flex-col gap-3">
+        {methods.map((m) => {
+          const copy = t.methods[m.type as keyof typeof t.methods] ?? { name: m.type, hint: '' };
+          return (
+            <RadioCard
+              key={m.type}
+              name="payment-method"
+              value={m.type}
+              checked={value === m.type}
+              onChange={() => onChange(m.type)}
+              icon={ICONS[m.type] ?? CreditCard}
+              title={copy.name}
+              hint={copy.hint || undefined}
+            />
+          );
+        })}
       </div>
     </div>
   );

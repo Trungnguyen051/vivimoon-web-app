@@ -5,6 +5,7 @@ import type { Currency } from '@/lib/api/schemas/catalog';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { shippingMethodName } from '@/lib/orders/shipping-method-name';
+import { StepHeading } from './step-heading';
 
 // Arrival is the shop's calendar (Vietnam), written dd/mm in both locales as on the wireframe.
 const ARRIVAL_FORMAT = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: '2-digit', timeZone: 'Asia/Ho_Chi_Minh' });
@@ -18,8 +19,11 @@ export type ShippingQuote = { method: string; etaDays: number; fee: number };
  * until the address can be quoted, and while a re-quote is in flight or failed,
  * so an old option is never presented as the current one.
  */
-export function ShippingBlock({ quote, failed, currency, locale, dict }: {
+export function ShippingBlock({ quote, failed, currency, locale, dict, step, className }: {
   quote: ShippingQuote | null; failed: boolean; currency: Currency; locale: Locale; dict: Dictionary;
+  /** Checkout's block number, drawn before the title. */
+  step?: number;
+  className?: string;
 }) {
   const t = dict.checkout.shipping;
   const headingId = useId();
@@ -27,14 +31,14 @@ export function ShippingBlock({ quote, failed, currency, locale, dict }: {
   const [now] = useState(() => Date.now());
 
   return (
-    <section aria-labelledby={headingId} className="flex flex-col gap-4">
-      <h2 id={headingId} className="font-heading text-2xl">{t.title}</h2>
+    <section aria-labelledby={headingId} className={className ?? 'flex flex-col gap-4'}>
+      <StepHeading id={headingId} step={step}>{t.title}</StepHeading>
       {quote ? (
-        <div className="flex items-center gap-4 border border-foreground p-5">
+        <div className="flex items-center gap-3 border border-foreground p-4 md:gap-4 md:p-5">
           <span aria-hidden className="flex size-5 shrink-0 items-center justify-center rounded-full border border-foreground">
             <span className="size-2.5 rounded-full bg-foreground" />
           </span>
-          <Truck aria-hidden className="size-6 shrink-0" />
+          <Truck aria-hidden className="size-6 shrink-0" strokeWidth={1.5} />
           <div className="flex min-w-0 flex-1 flex-col gap-0.5">
             <p className="font-medium">
               {shippingMethodName(quote.method, dict)} · {(quote.etaDays === 1 ? t.day : t.days).replace('{n}', String(quote.etaDays))}

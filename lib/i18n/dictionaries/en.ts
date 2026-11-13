@@ -276,12 +276,45 @@ export const en = {
       day: '{n} day', days: '{n} days', arrivesBy: 'Estimated arrival {date}', free: 'Free',
       failed: 'We could not quote delivery just now. It will be priced when you place the order.',
     },
-    title: 'Checkout', recipient: 'Recipient name', email: 'Email', line1: 'Address',
-    ward: 'Ward', district: 'District', province: 'Province',
-    phone: 'Phone', paymentMethod: 'Payment method', placeOrder: 'Place order', payNote: 'Payment is simulated in this demo.',
+    title: 'Checkout', recipient: 'Full name', email: 'Email (optional)', line1: 'Street address',
+    ward: 'Ward', district: 'District', province: 'Province / City',
+    phone: 'Phone', placeOrder: 'Place order', placeOrderTotal: 'Place order · {total}',
     success: 'Thank you! Your order is confirmed.', orderId: 'Order ID',
+    steps: { label: 'Checkout steps', cart: 'Cart', info: 'Details & payment', done: 'Done' },
+    secure: 'Secure checkout', support: 'Support: {phone}',
+    signInPrompt: {
+      title: 'Have an account? Sign in to fill in your address & use your points',
+      optional: 'Optional - you can still order right away',
+      google: 'Google', zalo: 'Zalo', signIn: 'Sign in',
+    },
+    member: {
+      greeting: 'Hi, {name}', points: '{points} points', prefilled: 'Filled in from your last order',
+      notYou: 'Not you?',
+    },
+    contact: {
+      title: 'Delivery details', phoneHint: 'For delivery, order lookup and earning points',
+      emailPlaceholder: 'Get your invoice & order code by email', line1Placeholder: 'House number, street',
+      note: 'Order note', notePlaceholder: 'E.g. deliver during office hours',
+      channel: 'Send order updates via', channels: { zalo: 'Zalo', sms: 'SMS', email: 'Email' },
+    },
+    address: {
+      title: 'Delivery address', default: 'Default', edit: 'Edit', add: '+ Add a new address',
+      save: 'Save address', cancel: 'Cancel', saveFailed: 'We could not save the address. Please try again.',
+    },
+    payment: {
+      title: 'Payment', remembered: 'Preselected from your last order',
+      methods: {
+        qr: { name: 'Bank transfer / Scan QR', hint: 'Confirmed automatically in 1–2 minutes' },
+        cod: { name: 'Cash on delivery (COD)', hint: 'Check your order before you pay' },
+        ewallet: { name: 'E-wallet (MoMo, ZaloPay, VNPay)', hint: '' },
+      },
+    },
+    summary: {
+      title: 'Order ({count})', editCart: 'Edit cart', changeVoucher: 'Change code', closeVoucher: 'Close',
+      bestVoucher: 'Best code applied for you', addVoucher: 'Add a promo code',
+    },
     errors: {
-      required: 'Required', invalidEmail: 'Invalid email',
+      required: 'Required', invalidEmail: 'Invalid email', emailForChannel: 'Enter an email to get updates by email',
       invalidPhone: 'Enter a valid Vietnamese phone number',
       summary: 'Please fix the following before placing your order.',
       orderFailed: 'Something went wrong placing your order. Please try again.',
@@ -391,6 +424,8 @@ export const en = {
     terms: 'Free 1-for-1 exchange within 15 days of delivery, for moisture-lock and breathable lenses',
     refund: 'Gritty, itchy or uncomfortable → 100% refund',
     swap: 'Not happy with the colour or style → swap for another',
+    // The checkout's one-line note; keep its period in step with `terms`.
+    refundWindow: 'Uncomfortable? Refund within 15 days',
     details: 'See the full policy', howTo: 'How to request a return', link: 'Return policy',
   },
   quiz: {
