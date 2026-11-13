@@ -512,6 +512,20 @@ export const vi: Dictionary = {
     titleLabel: 'Tiêu đề', titlePlaceholder: 'Tóm tắt trong một dòng',
     body: 'Nhận xét', bodyPlaceholder: 'Độ êm, màu lên mắt, đeo được bao lâu…',
     counter: '{n}/1000 ký tự',
+    media: {
+      label: 'Ảnh và video', hint: 'Tối đa 5 ảnh (JPG, PNG, WEBP, mỗi ảnh 5 MB) và 1 video (MP4, 30 giây, 50 MB).',
+      count: '{images}/5 ảnh · {videos}/1 video', add: 'Thêm ảnh/video',
+      uploading: 'Đang tải lên {name}', uploaded: 'Đã tải lên {name}', removed: 'Đã xóa {name}', failed: 'Không tải lên được {name}',
+      retry: 'Thử lại {name}', retryShort: 'Thử lại', remove: 'Xóa {name}',
+      waiting: 'Đợi ảnh và video tải lên xong', fixFailed: 'Thử lại hoặc xóa tệp tải lên lỗi để gửi',
+      errors: {
+        type: '{name}: chỉ nhận ảnh JPG, PNG, WEBP hoặc video MP4', imageSize: '{name}: mỗi ảnh tối đa 5 MB',
+        videoSize: '{name}: video tối đa 50 MB', imageCount: 'Tối đa 5 ảnh', videoCount: 'Chỉ được thêm 1 video',
+      },
+      reasons: {
+        type: 'Sai định dạng', imageSize: 'Ảnh quá 5 MB', videoSize: 'Video quá 50 MB', duration: 'Video dài quá 30 giây', other: 'Tải lên lỗi',
+      },
+    },
     submit: 'Gửi đánh giá', sending: 'Đang gửi…',
     errors: { rating: 'Hãy chọn số sao', bodyShort: 'Viết tối thiểu 20 ký tự (còn {n})', bodyLong: 'Tối đa 1000 ký tự' },
     sentTitle: 'Đã gửi đánh giá', sentBody: 'Cảm ơn bạn! Đánh giá đang được duyệt và sẽ hiện trên trang sản phẩm sau khi được duyệt.',

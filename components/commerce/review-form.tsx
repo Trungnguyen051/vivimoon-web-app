@@ -10,6 +10,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Field, FieldDescription, FieldError, FieldLabel } from '@/components/ui/field';
+import { ReviewMediaField, type MediaState } from './review-media-field';
 
 const TAGS: ReviewTag[] = ['sensitiveEyes', 'allDay', 'beginner', 'myopic'];
 const SUB_RATINGS = ['comfort', 'colorMatch', 'easeOfWear'] as const;
@@ -74,13 +75,15 @@ export function ReviewForm({ orderId, lineKey, orderHref, productHref, dict }: {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
+  const [media, setMedia] = useState<MediaState>({ ids: [], blocked: null });
 
   const length = body.trim().length;
   const errors = {
     rating: rating === undefined ? t.errors.rating : undefined,
     body: length < BODY_MIN ? fill(t.errors.bodyShort, { n: BODY_MIN - length }) : length > BODY_MAX ? t.errors.bodyLong : undefined,
   };
-  const valid = !errors.rating && !errors.body;
+  // A failed upload blocks too: the member retries or removes it rather than losing it unnoticed.
+  const valid = !errors.rating && !errors.body && !media.blocked;
   const showRatingError = touched.any && errors.rating;
   const showBodyError = touched.body && errors.body;
 
@@ -94,7 +97,7 @@ export function ReviewForm({ orderId, lineKey, orderHref, productHref, dict }: {
     if (!valid || busy) return;
     setBusy(true);
     setError(null);
-    const payload: ReviewCreate = { lineKey, rating: rating!, subRatings, tags, title: title || undefined, body };
+    const payload: ReviewCreate = { lineKey, rating: rating!, subRatings, tags, title: title || undefined, body, media: media.ids };
     const result = await apiRequest<{ id: string }>(`/api/orders/${encodeURIComponent(orderId)}/reviews`, { method: 'POST', body: payload });
     setBusy(false);
     if (!result.ok) return setError(result.error.message);
@@ -203,9 +206,23 @@ export function ReviewForm({ orderId, lineKey, orderHref, productHref, dict }: {
         </Field>
       </section>
 
-      <div className="flex flex-col-reverse gap-2 pt-5 sm:flex-row sm:justify-end">
-        <Link href={orderHref} className={buttonVariants({ variant: 'outline', size: 'xl' })}>{t.backToOrder}</Link>
-        <Button type="submit" size="xl" disabled={!valid || busy}>{busy ? t.sending : t.submit}</Button>
+      <ReviewMediaField dict={t} onChange={setMedia} />
+
+      <div className="flex flex-col gap-2 pt-5 sm:flex-row sm:items-center sm:justify-end">
+        {media.blocked ? (
+          <p id="review-media-blocked" className="text-xs leading-4 text-muted-foreground sm:mr-auto">
+            {media.blocked === 'uploading' ? t.media.waiting : t.media.fixFailed}
+          </p>
+        ) : null}
+        <div className="flex flex-col-reverse gap-2 sm:flex-row">
+          <Link href={orderHref} className={buttonVariants({ variant: 'outline', size: 'xl' })}>{t.backToOrder}</Link>
+          <Button
+            type="submit" size="xl" disabled={!valid || busy}
+            aria-describedby={media.blocked ? 'review-media-blocked' : undefined}
+          >
+            {busy ? t.sending : t.submit}
+          </Button>
+        </div>
       </div>
     </form>
   );

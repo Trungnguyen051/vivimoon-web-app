@@ -514,6 +514,20 @@ export const en = {
     titleLabel: 'Title', titlePlaceholder: 'Sum it up in a line',
     body: 'Your review', bodyPlaceholder: 'Comfort, how the colour looks on your eyes, how long you wore them…',
     counter: '{n}/1000 characters',
+    media: {
+      label: 'Photos and video', hint: 'Up to 5 photos (JPG, PNG, WEBP, 5 MB each) and 1 video (MP4, 30 seconds, 50 MB).',
+      count: '{images}/5 photos · {videos}/1 video', add: 'Add photo/video',
+      uploading: 'Uploading {name}', uploaded: 'Uploaded {name}', removed: 'Removed {name}', failed: 'Couldn’t upload {name}',
+      retry: 'Retry {name}', retryShort: 'Retry', remove: 'Remove {name}',
+      waiting: 'Wait for photos and video to finish uploading', fixFailed: 'Retry or remove the failed upload to send',
+      errors: {
+        type: '{name}: only JPG, PNG, WEBP photos or an MP4 video', imageSize: '{name}: each photo can be up to 5 MB',
+        videoSize: '{name}: the video can be up to 50 MB', imageCount: 'Up to 5 photos', videoCount: 'Only 1 video',
+      },
+      reasons: {
+        type: 'Wrong file type', imageSize: 'Photo over 5 MB', videoSize: 'Video over 50 MB', duration: 'Video over 30 seconds', other: 'Upload failed',
+      },
+    },
     submit: 'Send review', sending: 'Sending…',
     errors: { rating: 'Choose a star rating', bodyShort: 'Write at least 20 characters ({n} more)', bodyLong: 'Keep it to 1000 characters' },
     sentTitle: 'Review sent', sentBody: 'Thank you! We check every review first; it shows on the product page once approved.',

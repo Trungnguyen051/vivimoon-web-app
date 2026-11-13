@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { products, accessories, collections, reviews, galleries } from '@/content/mock';
 import { diameterMm, parseDiameterRange, parseRxPair, PRICE_PRESETS } from '@/lib/api/schemas/catalog';
-import type { Accessory, CatalogItem, Collection, LensGallery, Product, ProductQuery, Review, ReviewFilter, Variant } from '@/lib/api/schemas/catalog';
+import type { Accessory, CatalogItem, Collection, LensGallery, Product, ProductQuery, Review, ReviewFilter, ReviewMediaRef, Variant } from '@/lib/api/schemas/catalog';
 import { cheapestVariant } from '@/lib/products/cheapest-variant';
 import { filterReviews } from '@/lib/products/reviews';
 
@@ -232,6 +232,26 @@ export const mockCatalog = {
     return true;
   },
 
+  /** Keeps one uploaded photo or video for a Review the member is writing (#228), and says where it's served. */
+  async saveReviewMedia(userId: string, type: ReviewMediaRef['type'], contentType: string, bytes: Uint8Array): Promise<ReviewMediaRef | null> {
+    // Null once the member holds MEDIA_PER_MEMBER files, so one account can't fill the store.
+    if ([...reviewMedia.values()].filter((m) => m.userId === userId).length >= MEDIA_PER_MEMBER) return null;
+    const id = `m-${randomUUID()}`;
+    reviewMedia.set(id, { userId, type, contentType, bytes });
+    return { id, type, url: `/api/reviews/media/${id}` };
+  },
+
+  /** An uploaded file by its reference, with who uploaded it; null when there's none. */
+  async getReviewMedia(id: string): Promise<StoredMedia | null> {
+    return reviewMedia.get(id) ?? null;
+  },
+
+  /** Whether an uploaded file belongs to an approved Review, so anyone may see it; until then only its uploader may. */
+  async isReviewMediaPublic(id: string): Promise<boolean> {
+    const url = `/api/reviews/media/${id}`;
+    return reviews.some((r) => r.status === 'approved' && r.media.some((m) => m.url === url));
+  },
+
   /**
    * Finds a variant by id across the whole catalogue, and the product it
    * belongs to. This is the server-side price lookup pricing/mock.ts uses —
@@ -252,9 +272,15 @@ export type Catalog = typeof mockCatalog;
 const seedReviews = structuredClone(reviews);
 reviews.forEach(keepPrivate);
 const AUTO_APPROVE_MS = 60_000;
+// shortcut: uploads live in memory and are never evicted, fine for a mock; real storage is Vivimoon's backend.
+type StoredMedia = { userId: string; type: ReviewMediaRef['type']; contentType: string; bytes: Uint8Array };
+const reviewMedia = new Map<string, StoredMedia>();
+// shortcut: a flat per-member cap and no eviction of files never attached; the real backend should expire unattached uploads.
+const MEDIA_PER_MEMBER = 30;
 
 /** Test helper: restores the seeded Reviews. */
 export function resetMockReviewsState(): void {
+  reviewMedia.clear();
   reviews.splice(0, reviews.length, ...structuredClone(seedReviews).map(keepPrivate));
 }
 

@@ -280,7 +280,19 @@ export const reviewCreateSchema = z.object({
   tags: z.array(reviewTagSchema).max(3).refine((t) => new Set(t).size === t.length, 'tags must not repeat').default([]),
   title: z.string().trim().max(120).optional().transform((v) => v || undefined),
   body: z.string().trim().min(20).max(1000),
+  // References `POST /api/reviews/media` returned; the route checks they're the writer's and within the limits.
+  media: z.array(z.string()).max(6).refine((m) => new Set(m).size === m.length, 'media must not repeat').default([]),
 });
+
+const MB = 1024 * 1024;
+/** What a Review may carry (#228), checked by the browser for a quick message and by the upload route as the rule. */
+export const REVIEW_MEDIA_LIMITS = {
+  image: { types: ['image/jpeg', 'image/png', 'image/webp'], maxBytes: 5 * MB, maxCount: 5 },
+  video: { types: ['video/mp4'], maxBytes: 50 * MB, maxCount: 1, maxSeconds: 30 },
+} as const;
+
+/** What the upload route returns: the reference a Review's create call takes, and where the file is served. */
+export type ReviewMediaRef = { id: string; type: 'image' | 'video'; url: string };
 
 /** A line's Review as its writer sees it on the order detail; `none` means the line can be reviewed. */
 export const lineReviewSchema = z.object({
