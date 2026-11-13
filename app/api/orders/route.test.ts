@@ -79,8 +79,8 @@ describe('GET /api/orders', () => {
   it('includes, once, the guest order placed with the phone a seeded account verified before joining shipped (ADR-0026 backfill)', async () => {
     signIn('u-001'); // verified 0912345678; the seeded guest order typed it as "0912 345 678"
     const ids = async () => ((await (await GET()).json()).data as { id: string }[]).map((o) => o.id);
-    expect((await ids()).filter((id) => id === 'order-seed-9')).toEqual(['order-seed-9']);
-    expect((await ids()).filter((id) => id === 'order-seed-9')).toEqual(['order-seed-9']);
+    // Read twice: the backfill must not join or list it a second time.
+    for (let read = 0; read < 2; read++) expect((await ids()).filter((id) => id === 'order-seed-9')).toEqual(['order-seed-9']);
     signIn('u-002');
     expect(await ids()).not.toContain('order-seed-9');
   });
