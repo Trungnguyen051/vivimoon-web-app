@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto';
-import { orders as seedOrders } from '@/content/mock';
+import { orders as seedOrders, users as seedUsers } from '@/content/mock';
+import { phoneKey } from '@/lib/api/schemas/auth';
 import { pricing } from '@/lib/api/resources/pricing';
 import { catalog } from '@/lib/api/resources/catalog';
 import { payments } from '@/lib/api/resources/payments';
@@ -25,10 +26,30 @@ export class OrderError extends Error {
 // several orders), so a shallow copy would let a future in-place mutation
 // (#11's status updates) corrupt the shared fixture and survive a reset.
 let store = new Map<string, Order>(seedOrders.map((o) => [o.id, structuredClone(o)]));
+let backfilled = false;
 
 /** Test helper — restores the fixture state between cases. */
 export function resetMockOrdersState(): void {
   store = new Map(seedOrders.map((o) => [o.id, structuredClone(o)]));
+  backfilled = false;
+}
+
+/** Joins every guest order placed with this phone to the account, for good (ADR-0026). Joined orders have a userId, so a second call finds nothing. */
+function joinGuestOrders(phone: string, userId: string): number {
+  const key = phoneKey(phone);
+  const joining = [...store.values()].filter((o) => !o.userId && phoneKey(o.address.phone) === key);
+  for (const o of joining) o.userId = userId;
+  return joining.length;
+}
+
+/**
+ * ADR-0026's one-time backfill for accounts that verified a phone before joining shipped, which in the
+ * mock are the seeded ones. Run on the first read, since the mock has no release step.
+ */
+function backfillOnce(): void {
+  if (backfilled) return;
+  backfilled = true;
+  for (const u of seedUsers) if (u.phone) joinGuestOrders(u.phone, u.id);
 }
 
 function randomSuffix(): string {
@@ -156,6 +177,7 @@ export const mockOrders = {
 
   /** A logged-in shopper's order history, most recently placed first. */
   async list(userId: string): Promise<Order[]> {
+    backfillOnce();
     return [...store.values()]
       .filter((o) => o.userId === userId)
       .sort((a, b) => b.placedAt.localeCompare(a.placedAt));
@@ -163,7 +185,13 @@ export const mockOrders = {
 
   /** Looked up by id alone — the route handler is what enforces ownership (issue #11). */
   async get(id: string): Promise<Order | null> {
+    backfillOnce();
     return store.get(id) ?? null;
+  },
+
+  /** Called when an account verifies its phone, alongside crediting Held Points (ADR-0026). Returns how many joined. */
+  async joinGuestOrders(phone: string, userId: string): Promise<number> {
+    return joinGuestOrders(phone, userId);
   },
 
   /** Only a not-yet-packed order can be cancelled; ownership is the route's check. */

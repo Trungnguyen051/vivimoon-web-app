@@ -27,6 +27,9 @@ export function normalizePhone(identifier: string): string {
   return identifier.startsWith('+84') ? `0${identifier.slice(3)}` : identifier;
 }
 
+/** The one form Held Points and joined guest orders match a phone in (ADR-0024, ADR-0026): spaces, dots and dashes are how people type a number, not a different one. */
+export const phoneKey = (phone: string) => normalizePhone(phone.replace(/[\s.-]/g, ''));
+
 export const userSchema = z.object({
   id: z.string(),
   phone: z.string(),
