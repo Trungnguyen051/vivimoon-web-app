@@ -75,6 +75,22 @@ _Avoid_: Rewards, points program
 Loyalty points earned by a guest order, kept against the order's phone number until an account verifies that phone, at which point they are credited to it (ADR-0024). They cannot be spent while held.
 _Avoid_: Pending points, guest points
 
+**Review**:
+A shopper's rating and write-up of a product. It either comes from a marketplace listing (a Mirrored Review) or was written on Vivimoon by a member about a delivered, paid order line they bought, including guest orders that joined their account (ADR-0026). One Review per order line. Gifts can't be reviewed. A member may delete their own Review but not edit it.
+_Avoid_: Rating (that's one field of a Review), comment
+
+**Mirrored Review**:
+A Review copied from a Shopee or TikTok listing, shown with its source badge. It keeps the marketplace's own helpful count separately from Vivimoon's Helpful Votes.
+_Avoid_: Imported review, external review
+
+**Review Moderation**:
+The check every Review written on Vivimoon passes before it shows on the product page. It is pending until approved or rejected, and the writer sees which. A rejected Review can be written again.
+_Avoid_: Approval (on its own), review queue
+
+**Helpful Vote**:
+A member's "Hữu ích" on a Review. One per member per Review, can be taken back, and never on their own Review. The count shown is the Mirrored Review's marketplace count plus Helpful Votes.
+_Avoid_: Like, upvote
+
 **Comparison Tray**:
 The persistent, always-visible strip that accumulates a shopper's product selections (up to 4) for comparison as they browse across pages. Distinct from the Comparison Matrix — the tray is the accumulator; the matrix is the side-by-side view it opens.
 _Avoid_: Compare list (ambiguous with the matrix)

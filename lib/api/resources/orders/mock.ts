@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto';
-import { orders as seedOrders } from '@/content/mock';
+import { orders as seedOrders, users as seedUsers } from '@/content/mock';
+import { phoneKey } from '@/lib/api/schemas/auth';
 import { pricing } from '@/lib/api/resources/pricing';
 import { catalog } from '@/lib/api/resources/catalog';
 import { payments } from '@/lib/api/resources/payments';
@@ -24,11 +25,29 @@ export class OrderError extends Error {
 // objects (content/mock/orders.ts reuses the same address literal across
 // several orders), so a shallow copy would let a future in-place mutation
 // (#11's status updates) corrupt the shared fixture and survive a reset.
-let store = new Map<string, Order>(seedOrders.map((o) => [o.id, structuredClone(o)]));
+let store = seededStore();
 
 /** Test helper — restores the fixture state between cases. */
 export function resetMockOrdersState(): void {
-  store = new Map(seedOrders.map((o) => [o.id, structuredClone(o)]));
+  store = seededStore();
+}
+
+/**
+ * The seed orders, with ADR-0026's one-time backfill already applied: the accounts that verified a
+ * phone before joining shipped are the seeded ones, and building the store is the mock's release step.
+ */
+function seededStore(): Map<string, Order> {
+  const seeded = new Map<string, Order>(seedOrders.map((o) => [o.id, structuredClone(o)]));
+  for (const u of seedUsers) if (u.phone) joinIn(seeded, u.phone, u.id);
+  return seeded;
+}
+
+/** Joins every guest order placed with this phone to the account, for good (ADR-0026). Joined orders have a userId, so a second call finds nothing. */
+function joinIn(orders: Map<string, Order>, phone: string, userId: string): number {
+  const key = phoneKey(phone);
+  const joining = [...orders.values()].filter((o) => !o.userId && phoneKey(o.address.phone) === key);
+  for (const o of joining) o.userId = userId;
+  return joining.length;
 }
 
 function randomSuffix(): string {
@@ -164,6 +183,11 @@ export const mockOrders = {
   /** Looked up by id alone — the route handler is what enforces ownership (issue #11). */
   async get(id: string): Promise<Order | null> {
     return store.get(id) ?? null;
+  },
+
+  /** Called when an account verifies its phone, alongside crediting Held Points (ADR-0026). Returns how many joined. */
+  async joinGuestOrders(phone: string, userId: string): Promise<number> {
+    return joinIn(store, phone, userId);
   },
 
   /** Only a not-yet-packed order can be cancelled; ownership is the route's check. */

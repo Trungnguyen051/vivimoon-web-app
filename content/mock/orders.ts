@@ -129,4 +129,18 @@ export const orders: Order[] = [
     payment: { method: 'qr', status: 'pending' },
     userId: 'u-002',
   },
+  {
+    // A guest order placed with u-001's phone before joining shipped: the backfill joins it (ADR-0026).
+    id: 'order-seed-9',
+    code: 'VVM-SEED0009',
+    status: 'delivered',
+    placedAt: '2026-06-02T10:20:00.000Z',
+    lines: [{ lineKey: 'l1', variantId: 'p-hazel-monthly-gray-30', quantity: 1, unitPrice: 240_000, lineTotal: 240_000, currency: 'VND' }],
+    totals: { subtotal: 240_000, discount: 0, appliedVouchers: [], shipping: 30_000, total: 270_000, currency: 'VND' },
+    address: { ...HOME_ADDRESS, phone: '0912 345 678' },
+    shippingMethod: 'standard',
+    carrierTrackingCode: 'SPX2330409912745',
+    payment: { method: 'cod', status: 'paid' },
+    guestEmail: 'mai@example.vn',
+  },
 ];

@@ -1,7 +1,7 @@
 import { loyaltyHistory as seedHistory } from '@/content/mock';
 import type { LoyaltyBalance, LoyaltyEntry } from '@/lib/api/schemas/loyalty';
 import type { Order } from '@/lib/api/schemas/orders';
-import { normalizePhone } from '@/lib/api/schemas/auth';
+import { phoneKey } from '@/lib/api/schemas/auth';
 import { pointsEarnedFor } from '@/lib/loyalty/rules';
 
 // In-memory state, keyed by userId. Resets on every server restart — same
@@ -30,9 +30,6 @@ function entry(points: number, order: Order): LoyaltyEntry {
 
 /** Pricing's figure; an order placed before #204 has none, so it is earned by today's rule. */
 const earnedBy = (order: Order) => order.totals.pointsToEarn ?? pointsEarnedFor(order.totals.total);
-
-// Spaces, dots and dashes are how people type a number; they don't make it a different one.
-const phoneKey = (phone: string) => normalizePhone(phone.replace(/[\s.-]/g, ''));
 
 export const mockLoyalty = {
   async get(userId: string): Promise<LoyaltyBalance> {

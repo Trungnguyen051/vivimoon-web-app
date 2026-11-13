@@ -30,6 +30,11 @@ describe('GET /api/orders/[id]', () => {
     expect(body.data.lines.length).toBeGreaterThan(0);
   });
 
+  it('opens a backfilled guest order even when it is the first thing read (ADR-0026)', async () => {
+    signIn('u-001');
+    expect((await GET(new Request('http://x'), params('order-seed-9'))).status).toBe(200);
+  });
+
   it("404s another shopper's order — identical to a nonexistent id", async () => {
     signIn('u-002');
     const otherRes = await GET(new Request('http://x'), params('order-seed-1')); // belongs to u-001

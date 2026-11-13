@@ -27,6 +27,9 @@ const { POST: passwordReset } = await import('./password/reset/route');
 const { resetMockAuthState } = await import('@/lib/api/resources/auth/mock');
 const { resetMockLoyaltyState } = await import('@/lib/api/resources/loyalty/mock');
 const { loyalty } = await import('@/lib/api/resources/loyalty');
+const { resetMockOrdersState } = await import('@/lib/api/resources/orders/mock');
+const { GET: listOrders, POST: placeOrder } = await import('../orders/route');
+const { GET: orderDetail } = await import('../orders/[id]/route');
 type Order = import('@/lib/api/schemas/orders').Order;
 
 function post(body: unknown): Request {
@@ -44,6 +47,7 @@ describe('auth routes', () => {
     jar.clear();
     resetMockAuthState();
     resetMockLoyaltyState();
+    resetMockOrdersState();
   });
 
   afterEach(() => {
@@ -132,6 +136,36 @@ describe('auth routes', () => {
     await otpVerify(post({ otpId: challenge.data.otpId, code: challenge.data.devCode }));
     expect((await loyalty.get(userId)).balance).toBe(58);
     expect(await loyalty.claimHeld('0999999999', 'u-other')).toBe(58);
+  });
+
+  it('verifying a phone joins every guest order placed with it, once, and still credits Held Points once (ADR-0026)', async () => {
+    const guestOrder = async (phone: string) => (await (await placeOrder(post({
+      lines: [{ lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1, rx: { sameBothEyes: true, right: { sph: -2.5 }, left: { sph: -2.5 } } }],
+      address: { recipient: 'Mới', phone, line1: '1 Le Loi', ward: 'Ben Nghe', district: 'District 1', province: 'Ho Chi Minh City', label: 'home' },
+      paymentMethod: 'cod', notificationChannel: 'zalo',
+    }))).json()).data as Order;
+    // However the number was typed at checkout, it's the same phone.
+    const mine = [await guestOrder('0900 000 005'), await guestOrder('0900.000.005'), await guestOrder('+84-900-000-005')];
+    const someoneElses = await guestOrder('0999999999');
+
+    const { data } = await (await register(post({ phone: '0900000005', name: 'Mới', password: 'abcdefgh' }))).json();
+    const { data: verified } = await (await otpVerify(post({ otpId: data.otpId, code: data.devCode }))).json();
+    const userId = verified.user.id;
+    const historyIds = async () => ((await (await listOrders()).json()).data as Order[]).map((o) => o.id).sort();
+    const detail = (id: string) => orderDetail(post({}), { params: Promise.resolve({ id }) });
+
+    expect(await historyIds()).toEqual(mine.map((o) => o.id).sort());
+    expect((await detail(mine[0].id)).status).toBe(200);
+    expect((await detail(someoneElses.id)).status).toBe(404);
+    const earned = mine.reduce((sum, o) => sum + (o.totals.pointsToEarn ?? 0), 0);
+    expect(earned).toBeGreaterThan(0);
+    expect((await loyalty.get(userId)).balance).toBe(earned);
+
+    // A later OTP sign-in verifies the phone again: nothing joins or pays out twice.
+    const challenge = await (await otpRequest(post({ identifier: '0900000005', purpose: 'login' }))).json();
+    await otpVerify(post({ otpId: challenge.data.otpId, code: challenge.data.devCode }));
+    expect(await historyIds()).toEqual(mine.map((o) => o.id).sort());
+    expect((await loyalty.get(userId)).balance).toBe(earned);
   });
 
   it('400s a registration without a password', async () => {
