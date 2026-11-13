@@ -1,9 +1,9 @@
 'use client';
-import { useState, useSyncExternalStore } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { ChevronRight, Loader2, PenLine } from 'lucide-react';
-import type { EligibleLine } from '@/app/api/products/[slug]/reviews/eligibility/route';
+import type { EligibleLine } from '@/lib/api/schemas/catalog';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { apiRequest } from '@/lib/api/client';
@@ -12,14 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { toIntlLocale } from '@/lib/utils/format';
-
-// Dialog from md up, bottom sheet below: the same split as Quick add.
-const DESKTOP = '(min-width: 768px)';
-const subscribe = (onChange: () => void) => {
-  const query = window.matchMedia(DESKTOP);
-  query.addEventListener('change', onChange);
-  return () => query.removeEventListener('change', onChange);
-};
+import { useDesktop } from './use-desktop';
 
 /**
  * "Viết đánh giá" on the product page, branching on the member's Review eligibility for the lens:
@@ -30,7 +23,8 @@ export function WriteReviewButton({ productSlug, locale, dict }: { productSlug: 
   const router = useRouter();
   const pathname = usePathname();
   const status = useSessionStore((s) => s.status);
-  const desktop = useSyncExternalStore(subscribe, () => window.matchMedia(DESKTOP).matches, () => true);
+  // Dialog from md up, bottom sheet below: the same split as Quick add.
+  const desktop = useDesktop();
   const [busy, setBusy] = useState(false);
   const [lines, setLines] = useState<EligibleLine[]>([]);
   const [open, setOpen] = useState(false);

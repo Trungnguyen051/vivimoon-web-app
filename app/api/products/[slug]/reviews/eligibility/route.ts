@@ -3,9 +3,7 @@ import { orders } from '@/lib/api/resources/orders';
 import { apiOk, apiFail } from '@/lib/api/response';
 import { readSessionUserId } from '@/lib/auth/cookie';
 import { lineReview } from '@/lib/orders/line-review';
-
-/** One order line the member may review, as the product page's order picker shows it. */
-export type EligibleLine = { orderId: string; orderCode: string; placedAt: string; lineKey: string; variantLabel: string };
+import type { EligibleLine } from '@/lib/api/schemas/catalog';
 
 /**
  * The member's delivered, paid order lines of this product with no live Review, newest order first.

@@ -1,5 +1,5 @@
 'use client';
-import { useState, useSyncExternalStore } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ChevronRight, Droplet, ShieldCheck, ShoppingBag, X } from 'lucide-react';
@@ -10,18 +10,13 @@ import { Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger } from '
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { buttonVariants } from '@/components/ui/button';
 import { AddToCart } from './add-to-cart';
+import { useDesktop } from './use-desktop';
 import { RatingStars } from './rating-stars';
 import { RETURNS_FAQ } from './product-reassurance';
 import { cn } from '@/lib/utils/cn';
 import { formatCount } from '@/lib/utils/format';
 import { lineLabel } from '@/lib/products/plp-card';
 
-const DESKTOP = '(min-width: 768px)';
-const subscribe = (onChange: () => void) => {
-  const query = window.matchMedia(DESKTOP);
-  query.addEventListener('change', onChange);
-  return () => query.removeEventListener('change', onChange);
-};
 const THUMBS = 5;
 
 /**
@@ -40,7 +35,7 @@ export function QuickAdd({
   const [open, setOpen] = useState(false);
   // The server can't know the width; it renders the closed Dialog trigger, which is the same
   // button either way, so a phone only swaps the (still closed) root after hydration.
-  const desktop = useSyncExternalStore(subscribe, () => window.matchMedia(DESKTOP).matches, () => true);
+  const desktop = useDesktop();
   const trigger = (
     <button
       type="button"
