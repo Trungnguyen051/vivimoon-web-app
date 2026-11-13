@@ -4,6 +4,9 @@ import { Gift, Tag, Truck } from 'lucide-react';
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { catalog } from '@/lib/api/resources/catalog';
+import { fetchViaSelf } from '@/lib/api/server-fetch';
+import type { ApiResult } from '@/lib/api/client';
+import type { Review } from '@/lib/api/schemas/catalog';
 import { cheapestVariant } from '@/lib/products/cheapest-variant';
 import { formatCount, formatPrice } from '@/lib/utils/format';
 import { LensViewer } from '@/components/commerce/lens-viewer';
@@ -28,6 +31,17 @@ const WHY_COMFORTABLE_ARTICLE = 'silicone-hydrogel-vs-lens-thuong';
 const WEAR_GUIDE = 'cach-deo-va-thao-lens';
 
 /**
+ * Through the route rather than the catalog directly: a member's Review is written and moderated in the
+ * route handlers' module instance, which this page doesn't share (ADR-0002). The list and the summary
+ * above it both read this, so an approved Review reaches both.
+ */
+async function approvedReviews(slug: string): Promise<Review[]> {
+  const result = (await (await fetchViaSelf(`/api/products/${encodeURIComponent(slug)}/reviews`)).json()) as ApiResult<Review[]>;
+  if (!result.ok) throw new Error(`reviews read failed: ${result.error.message}`);
+  return result.data;
+}
+
+/**
  * Section order follows the PDP frames (Figma 56:2 desktop, 195:431 mobile): gallery,
  * product info and buy box, reassurance, FAQ beside specs, VIVIMOON TV, Bundle,
  * reviews, related. Every optional section hides when the product lacks its data.
@@ -42,7 +56,7 @@ export default async function ProductPage({ params }: { params: Promise<{ locale
   if (!product) notFound();
 
   const related = await catalog.getRelatedProducts(product, 8);
-  const reviews = await catalog.getReviews(product.id);
+  const reviews = await approvedReviews(product.slug);
   const gallery = await catalog.getGallery(product.id);
   const bundleIds = product.bundle?.accessoryIds ?? [];
   // In the Bundle's own order; the block hides unless every accessory still exists.

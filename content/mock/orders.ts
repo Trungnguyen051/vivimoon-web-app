@@ -144,7 +144,7 @@ export const orders: Order[] = [
     guestEmail: 'mai@example.vn',
   },
   {
-    // Delivered and paid, for writing Reviews: l1 carries rejected Review r12, l2 has none yet.
+    // Delivered and paid, for writing Reviews: l1 carries rejected Review r12, l2 has none yet, l3 carries pending Review r11.
     id: 'order-seed-10',
     code: 'VVM-SEED0010',
     status: 'delivered',
@@ -152,15 +152,16 @@ export const orders: Order[] = [
     lines: [
       { lineKey: 'l1', variantId: 'p-aqua-daily-30', quantity: 1, unitPrice: 125_000, lineTotal: 125_000, currency: 'VND' },
       { lineKey: 'l2', variantId: 'p-breeze-daily-30', quantity: 1, unitPrice: 110_000, lineTotal: 110_000, currency: 'VND' },
+      { lineKey: 'l3', variantId: 'p-hazel-monthly-gray-30', quantity: 1, unitPrice: 240_000, lineTotal: 240_000, currency: 'VND' },
     ],
-    totals: { subtotal: 235_000, discount: 0, appliedVouchers: [], shipping: 30_000, total: 265_000, currency: 'VND' },
+    totals: { subtotal: 475_000, discount: 0, appliedVouchers: [], shipping: 30_000, total: 505_000, currency: 'VND' },
     address: HOME_ADDRESS,
     shippingMethod: 'standard',
     carrierTrackingCode: 'SPX2330409915502',
     payment: { method: 'cod', status: 'paid' },
     userId: 'u-001',
   },
-  // Two more delivered Hazels for u-001 (order-seed-9's already has a pending Review), so the product page's order picker has two to offer.
+  // Two more delivered Hazels for u-001 (order-seed-10's l3 already has a pending Review), so the product page's order picker has several to offer.
   {
     id: 'order-seed-11',
     code: 'VVM-SEED0011',

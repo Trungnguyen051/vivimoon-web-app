@@ -187,7 +187,7 @@ export const reviews: Review[] = [
     helpfulVoteCount: 0,
     status: 'approved',
   },
-  // Review Moderation states on u-001's delivered orders, kept off the product page and out of its rating summary.
+  // Review Moderation states on u-001's delivered order-seed-10, kept off the product page and out of its rating summary.
   {
     id: 'r11',
     productId: 'p-hazel-monthly',
@@ -198,8 +198,8 @@ export const reviews: Review[] = [
     source: 'vivimoon',
     variantLabel: 'Storm Gray',
     authorUserId: 'u-001',
-    orderId: 'order-seed-9',
-    lineKey: 'l1',
+    orderId: 'order-seed-10',
+    lineKey: 'l3',
     tags: [],
     media: [],
     marketplaceHelpfulCount: 0,

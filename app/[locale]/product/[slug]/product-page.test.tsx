@@ -1,8 +1,23 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import ProductPage from './page';
 import { products, reviews } from '@/content/mock';
 import { en as enDict } from '@/lib/i18n/dictionaries/en';
+import { fetchViaSelf } from '@/lib/api/server-fetch';
+import type { Review } from '@/lib/types';
+import { GET as getReviewsRoute } from '@/app/api/products/[slug]/reviews/route';
+
+// The page reads Reviews through the route (ADR-0002); here the self-fetch lands on that route's handler.
+vi.mock('@/lib/api/server-fetch', () => ({ fetchViaSelf: vi.fn() }));
+vi.mock('@/lib/auth/cookie', () => ({ readSessionUserId: async () => null }));
+const mockedFetchViaSelf = vi.mocked(fetchViaSelf);
+beforeEach(() => {
+  mockedFetchViaSelf.mockReset();
+  mockedFetchViaSelf.mockImplementation(async (path) => {
+    const slug = decodeURIComponent(path.match(/^\/api\/products\/([^/?]+)\/reviews$/)![1]);
+    return getReviewsRoute(new Request(`http://x${path}`), { params: Promise.resolve({ slug }) });
+  });
+});
 
 vi.mock('next/navigation', async (orig) => ({
   ...(await orig<typeof import('next/navigation')>()),
@@ -43,6 +58,24 @@ describe('a product page', () => {
 
     expect(screen.getByText(new RegExp(`^${reviewsOf(product.id).length} reviews · `))).toBeInTheDocument();
     for (const r of hidden) expect(screen.queryByText(r.body)).not.toBeInTheDocument();
+  });
+
+  it("shows the Reviews the route returns, so a member's approved Review reaches the list and the summary", async () => {
+    // A Review written through a route handler lives in that module instance, not the page's: only the route knows it.
+    const product = products.find((p) => reviewsOf(p.id).length > 0)!;
+    const written: Review = {
+      id: 'r-written', productId: product.id, author: 'Mai N.', rating: 1, body: 'Viết qua route, duyệt rồi, phải hiện trên trang.',
+      createdAt: '2026-11-01T00:00:00.000Z', tags: [], media: [], marketplaceHelpfulCount: 0, helpfulVoteCount: 0,
+      status: 'approved', source: 'vivimoon',
+    };
+    const all = [written, ...reviewsOf(product.id)];
+    mockedFetchViaSelf.mockResolvedValue(Response.json({ ok: true, data: all }));
+    await renderProduct(product.slug);
+
+    expect(mockedFetchViaSelf).toHaveBeenCalledWith(`/api/products/${product.slug}/reviews`);
+    expect(screen.getByText(written.body)).toBeInTheDocument();
+    const average = all.reduce((sum, r) => sum + r.rating, 0) / all.length;
+    expect(screen.getByText(`${average.toFixed(1)} · ${all.length}`)).toBeInTheDocument();
   });
 
   it('shows no stars at all for a product nobody has reviewed', async () => {

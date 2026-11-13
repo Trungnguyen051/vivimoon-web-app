@@ -14,8 +14,11 @@ export function resetMockHelpfulVotes(): void {
 
 export type HelpfulVoteResult = 'not_found' | 'own_review' | { hasVoted: boolean; helpfulVoteCount: number };
 
-/** What a shopper may see: never the writer's account; with a viewer, their per-Review flags. */
-function toPublicReview({ authorUserId, ...review }: Review, viewerId?: string | null): Review {
+/**
+ * What a shopper may see: never the writer's account or the order line it's about, whatever the store
+ * hands back; with a viewer, their per-Review flags.
+ */
+function toPublicReview({ authorUserId, orderId: _orderId, lineKey: _lineKey, ...review }: Review, viewerId?: string | null): Review {
   const voters = helpfulVotes.get(review.id);
   const counted = { ...review, helpfulVoteCount: review.helpfulVoteCount + (voters?.size ?? 0) };
   return viewerId
@@ -209,7 +212,7 @@ export const mockCatalog = {
     return galleries.find((g) => g.productId === productId) ?? null;
   },
 
-  /** The Review written about one order line, as its writer sees it: the latest that wasn't deleted. */
+  /** The Review written about one order line, as its writer sees it: the latest that wasn't deleted. Server-only: it carries the writer and order line, so pass it through toPublicReview before it reaches anyone else. */
   async getLineReview(orderId: string, lineKey: string): Promise<Review | null> {
     return reviews.findLast((r) => r.orderId === orderId && r.lineKey === lineKey) ?? null;
   },
@@ -220,7 +223,7 @@ export const mockCatalog = {
       ...input, id: `r-${randomUUID()}`, createdAt: new Date().toISOString(),
       status: 'pending', source: 'vivimoon', marketplaceHelpfulCount: 0, helpfulVoteCount: 0,
     };
-    reviews.push(keepPrivate(pendingUntil(review, Date.now() + AUTO_APPROVE_MS)));
+    reviews.push(pendingUntil(review, Date.now() + AUTO_APPROVE_MS));
     return review;
   },
 
@@ -270,7 +273,6 @@ export type Catalog = typeof mockCatalog;
 
 // Review Moderation in the mock: the seed list is the store, mutated in place so every read above sees writes.
 const seedReviews = structuredClone(reviews);
-reviews.forEach(keepPrivate);
 const AUTO_APPROVE_MS = 60_000;
 // shortcut: uploads live in memory and are never evicted, fine for a mock; real storage is Vivimoon's backend.
 type StoredMedia = { userId: string; type: ReviewMediaRef['type']; contentType: string; bytes: Uint8Array };
@@ -281,7 +283,7 @@ const MEDIA_PER_MEMBER = 30;
 /** Test helper: restores the seeded Reviews. */
 export function resetMockReviewsState(): void {
   reviewMedia.clear();
-  reviews.splice(0, reviews.length, ...structuredClone(seedReviews).map(keepPrivate));
+  reviews.splice(0, reviews.length, ...structuredClone(seedReviews));
 }
 
 /** Test-only hook standing in for the upstream moderation queue: approves or rejects at once. */
@@ -302,17 +304,6 @@ function pendingUntil(review: Review, at: number): Review {
     set: (next: Review['status']) => { status = next; },
     enumerable: true, configurable: true,
   });
-}
-
-/**
- * Who wrote a Review and about which order line never leave the server: non-enumerable, so a spread or
- * JSON response drops them while the mock can still read them.
- */
-function keepPrivate(review: Review): Review {
-  for (const key of ['authorUserId', 'orderId', 'lineKey'] as const) {
-    if (key in review) Object.defineProperty(review, key, { value: review[key], enumerable: false, writable: true, configurable: true });
-  }
-  return review;
 }
 
 /**

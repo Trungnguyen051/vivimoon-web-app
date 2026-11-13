@@ -66,10 +66,12 @@ describe('GET /api/products/:slug/reviews/eligibility', () => {
 
   it('returns several lines, newest order first, leaving out a line with a pending Review', async () => {
     signIn();
-    // order-seed-9 (a joined guest order) is Hazel too, but its pending Review r11 holds the line.
+    // order-seed-10 l3 is Hazel too, but its pending Review r11 holds the line.
     expect((await eligibility('hazel-monthly-colored')).body.data).toEqual([
       { orderId: 'order-seed-12', orderCode: 'VVM-SEED0012', placedAt: '2026-09-21T11:05:00.000Z', lineKey: 'l1', variantLabel: expect.stringContaining('Storm Gray') },
       { orderId: 'order-seed-11', orderCode: 'VVM-SEED0011', placedAt: '2026-08-12T03:40:00.000Z', lineKey: 'l1', variantLabel: expect.stringContaining('Hazel Brown') },
+      // A joined guest order counts like any other.
+      { orderId: 'order-seed-9', orderCode: 'VVM-SEED0009', placedAt: '2026-06-02T10:20:00.000Z', lineKey: 'l1', variantLabel: expect.stringContaining('Storm Gray') },
     ]);
   });
 });

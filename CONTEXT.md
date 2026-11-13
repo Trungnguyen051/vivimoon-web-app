@@ -76,7 +76,7 @@ Loyalty points earned by a guest order, kept against the order's phone number un
 _Avoid_: Pending points, guest points
 
 **Review**:
-A shopper's rating and write-up of a product. It either comes from a marketplace listing (a Mirrored Review) or was written on Vivimoon by a member about a delivered, paid order line they bought, including guest orders that joined their account (ADR-0026). One Review per order line. Gifts can't be reviewed. A member may delete their own Review but not edit it.
+A shopper's rating and write-up of a product. It either comes from a marketplace listing (a Mirrored Review) or was written on Vivimoon by a member about a delivered, paid order line they bought, including guest orders that joined their account (ADR-0026). One live (pending or approved) Review per order line; a rejected or deleted one can be written again. Gifts can't be reviewed. A member may delete their own Review but not edit it.
 _Avoid_: Rating (that's one field of a Review), comment
 
 **Mirrored Review**:

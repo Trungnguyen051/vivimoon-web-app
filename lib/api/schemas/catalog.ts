@@ -272,24 +272,27 @@ export const reviewFilterSchema = z.object({
   hasMedia: z.enum(['true', 'false']).transform((v) => v === 'true').optional(),
 });
 
-/** `POST /api/orders/:id/reviews`: a member's Review of one line of their order. */
-export const reviewCreateSchema = z.object({
-  lineKey: z.string().min(1),
-  rating: z.number().int().min(1).max(5),
-  subRatings: reviewSchema.shape.subRatings,
-  tags: z.array(reviewTagSchema).max(3).refine((t) => new Set(t).size === t.length, 'tags must not repeat').default([]),
-  title: z.string().trim().max(120).optional().transform((v) => v || undefined),
-  body: z.string().trim().min(20).max(1000),
-  // References `POST /api/reviews/media` returned; the route checks they're the writer's and within the limits.
-  media: z.array(z.string()).max(6).refine((m) => new Set(m).size === m.length, 'media must not repeat').default([]),
-});
-
 const MB = 1024 * 1024;
 /** What a Review may carry (#228), checked by the browser for a quick message and by the upload route as the rule. */
 export const REVIEW_MEDIA_LIMITS = {
   image: { types: ['image/jpeg', 'image/png', 'image/webp'], maxBytes: 5 * MB, maxCount: 5 },
   video: { types: ['video/mp4'], maxBytes: 50 * MB, maxCount: 1, maxSeconds: 30 },
 } as const;
+
+/** What a Review's text may be, checked by the form for a quick message and by the create route as the rule. */
+export const REVIEW_TEXT_LIMITS = { bodyMin: 20, bodyMax: 1000, titleMax: 120, maxTags: 3 } as const;
+
+/** `POST /api/orders/:id/reviews`: a member's Review of one line of their order. */
+export const reviewCreateSchema = z.object({
+  lineKey: z.string().min(1),
+  rating: z.number().int().min(1).max(5),
+  subRatings: reviewSchema.shape.subRatings,
+  tags: z.array(reviewTagSchema).max(REVIEW_TEXT_LIMITS.maxTags).refine((t) => new Set(t).size === t.length, 'tags must not repeat').default([]),
+  title: z.string().trim().max(REVIEW_TEXT_LIMITS.titleMax).optional().transform((v) => v || undefined),
+  body: z.string().trim().min(REVIEW_TEXT_LIMITS.bodyMin).max(REVIEW_TEXT_LIMITS.bodyMax),
+  // References `POST /api/reviews/media` returned; the route checks they're the writer's and within the limits.
+  media: z.array(z.string()).max(REVIEW_MEDIA_LIMITS.image.maxCount + REVIEW_MEDIA_LIMITS.video.maxCount).refine((m) => new Set(m).size === m.length, 'media must not repeat').default([]),
+});
 
 /** What the upload route returns: the reference a Review's create call takes, and where the file is served. */
 export type ReviewMediaRef = { id: string; type: 'image' | 'video'; url: string };
@@ -299,7 +302,7 @@ export const lineReviewSchema = z.object({
   status: z.enum(['none', 'pending', 'approved', 'rejected']),
   reviewId: z.string().optional(),
   reason: z.string().optional(),
-  productSlug: z.string().optional(),
+  productSlug: z.string(),
 });
 
 /** `GET /api/products/:slug/reviews/eligibility`: one order line the member may review, as the product page's picker shows it. */
