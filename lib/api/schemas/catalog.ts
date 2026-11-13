@@ -272,6 +272,13 @@ export const reviewFilterSchema = z.object({
   hasMedia: z.enum(['true', 'false']).transform((v) => v === 'true').optional(),
 });
 
+const MB = 1024 * 1024;
+/** What a Review may carry (#228), checked by the browser for a quick message and by the upload route as the rule. */
+export const REVIEW_MEDIA_LIMITS = {
+  image: { types: ['image/jpeg', 'image/png', 'image/webp'], maxBytes: 5 * MB, maxCount: 5 },
+  video: { types: ['video/mp4'], maxBytes: 50 * MB, maxCount: 1, maxSeconds: 30 },
+} as const;
+
 /** What a Review's text may be, checked by the form for a quick message and by the create route as the rule. */
 export const REVIEW_TEXT_LIMITS = { bodyMin: 20, bodyMax: 1000, titleMax: 120, maxTags: 3 } as const;
 
@@ -284,15 +291,8 @@ export const reviewCreateSchema = z.object({
   title: z.string().trim().max(REVIEW_TEXT_LIMITS.titleMax).optional().transform((v) => v || undefined),
   body: z.string().trim().min(REVIEW_TEXT_LIMITS.bodyMin).max(REVIEW_TEXT_LIMITS.bodyMax),
   // References `POST /api/reviews/media` returned; the route checks they're the writer's and within the limits.
-  media: z.array(z.string()).max(6).refine((m) => new Set(m).size === m.length, 'media must not repeat').default([]),
+  media: z.array(z.string()).max(REVIEW_MEDIA_LIMITS.image.maxCount + REVIEW_MEDIA_LIMITS.video.maxCount).refine((m) => new Set(m).size === m.length, 'media must not repeat').default([]),
 });
-
-const MB = 1024 * 1024;
-/** What a Review may carry (#228), checked by the browser for a quick message and by the upload route as the rule. */
-export const REVIEW_MEDIA_LIMITS = {
-  image: { types: ['image/jpeg', 'image/png', 'image/webp'], maxBytes: 5 * MB, maxCount: 5 },
-  video: { types: ['video/mp4'], maxBytes: 50 * MB, maxCount: 1, maxSeconds: 30 },
-} as const;
 
 /** What the upload route returns: the reference a Review's create call takes, and where the file is served. */
 export type ReviewMediaRef = { id: string; type: 'image' | 'video'; url: string };

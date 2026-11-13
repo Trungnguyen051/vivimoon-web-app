@@ -9,7 +9,7 @@ export type ReviewableLine = { review: LineReview; product: CatalogItem; variant
  * A line's Review state, or null when the line can't be reviewed: the order isn't delivered and paid,
  * or the line isn't a lens. Ownership is the caller's check; Gifts aren't lines.
  */
-export async function lineReview(order: Order, line: OrderLine): Promise<ReviewableLine | null> {
+export async function reviewableLine(order: Order, line: OrderLine): Promise<ReviewableLine | null> {
   if (order.status !== 'delivered' || order.payment.status !== 'paid') return null;
   const found = await catalog.getVariantById(line.variantId);
   if (!found || found.product.kind === 'accessory') return null;

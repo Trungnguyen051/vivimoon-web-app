@@ -1,7 +1,7 @@
 import { orders } from '@/lib/api/resources/orders';
 import { apiOk, apiFail } from '@/lib/api/response';
 import { readSessionUserId } from '@/lib/auth/cookie';
-import { lineReview } from '@/lib/orders/line-review';
+import { reviewableLine } from '@/lib/orders/line-review';
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const userId = await readSessionUserId();
@@ -15,7 +15,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
   // Each line's Review state, for the order detail's "Viết đánh giá" and its moderation states.
   const lines = await Promise.all(order.lines.map(async (line) => {
-    const reviewable = await lineReview(order, line);
+    const reviewable = await reviewableLine(order, line);
     return reviewable ? { ...line, review: reviewable.review } : line;
   }));
   return apiOk({ ...order, lines });

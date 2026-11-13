@@ -2,7 +2,7 @@ import { catalog } from '@/lib/api/resources/catalog';
 import { orders } from '@/lib/api/resources/orders';
 import { apiOk, apiFail } from '@/lib/api/response';
 import { readSessionUserId } from '@/lib/auth/cookie';
-import { hasLiveReview, lineReview } from '@/lib/orders/line-review';
+import { hasLiveReview, reviewableLine } from '@/lib/orders/line-review';
 import type { EligibleLine } from '@/lib/api/schemas/catalog';
 
 /**
@@ -20,7 +20,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ slu
   for (const order of await orders.list(userId)) {
     for (const line of order.lines) {
       // The same rules the create route enforces, so the picker never offers a line it would refuse.
-      const reviewable = await lineReview(order, line);
+      const reviewable = await reviewableLine(order, line);
       if (reviewable?.product.slug !== slug || hasLiveReview(reviewable.review)) continue;
       const { variant } = reviewable;
       eligible.push({

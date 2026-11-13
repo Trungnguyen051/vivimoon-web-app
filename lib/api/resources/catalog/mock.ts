@@ -212,7 +212,7 @@ export const mockCatalog = {
     return galleries.find((g) => g.productId === productId) ?? null;
   },
 
-  /** The Review written about one order line, as its writer sees it: the latest that wasn't deleted. */
+  /** The Review written about one order line, as its writer sees it: the latest that wasn't deleted. Server-only: it carries the writer and order line, so pass it through toPublicReview before it reaches anyone else. */
   async getLineReview(orderId: string, lineKey: string): Promise<Review | null> {
     return reviews.findLast((r) => r.orderId === orderId && r.lineKey === lineKey) ?? null;
   },
