@@ -31,6 +31,13 @@ describe('ReviewsList', () => {
     expect(screen.getByText(en.pdp.noReviews)).toBeInTheDocument();
   });
 
+  it('badges a Review written on Vivimoon as a verified purchase, and a Mirrored one not', () => {
+    renderList();
+    const [mirrored, written] = screen.getAllByRole('article');
+    expect(within(mirrored).queryByText(en.writeReview.verifiedPurchase)).toBeNull();
+    expect(within(written).getByText(en.writeReview.verifiedPurchase)).toBeInTheDocument();
+  });
+
   it('summarises count, media share, average and the 5→1 histogram', () => {
     renderList();
     expect(screen.getByText('4 reviews · 25% with real photos')).toBeInTheDocument();

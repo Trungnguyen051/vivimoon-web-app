@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { reviewSchema } from '@/lib/api/schemas/catalog';
-import { filterReviews, reviewStats } from './reviews';
+import { filterReviews, reviewStats, shortName } from './reviews';
 
 const base = { productId: 'p1', author: 'A', title: 't', body: 'b', createdAt: '2026-01-01' };
 const reviews = [
@@ -46,5 +46,26 @@ describe('reviewStats', () => {
 
   it('has no sub-ratings when no review gave any', () => {
     expect(reviewStats(reviews.slice(2)).subRatings).toBeNull();
+  });
+});
+
+describe('reviewStats with partial sub-ratings', () => {
+  it('averages each sub-rating over the Reviews that gave it, leaving out one nobody gave', () => {
+    const partial = [
+      reviewSchema.parse({ ...base, id: 'p', rating: 5, subRatings: { comfort: 5 } }),
+      reviewSchema.parse({ ...base, id: 'q', rating: 4, subRatings: { comfort: 3, colorMatch: 4 } }),
+    ];
+    expect(reviewStats(partial).subRatings).toEqual({ comfort: 4, colorMatch: 4 });
+  });
+});
+
+describe('shortName', () => {
+  it.each([
+    ['Nguyễn Văn Trung', 'Trung N.'],
+    ['Nguyễn Thị Mai', 'Mai N.'],
+    ['  trần   linh ', 'linh T.'],
+    ['Madonna', 'Madonna'],
+  ])('shows %s as %s', (full, short) => {
+    expect(shortName(full)).toBe(short);
   });
 });

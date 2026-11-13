@@ -8,6 +8,7 @@ import type { Dictionary } from '@/lib/i18n/dictionaries';
 import type { Locale } from '@/lib/i18n/config';
 import { filterReviews, reviewStats } from '@/lib/products/reviews';
 import { toIntlLocale } from '@/lib/utils/format';
+import { BadgeCheck } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { RatingStars } from './rating-stars';
 import { ReviewSourceBadge } from './review-source-badge';
@@ -109,10 +110,10 @@ export function ReviewsList({ reviews, dict, locale }: { reviews: Review[]; dict
 
           {stats.subRatings && (
             <dl className="flex flex-col gap-3 rounded-xl bg-muted/60 p-5 text-sm">
-              {SUB_RATINGS.map((key) => (
+              {SUB_RATINGS.filter((key) => stats.subRatings![key] !== undefined).map((key) => (
                 <div key={key} className="flex justify-between gap-4">
                   <dt className="text-muted-foreground">{t.subRatings[key]}</dt>
-                  <dd className="font-semibold">{stats.subRatings![key].toFixed(1)} / 5</dd>
+                  <dd className="font-semibold">{stats.subRatings![key]!.toFixed(1)} / 5</dd>
                 </div>
               ))}
             </dl>
@@ -173,7 +174,15 @@ function ReviewCard({ review: r, dict }: { review: Review; dict: Dictionary }) {
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <h3 className="font-medium">{r.author}</h3>
-            <ReviewSourceBadge source={r.source} sourceUrl={r.sourceUrl} dict={dict} />
+            <div className="flex shrink-0 items-center gap-1.5">
+              {r.source === 'vivimoon' && (
+                <span className="inline-flex items-center gap-1 text-xs text-emerald-700">
+                  <BadgeCheck aria-hidden className="size-3.5" />
+                  {dict.writeReview.verifiedPurchase}
+                </span>
+              )}
+              <ReviewSourceBadge source={r.source} sourceUrl={r.sourceUrl} dict={dict} />
+            </div>
           </div>
           <div className="mt-0.5 flex flex-wrap items-center gap-x-1 text-sm text-muted-foreground">
             <RatingStars label={dict.common.rating} outOfLabel={dict.common.outOf} rating={r.rating} />

@@ -186,16 +186,19 @@ export const reviews: Review[] = [
     helpfulVoteCount: 0,
     status: 'approved',
   },
-  // Review Moderation states, kept off the product page and out of its rating summary.
+  // Review Moderation states on u-001's delivered orders, kept off the product page and out of its rating summary.
   {
     id: 'r11',
-    productId: 'p-aqua-daily',
-    author: 'Trung N.',
-    rating: 1,
+    productId: 'p-hazel-monthly',
+    author: 'Mai N.',
+    rating: 4,
     body: 'Đang chờ duyệt: chưa được hiện trên trang sản phẩm.',
     createdAt: '2026-08-01',
     source: 'vivimoon',
-    variantLabel: 'Aqua Daily Clear · 30 chiếc',
+    variantLabel: 'Storm Gray',
+    authorUserId: 'u-001',
+    orderId: 'order-seed-9',
+    lineKey: 'l1',
     tags: [],
     media: [],
     marketplaceHelpfulCount: 0,
@@ -205,7 +208,7 @@ export const reviews: Review[] = [
   {
     id: 'r12',
     productId: 'p-aqua-daily',
-    author: 'Trung N.',
+    author: 'Mai N.',
     rating: 1,
     title: 'Bị từ chối',
     body: 'Bị từ chối khi duyệt: không bao giờ hiện trên trang sản phẩm.',
@@ -218,5 +221,8 @@ export const reviews: Review[] = [
     helpfulVoteCount: 0,
     status: 'rejected',
     reason: 'Nội dung không liên quan đến sản phẩm.',
+    authorUserId: 'u-001',
+    orderId: 'order-seed-10',
+    lineKey: 'l1',
   },
 ];

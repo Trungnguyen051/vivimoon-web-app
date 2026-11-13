@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { ORDER_STATUSES } from '@/lib/orders/statuses';
 import { giftLineSchema, priceCartRequestSchema, priceLineInputSchema, pricedLineSchema, pricedCartSchema } from './cart';
-import { currencySchema } from './catalog';
+import { currencySchema, lineReviewSchema } from './catalog';
 import { lineRxSchema, purchaseUnitSchema } from './rx';
 import { addressSchema } from './checkout';
 import { paymentIntentSchema, paymentMethodTypeSchema, paymentStatusSchema } from './payments';
@@ -40,6 +40,8 @@ export const orderLineSchema = pricedLineSchema.extend({
   // only when it was above what was charged — so a past order never quotes
   // today's catalogue.
   compareAtUnitPrice: z.number().int().nonnegative().optional(),
+  // Set by the member's order detail only, on lines that can be or were reviewed.
+  review: lineReviewSchema.optional(),
 });
 
 export const orderSchema = z.object({

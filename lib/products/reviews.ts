@@ -15,11 +15,20 @@ export function reviewStats(reviews: Review[]) {
     stars,
     count: reviews.filter((r) => Math.round(r.rating) === stars).length,
   }));
-  const rated = reviews.flatMap((r) => (r.subRatings ? [r.subRatings] : []));
-  const subRatings = rated.length === 0
-    ? null
-    : (Object.fromEntries(
-        SUB_RATINGS.map((key) => [key, rated.reduce((sum, s) => sum + s[key], 0) / rated.length]),
-      ) as SubRatings);
+  // Per sub-rating, over the Reviews that rated it; a sub-rating nobody rated is left out.
+  const entries = SUB_RATINGS.flatMap((key) => {
+    const given = reviews.flatMap((r) => (r.subRatings?.[key] === undefined ? [] : [r.subRatings[key]]));
+    return given.length === 0 ? [] : [[key, given.reduce((sum, v) => sum + v, 0) / given.length] as const];
+  });
+  const subRatings = entries.length === 0 ? null : (Object.fromEntries(entries) as SubRatings);
   return { average, histogram, subRatings, withMedia: reviews.filter((r) => r.media.length > 0).length };
+}
+
+/**
+ * A writer's public name: given name plus family initial ("Nguyễn Văn Trung" → "Trung N."). Vietnamese
+ * names put the family name first; a single-word name shows as given.
+ */
+export function shortName(fullName: string): string {
+  const words = fullName.trim().split(/\s+/);
+  return words.length < 2 ? words[0] : `${words.at(-1)} ${words[0].charAt(0).toUpperCase()}.`;
 }

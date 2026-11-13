@@ -4,6 +4,7 @@ import { shippingMethodName } from '@/lib/orders/shipping-method-name';
 import { LineSummary } from './line-summary';
 import { OrderStatusTimeline } from './order-status-timeline';
 import { OrderActions } from './order-actions';
+import { OrderLineReview } from './order-line-review';
 import { formatPrice, toIntlLocale } from '@/lib/utils/format';
 import type { PublicOrder } from '@/lib/api/schemas/orders';
 import type { Locale } from '@/lib/i18n/config';
@@ -93,6 +94,15 @@ export async function OrderDetailView({ order, locale, dict, signedIn }: {
                   </p>
                   <span className="text-xs leading-4 text-muted-foreground">×{line.quantity}</span>
                 </div>
+                {line.review ? (
+                  <div className="pt-2">
+                    <OrderLineReview
+                      review={line.review} dict={dict.writeReview.line}
+                      writeHref={`/${locale}/account/orders/${encodeURIComponent(order.id)}/review/${encodeURIComponent(line.lineKey)}`}
+                      productHref={`/${locale}/product/${line.review.productSlug}`}
+                    />
+                  </div>
+                ) : null}
               </div>
             </li>
           ))}
