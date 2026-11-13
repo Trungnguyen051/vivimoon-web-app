@@ -169,6 +169,15 @@ export const en = {
     noMatch: 'No reviews here yet.', photo: 'Review photo {n}', video: 'Review video',
     helpfulFailed: 'Couldn’t save your vote. Please try again.',
   },
+  // "Write a review" on the product page: which order to review, or why there's none.
+  reviewPicker: {
+    title: 'Which order are you reviewing?',
+    subtitle: 'You’ve received this lens more than once. Pick the order this review is about.',
+    order: 'Order {code}',
+    notYet: 'You need to buy and receive this product to review it.',
+    myOrders: 'View my orders',
+    failed: 'Couldn’t check your orders. Please try again.',
+  },
   pdp: {
     specs: 'Specifications', related: 'You might also like', reviews: 'Reviews',
     material: 'Material', waterContent: 'Water content', baseCurve: 'Base curve',

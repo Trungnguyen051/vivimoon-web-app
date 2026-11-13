@@ -31,13 +31,14 @@ const reviews = [
   reviewSchema.parse({ ...base, id: 'r4', author: 'Hoa', rating: 1, body: 'Not for me.' }),
 ];
 
-const renderList = (list = reviews) => render(<ReviewsList reviews={list} locale="en" dict={en} />);
+const renderList = (list = reviews) => render(<ReviewsList reviews={list} locale="en" dict={en} productSlug="hazel" />);
 const authors = () => screen.getAllByRole('article').map((a) => within(a).getByRole('heading').textContent);
 
 describe('ReviewsList', () => {
-  it('shows the empty state when there are no reviews', () => {
+  it('shows the empty state when there are no reviews, still offering "Write a review"', () => {
     renderList([]);
     expect(screen.getByText(en.pdp.noReviews)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: en.reviews.write })).toBeInTheDocument();
   });
 
   it('badges a Review written on Vivimoon as a verified purchase, and a Mirrored one not', () => {
@@ -100,11 +101,6 @@ describe('ReviewsList', () => {
     expect(screen.getAllByText(en.pdp.reviewSource.vivimoon)).toHaveLength(3);
   });
 
-  it('sends "Write a review" to the shopper’s orders', () => {
-    renderList();
-    expect(screen.getByRole('link', { name: en.reviews.write })).toHaveAttribute('href', '/en/account/orders');
-  });
-
   it('shows the first reviews and reveals the rest from "See all"', async () => {
     const many = Array.from({ length: 6 }, (_, i) => reviewSchema.parse({ ...base, id: `m${i}`, author: `A${i}`, rating: 5, body: 'b' }));
     renderList(many);
@@ -120,7 +116,7 @@ describe('ReviewsList', () => {
       ok: true,
       data: [{ ...reviews[0], isOwn: true, hasVoted: false }, { ...reviews[1], isOwn: false, hasVoted: true, helpfulVoteCount: 1 }],
     })));
-    render(<ReviewsList reviews={reviews} locale="en" dict={en} productSlug="hazel" />);
+    renderList();
     const [mine, voted] = screen.getAllByRole('article');
     await vi.waitFor(() => expect(within(mine).queryByRole('button', { name: /Helpful/ })).not.toBeInTheDocument());
     expect(within(mine).getByText('Helpful (24)')).toBeInTheDocument();
