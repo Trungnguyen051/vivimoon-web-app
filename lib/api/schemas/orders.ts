@@ -65,7 +65,13 @@ export const orderSchema = z.object({
   // The carrier's own waybill number — set once the order ships.
   carrierTrackingCode: z.string().optional(),
   // COD has no intent; QR carries the QR one, e-wallet the redirect one (ADR-0025).
-  payment: z.object({ method: paymentMethodTypeSchema, status: paymentStatusSchema, intent: paymentIntentSchema.optional() }),
+  payment: z.object({
+    method: paymentMethodTypeSchema,
+    status: paymentStatusSchema,
+    intent: paymentIntentSchema.optional(),
+    // When an expired QR was replaced by a new one; its hold runs from here, not `placedAt` (#205).
+    renewedAt: z.string().optional(),
+  }),
   // Optional so orders placed before ADR-0025 stay valid.
   notificationChannel: notificationChannelSchema.optional(),
   note: z.string().optional(),
@@ -81,6 +87,18 @@ export const orderSchema = z.object({
  */
 export const publicOrderSchema = orderSchema.omit({ userId: true, guestEmail: true, payment: true });
 export type PublicOrder = z.infer<typeof publicOrderSchema>;
+
+/**
+ * What the QR transfer page reads by Order Code (#205): the order minus its owner and
+ * email. Unlike Order Lookup it keeps `payment`, the page's whole subject; an intent's
+ * `qrCode` and status say nothing about who placed the order.
+ */
+export const paymentOrderSchema = orderSchema.omit({ userId: true, guestEmail: true });
+export type PaymentOrder = z.infer<typeof paymentOrderSchema>;
+
+/** What the QR page can do to its order's payment (#205). */
+export const paymentActionSchema = z.enum(['confirm', 'cod', 'renew']);
+export type PaymentAction = z.infer<typeof paymentActionSchema>;
 
 export type NotificationChannel = z.infer<typeof notificationChannelSchema>;
 export type PlaceOrderRequest = z.infer<typeof placeOrderRequestSchema>;

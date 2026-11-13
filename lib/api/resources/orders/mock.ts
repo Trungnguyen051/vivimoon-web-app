@@ -3,8 +3,9 @@ import { orders as seedOrders } from '@/content/mock';
 import { pricing } from '@/lib/api/resources/pricing';
 import { catalog } from '@/lib/api/resources/catalog';
 import { payments } from '@/lib/api/resources/payments';
-import type { Order, PlaceOrderRequest } from '@/lib/api/schemas/orders';
+import type { Order, PaymentAction, PlaceOrderRequest } from '@/lib/api/schemas/orders';
 import { normalizeOrderCode } from '@/lib/api/schemas/orders';
+import { qrExpiresAt } from '@/lib/orders/qr-hold';
 import { lensesIn, purchaseUnitOf } from '@/lib/api/schemas/rx';
 
 /** Thrown by the mock so the route handler can map it to an envelope. */
@@ -180,8 +181,49 @@ export const mockOrders = {
   async findByCode(code: string): Promise<Order | null> {
     const normalized = normalizeOrderCode(code);
     if (!normalized) return null;
-    return [...store.values()].find((o) => o.code.toUpperCase() === normalized) ?? null;
+    const order = [...store.values()].find((o) => o.code.toUpperCase() === normalized);
+    return order ? expireStaleQr(order) : null;
+  },
+
+  /**
+   * The QR page's actions, by Order Code (#205): "Tôi đã chuyển khoản" confirms the
+   * transfer (mocked, no bank webhook), "Đổi sang COD" switches the method, and an
+   * expired QR can be renewed. Null for an unknown code.
+   */
+  async updatePayment(code: string, action: PaymentAction): Promise<Order | null> {
+    const order = await mockOrders.findByCode(code);
+    if (!order) return null;
+    const { payment } = order;
+    if (payment.method !== 'qr' || payment.status === 'paid') {
+      throw new OrderError(`a ${payment.method} ${payment.status} order cannot change its payment`, 'conflict');
+    }
+    if (action === 'cod') {
+      order.payment = { method: 'cod', status: 'pending' };
+    } else if (action === 'confirm') {
+      if (payment.status === 'expired') throw new OrderError('this QR has expired', 'conflict');
+      payment.status = 'paid';
+    } else {
+      if (payment.status !== 'expired') throw new OrderError('the current QR is still live', 'conflict');
+      order.payment = {
+        method: 'qr', status: 'pending',
+        intent: await payments.createIntent({ method: 'qr' }),
+        renewedAt: new Date().toISOString(),
+      };
+    }
+    return order;
   },
 };
+
+/**
+ * A QR order still awaiting its transfer when the hold runs out is expired (#205).
+ * Applied on read: the mock has no scheduler, and a real backend would do this itself.
+ */
+function expireStaleQr(order: Order): Order {
+  const { payment } = order;
+  if (order.status === 'placed' && payment.method === 'qr' && payment.status === 'pending' && Date.now() >= qrExpiresAt(order)) {
+    payment.status = 'expired';
+  }
+  return order;
+}
 
 export type Orders = typeof mockOrders;

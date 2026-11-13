@@ -270,6 +270,19 @@ export const vi: Dictionary = {
     upsell: 'Thêm để đủ Freeship', addItem: 'Thêm {name} vào giỏ',
     note: 'Phí vận chuyển & voucher áp dụng ở bước thanh toán', viewCart: 'Xem giỏ hàng',
   },
+  qrPayment: {
+    title: 'Quét mã để thanh toán', subtitle: 'Mở app ngân hàng bất kỳ và quét mã. Đơn sẽ được xác nhận tự động.',
+    expiresIn: 'Mã QR hết hạn sau', qrLabel: 'Mã VietQR cho đơn {code}', saveQr: 'Lưu ảnh QR',
+    bank: 'Ngân hàng', accountNumber: 'Số tài khoản', accountHolder: 'Chủ tài khoản', amount: 'Số tiền',
+    reference: 'Nội dung chuyển khoản', copy: 'Sao chép {label}', copied: 'Đã sao chép {label}',
+    note: 'Vui lòng giữ nguyên nội dung chuyển khoản để hệ thống tự xác nhận trong 1–2 phút. Đơn hàng được giữ trong {n} phút.',
+    switchToCod: 'Đổi sang COD', paid: 'Tôi đã chuyển khoản',
+    expiredTitle: 'Mã QR đã hết hạn',
+    expiredBody: 'Đơn hàng không còn được giữ để chuyển khoản. Bạn có thể đổi sang thanh toán khi nhận hàng hoặc tạo mã QR mới.',
+    newQr: 'Tạo mã QR mới', failed: 'Đã có lỗi xảy ra. Vui lòng thử lại.',
+    order: 'Đơn hàng #{code}', awaiting: 'Đang chờ thanh toán', expired: 'Hết hạn thanh toán',
+    total: 'Tổng thanh toán', deliverTo: 'Giao tới: {address}', help: 'Gặp khó khăn? Chat với Vivimoon',
+  },
   checkout: {
     shipping: {
       title: 'Vận chuyển', pending: 'Nhập địa chỉ để xem phương thức vận chuyển.',
