@@ -67,7 +67,7 @@ describe('QrTransferView', () => {
     renderAt(0);
     await userEvent.setup().click(screen.getByRole('button', { name: dict.qrPayment.paid }));
     expect(JSON.parse((fetch.mock.calls[0] as unknown as [string, RequestInit])[1].body as string)).toEqual({ code: 'VVM-ABC123', action: 'confirm' });
-    await waitFor(() => expect(push).toHaveBeenCalledWith('/en/checkout/success'));
+    await waitFor(() => expect(push).toHaveBeenCalledWith('/en/checkout/success?code=VVM-ABC123'));
   });
 
   it('shows the expired state once the hold is up, without the QR or a confirm button', () => {

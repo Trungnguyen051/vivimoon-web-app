@@ -11,6 +11,11 @@ import { StepHeading } from './step-heading';
 const ARRIVAL_FORMAT = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: '2-digit', timeZone: 'Asia/Ho_Chi_Minh' });
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+/** "02/10": the day a parcel sent at `from` (ms) arrives, `etaDays` later. Shared with the success page. */
+export function arrivalDate(from: number, etaDays: number): string {
+  return ARRIVAL_FORMAT.format(new Date(from + etaDays * DAY_MS));
+}
+
 export type ShippingQuote = { method: string; etaDays: number; fee: number };
 
 /**
@@ -44,7 +49,7 @@ export function ShippingBlock({ quote, failed, currency, locale, dict, step, cla
               {shippingMethodName(quote.method, dict)} · {(quote.etaDays === 1 ? t.day : t.days).replace('{n}', String(quote.etaDays))}
             </p>
             <p className="text-sm text-muted-foreground">
-              {t.arrivesBy.replace('{date}', ARRIVAL_FORMAT.format(new Date(now + quote.etaDays * DAY_MS)))}
+              {t.arrivesBy.replace('{date}', arrivalDate(now, quote.etaDays))}
             </p>
           </div>
           <p className="font-semibold">{quote.fee === 0 ? t.free : formatPrice(quote.fee, currency, locale)}</p>

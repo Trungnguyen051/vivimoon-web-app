@@ -132,7 +132,7 @@ describe('Checkout — guest', () => {
     const body = orderBody(fetchMock);
     expect(body).not.toHaveProperty('email');
     expect(body).toMatchObject({ paymentMethod: 'cod', notificationChannel: 'sms', note: 'Office hours' });
-    await waitFor(() => expect(push).toHaveBeenCalledWith('/en/checkout/success'));
+    await waitFor(() => expect(push).toHaveBeenCalledWith('/en/checkout/success?code=VVM-X'));
   });
 
   it('sends a QR order to its transfer page (#205)', async () => {

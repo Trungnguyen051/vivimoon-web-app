@@ -12,7 +12,7 @@ async function renderSuccessPage() {
   await act(async () => {
     render(
       <Suspense fallback={null}>
-        <SuccessView locale="en" dict={getDictionary('en')} />
+        <SuccessView order={null} reads={[]} locale="en" dict={getDictionary('en')} />
       </Suspense>,
     );
     await Promise.resolve();
