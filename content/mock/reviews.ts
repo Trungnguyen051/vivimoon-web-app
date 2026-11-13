@@ -20,6 +20,7 @@ export const reviews: Review[] = [
     marketplaceHelpfulCount: 0,
     helpfulVoteCount: 24,
     status: 'approved',
+    authorUserId: 'u-001',
   },
   {
     id: 'r2',

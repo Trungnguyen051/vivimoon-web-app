@@ -1,9 +1,18 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ReviewsList } from './reviews-list';
 import { en } from '@/lib/i18n/dictionaries/en';
 import { reviewSchema } from '@/lib/api/schemas/catalog';
+import { useSessionStore } from '@/features/session/session-store';
+
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn() }), usePathname: () => '/en/product/hazel' }));
+const fetchMock = vi.fn();
+vi.stubGlobal('fetch', fetchMock);
+beforeEach(() => {
+  fetchMock.mockReset();
+  useSessionStore.setState({ user: null, status: 'anonymous' });
+});
 
 const base = { productId: 'p1', title: 't', createdAt: '2026-08-01' };
 const reviews = [
@@ -96,5 +105,19 @@ describe('ReviewsList', () => {
     await userEvent.click(screen.getByRole('button', { name: 'See all 6 reviews' }));
     expect(screen.getAllByRole('article')).toHaveLength(6);
     expect(screen.queryByRole('button', { name: 'See all 6 reviews' })).not.toBeInTheDocument();
+  });
+
+  it('reads a signed-in member’s votes and own Review, so theirs has no "Helpful" button', async () => {
+    useSessionStore.setState({ user: { id: 'u-001', name: 'Mai', phone: '0912345678' }, status: 'authenticated' });
+    fetchMock.mockResolvedValue(new Response(JSON.stringify({
+      ok: true,
+      data: [{ ...reviews[0], isOwn: true, hasVoted: false }, { ...reviews[1], isOwn: false, hasVoted: true, helpfulVoteCount: 1 }],
+    })));
+    render(<ReviewsList reviews={reviews} locale="en" dict={en} productSlug="hazel" />);
+    const [mine, voted] = screen.getAllByRole('article');
+    await vi.waitFor(() => expect(within(mine).queryByRole('button', { name: /Helpful/ })).not.toBeInTheDocument());
+    expect(within(mine).getByText('Helpful (24)')).toBeInTheDocument();
+    expect(within(voted).getByRole('button', { name: 'Helpful (1)' })).toHaveAttribute('aria-pressed', 'true');
+    expect(fetchMock).toHaveBeenCalledWith('/api/products/hazel/reviews', expect.anything());
   });
 });

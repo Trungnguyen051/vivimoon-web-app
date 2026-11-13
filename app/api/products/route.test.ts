@@ -1,7 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { GET as listProducts } from './route';
 import { GET as getProduct } from './[slug]/route';
 import { GET as getReviews } from './[slug]/reviews/route';
+
+// A guest: the reviews route reads the session for per-viewer flags.
+vi.mock('next/headers', () => ({ cookies: async () => ({ get: () => undefined }) }));
 
 function req(url: string): Request {
   return new Request(`http://localhost${url}`);
