@@ -159,6 +159,17 @@ describe('fixture conformance', () => {
     }
   });
 
+  it('every quiz question has a helper line and every option a sub-label, in both locales (#263)', () => {
+    for (const q of quiz.questions) {
+      expect(q.helper?.vi.trim(), q.id).toBeTruthy();
+      expect(q.helper?.en.trim(), q.id).toBeTruthy();
+      for (const o of q.options) {
+        expect(o.sublabel?.vi.trim(), o.id).toBeTruthy();
+        expect(o.sublabel?.en.trim(), o.id).toBeTruthy();
+      }
+    }
+  });
+
   it('content/quiz.ts satisfies quizDefinitionSchema', () => {
     const result = quizDefinitionSchema.safeParse(quiz);
     expect(result.success, result.success ? '' : result.error.issues.map((x) => `${x.path.join('.')} ${x.message}`).join('; ')).toBe(true);

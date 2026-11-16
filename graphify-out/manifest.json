@@ -786,9 +786,9 @@
     "semantic_hash": "690fad436ae1cc0b42f178b87b2c90c5"
   },
   "tests/contract/fixtures.test.ts": {
-    "mtime": 1794501664.8488598,
-    "seen": 1794802546.673847,
-    "ast_hash": "f94cff9e741d0d9e3aac66129ab208ff",
+    "mtime": 1794811705.6357837,
+    "seen": 1794811799.864647,
+    "ast_hash": "92c41042a9583c621e21be5aa02cebbe",
     "semantic_hash": ""
   },
   "app/api/collections/[slug]/route.ts": {
@@ -1836,15 +1836,15 @@
     "semantic_hash": ""
   },
   "app/[locale]/quiz/quiz-flow.test.tsx": {
-    "mtime": 1794804988.4028158,
-    "seen": 1794805807.6508338,
-    "ast_hash": "a6e7bae8586cdd2a2758733c53d7b091",
+    "mtime": 1794811705.637178,
+    "seen": 1794811799.864223,
+    "ast_hash": "5ea2083a783771f47ecf856589a5fc2b",
     "semantic_hash": ""
   },
   "app/[locale]/quiz/quiz-flow.tsx": {
-    "mtime": 1794804988.4091892,
-    "seen": 1794805807.650835,
-    "ast_hash": "da479834063df24bade089614203285b",
+    "mtime": 1794811705.6365986,
+    "seen": 1794811799.864223,
+    "ast_hash": "c6578b91ed857f502266c2fd4d84ff24",
     "semantic_hash": ""
   },
   "app/api/quiz/quiz-routes.test.ts": {
@@ -1866,9 +1866,9 @@
     "semantic_hash": ""
   },
   "content/quiz.ts": {
-    "mtime": 1794803742.3955662,
-    "seen": 1794804297.11669,
-    "ast_hash": "980e396d13161b35175534c463dd7ee7",
+    "mtime": 1794811705.63554,
+    "seen": 1794811799.8644722,
+    "ast_hash": "143e14f6c2950158cbdf4e611de66a78",
     "semantic_hash": ""
   },
   "lib/api/schemas/discovery.test.ts": {
@@ -1878,9 +1878,9 @@
     "semantic_hash": ""
   },
   "lib/api/schemas/discovery.ts": {
-    "mtime": 1794465394.1342633,
-    "seen": 1794802546.6734452,
-    "ast_hash": "30665fc42e92fcf5b56a1490b03ab849",
+    "mtime": 1794811705.6350882,
+    "seen": 1794811799.864556,
+    "ast_hash": "c98516630fa3db4a4b0c827be69b1c07",
     "semantic_hash": ""
   },
   "lib/products/quiz-scoring.test.ts": {
@@ -2142,8 +2142,8 @@
     "semantic_hash": ""
   },
   "app/[locale]/articles/[slug]/page.tsx": {
-    "mtime": 1794810370.4294553,
-    "seen": 1794810519.104207,
+    "mtime": 1794810748.4661484,
+    "seen": 1794811799.8641899,
     "ast_hash": "8956189973eef4f150112dfc58e4edda",
     "semantic_hash": ""
   },
@@ -2766,8 +2766,8 @@
     "semantic_hash": ""
   },
   "app/[locale]/articles/[slug]/article-page.test.tsx": {
-    "mtime": 1794810370.4300027,
-    "seen": 1794810519.104206,
+    "mtime": 1794810748.465835,
+    "seen": 1794811799.864188,
     "ast_hash": "99ba6a94c76492fa9b720c17a31cc3c4",
     "semantic_hash": ""
   },
