@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { mockCatalog, minPrice } from './mock';
+import { mockCatalog, minPrice, inStockForBothEyes } from './mock';
 import { PRICE_PRESETS, type Product } from '@/lib/api/schemas/catalog';
 import { accessories, reviews } from '@/content/mock';
 
@@ -286,6 +286,28 @@ describe('mockCatalog', () => {
     it("narrows the other facets' counts too", async () => {
       const { counts } = await mockCatalog.searchProducts({ rx: '-8,-8' });
       expect(counts.replacement.monthly ?? 0).toBe((await mockCatalog.listProducts({ rx: '-8,-8', replacement: 'monthly' })).length);
+    });
+
+    it('never lists a sold-out lens: "có sẵn" is a stock claim (#246)', async () => {
+      const lens = (await mockCatalog.listProducts())[0];
+      const soldOut = { ...lens, variants: lens.variants.map((v) => ({ ...v, stock: 0 })) };
+      expect(inStockForBothEyes(lens, '-1,-1')).toBe(true);
+      expect(inStockForBothEyes(soldOut, '-1,-1')).toBe(false);
+    });
+
+    it('reports how many lenses the other filters leave before the Default Rx (#246)', async () => {
+      const query = { replacement: 'monthly' } as const;
+      const { total, totalAnyPower } = await mockCatalog.searchProducts({ ...query, rx: '-2.5,-7' });
+      expect(totalAnyPower).toBe((await mockCatalog.listProducts(query)).length);
+      expect(total).toBeLessThan(totalAnyPower);
+      const plain = await mockCatalog.searchProducts(query);
+      expect(plain.totalAnyPower).toBe(plain.total);
+    });
+
+    it('lists nothing for a pair of powers no lens is stocked in', async () => {
+      const { total, totalAnyPower } = await mockCatalog.searchProducts({ rx: '-2.5,-30' });
+      expect(total).toBe(0);
+      expect(totalAnyPower).toBeGreaterThan(0);
     });
   });
 });

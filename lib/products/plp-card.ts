@@ -1,6 +1,7 @@
 import { parseRxPair, type LensGalleryContexts, type Product } from '@/lib/api/schemas/catalog';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { MATERIAL_VALUES } from './lens-facets';
+import { formatSph } from './rx-ranges';
 
 /** "Xem ảnh" on the PLP (#195). `face` (Người mẫu) is the default and never written to the URL. */
 export const CARD_VIEWS = ['eye', 'face', 'closeUp'] as const;
@@ -32,6 +33,16 @@ export function specLine(product: Product, dict: Dictionary): string {
     product.specs.diameter ? `DIA ${mm(product.specs.diameter)}` : undefined,
     product.specs.graphicDiameter ? `GDIA ${mm(product.specs.graphicDiameter)}` : undefined,
   ].filter(Boolean).join(' · ');
+}
+
+/** "L -2.50 / R -3.00" for a listing's applied Default Rx (`rx=L,R`), or null when there is none. */
+export function rxPairLabel(rx: string | null | undefined, dict: Dictionary): string | null {
+  const pair = parseRxPair(rx ?? '');
+  if (!pair) return null;
+  const t = dict.collection.rx;
+  return pair.left === pair.right
+    ? t.same.replace('{power}', formatSph(pair.left))
+    : t.pair.replace('{left}', formatSph(pair.left)).replace('{right}', formatSph(pair.right));
 }
 
 /**

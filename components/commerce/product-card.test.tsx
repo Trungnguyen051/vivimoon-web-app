@@ -67,4 +67,10 @@ describe('ProductCard', () => {
     const { container } = render(<ProductCard product={product} locale="vi" dict={vi} image="/view.jpg" />);
     expect(container.querySelector('img')?.getAttribute('src')).toContain('view.jpg');
   });
+  it('carries the "Có sẵn" line only on a listing narrowed by a Default Rx (#246)', () => {
+    const { rerender } = render(<ProductCard product={product} locale="vi" dict={vi} />);
+    expect(screen.queryByText(/Có sẵn/)).toBeNull();
+    rerender(<ProductCard product={product} locale="vi" dict={vi} rxLine="✓ Có sẵn L -2.50 / R -3.00" />);
+    expect(screen.getByText('✓ Có sẵn L -2.50 / R -3.00')).toBeInTheDocument();
+  });
 });

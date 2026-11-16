@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Droplet, Eye, Info, ListFilter, Wind } from 'lucide-react';
+import { Droplet, Eye, Info, ListFilter, Wind, X } from 'lucide-react';
 import {
   rxFilterCleared,
   setRxFilterCleared,
@@ -53,7 +53,8 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils/cn';
-import { CARD_VIEWS, parseCardView } from '@/lib/products/plp-card';
+import { CARD_VIEWS, parseCardView, rxPairLabel } from '@/lib/products/plp-card';
+import { formatPrice } from '@/lib/utils/format';
 
 /** Every field a collection URL can carry, so "Xoá tất cả" cannot fall behind one. `sort` survives it. */
 const FILTER_KEYS = Object.keys(productQuerySchema.shape).filter(
@@ -394,6 +395,93 @@ export function YourRxSheet({ dict }: { dict: Dictionary }) {
         </Link>
       </SheetContent>
     </Sheet>
+  );
+}
+
+/** Removes the power filter from this listing; the saved Default Rx stays, and isn't re-applied this session. */
+function useClearRx() {
+  const { navigate } = useSetParams();
+  return () => {
+    setRxFilterCleared(true);
+    navigate((next) => next.delete('rx'));
+  };
+}
+
+/** The Rx-specific empty state's way out (#246): drops the power filter, keeps the others. */
+export function ClearRxFilter({ children }: { children: ReactNode }) {
+  return <Button variant="outline" onClick={useClearRx()}>{children}</Button>;
+}
+
+/** "Đang lọc:" — every applied filter as a removable chip, the Default Rx first (Figma 70:622). */
+export function ActiveFilters({ dict }: { dict: Dictionary }) {
+  const { params, navigate } = useSetParams();
+  const clearRx = useClearRx();
+  const t = dict.filters.sidebar;
+  const c = dict.collection;
+  const named = (table: object, value: string) => (table as Record<string, string | undefined>)[value];
+  const labelOf: Record<string, (value: string) => string | undefined> = {
+    material: (v) => named(dict.nav.facets.materials, MATERIAL_VALUES.find((m) => m.material === v)?.id ?? ''),
+    color: (v) => named(dict.filters.colors, v),
+    productLine: (v) => named(dict.filters.productLines, v),
+    replacement: (v) => named(dict.filters.replacements, v),
+    diameter: (v) => {
+      const range = parseDiameterRange(v);
+      return range ? diameterBucketLabel({ id: v, ...range }) : undefined;
+    },
+    makeupStyle: (v) => named(t.makeupStyles, v),
+    series: (v) => named(t.seriesNames, v),
+    occasion: (v) => named(t.occasions, v),
+    // No sidebar group and no label table: the chip shows the id, so the filter is still removable.
+    brandId: () => undefined,
+  };
+
+  const chips: { id: string; label: string; remove: () => void }[] = [];
+  const rx = rxPairLabel(params.get('rx'), dict);
+  if (rx) chips.push({ id: 'rx', label: c.rx.chip.replace('{rx}', rx), remove: clearRx });
+  for (const key of Object.keys(labelOf)) {
+    const values = params.get(key)?.split(',').filter(Boolean) ?? [];
+    for (const value of values) {
+      chips.push({
+        id: `${key}:${value}`,
+        label: labelOf[key](value) ?? value,
+        remove: () => navigate((next) => {
+          const rest = values.filter((v) => v !== value);
+          if (rest.length > 0) next.set(key, rest.join(','));
+          else next.delete(key);
+        }),
+      });
+    }
+  }
+  const [min, max] = [params.get('minPrice'), params.get('maxPrice')].map((v) => (v && /^\d+$/.test(v) ? Number(v) : undefined));
+  if (min !== undefined || max !== undefined) {
+    const preset = PRICE_PRESETS.find((p) => p.min === min && p.max === max);
+    const money = (n: number) => formatPrice(n, 'VND', 'vi');
+    chips.push({
+      id: 'price',
+      label: preset
+        ? t.pricePresets[preset.id]
+        : min !== undefined && max !== undefined ? `${money(min)} – ${money(max)}`
+        : min !== undefined ? `≥ ${money(min)}` : `≤ ${money(max!)}`,
+      remove: () => navigate((next) => { next.delete('minPrice'); next.delete('maxPrice'); }),
+    });
+  }
+  if (chips.length === 0) return null;
+
+  return (
+    <div className="flex flex-wrap items-center gap-2 text-sm">
+      <span className="text-muted-foreground">{c.filtering}</span>
+      {chips.map((chip) => (
+        <button
+          key={chip.id}
+          type="button"
+          onClick={chip.remove}
+          aria-label={c.removeFilter.replace('{name}', chip.label)}
+          className="inline-flex items-center gap-1.5 border border-primary bg-primary/10 px-3 py-1.5 text-primary transition-colors hover:bg-primary/20"
+        >
+          {chip.label} <X className="size-3.5" aria-hidden />
+        </button>
+      ))}
+    </div>
   );
 }
 

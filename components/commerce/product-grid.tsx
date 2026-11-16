@@ -9,13 +9,15 @@ import { toGa4Items } from '@/lib/analytics/events';
 import { cn } from '@/lib/utils/cn';
 
 export function ProductGrid({
-  products, locale, dict, listId, className, images, fourth,
+  products, locale, dict, listId, className, images, fourth, rxLine,
 }: {
   products: Product[]; locale: Locale; dict: Dictionary; listId: string; className?: string;
   /** Each card's "Xem ảnh" photo and hover photo, by product id (the PLP). */
   images?: Record<string, { image: string; hoverImage: string }>;
   /** A tile placed at grid position 4 — the PLP's quiz card. */
   fourth?: ReactNode;
+  /** Every card's "✓ Có sẵn" line when a Default Rx narrows the listing. */
+  rxLine?: string;
 }) {
   const { track } = useAnalytics();
   useEffect(() => {
@@ -32,6 +34,7 @@ export function ProductGrid({
             locale={locale}
             dict={dict}
             {...images?.[p.id]}
+            rxLine={rxLine}
             onSelect={() => track({ name: 'select_item', params: { item_list_id: listId, items: toGa4Items([{ product: p }]) } })}
           />
         </Fragment>

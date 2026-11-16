@@ -82,14 +82,18 @@ function inPriceRange(p: Product, min: number | undefined, max: number | undefin
 }
 
 /**
- * Whether a lens is stocked in both eyes' powers (Default Rx, #196). A lens stating no range
- * is matched by nothing, the same answer a lens with no makeup styles gets; an unparseable
- * `rx` can only come from a caller that bypassed the schema.
+ * Whether a lens is in stock in both eyes' powers (Default Rx, #196). "Có sẵn" is a stock
+ * claim (#246), so a sold-out lens never matches. A lens stating no range is matched by
+ * nothing, the same answer a lens with no makeup styles gets; an unparseable `rx` can only
+ * come from a caller that bypassed the schema.
  */
-function coversBothEyes(p: Product, rx: string): boolean {
+// shortcut: stock is per variant, not per power; swap this body when the backend supplies stock per power.
+export function inStockForBothEyes(p: Product, rx: string): boolean {
   const pair = parseRxPair(rx);
   const range = p.sphRange;
-  return pair !== null && range !== undefined && [pair.left, pair.right].every((sph) => range.min <= sph && sph <= range.max);
+  return pair !== null && range !== undefined
+    && p.variants.some((v) => v.stock > 0)
+    && [pair.left, pair.right].every((sph) => range.min <= sph && sph <= range.max);
 }
 
 /** Whether a lens passes every active facet of the query, except `skip`. */
@@ -99,7 +103,7 @@ function applies(p: Product, query: ProductQuery, skip?: FacetKey): boolean {
     if (facet === skip || value === undefined) continue;
     if (!value.split(',').some((v) => matchesValue(facet, p, v))) return false;
   }
-  if (query.rx !== undefined && !coversBothEyes(p, query.rx)) return false;
+  if (query.rx !== undefined && !inStockForBothEyes(p, query.rx)) return false;
   return skip === 'price' || inPriceRange(p, query.minPrice, query.maxPrice);
 }
 
@@ -149,14 +153,18 @@ export const mockCatalog = {
   /**
    * The collection page's query: the filtered, sorted result paged by offset and limit,
    * its total, and the per-option counts the sidebar shows. `ids` scopes it to a Collection.
+   * `totalAnyPower` is the total without the Default Rx — the "128" in "38 / 128" (#246).
    */
   async searchProducts(
     query: ProductQuery,
     { ids, offset = 0, limit = Infinity }: { ids?: string[]; offset?: number; limit?: number } = {},
-  ): Promise<{ products: Product[]; total: number; counts: FacetCounts }> {
+  ): Promise<{ products: Product[]; total: number; totalAnyPower: number; counts: FacetCounts }> {
     const scope = ids ? products.filter((p) => ids.includes(p.id)) : products;
     const result = sortProducts(scope.filter((p) => applies(p, query)).map(withWrittenReviews), query.sort);
-    return { products: result.slice(offset, offset + limit), total: result.length, counts: facetCounts(scope, query) };
+    const totalAnyPower = query.rx === undefined
+      ? result.length
+      : scope.filter((p) => applies(p, { ...query, rx: undefined })).length;
+    return { products: result.slice(offset, offset + limit), total: result.length, totalAnyPower, counts: facetCounts(scope, query) };
   },
 
   /** The cart's accessory variant picker reads this. */

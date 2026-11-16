@@ -20,9 +20,11 @@ const SWATCHES_SHOWN = 3;
  * `hoverImage` what a hover swaps to; without them the product's own first two images.
  */
 export function ProductCard({
-  product, locale, dict, onSelect, image, hoverImage,
+  product, locale, dict, onSelect, image, hoverImage, rxLine,
 }: {
   product: Product; locale: Locale; dict: Dictionary; onSelect?: () => void; image?: string; hoverImage?: string;
+  /** "✓ Có sẵn L -2.50 / R -3.00" — only on a listing narrowed by a Default Rx (#246). */
+  rxLine?: string;
 }) {
   const v = cheapestVariant(product);
   const primary = image ?? product.images[0];
@@ -87,6 +89,7 @@ export function ProductCard({
         >
           {product.name}
         </Link>
+        {rxLine ? <p className="text-xs font-medium text-primary md:text-sm">{rxLine}</p> : null}
         {spec ? <p className="text-xs text-muted-foreground md:text-sm">{spec}</p> : null}
         {colors.length > 0 ? (
           <div className="flex items-center gap-1.5">

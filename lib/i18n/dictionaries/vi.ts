@@ -24,7 +24,13 @@ export const vi: Dictionary = {
     colored: 'Lens màu', daily: 'Lens hằng ngày', allLenses: 'Tất cả lens',
     beginnerFriendly: 'Lens cho người mới',
     productsLabel: 'sản phẩm', noResults: 'Không có sản phẩm phù hợp với bộ lọc.', showAll: 'Xem tất cả sản phẩm',
-    card: { lines: { moisture: 'Khoá ẩm', breathable: 'Mắt thở' }, moreColors: '+{n} màu' },
+    card: { lines: { moisture: 'Khoá ẩm', breathable: 'Mắt thở' }, moreColors: '+{n} màu', rxInStock: '✓ Có sẵn {rx}' },
+    rx: {
+      pair: 'L {left} / R {right}', same: 'L & R {power}', chip: 'Độ: {rx}',
+      count: '{n} / {total} mẫu có sẵn cả 2 độ của bạn',
+      noResults: 'Chưa có mẫu nào có sẵn đúng cặp độ {rx} của bạn.', clear: 'Bỏ lọc theo độ',
+    },
+    filtering: 'Đang lọc:', removeFilter: 'Bỏ lọc {name}',
     imageView: 'Xem ảnh:',
     quizCard: {
       title: 'Chưa biết chọn mẫu nào?',
