@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { mockCatalog, minPrice, inStockForBothEyes } from './mock';
-import { PRICE_PRESETS, type Product } from '@/lib/api/schemas/catalog';
+import { PRICE_PRESETS, occasionSchema, type Product } from '@/lib/api/schemas/catalog';
 import { accessories, reviews } from '@/content/mock';
 import { quiz } from '@/content/quiz';
 import { quizMatches } from '@/lib/products/quiz-scoring';
@@ -350,6 +350,19 @@ describe('mockCatalog', () => {
 
     it('lists the same matches through listProducts', async () => {
       expect((await mockCatalog.listProducts({ quiz: ids })).map((p) => p.id)).toEqual(await expected());
+    });
+  });
+
+  describe('Occasion Collections (#251)', () => {
+    it('each Occasion is a Collection of exactly the lenses tagged with it', async () => {
+      const all = await mockCatalog.listProducts();
+      for (const occasion of occasionSchema.options) {
+        const collection = await mockCatalog.getCollection(occasion);
+        const tagged = all.filter((p) => p.occasions?.includes(occasion)).map((p) => p.id);
+        expect(collection, occasion).not.toBeNull();
+        expect(tagged.length, occasion).toBeGreaterThan(0);
+        expect([...collection!.productIds].sort(), occasion).toEqual(tagged.sort());
+      }
     });
   });
 });

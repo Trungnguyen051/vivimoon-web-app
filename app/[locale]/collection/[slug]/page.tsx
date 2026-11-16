@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { isLocale, type Locale } from '@/lib/i18n/config';
 import { getDictionary, type Dictionary } from '@/lib/i18n/dictionaries';
 import { catalog } from '@/lib/api/resources/catalog';
-import { COLLECTION_PAGE_SIZE as PAGE_SIZE, DEFAULT_SORT, parseProductQueryLoose } from '@/lib/api/schemas/catalog';
+import { COLLECTION_PAGE_SIZE as PAGE_SIZE, DEFAULT_SORT, occasionSchema, parseProductQueryLoose } from '@/lib/api/schemas/catalog';
 import { SearchX } from 'lucide-react';
 import { ProductGrid } from '@/components/commerce/product-grid';
 import { collectionListId } from '@/lib/analytics/list-id';
@@ -16,6 +16,7 @@ import { quiz, quizSocialProof } from '@/content/quiz';
 import { answersFromOptionIds, quizMatches } from '@/lib/products/quiz-scoring';
 import { quizReasons } from '@/lib/products/quiz-reasons';
 import { QuizTopPick } from '@/components/commerce/quiz-top-pick';
+import { OccasionHeader } from '@/components/commerce/occasion-header';
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
@@ -88,6 +89,9 @@ export default async function CollectionPage({
     ? quizMatches(answers, quiz.questions, base)
     : { matches: [], bestPercent: 0 };
   const topPick = matches[0]?.product;
+
+  // An Occasion's Collection carries its slug, and opens with that Occasion's advice (#251).
+  const occasion = occasionSchema.safeParse(slug).data;
   const colors = distinctColorVariants(base.flatMap((p) => p.variants)).map((v) => v.color as string);
 
   /* The filters the page actually applied, not every query param — a utm tag must not
@@ -122,6 +126,8 @@ export default async function CollectionPage({
             <Link href={`/${l}/quiz?answers=${query.quiz}`} className="underline underline-offset-4">{dict.quiz.results.edit}</Link>
           </div>
         </>
+      ) : occasion ? (
+        <OccasionHeader occasion={occasion} count={base.length} poster={base[0]?.images[0]} locale={l} dict={dict} />
       ) : (
         <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{resolveTitle(dict, collection.title)}</h1>
       )}
