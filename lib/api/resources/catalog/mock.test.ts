@@ -4,6 +4,7 @@ import { PRICE_PRESETS, occasionSchema, type Product } from '@/lib/api/schemas/c
 import { accessories, reviews } from '@/content/mock';
 import { quiz } from '@/content/quiz';
 import { quizMatches } from '@/lib/products/quiz-scoring';
+import { matchesSearch } from '@/lib/products/search';
 
 describe('mockCatalog', () => {
   it('finds a product by slug', async () => {
@@ -363,6 +364,41 @@ describe('mockCatalog', () => {
         expect(tagged.length, occasion).toBeGreaterThan(0);
         expect([...collection!.productIds].sort(), occasion).toEqual(tagged.sort());
       }
+    });
+  });
+
+  describe('Search results (#259)', () => {
+    it('keeps only the lenses that match every typed word', async () => {
+      const all = await mockCatalog.listProducts();
+      const { products, total } = await mockCatalog.searchProducts({ q: 'nau tu nhien' });
+      expect(total).toBeGreaterThan(0);
+      expect(total).toBeLessThan(all.length);
+      expect(products.every((p) => matchesSearch(p, 'nâu tự nhiên'))).toBe(true);
+      expect(all.filter((p) => matchesSearch(p, 'nâu tự nhiên'))).toHaveLength(total);
+    });
+
+    it('combines with a filter, a Default Rx and Quiz answers', async () => {
+      const q = 'nâu';
+      const base = (await mockCatalog.searchProducts({ q })).total;
+      const filtered = await mockCatalog.searchProducts({ q, replacement: 'monthly' });
+      expect(filtered.products.every((p) => p.replacement === 'monthly' && matchesSearch(p, q))).toBe(true);
+      const powered = await mockCatalog.searchProducts({ q, rx: '-9,-9' });
+      expect(powered.totalAnyPower).toBe(base);
+      expect(powered.total).toBeLessThanOrEqual(base);
+      const quizzed = await mockCatalog.searchProducts({ q, quiz: 'experience-never,look-natural,duration-allDay' });
+      expect(quizzed.products.every((p) => matchesSearch(p, q))).toBe(true);
+      expect(quizzed.total).toBeLessThanOrEqual(base);
+    });
+
+    it('counts the sidebar options within the matches', async () => {
+      const { counts, total } = await mockCatalog.searchProducts({ q: 'nâu' });
+      expect(Object.values(counts.replacement).reduce((a, b) => a + b, 0)).toBe(total);
+    });
+
+    it('never returns an accessory, and nothing for words no lens states', async () => {
+      const ids = new Set(accessories.map((a) => a.id));
+      expect((await mockCatalog.searchProducts({ q: 'lens' })).products.some((p) => ids.has(p.id))).toBe(false);
+      expect((await mockCatalog.searchProducts({ q: 'zzzz' })).total).toBe(0);
     });
   });
 });

@@ -119,6 +119,14 @@ _Avoid_: Quiz result (ambiguous with the results screen), recommendation
 One of the six moments a lens is chosen for — Kỷ yếu, Đám cưới, Tiệc, Hẹn hò, Du lịch, Chụp ảnh. An Occasion is both a filter value on any listing and a Collection of its own, whose page opens with that Occasion's advice (a headline, tips, a look video shown as a still while no footage exists) above the lenses. The advice copy is provisional pending Vivimoon's. Distinct from the Reading Theme "lens theo dịp", which files Articles.
 _Avoid_: Moment, khoảnh khắc (in code), event
 
+**Search**:
+Finding lenses by typing words. A Search matches the words a shopper sees on a lens — its name, color name, Dòng lens, hạn sử dụng, makeup style and Occasion — ignoring accents and capitals, and every typed word has to match somewhere. Its results are a listing a shopper can filter like any other. Lenses only: an accessory is never a result.
+_Avoid_: Query (the typed words, not the concept), lookup, tìm kiếm (in code)
+
+**Suggested Category**:
+A way of browsing that a Search offers beside its results: one filter value — a Color Family, makeup style, Occasion, Dòng lens or hạn sử dụng — whose name matches the typed words, shown with how many lenses it holds. It opens the listing narrowed by that one value, not the Search's results.
+_Avoid_: Search category, suggestion (ambiguous with a suggested lens or keyword)
+
 **Trust Badge**:
 One of the four promises the homepage states beneath VIVIMOON TV — authenticity, free consultation, 30-day returns, express delivery. A Trust Badge is a claim Vivimoon stands behind rather than a feature of the storefront, so its wording comes from Vivimoon and the evidence for it is theirs; the same is true of the regulatory line in the announcement bar.
 _Avoid_: USP strip, trust signals, guarantees

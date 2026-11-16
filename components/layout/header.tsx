@@ -10,6 +10,7 @@ import { MobileNav } from './mobile-nav';
 import { LocaleSwitcher } from './locale-switcher';
 import { useCart } from '@/features/cart/use-cart';
 import { cn } from '@/lib/utils/cn';
+import { FACET_COLLECTION } from '@/lib/products/lens-facets';
 
 /** A 24px glyph as the design draws it, in a 44px target the design does not. */
 const ACTION_CLASS =
@@ -49,14 +50,19 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
           </div>
 
           {searchOpen ? (
-            <div className="absolute inset-x-0 flex items-center gap-2 rounded-full border bg-background px-4 focus-within:border-ring">
+            // A plain GET form: Enter opens the Search's results (#259), with or without JavaScript.
+            <form
+              action={`/${locale}/collection/${FACET_COLLECTION}`}
+              role="search"
+              className="absolute inset-x-0 flex items-center gap-2 rounded-full border bg-background px-4 focus-within:border-ring"
+            >
               <Search aria-hidden className="size-5 shrink-0 text-muted-foreground" />
-              {/* No form and no submit handler, deliberately: there is no search
-                  route yet, and a field that accepts a query and swallows it is
-                  worse than one that is plainly a placeholder. Enter does nothing
-                  because nothing is listening (#74). */}
               <input
                 ref={inputRef}
+                name="q"
+                type="search"
+                required
+                maxLength={80}
                 aria-label={dict.common.search}
                 placeholder={dict.common.search}
                 onKeyDown={(e) => {
@@ -65,7 +71,7 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dictionary }) {
                 onBlur={() => setSearchOpen(false)}
                 className="h-11 w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
               />
-            </div>
+            </form>
           ) : null}
         </div>
 

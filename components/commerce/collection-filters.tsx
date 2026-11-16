@@ -58,10 +58,11 @@ import { formatPrice } from '@/lib/utils/format';
 
 /**
  * Every field a collection URL can carry, so "Xoá tất cả" cannot fall behind one. `sort`
- * survives it, and so does `quiz`: the answers are what the results page is, not a filter on it.
+ * survives it, and so do `quiz` and `q`: the answers or the typed words are what the results
+ * page is, not a filter on it.
  */
 const FILTER_KEYS = Object.keys(productQuerySchema.shape).filter(
-  (key) => key !== 'sort' && key !== 'quiz',
+  (key) => key !== 'sort' && key !== 'quiz' && key !== 'q',
 );
 const SORTS = ['bestselling', 'newest', 'price-asc', 'price-desc'] as const;
 const COMPARE_ARTICLE = 'silicone-hydrogel-vs-lens-thuong';

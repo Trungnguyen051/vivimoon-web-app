@@ -485,6 +485,10 @@ export const vi: Dictionary = {
     refundWindow: 'Không êm hoàn tiền trong 15 ngày',
     details: 'Xem chi tiết chính sách', howTo: 'Cách gửi yêu cầu đổi trả', link: 'Chính sách đổi trả',
   },
+  search: {
+    resultsFor: 'Kết quả cho “{q}”', breadcrumb: 'Kết quả tìm kiếm', none: 'Không tìm thấy lens nào cho “{q}”',
+    popular: 'Tìm kiếm phổ biến',
+  },
   quiz: {
     title: 'Trắc nghiệm chọn lens', next: 'Tiếp tục', back: 'Câu trước', submit: 'Xem kết quả',
     submitCount: 'Xem {n} mẫu lens hợp với bạn', step: 'Bước {n}/{total}', exit: 'Thoát quiz',

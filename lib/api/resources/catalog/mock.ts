@@ -5,6 +5,7 @@ import type { Accessory, CatalogItem, Collection, LensGallery, Product, ProductQ
 import { cheapestVariant } from '@/lib/products/cheapest-variant';
 import { filterReviews } from '@/lib/products/reviews';
 import { answersFromOptionIds, quizMatches } from '@/lib/products/quiz-scoring';
+import { matchesSearch } from '@/lib/products/search';
 import { quiz } from '@/content/quiz';
 
 /** Helpful Votes cast here, per Review id: the voting members. Seeded `helpfulVoteCount` is the base they add to. */
@@ -106,6 +107,7 @@ function applies(p: Product, query: ProductQuery, skip?: FacetKey): boolean {
     if (!value.split(',').some((v) => matchesValue(facet, p, v))) return false;
   }
   if (query.rx !== undefined && !inStockForBothEyes(p, query.rx)) return false;
+  if (query.q !== undefined && !matchesSearch(p, query.q)) return false;
   return skip === 'price' || inPriceRange(p, query.minPrice, query.maxPrice);
 }
 

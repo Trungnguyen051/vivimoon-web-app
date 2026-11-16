@@ -61,4 +61,4 @@ export const activeFilterGroups = (params: Record<string, string | undefined>) =
 
 /** The designer's "Rule hiện / ẩn card Quiz" (Figma PLP 55:2). */
 export const showQuizCard = (params: Record<string, string | undefined>, total: number) =>
-  params.from !== 'quiz' && !params.quiz && activeFilterGroups(params) < 2 && total >= 6;
+  params.from !== 'quiz' && !params.quiz && !params.q?.trim() && activeFilterGroups(params) < 2 && total >= 6;

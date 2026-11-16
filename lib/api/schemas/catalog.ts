@@ -459,6 +459,8 @@ export const productQuerySchema = z.object({
   material: blankToUndefined(z.string()),
   /** A Default Rx as `L,R` (#196): only lenses stocked in both eyes' powers. */
   rx: blankToUndefined(z.string().refine((v) => parseRxPair(v) !== null, 'rx must be a left and a right sph, like -2.5,-3')),
+  /** A Search's typed words (#259): only the lenses that match every one of them. */
+  q: blankToUndefined(z.string().trim().min(1).max(80)),
   /** A set of Quiz answers as option ids (#248): only the Quiz Matches for them, best first unless sorted. */
   quiz: blankToUndefined(csvOf(
     (part) => quiz.questions.some((q) => q.options.some((o) => o.id === part)),
