@@ -489,7 +489,8 @@ export const en = {
   },
   search: {
     resultsFor: 'Results for “{q}”', breadcrumb: 'Search results', none: 'No lenses found for “{q}”',
-    popular: 'Popular searches',
+    popular: 'Popular searches', recent: 'Recent searches', clearRecent: 'Clear',
+    categories: 'Suggested categories', products: 'Matching lenses', seeAll: 'See all {n} results for “{q}”',
   },
   quiz: {
     title: 'Lens-Matching Quiz', next: 'Continue', back: 'Previous question', submit: 'See my results',

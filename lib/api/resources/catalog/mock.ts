@@ -1,11 +1,11 @@
 import { randomUUID } from 'node:crypto';
 import { products, accessories, collections, reviews, galleries } from '@/content/mock';
-import { diameterMm, parseDiameterRange, parseRxPair, PRICE_PRESETS } from '@/lib/api/schemas/catalog';
+import { diameterMm, parseDiameterRange, parseProductQueryLoose, parseRxPair, PRICE_PRESETS } from '@/lib/api/schemas/catalog';
 import type { Accessory, CatalogItem, Collection, LensGallery, Product, ProductQuery, Review, ReviewFilter, ReviewMediaRef, Variant } from '@/lib/api/schemas/catalog';
 import { cheapestVariant } from '@/lib/products/cheapest-variant';
 import { filterReviews } from '@/lib/products/reviews';
 import { answersFromOptionIds, quizMatches } from '@/lib/products/quiz-scoring';
-import { matchesSearch } from '@/lib/products/search';
+import { matchesSearch, suggestedCategories } from '@/lib/products/search';
 import { quiz } from '@/content/quiz';
 
 /** Helpful Votes cast here, per Review id: the voting members. Seeded `helpfulVoteCount` is the base they add to. */
@@ -153,6 +153,13 @@ function facetCounts(scope: Product[], query: ProductQuery): FacetCounts {
   return counts;
 }
 
+/** A Suggested Category as the catalog returns it: its id (named by `categoryLabel`), the filter it opens, its size. */
+export type SearchSuggestions = {
+  categories: { id: string; query: string; count: number }[];
+  products: Product[];
+  total: number;
+};
+
 export const mockCatalog = {
   async getProductBySlug(slug: string): Promise<Product | null> {
     const product = products.find((p) => p.slug === slug);
@@ -179,6 +186,23 @@ export const mockCatalog = {
       ? result.length
       : scope.filter((p) => applies(p, { ...query, rx: undefined })).length;
     return { products: result.slice(offset, offset + limit), total: result.length, totalAnyPower, counts: facetCounts(scope, query) };
+  },
+
+  /**
+   * What the Search panel shows while typing (#260): up to three Suggested Categories with
+   * how many lenses each holds, the first three results in best-selling order, and the total.
+   */
+  async searchSuggestions(q: string): Promise<SearchSuggestions> {
+    const result = await this.searchProducts({ q, sort: 'bestselling' }, { limit: 3 });
+    if (result.total === 0) return { categories: [], products: [], total: 0 };
+    const categories = suggestedCategories(q, Infinity)
+      .map((category) => ({
+        ...category,
+        count: products.filter((p) => applies(p, parseProductQueryLoose(Object.fromEntries(new URLSearchParams(category.query))))).length,
+      }))
+      .filter((category) => category.count > 0)
+      .slice(0, 3);
+    return { categories, products: result.products, total: result.total };
   },
 
   /** The cart's accessory variant picker reads this. */
