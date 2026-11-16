@@ -2,62 +2,41 @@ import { toIntlLocale } from '@/lib/utils/format';
 import type { QuizDefinition } from '@/lib/api/schemas/discovery';
 
 /**
- * PROVISIONAL — real question set and tag weights pending Vivimoon (spec
- * §11). Owner: Vivimoon. Six placeholder questions, tag weights drawn from
- * real product fields (`productLine`/`replacement`/`badges` — see
- * `lib/products/quiz-scoring.ts`) so scoring against the real catalog is
- * meaningful even with placeholder copy. Replacing the questions or
- * re-tuning weights later is a data edit in this one file.
+ * PROVISIONAL — owner: Vivimoon. The three questions and their options are the
+ * wireframe's (Figma 71:3 / 71:75 / 71:148); the tag weights are ours, pending
+ * Vivimoon's real ones. Weights are drawn from real product fields (see
+ * `lib/products/quiz-scoring.ts` for the tag vocabulary) so scoring against the real
+ * catalog is meaningful. Replacing the questions or re-tuning weights later is a data
+ * edit in this one file.
  */
 export const quiz: QuizDefinition = {
   questions: [
     {
-      id: 'lifestyle',
-      prompt: { vi: 'Một ngày của bạn bận rộn đến mức nào?', en: 'How active is your day-to-day?' },
+      id: 'experience',
+      prompt: { vi: 'Bạn đã từng đeo lens chưa?', en: 'Have you worn contact lenses before?' },
       options: [
-        { id: 'lifestyle-onthego', label: { vi: 'Luôn di chuyển — mỗi ngày một cặp lens mới', en: 'Always on the go — fresh lenses every day' }, tags: { 'replacement:daily': 2 } },
-        { id: 'lifestyle-routine', label: { vi: 'Nếp sinh hoạt đều đặn — 3 tháng thay một lần là ổn', en: 'Steady routine — every 3 months works fine' }, tags: { 'replacement:threeMonth': 2 } },
-        { id: 'lifestyle-lowkey', label: { vi: 'Ít chăm chút — thay hằng tháng là tiện nhất', en: 'Low maintenance — monthly is easiest' }, tags: { 'replacement:monthly': 2 } },
+        { id: 'experience-never', label: { vi: 'Chưa bao giờ', en: 'Never' }, tags: { 'material:moisture': 2, 'replacement:daily': 1, 'makeupStyle:natural': 1 } },
+        { id: 'experience-few', label: { vi: 'Đã đeo vài lần', en: 'A few times' }, tags: { 'material:moisture': 1 } },
+        { id: 'experience-often', label: { vi: 'Đeo thường xuyên', en: 'Regularly' }, tags: { 'material:breathable': 2 } },
       ],
     },
     {
       id: 'look',
-      prompt: { vi: 'Bạn muốn vẻ ngoài như thế nào?', en: 'What look are you going for?' },
+      prompt: { vi: 'Bạn muốn look như thế nào?', en: 'What look are you going for?' },
       options: [
-        { id: 'look-natural', label: { vi: 'Tự nhiên, trong trẻo như không đeo', en: 'Natural, barely-there clarity' }, tags: { 'productLine:trongSuot': 2 } },
-        { id: 'look-color', label: { vi: 'Đổi màu mắt rõ rệt', en: 'A noticeable color change' }, tags: { 'productLine:coMau': 2, 'productLine:vanNhu': 2 } },
+        { id: 'look-natural', label: { vi: 'Tự nhiên', en: 'Natural' }, tags: { 'makeupStyle:natural': 2, 'productLine:trongSuot': 1 } },
+        { id: 'look-bigEyes', label: { vi: 'Mắt to long lanh', en: 'Big, sparkling eyes' }, tags: { 'productLine:vanNhu': 2, 'makeupStyle:pink': 1 } },
+        { id: 'look-sharp', label: { vi: 'Sắc sảo', en: 'Sharp' }, tags: { 'makeupStyle:orange': 2, 'productLine:coMau': 1 } },
+        { id: 'look-western', label: { vi: 'Tây', en: 'Western' }, tags: { 'makeupStyle:smoky': 2, 'productLine:coMau': 1 } },
       ],
     },
     {
-      id: 'discovery',
-      prompt: { vi: 'Bạn thích mua sắm theo kiểu nào?', en: 'How do you like to shop?' },
+      id: 'duration',
+      prompt: { vi: 'Bạn muốn đeo lens trong bao lâu mỗi lần?', en: 'How long do you wear lenses each time?' },
       options: [
-        { id: 'discovery-new', label: { vi: 'Mình thích thử những mẫu mới nhất', en: 'I love trying the newest releases' }, tags: { 'badge:new': 2 } },
-        { id: 'discovery-proven', label: { vi: 'Mình chọn những mẫu bán chạy đã được kiểm chứng', en: 'I stick to proven bestsellers' }, tags: { 'badge:bestseller': 2 } },
-      ],
-    },
-    {
-      id: 'budget',
-      prompt: { vi: 'Về giá, điều gì quan trọng nhất với bạn?', en: 'What matters most on price?' },
-      options: [
-        { id: 'budget-deal', label: { vi: 'Có được ưu đãi tốt nhất', en: 'Getting the best deal' }, tags: { 'badge:sale': 2 } },
-        { id: 'budget-noPref', label: { vi: 'Giá không phải mối bận tâm chính', en: "Price isn't my main concern" }, tags: {} },
-      ],
-    },
-    {
-      id: 'wear',
-      prompt: { vi: 'Mỗi ngày bạn thường đeo lens bao lâu?', en: 'How long do you usually wear lenses per day?' },
-      options: [
-        { id: 'wear-short', label: { vi: 'Vài tiếng, lúc có lúc không', en: 'A few hours here and there' }, tags: { 'replacement:daily': 1 } },
-        { id: 'wear-allday', label: { vi: 'Cả ngày, ngày nào cũng đeo', en: 'All day, every day' }, tags: { 'replacement:monthly': 1, 'productLine:trongSuot': 1 } },
-      ],
-    },
-    {
-      id: 'occasion',
-      prompt: { vi: 'Bạn đeo lens cho dịp nào?', en: "What's the occasion?" },
-      options: [
-        { id: 'occasion-everyday', label: { vi: 'Đeo hằng ngày', en: 'Everyday wear' }, tags: { 'productLine:trongSuot': 1, 'replacement:daily': 1 } },
-        { id: 'occasion-special', label: { vi: 'Một vẻ ngoài đặc biệt để chụp ảnh hoặc dự sự kiện', en: 'A special look for photos or events' }, tags: { 'productLine:coMau': 1, 'productLine:vanNhu': 1, 'badge:new': 1 } },
+        { id: 'duration-allDay', label: { vi: 'Cả ngày (8h+)', en: 'All day (8h+)' }, tags: { 'material:moisture': 2 } },
+        { id: 'duration-hours', label: { vi: '4–6 tiếng', en: '4–6 hours' }, tags: { 'replacement:monthly': 1 } },
+        { id: 'duration-special', label: { vi: 'Dịp đặc biệt', en: 'Special occasions' }, tags: { 'replacement:daily': 2, 'occasion:party': 1, 'occasion:photoshoot': 1 } },
       ],
     },
   ],

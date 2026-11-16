@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { scoreQuiz, QUIZ_RESULTS_CAP } from './quiz-scoring';
+import { quizMatches, scoreQuiz } from './quiz-scoring';
 import type { QuizQuestion } from '@/lib/api/schemas/discovery';
 import type { Product } from '@/lib/api/schemas/catalog';
 
@@ -44,26 +44,65 @@ const clear2 = product({ id: 'clear-2', productLine: 'trongSuot', reviewCount: 1
 const fixtureProducts = [clear1, clear2, colored1, colored2];
 
 describe('scoreQuiz', () => {
-  it('ranks every product matching the weighted tag above every product that does not', () => {
-    const answers = [{ questionId: 'q1', optionId: 'q1-colored' }];
-    const ranked = scoreQuiz(answers, questions, fixtureProducts);
-    const coloredIds = new Set([colored1.id, colored2.id]);
-    const firstClearIndex = ranked.findIndex((p) => !coloredIds.has(p.id));
-    const lastColoredIndex = Math.max(...ranked.map((p, i) => (coloredIds.has(p.id) ? i : -1)));
-    expect(lastColoredIndex).toBeLessThan(firstClearIndex);
+  it('ranks the lenses the answers weight first', () => {
+    const ranked = scoreQuiz([{ questionId: 'q1', optionId: 'q1-colored' }], questions, fixtureProducts);
+    expect(ranked.map((p) => p.id)).toEqual([colored1.id, colored2.id]);
   });
 
   it('degrades to a deterministic default ordering (by reviewCount) when answers is empty', () => {
     const ranked = scoreQuiz([], questions, fixtureProducts);
-    expect(ranked.length).toBeGreaterThan(0);
+    expect(ranked).toHaveLength(fixtureProducts.length);
     const reviewCounts = ranked.map((p) => p.reviewCount);
-    const sorted = [...reviewCounts].sort((a, b) => b - a);
-    expect(reviewCounts).toEqual(sorted);
+    expect(reviewCounts).toEqual([...reviewCounts].sort((a, b) => b - a));
   });
 
-  it('never exceeds the cap regardless of catalog size', () => {
-    const many = Array.from({ length: QUIZ_RESULTS_CAP + 10 }, (_, i) => product({ id: `p-${i}` }));
-    const ranked = scoreQuiz([], questions, many);
-    expect(ranked.length).toBe(QUIZ_RESULTS_CAP);
+  it('has no fixed cap: every lens that matches is returned', () => {
+    const many = Array.from({ length: 30 }, (_, i) => product({ id: `p-${i}`, productLine: 'coMau' }));
+    expect(scoreQuiz([{ questionId: 'q1', optionId: 'q1-colored' }], questions, many)).toHaveLength(30);
+  });
+});
+
+describe('quizMatches (#247)', () => {
+  const two: QuizQuestion[] = [
+    ...questions,
+    {
+      id: 'q2',
+      prompt: { vi: 'Wear?', en: 'Wear?' },
+      options: [
+        { id: 'q2-daily', label: { vi: 'Daily', en: 'Daily' }, tags: { 'replacement:daily': 2, 'replacement:monthly': 1 } },
+        { id: 'q2-soft', label: { vi: 'Soft', en: 'Soft' }, tags: { 'material:moisture': 3, 'makeupStyle:natural': 1 } },
+      ],
+    },
+  ];
+  const both = product({ id: 'both', productLine: 'coMau', replacement: 'daily' });
+  const mostly = product({ id: 'mostly', productLine: 'coMau', replacement: 'monthly' });
+  const half = product({ id: 'half', productLine: 'trongSuot', replacement: 'daily' });
+  const none = product({ id: 'none', productLine: 'trongSuot', replacement: 'sixMonth' });
+  const answers = [{ questionId: 'q1', optionId: 'q1-colored' }, { questionId: 'q2', optionId: 'q2-daily' }];
+
+  it('a match is any lens within a share of the best score, best first', () => {
+    const { matches } = quizMatches(answers, two, [none, half, mostly, both]);
+    // both 4, mostly 3, half 2 (below 60% of 4), none 0.
+    expect(matches.map((m) => [m.product.id, m.score])).toEqual([['both', 4], ['mostly', 3]]);
+  });
+
+  it('always matches at least the best lens, whatever the answers', () => {
+    const { matches } = quizMatches(answers, two, [none]);
+    expect(matches.map((m) => m.product.id)).toEqual(['none']);
+  });
+
+  it('gives the best match as a percentage of the most those answers could score', () => {
+    // A lens has one replacement, so the most is 2 (colored) + 2 (daily), not 2 + 2 + 1.
+    expect(quizMatches(answers, two, [both, mostly]).bestPercent).toBe(100);
+    expect(quizMatches(answers, two, [mostly, half]).bestPercent).toBe(75);
+    expect(quizMatches([], two, [both]).bestPercent).toBe(0);
+  });
+
+  it('scores the material line and makeup style a lens states', () => {
+    const soft = product({ id: 'soft', makeupStyles: ['natural'] }); // Hydrogel = the moisture line
+    const hard = product({ id: 'hard', specs: { ...soft.specs, material: 'Silicone Hydrogel' } });
+    const { matches, bestPercent } = quizMatches([{ questionId: 'q2', optionId: 'q2-soft' }], two, [hard, soft]);
+    expect(matches.map((m) => [m.product.id, m.score])).toEqual([['soft', 4]]);
+    expect(bestPercent).toBe(100);
   });
 });
