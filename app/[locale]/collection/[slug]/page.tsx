@@ -13,6 +13,7 @@ import {
 import { QuizCard } from '@/components/commerce/quiz-card';
 import { cardImage, parseCardView, rxPairLabel, showQuizCard } from '@/lib/products/plp-card';
 import { quiz, quizSocialProof } from '@/content/quiz';
+import { popularSearches } from '@/content/search';
 import { answersFromOptionIds, quizMatches } from '@/lib/products/quiz-scoring';
 import { quizReasons } from '@/lib/products/quiz-reasons';
 import { QuizTopPick } from '@/components/commerce/quiz-top-pick';
@@ -30,6 +31,9 @@ import { PageContainer } from '@/components/layout/page-container';
 /** "Lần đầu đeo lens?" shows only for a shopper who has never worn lenses, and opens the put-in/take-out Guide. */
 const BEGINNER_ANSWER = 'experience-never';
 const FIRST_WEAR_GUIDE = 'cach-deo-va-thao-lens';
+
+/** Query fields that say what the page is, not how it is narrowed: "Xoá tất cả" and "show all" leave them. */
+const PAGE_IDENTITY = ['sort', 'quiz', 'q'];
 
 function resolveTitle(dict: Dictionary, key: string): string {
   const parts = key.split('.');
@@ -97,8 +101,15 @@ export default async function CollectionPage({
   /* The filters the page actually applied, not every query param — a utm tag must not
      make an genuinely empty collection look filtered and offer a link back to itself. */
   const unfilteredHref = `/${l}/collection/${slug}`;
-  const isFiltered = Object.entries(query).some(([key, value]) => key !== 'sort' && key !== 'quiz' && value !== undefined);
-  const unfilteredResultsHref = isQuizResults ? `${unfilteredHref}?quiz=${query.quiz}` : unfilteredHref;
+  const isFiltered = Object.entries(query).some(([key, value]) => !PAGE_IDENTITY.includes(key) && value !== undefined);
+  // What "show all" keeps: the Quiz answers or the Search words that make this page what it is.
+  const identity = new URLSearchParams(PAGE_IDENTITY.flatMap((key) => {
+    const value = key === 'sort' ? undefined : query[key as 'quiz' | 'q'];
+    return value ? [[key, value]] : [];
+  })).toString();
+  const unfilteredResultsHref = identity ? `${unfilteredHref}?${identity}` : unfilteredHref;
+  // A Search's results (#259), unless the page is already a Quiz's.
+  const searched = isQuizResults ? undefined : query.q;
 
   return (
     <PageContainer>
@@ -125,6 +136,19 @@ export default async function CollectionPage({
             <Link href={`/${l}/quiz`} className="underline underline-offset-4">{dict.quiz.results.redo}</Link>
             <Link href={`/${l}/quiz?answers=${query.quiz}`} className="underline underline-offset-4">{dict.quiz.results.edit}</Link>
           </div>
+        </>
+      ) : searched ? (
+        <>
+          <Breadcrumb aria-label={dict.common.breadcrumb} className="mb-4">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink render={<Link href={unfilteredHref} />}>{resolveTitle(dict, collection.title)}</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem><BreadcrumbPage>{dict.search.breadcrumb}</BreadcrumbPage></BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{dict.search.resultsFor.replace('{q}', searched)}</h1>
         </>
       ) : occasion ? (
         <OccasionHeader occasion={occasion} count={base.length} poster={base[0]?.images[0]} locale={l} dict={dict} />
@@ -186,7 +210,9 @@ export default async function CollectionPage({
               </EmptyMedia>
               {/* Only blame the powers when dropping them would actually show lenses. */}
               <EmptyTitle>
-                {rx && totalAnyPower > 0 ? dict.collection.rx.noResults.replace('{rx}', rx) : dict.collection.noResults}
+                {rx && totalAnyPower > 0 ? dict.collection.rx.noResults.replace('{rx}', rx)
+                  : searched && !isFiltered ? dict.search.none.replace('{q}', searched)
+                  : dict.collection.noResults}
               </EmptyTitle>
             </EmptyHeader>
             {/* A real control, not an instruction (#43). Named for its outcome rather
@@ -195,6 +221,24 @@ export default async function CollectionPage({
             {rx && totalAnyPower > 0 ? (
               <EmptyContent>
                 <ClearRxFilter>{dict.collection.rx.clear}</ClearRxFilter>
+              </EmptyContent>
+            ) : searched && !isFiltered ? (
+              // Nothing matches the words themselves: other ways in, not a way back to the same empty page.
+              <EmptyContent>
+                <p className="text-sm text-muted-foreground">{dict.search.popular}</p>
+                <ul className="flex flex-wrap justify-center gap-2">
+                  {popularSearches[l].map((keyword) => (
+                    <li key={keyword}>
+                      <Link
+                        href={`${unfilteredHref}?q=${encodeURIComponent(keyword)}`}
+                        className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'rounded-none')}
+                      >
+                        {keyword}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+                <Link href={`/${l}/quiz`} className="text-sm underline underline-offset-4">{dict.collection.quizCard.cta}</Link>
               </EmptyContent>
             ) : isFiltered ? (
               <EmptyContent>

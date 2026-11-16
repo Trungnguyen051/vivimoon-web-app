@@ -4,7 +4,7 @@ import { Menu, Search } from 'lucide-react';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { getNavItems } from './nav-items';
-import { LENS_FACETS, facetValueHref } from '@/lib/products/lens-facets';
+import { FACET_COLLECTION, LENS_FACETS, facetValueHref } from '@/lib/products/lens-facets';
 import { Swatches, valueLabel } from './facet-value';
 import { LocaleSwitcher } from './locale-switcher';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -29,10 +29,14 @@ export function MobileNav({ locale, dict }: { locale: Locale; dict: Dictionary }
         </SheetHeader>
 
         <div className="px-4">
-          {/* Search shares the storefront's search field; submission wiring is a follow-up. */}
-          <form onSubmit={(e) => e.preventDefault()} className="flex items-center gap-2 rounded-md border px-3">
+          {/* The same Search as the header's: a plain GET form to the results listing (#259). */}
+          <form action={`/${locale}/collection/${FACET_COLLECTION}`} role="search" className="flex items-center gap-2 rounded-md border px-3">
             <Search className="h-4 w-4 text-muted-foreground" />
             <input
+              name="q"
+              type="search"
+              required
+              maxLength={80}
               aria-label={dict.common.search}
               placeholder={dict.common.search}
               className="h-11 flex-1 bg-transparent text-sm outline-none"

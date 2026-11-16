@@ -299,3 +299,14 @@ describe('productQuerySchema — quiz (#248)', () => {
     expect(parseProductQueryLoose({ quiz: 'experience-never,nope', replacement: 'daily' })).toEqual({ replacement: 'daily' });
   });
 });
+
+describe('productQuerySchema — q (#259)', () => {
+  it('accepts and trims typed words', () => {
+    expect(productQuerySchema.parse({ q: '  nâu tự nhiên ' })).toEqual({ q: 'nâu tự nhiên' });
+  });
+  it('reads a blank q as absent and rejects an over-long one', () => {
+    expect(productQuerySchema.parse({ q: '' })).toEqual({});
+    expect(productQuerySchema.safeParse({ q: 'x'.repeat(81) }).success).toBe(false);
+    expect(parseProductQueryLoose({ q: '   ', replacement: 'daily' })).toEqual({ replacement: 'daily' });
+  });
+});

@@ -487,6 +487,10 @@ export const en = {
     refundWindow: 'Uncomfortable? Refund within 15 days',
     details: 'See the full policy', howTo: 'How to request a return', link: 'Return policy',
   },
+  search: {
+    resultsFor: 'Results for “{q}”', breadcrumb: 'Search results', none: 'No lenses found for “{q}”',
+    popular: 'Popular searches',
+  },
   quiz: {
     title: 'Lens-Matching Quiz', next: 'Continue', back: 'Previous question', submit: 'See my results',
     submitCount: 'See {n} lenses that suit you', step: 'Step {n}/{total}', exit: 'Exit quiz',

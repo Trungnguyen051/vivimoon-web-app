@@ -29,15 +29,15 @@ describe('Header', () => {
   it('opens the search field focused, and closes it on Escape', async () => {
     render(<Header locale="vi" dict={viDict} />);
 
-    expect(screen.queryByRole('textbox', { name: viDict.common.search })).not.toBeInTheDocument();
+    expect(screen.queryByRole('searchbox', { name: viDict.common.search })).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: viDict.common.search }));
 
-    const input = await screen.findByRole('textbox', { name: viDict.common.search });
+    const input = await screen.findByRole('searchbox', { name: viDict.common.search });
     expect(input).toHaveFocus();
 
     await userEvent.keyboard('{Escape}');
-    expect(screen.queryByRole('textbox', { name: viDict.common.search })).not.toBeInTheDocument();
+    expect(screen.queryByRole('searchbox', { name: viDict.common.search })).not.toBeInTheDocument();
   });
 
   it('takes the nav out of the accessibility tree while search is open', async () => {
@@ -47,22 +47,18 @@ describe('Header', () => {
 
     await userEvent.click(screen.getByRole('button', { name: viDict.common.search }));
 
-    await screen.findByRole('textbox', { name: viDict.common.search });
+    await screen.findByRole('searchbox', { name: viDict.common.search });
     expect(screen.queryByRole('link', { name: viDict.nav.about })).not.toBeInTheDocument();
   });
 
-  it('never attaches a submit handler to a search that goes nowhere', async () => {
+  it('submits the typed words to the Search results listing (#259)', async () => {
     render(<Header locale="vi" dict={viDict} />);
     await userEvent.click(screen.getByRole('button', { name: viDict.common.search }));
 
-    const input = await screen.findByRole('textbox', { name: viDict.common.search });
-    await userEvent.type(input, 'lens nâu');
-
-    // No form means Enter cannot submit. A field that silently ate the query would
-    // look identical on screen and be worse than one that is plainly a placeholder.
-    expect(input.closest('form')).toBeNull();
-    await userEvent.keyboard('{Enter}');
-    expect(input).toHaveValue('lens nâu');
+    const input = await screen.findByRole('searchbox', { name: viDict.common.search });
+    expect(input).toHaveAttribute('name', 'q');
+    expect(input).toBeRequired();
+    expect(screen.getByRole('search')).toHaveAttribute('action', '/vi/collection/all-lenses');
   });
 
   it('offers both locales and marks the current one', () => {
