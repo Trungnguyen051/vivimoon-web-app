@@ -11,6 +11,8 @@ import type { Product } from '@/lib/types';
 vi.mock('@/lib/api/client', () => ({ apiRequest: vi.fn() }));
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn() }), usePathname: () => '/en/quiz' }));
 const mockedApiRequest = vi.mocked(apiRequest);
+/** The last step's button once the live count has arrived. */
+const countButton = (n: number) => screen.findByRole('button', { name: en.quiz.submitCount.replace('{n}', String(n)) });
 
 const definition: QuizDefinition = {
   questions: [
@@ -62,15 +64,15 @@ describe('QuizFlow', () => {
   it('advances the progress indicator on next and keeps the prior answer selected on back', async () => {
     const user = userEvent.setup();
     render(<QuizFlow definition={definition} locale="en" dict={en} />);
-    expect(screen.getByText('1 / 2')).toBeInTheDocument();
+    expect(screen.getByText('Step 1/2')).toBeInTheDocument();
 
     await user.click(screen.getByRole('radio', { name: 'Option A' }));
     await user.click(screen.getByRole('button', { name: en.quiz.next }));
-    expect(screen.getByText('2 / 2')).toBeInTheDocument();
+    expect(screen.getByText('Step 2/2')).toBeInTheDocument();
     expect(screen.getByText('Second question?')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: en.quiz.back }));
-    expect(screen.getByText('1 / 2')).toBeInTheDocument();
+    expect(screen.getByText('Step 1/2')).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: 'Option A' })).toHaveAttribute('aria-checked', 'true');
   });
 
@@ -82,7 +84,7 @@ describe('QuizFlow', () => {
     await user.click(screen.getByRole('radio', { name: 'Option A' }));
     await user.click(screen.getByRole('button', { name: en.quiz.next }));
     await user.click(screen.getByRole('radio', { name: 'Option C' }));
-    await user.click(screen.getByRole('button', { name: en.quiz.submit }));
+    await user.click(await countButton(2));
 
     expect(mockedApiRequest).toHaveBeenCalledWith('/api/quiz/submit', {
       method: 'POST',
@@ -101,7 +103,7 @@ describe('QuizFlow', () => {
     await user.click(screen.getByRole('button', { name: en.quiz.next }));
     await user.click(screen.getByRole('radio', { name: 'Option C' }));
     expect(localStorage.getItem('vivimoon:quiz-results')).toBeNull();
-    await user.click(screen.getByRole('button', { name: en.quiz.submit }));
+    await user.click(await countButton(2));
 
     await screen.findByText('Product rec-1');
     expect(localStorage.getItem('vivimoon:quiz-results')).toBe('rec-1,rec-2');
@@ -129,7 +131,7 @@ describe('QuizFlow', () => {
       .toHaveAttribute('href', '/vi/collection/all-lenses?from=quiz');
   });
 
-  it('a rapid double-click on submit fires only one request, not two', async () => {
+  it('a rapid double-click on submit fires no request beyond the one that counted the matches', async () => {
     mockedApiRequest.mockResolvedValue({ ok: true, data: { recommendations: [product('rec-1')] } });
     const user = userEvent.setup();
     render(<QuizFlow definition={definition} locale="en" dict={en} />);
@@ -138,7 +140,7 @@ describe('QuizFlow', () => {
     await user.click(screen.getByRole('button', { name: en.quiz.next }));
     await user.click(screen.getByRole('radio', { name: 'Option C' }));
 
-    const submitButton = screen.getByRole('button', { name: en.quiz.submit });
+    const submitButton = await countButton(1);
     // Two clicks in the same synchronous tick (fireEvent, not userEvent, so
     // nothing awaits between them) — the ref guard, not just `isPending`
     // state, is what has to catch the second one before any re-render.
@@ -157,12 +159,12 @@ describe('QuizFlow', () => {
     await user.click(screen.getByRole('radio', { name: 'Option A' }));
     await user.click(screen.getByRole('button', { name: en.quiz.next }));
     await user.click(screen.getByRole('radio', { name: 'Option C' }));
-    await user.click(screen.getByRole('button', { name: en.quiz.submit }));
+    await user.click(await countButton(1));
     await screen.findByText('Product rec-1');
 
     await user.click(screen.getByRole('button', { name: en.quiz.retake }));
     expect(screen.getByText('First question?')).toBeInTheDocument();
-    expect(screen.getByText('1 / 2')).toBeInTheDocument();
+    expect(screen.getByText('Step 1/2')).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: 'Option A' })).toHaveAttribute('aria-checked', 'false');
   });
 
@@ -185,5 +187,31 @@ describe('QuizFlow', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent(en.quiz.error);
     expect(screen.queryByText(/Unknown option/)).not.toBeInTheDocument();
+  });
+  it('scores the answers once the last one is picked, and the button states the match count (#247)', async () => {
+    mockedApiRequest.mockResolvedValue({ ok: true, data: { recommendations: [product('rec-1'), product('rec-2')] } });
+    const user = userEvent.setup();
+    render(<QuizFlow definition={definition} locale="vi" dict={viDict} />);
+
+    await user.click(screen.getByRole('radio', { name: 'Lựa chọn A' }));
+    await user.click(screen.getByRole('button', { name: viDict.quiz.next }));
+    expect(mockedApiRequest).not.toHaveBeenCalled();
+    await user.click(screen.getByRole('radio', { name: 'Lựa chọn C' }));
+
+    await user.click(await screen.findByRole('button', { name: 'Xem 2 mẫu lens hợp với bạn' }));
+    expect(screen.getByText('Product rec-1')).toBeInTheDocument();
+    expect(mockedApiRequest).toHaveBeenCalledTimes(1);
+  });
+
+  it('recaps the earlier answers and offers ways out on every step (#247)', async () => {
+    const user = userEvent.setup();
+    render(<QuizFlow definition={definition} locale="vi" dict={viDict} />);
+    expect(screen.queryByText(viDict.quiz.recap)).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: viDict.quiz.exit })).toHaveAttribute('href', '/vi');
+    expect(screen.getByRole('link', { name: viDict.quiz.skip })).toHaveAttribute('href', '/vi/collection/all-lenses?from=quiz');
+
+    await user.click(screen.getByRole('radio', { name: 'Lựa chọn A' }));
+    await user.click(screen.getByRole('button', { name: viDict.quiz.next }));
+    expect(screen.getByText(viDict.quiz.recap)).toHaveTextContent('Lựa chọn A');
   });
 });

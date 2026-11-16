@@ -486,7 +486,9 @@ export const vi: Dictionary = {
     details: 'Xem chi tiết chính sách', howTo: 'Cách gửi yêu cầu đổi trả', link: 'Chính sách đổi trả',
   },
   quiz: {
-    title: 'Trắc nghiệm chọn lens', next: 'Tiếp theo', back: 'Quay lại', submit: 'Xem kết quả',
+    title: 'Trắc nghiệm chọn lens', next: 'Tiếp tục', back: 'Câu trước', submit: 'Xem kết quả',
+    submitCount: 'Xem {n} mẫu lens hợp với bạn', step: 'Bước {n}/{total}', exit: 'Thoát quiz',
+    skip: 'Bỏ qua, xem tất cả lens', recap: 'Câu trả lời của bạn:',
     resultsTitle: 'Gợi ý cho bạn', retake: 'Làm lại bài trắc nghiệm', browseAll: 'Xem tất cả mẫu lens',
     unanswered: 'Chọn một câu trả lời để tiếp tục.',
     error: 'Đã có lỗi khi chấm điểm câu trả lời của bạn. Vui lòng thử lại.',

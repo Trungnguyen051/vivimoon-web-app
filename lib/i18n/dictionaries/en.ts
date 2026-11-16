@@ -488,7 +488,9 @@ export const en = {
     details: 'See the full policy', howTo: 'How to request a return', link: 'Return policy',
   },
   quiz: {
-    title: 'Lens-Matching Quiz', next: 'Next', back: 'Back', submit: 'See my results',
+    title: 'Lens-Matching Quiz', next: 'Continue', back: 'Previous question', submit: 'See my results',
+    submitCount: 'See {n} lenses that suit you', step: 'Step {n}/{total}', exit: 'Exit quiz',
+    skip: 'Skip, see all lenses', recap: 'Your answers:',
     resultsTitle: 'Recommended for you', retake: 'Retake the quiz', browseAll: 'See all lenses',
     unanswered: 'Select an answer to continue.',
     error: 'Something went wrong scoring your answers. Please try again.',

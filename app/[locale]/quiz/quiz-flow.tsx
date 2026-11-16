@@ -1,5 +1,5 @@
 'use client';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import type { QuizDefinition, QuizSubmitResponse } from '@/lib/api/schemas/discovery';
@@ -44,6 +44,36 @@ export function QuizFlow({
   const isLast = step === definition.questions.length - 1;
   const selectedOptionId = question ? answers[question.id] : undefined;
 
+  /*
+   * The last step's button says how many lenses match ("Xem 12 mẫu lens hợp với bạn"), so
+   * the answers are scored as soon as the set is complete. The same response is what the
+   * button then shows — the count and the results can't disagree, and a click costs no
+   * second request.
+   */
+  const [preview, setPreview] = useState<{ key: string; products: Product[] } | null>(null);
+  const answersKey = definition.questions.map((q) => answers[q.id] ?? '').join(',');
+  const complete = definition.questions.every((q) => answers[q.id]);
+  const submit = (key: string) => apiRequest<QuizSubmitResponse>('/api/quiz/submit', {
+    method: 'POST',
+    body: { answers: key.split(',').map((optionId, i) => ({ questionId: definition.questions[i].id, optionId })) },
+  });
+  const submitRef = useRef(submit);
+  useEffect(() => { submitRef.current = submit; });
+  useEffect(() => {
+    if (!complete) return;
+    let stale = false;
+    submitRef.current(answersKey).then((res) => {
+      if (!stale && res.ok) setPreview({ key: answersKey, products: res.data.recommendations });
+    });
+    return () => { stale = true; };
+  }, [answersKey, complete]);
+  const matches = preview?.key === answersKey ? preview.products : null;
+
+  function showResults(products: Product[]) {
+    setResults(products);
+    saveQuizResults(products.map((p) => p.id));
+  }
+
   function selectOption(optionId: string) {
     setAnswers((prev) => ({ ...prev, [question.id]: optionId }));
   }
@@ -58,20 +88,16 @@ export function QuizFlow({
       setStep((s) => s + 1);
       return;
     }
+    if (matches) return showResults(matches);
+    // The count never arrived (slow or failed request): score on the click instead.
     if (isSubmittingRef.current) return;
     isSubmittingRef.current = true;
     setIsPending(true);
     setError(null);
-    const res = await apiRequest<QuizSubmitResponse>('/api/quiz/submit', {
-      method: 'POST',
-      body: { answers: definition.questions.map((q) => ({ questionId: q.id, optionId: answers[q.id] })) },
-    });
+    const res = await submit(answersKey);
     isSubmittingRef.current = false;
     setIsPending(false);
-    if (res.ok) {
-      setResults(res.data.recommendations);
-      saveQuizResults(res.data.recommendations.map((p) => p.id));
-    }
+    if (res.ok) showResults(res.data.recommendations);
     // The server's message is for logs, not shoppers, and it is English either way.
     else setError(dict.quiz.error);
   }
@@ -80,6 +106,7 @@ export function QuizFlow({
     setStep(0);
     setAnswers({});
     setResults(null);
+    setPreview(null);
     setError(null);
   }
 
@@ -107,11 +134,20 @@ export function QuizFlow({
   if (!question) return null;
 
   const total = definition.questions.length;
+  const allLensesHref = `/${locale}/collection/${FACET_COLLECTION}?from=quiz`;
+  // The answers given on the steps before this one.
+  const recap = definition.questions.slice(0, step).flatMap((q) => {
+    const option = q.options.find((o) => o.id === answers[q.id]);
+    return option ? [option.label[locale]] : [];
+  });
 
   return (
     <div className="mx-auto max-w-xl space-y-8">
       <div className="space-y-2">
-        <p className="text-sm text-muted-foreground">{step + 1} / {total}</p>
+        <div className="flex items-center justify-between gap-4 text-sm text-muted-foreground">
+          <p>{dict.quiz.step.replace('{n}', String(step + 1)).replace('{total}', String(total))}</p>
+          <Link href={`/${locale}`} className="underline underline-offset-4 hover:text-foreground">{dict.quiz.exit}</Link>
+        </div>
         <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
           <div
             className="h-full rounded-full bg-primary transition-all"
@@ -143,6 +179,13 @@ export function QuizFlow({
         })}
       </div>
 
+      {recap.length > 0 ? (
+        <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          {dict.quiz.recap}
+          {recap.map((label) => <span key={label} className="border px-2 py-0.5 text-foreground">{label}</span>)}
+        </p>
+      ) : null}
+
       {error ? <p role="alert" className="text-sm text-destructive">{error}</p> : null}
 
       <div className="flex items-center justify-between gap-3">
@@ -151,11 +194,17 @@ export function QuizFlow({
         </Button>
         <div className="flex flex-col items-end gap-1.5">
           <Button type="button" onClick={goNext} disabled={!selectedOptionId || isPending}>
-            {isLast ? dict.quiz.submit : dict.quiz.next}
+            {!isLast ? dict.quiz.next : matches ? dict.quiz.submitCount.replace('{n}', String(matches.length)) : dict.quiz.submit}
           </Button>
           {!selectedOptionId ? <p className="text-xs text-muted-foreground">{dict.quiz.unanswered}</p> : null}
         </div>
       </div>
+
+      <p className="text-center text-sm">
+        <Link href={allLensesHref} className="text-muted-foreground underline underline-offset-4 hover:text-foreground">
+          {dict.quiz.skip}
+        </Link>
+      </p>
     </div>
   );
 }
