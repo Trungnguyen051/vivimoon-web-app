@@ -173,6 +173,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
               >
                 {dict.articles.collectionBannerCta}
               </Link>
+              {/* The other way on (Figma 64:261): a recommendation, for a reader still unsure. */}
+              <Link
+                href={`/${locale}/quiz`}
+                className={cn(buttonVariants({ variant: 'outline', size: 'xl' }))}
+              >
+                {dict.collection.quizCard.cta}
+              </Link>
               <Link
                 href={`/${locale}/articles`}
                 className={cn(buttonVariants({ variant: 'outline', size: 'xl' }))}
@@ -184,9 +191,14 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
         ) : (
           /* Every article still offers a way onward. A `care` article ends with no
              banner by design; ending with nothing at all is a different thing. */
-          <Link href={`/${locale}/articles`} className="text-sm text-muted-foreground underline underline-offset-4">
-            {dict.articles.backToIndex}
-          </Link>
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+            <Link href={`/${locale}/quiz`} className="underline underline-offset-4">
+              {dict.collection.quizCard.cta}
+            </Link>
+            <Link href={`/${locale}/articles`} className="text-muted-foreground underline underline-offset-4">
+              {dict.articles.backToIndex}
+            </Link>
+          </div>
         )}
       </div>
     </PageContainer>

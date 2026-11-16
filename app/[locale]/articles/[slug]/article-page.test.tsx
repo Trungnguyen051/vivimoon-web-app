@@ -164,6 +164,16 @@ describe('an article page', () => {
     expect(screen.getByText(careArticle.body.vi[0])).toBeInTheDocument();
   });
 
+  it('always ends with a way to the Quiz, with or without a collection banner (#262)', async () => {
+    const { unmount } = await renderArticle(merchandised.slug);
+    expect(screen.getByText(viDict.articles.collectionBannerTitle)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: viDict.collection.quizCard.cta })).toHaveAttribute('href', '/vi/quiz');
+    unmount();
+
+    await renderArticle(careArticle.slug);
+    expect(screen.getByRole('link', { name: viDict.collection.quizCard.cta })).toHaveAttribute('href', '/vi/quiz');
+  });
+
   it('404s on a slug nobody authored', async () => {
     await expect(renderArticle('khong-co-bai-nao')).rejects.toThrow();
   });
