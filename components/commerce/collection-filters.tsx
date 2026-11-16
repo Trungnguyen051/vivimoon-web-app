@@ -56,9 +56,12 @@ import { cn } from '@/lib/utils/cn';
 import { CARD_VIEWS, parseCardView, rxPairLabel } from '@/lib/products/plp-card';
 import { formatPrice } from '@/lib/utils/format';
 
-/** Every field a collection URL can carry, so "Xoá tất cả" cannot fall behind one. `sort` survives it. */
+/**
+ * Every field a collection URL can carry, so "Xoá tất cả" cannot fall behind one. `sort`
+ * survives it, and so does `quiz`: the answers are what the results page is, not a filter on it.
+ */
 const FILTER_KEYS = Object.keys(productQuerySchema.shape).filter(
-  (key) => key !== 'sort',
+  (key) => key !== 'sort' && key !== 'quiz',
 );
 const SORTS = ['bestselling', 'newest', 'price-asc', 'price-desc'] as const;
 const COMPARE_ARTICLE = 'silicone-hydrogel-vs-lens-thuong';
@@ -843,20 +846,23 @@ export function CollectionFilters({
 /** "Sắp xếp: …" above the grid. Best-selling is the default and never written to the URL. */
 export function CollectionSort({ dict }: { dict: Dictionary }) {
   const { params, navigate } = useSetParams();
-  const label = (sort: (typeof SORTS)[number]) =>
+  // Quiz results (#248) come best match first until the shopper picks another order.
+  const sorts = params.get('quiz') ? (['match', ...SORTS] as const) : SORTS;
+  const fallback = sorts[0] === 'match' ? 'match' : DEFAULT_SORT;
+  const label = (sort: (typeof sorts)[number]) =>
     dict.filters.sidebar.sortBy.replace('{sort}', dict.filters.sorts[sort]);
 
   return (
     <Select
-      value={params.get('sort') ?? DEFAULT_SORT}
+      value={params.get('sort') ?? fallback}
       onValueChange={(value) =>
         navigate((next) => {
-          if (value && value !== DEFAULT_SORT) next.set('sort', value);
+          if (value && value !== fallback) next.set('sort', value);
           else next.delete('sort');
         })
       }
       // Base UI reads the trigger's text from `items`, so the chosen sort reads "Sắp xếp: …".
-      items={Object.fromEntries(SORTS.map((s) => [s, label(s)]))}
+      items={Object.fromEntries(sorts.map((s) => [s, label(s)]))}
     >
       <SelectTrigger
         aria-label={dict.filters.sort}
@@ -866,7 +872,7 @@ export function CollectionSort({ dict }: { dict: Dictionary }) {
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          {SORTS.map((s) => (
+          {sorts.map((s) => (
             <SelectItem key={s} value={s}>
               {dict.filters.sorts[s]}
             </SelectItem>

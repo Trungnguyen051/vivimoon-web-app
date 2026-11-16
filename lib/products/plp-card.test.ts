@@ -40,6 +40,7 @@ describe('quiz card rules', () => {
 
   it('hides for a shopper arriving from quiz results', () => {
     expect(showQuizCard({ from: 'quiz' }, 20)).toBe(false);
+    expect(showQuizCard({ quiz: 'experience-never' }, 20)).toBe(false);
   });
 
   it('hides at two filter groups', () => {

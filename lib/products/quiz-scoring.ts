@@ -76,3 +76,11 @@ export function quizMatches(
 export function scoreQuiz(answers: QuizAnswer[], questions: QuizQuestion[], products: Product[]): Product[] {
   return quizMatches(answers, questions, products).matches.map((m) => m.product);
 }
+
+/** The answers a `quiz=` list of option ids stands for: at most one per question, unknown ids ignored. */
+export function answersFromOptionIds(optionIds: string[], questions: QuizQuestion[]): QuizAnswer[] {
+  return questions.flatMap((q) => {
+    const option = q.options.find((o) => optionIds.includes(o.id));
+    return option ? [{ questionId: q.id, optionId: option.id }] : [];
+  });
+}

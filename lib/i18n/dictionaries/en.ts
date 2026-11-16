@@ -143,7 +143,7 @@ export const en = {
     colors: { brown: 'Brown', black: 'Black', gray: 'Gray', violet: 'Violet' },
     productLines: { trongSuot: 'Clear', coMau: 'Colored', vanNhu: 'Glitter' },
     replacements: { daily: '1 day', monthly: '1 month', threeMonth: '3 months', sixMonth: '6 months' },
-    sorts: { newest: 'Newest', 'price-asc': 'Price: low to high', 'price-desc': 'Price: high to low', bestselling: 'Best selling' },
+    sorts: { newest: 'Newest', 'price-asc': 'Price: low to high', 'price-desc': 'Price: high to low', bestselling: 'Best selling', match: 'Best match' },
     sidebar: {
       title: 'Filters', clearAll: 'Clear all', lensLine: 'Lens line', makeupStyle: 'Makeup style',
       series: 'Collection', occasion: 'Occasion', price: 'Price range', priceFrom: 'From ₫', priceTo: 'To ₫',
@@ -491,9 +491,11 @@ export const en = {
     title: 'Lens-Matching Quiz', next: 'Continue', back: 'Previous question', submit: 'See my results',
     submitCount: 'See {n} lenses that suit you', step: 'Step {n}/{total}', exit: 'Exit quiz',
     skip: 'Skip, see all lenses', recap: 'Your answers:',
-    resultsTitle: 'Recommended for you', retake: 'Retake the quiz', browseAll: 'See all lenses',
     unanswered: 'Select an answer to continue.',
-    error: 'Something went wrong scoring your answers. Please try again.',
+    results: {
+      breadcrumb: 'Recommended for you', title: 'Lenses that suit you', summary: '{n} lenses picked from your answers: {answers}',
+      redo: 'Retake the quiz', edit: 'Change my answers',
+    },
   },
   vouchers: {
     title: 'My vouchers', empty: 'You have no vouchers available right now.',
