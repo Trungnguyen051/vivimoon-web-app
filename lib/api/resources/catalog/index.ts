@@ -19,4 +19,4 @@ export const catalog: Catalog =
       })();
 
 export { minPrice } from './mock';
-export type { FacetCounts, FacetKey } from './mock';
+export type { FacetCounts, FacetKey, SearchSuggestions } from './mock';

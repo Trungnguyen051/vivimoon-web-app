@@ -401,4 +401,32 @@ describe('mockCatalog', () => {
       expect((await mockCatalog.searchProducts({ q: 'zzzz' })).total).toBe(0);
     });
   });
+
+  describe('Search suggestions (#260)', () => {
+    it('offers the first three results in best-selling order and the real total', async () => {
+      const full = await mockCatalog.searchProducts({ q: 'lens', sort: 'bestselling' });
+      const { products, total } = await mockCatalog.searchSuggestions('lens');
+      expect(total).toBe(full.total);
+      expect(products.map((p) => p.id)).toEqual(full.products.slice(0, 3).map((p) => p.id));
+    });
+
+    it('suggests at most three categories, each with the size of the listing it opens', async () => {
+      const { categories } = await mockCatalog.searchSuggestions('lens nâu khoá ẩm 1 tháng');
+      expect(categories).toHaveLength(3);
+      for (const category of categories) {
+        const params = Object.fromEntries(new URLSearchParams(category.query));
+        expect(category.count, category.id).toBe((await mockCatalog.searchProducts(params)).total);
+        expect(category.count, category.id).toBeGreaterThan(0);
+      }
+    });
+
+    it('names the category the words name', async () => {
+      const { categories } = await mockCatalog.searchSuggestions('nâu');
+      expect(categories.map((c) => c.id)).toEqual(['color:brown']);
+    });
+
+    it('offers nothing for words no lens states', async () => {
+      expect(await mockCatalog.searchSuggestions('zzzz')).toEqual({ categories: [], products: [], total: 0 });
+    });
+  });
 });

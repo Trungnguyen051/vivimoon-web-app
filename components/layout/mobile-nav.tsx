@@ -1,12 +1,14 @@
 'use client';
+import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, Search } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { getNavItems } from './nav-items';
-import { FACET_COLLECTION, LENS_FACETS, facetValueHref } from '@/lib/products/lens-facets';
+import { LENS_FACETS, facetValueHref } from '@/lib/products/lens-facets';
 import { Swatches, valueLabel } from './facet-value';
 import { LocaleSwitcher } from './locale-switcher';
+import { SearchBox } from './search-box';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
@@ -14,9 +16,11 @@ const ROW_CLASS = 'flex min-h-11 items-center rounded-md px-2 text-base font-med
 
 export function MobileNav({ locale, dict }: { locale: Locale; dict: Dictionary }) {
   const items = getNavItems(dict, locale);
+  // Controlled, so a link followed from the Search panel can close the menu like any other row does.
+  const [open, setOpen] = useState(false);
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
         aria-label={dict.common.menu}
         className="flex h-11 w-11 items-center justify-center rounded-md hover:bg-muted lg:hidden"
@@ -29,19 +33,8 @@ export function MobileNav({ locale, dict }: { locale: Locale; dict: Dictionary }
         </SheetHeader>
 
         <div className="px-4">
-          {/* The same Search as the header's: a plain GET form to the results listing (#259). */}
-          <form action={`/${locale}/collection/${FACET_COLLECTION}`} role="search" className="flex items-center gap-2 rounded-md border px-3">
-            <Search className="h-4 w-4 text-muted-foreground" />
-            <input
-              name="q"
-              type="search"
-              required
-              maxLength={80}
-              aria-label={dict.common.search}
-              placeholder={dict.common.search}
-              className="h-11 flex-1 bg-transparent text-sm outline-none"
-            />
-          </form>
+          {/* The same Search as the header's (#260); following a link from it closes the menu. */}
+          <SearchBox locale={locale} dict={dict} onNavigate={() => setOpen(false)} />
         </div>
 
         {/* The same five items as the desktop nav, from the same source — only the

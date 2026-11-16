@@ -487,7 +487,8 @@ export const vi: Dictionary = {
   },
   search: {
     resultsFor: 'Kết quả cho “{q}”', breadcrumb: 'Kết quả tìm kiếm', none: 'Không tìm thấy lens nào cho “{q}”',
-    popular: 'Tìm kiếm phổ biến',
+    popular: 'Tìm kiếm phổ biến', recent: 'Tìm kiếm gần đây', clearRecent: 'Xoá',
+    categories: 'Danh mục gợi ý', products: 'Sản phẩm phù hợp', seeAll: 'Xem tất cả {n} kết quả cho “{q}”',
   },
   quiz: {
     title: 'Trắc nghiệm chọn lens', next: 'Tiếp tục', back: 'Câu trước', submit: 'Xem kết quả',
