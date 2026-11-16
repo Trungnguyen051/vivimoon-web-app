@@ -22,7 +22,13 @@ export const en = {
     colored: 'Colored Lenses', daily: 'Daily Lenses', allLenses: 'All Lenses',
     beginnerFriendly: 'Beginner-Friendly Lenses',
     productsLabel: 'products', noResults: 'No products match your filters.', showAll: 'Show all products',
-    card: { lines: { moisture: 'Moisture-lock', breathable: 'Breathable' }, moreColors: '+{n} colors' },
+    card: { lines: { moisture: 'Moisture-lock', breathable: 'Breathable' }, moreColors: '+{n} colors', rxInStock: '✓ In stock {rx}' },
+    rx: {
+      pair: 'L {left} / R {right}', same: 'L & R {power}', chip: 'Power: {rx}',
+      count: '{n} / {total} lenses in stock in both your powers',
+      noResults: 'No lens is in stock in your pair of powers ({rx}).', clear: 'Remove the power filter',
+    },
+    filtering: 'Filtering:', removeFilter: 'Remove filter {name}',
     imageView: 'View:',
     quizCard: {
       title: 'Not sure which one to pick?',

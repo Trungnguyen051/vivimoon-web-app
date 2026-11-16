@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
-  CollectionFilters, CollectionFiltersSheet, CollectionImageView, CollectionLoadMore, CollectionSort, DefaultRxAutoApply, YourRxSheet,
+  ActiveFilters, ClearRxFilter, CollectionFilters, CollectionFiltersSheet, CollectionImageView, CollectionLoadMore, CollectionSort, DefaultRxAutoApply, YourRxSheet,
 } from './collection-filters';
 import { useSessionStore } from '@/features/session/session-store';
 import { GUEST_RX_KEY, useGuestRxStore } from '@/features/session/default-rx';
@@ -352,5 +352,50 @@ describe('CollectionImageView (#195)', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Người mẫu' }));
     expect(replace).toHaveBeenLastCalledWith('/vi/collection/all-lenses', { scroll: false });
+  });
+});
+
+describe('"Đang lọc:" chips (#246)', () => {
+  beforeEach(() => {
+    push.mockClear();
+    sessionStorage.clear();
+    search = '';
+  });
+
+  it('renders nothing when no filter is applied', () => {
+    const { container } = render(<ActiveFilters dict={viDict} />);
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it('lists every applied filter, the Default Rx first', () => {
+    search = 'occasion=party,date&rx=-2.5,-3&maxPrice=199999&sort=newest';
+    render(<ActiveFilters dict={viDict} />);
+    expect(screen.getAllByRole('button').map((b) => b.textContent?.trim())).toEqual([
+      'Độ: L -2.50 / R -3.00', t.occasions.party, t.occasions.date, t.pricePresets['under-200k'],
+    ]);
+  });
+
+  it('removing a chip drops only that value', async () => {
+    search = 'occasion=party,date&rx=-2.5,-3';
+    render(<ActiveFilters dict={viDict} />);
+    await userEvent.click(screen.getByRole('button', { name: viDict.collection.removeFilter.replace('{name}', t.occasions.party) }));
+    expect(lastUrl()).toBe('/vi/collection/all-lenses?occasion=date&rx=-2.5,-3');
+  });
+
+  it('removing the power chip keeps the saved Default Rx and stops it coming straight back', async () => {
+    localStorage.setItem(GUEST_RX_KEY, JSON.stringify({ left: -2.5, right: -3 }));
+    search = 'rx=-2.5,-3&occasion=party';
+    render(<ActiveFilters dict={viDict} />);
+    await userEvent.click(screen.getByRole('button', { name: /Độ: L -2.50/ }));
+    expect(lastUrl()).toBe('/vi/collection/all-lenses?occasion=party');
+    expect(localStorage.getItem(GUEST_RX_KEY)).not.toBeNull();
+    expect(sessionStorage.getItem('vivimoon-default-rx-cleared')).toBe('1');
+  });
+
+  it('the empty state’s button removes the power filter and keeps the others', async () => {
+    search = 'rx=-2.5,-30&occasion=party';
+    render(<ClearRxFilter>{viDict.collection.rx.clear}</ClearRxFilter>);
+    await userEvent.click(screen.getByRole('button', { name: viDict.collection.rx.clear }));
+    expect(lastUrl()).toBe('/vi/collection/all-lenses?occasion=party');
   });
 });

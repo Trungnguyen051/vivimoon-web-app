@@ -21,7 +21,7 @@ A shopper's per-eye contact-lens prescription, captured at add-to-cart as line m
 _Avoid_: Prescription, power
 
 **Default Rx**:
-A per-eye `sph` a shopper keeps as their standing answer — shown to shoppers as "Độ của bạn". A member's lives on the account (collected by the welcome step, editable from Account info and from the collection sidebar); a guest's lives on their device. It narrows collection listings to lenses stocked in both eyes' powers and pre-fills the Rx at add-to-cart, but it is not an Rx: it never travels with a Cart Line on its own. Myopia only, in 0.25 steps; no `cyl`/`axis`/`add`.
+A per-eye `sph` a shopper keeps as their standing answer — shown to shoppers as "Độ của bạn". A member's lives on the account (collected by the welcome step, editable from Account info and from the collection sidebar); a guest's lives on their device. It narrows collection listings to lenses stocked in both eyes' powers — "có sẵn" there is a stock claim: the shopper can buy that power now, not merely that the lens is manufactured in it. A lens stocked in only one of the two powers is never shown: when nothing covers both, the listing says so rather than offering a lens the shopper could not wear as a pair. It also pre-fills the Rx at add-to-cart, but it is not an Rx: it never travels with a Cart Line on its own. Myopia only, in 0.25 steps; no `cyl`/`axis`/`add`.
 _Avoid_: Eye power, độ cận (in code), saved prescription
 
 **Product Line**:
@@ -108,8 +108,16 @@ The PDP gallery: one strip of slides across the views Vân lens (eye), Người 
 _Avoid_: Gallery alone (ambiguous with the standard gallery it falls back to), Multi-Context Viewer (same concept — Lens Viewer is the shorter canonical form used in §10 of the client-scope spec)
 
 **Quiz**:
-The step-by-step questionnaire that scores a shopper's tag-weighted answers into product recommendations. Content (6 questions, tag weights) is provisional pending Vivimoon's real question set.
+The step-by-step questionnaire that scores a shopper's tag-weighted answers into product recommendations. Content (3 questions — đã từng đeo lens chưa, look, đeo bao lâu — and their tag weights) is provisional pending Vivimoon's real question set.
 _Avoid_: Lens-Matching Quiz (same concept — Quiz is the canonical short form)
+
+**Quiz Match**:
+A lens the Quiz recommends for one set of answers: any lens scoring at or above the cutoff, so the number of matches varies with the answers instead of being a fixed top few. Quiz Matches are shown as a listing, best first, that a shopper can filter like any other.
+_Avoid_: Quiz result (ambiguous with the results screen), recommendation
+
+**Occasion**:
+One of the six moments a lens is chosen for — Kỷ yếu, Đám cưới, Tiệc, Hẹn hò, Du lịch, Chụp ảnh. An Occasion is both a filter value on any listing and a Collection of its own, whose page opens with that Occasion's advice (a headline, tips, a look video shown as a still while no footage exists) above the lenses. The advice copy is provisional pending Vivimoon's. Distinct from the Reading Theme "lens theo dịp", which files Articles.
+_Avoid_: Moment, khoảnh khắc (in code), event
 
 **Trust Badge**:
 One of the four promises the homepage states beneath VIVIMOON TV — authenticity, free consultation, 30-day returns, express delivery. A Trust Badge is a claim Vivimoon stands behind rather than a feature of the storefront, so its wording comes from Vivimoon and the evidence for it is theirs; the same is true of the regulatory line in the announcement bar.

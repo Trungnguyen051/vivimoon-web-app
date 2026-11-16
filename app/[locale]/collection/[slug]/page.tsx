@@ -7,11 +7,11 @@ import { SearchX } from 'lucide-react';
 import { ProductGrid } from '@/components/commerce/product-grid';
 import { collectionListId } from '@/lib/analytics/list-id';
 import {
-  CollectionFilters, CollectionFiltersSheet, CollectionImageView, CollectionLoadMore, CollectionSort,
-  DefaultRxAutoApply, YourRxSheet,
+  ActiveFilters, ClearRxFilter, CollectionFilters, CollectionFiltersSheet, CollectionImageView, CollectionLoadMore,
+  CollectionSort, DefaultRxAutoApply, YourRxSheet,
 } from '@/components/commerce/collection-filters';
 import { QuizCard } from '@/components/commerce/quiz-card';
-import { cardImage, parseCardView, showQuizCard } from '@/lib/products/plp-card';
+import { cardImage, parseCardView, rxPairLabel, showQuizCard } from '@/lib/products/plp-card';
 import { quiz, quizSocialProof } from '@/content/quiz';
 import { distinctColorVariants } from '@/lib/products/variant-colors';
 import { buttonVariants } from '@/components/ui/button';
@@ -51,10 +51,13 @@ export default async function CollectionPage({
   const query = parseProductQueryLoose(sp);
   // Paging is `?show=`, whole pages only, so a shared link opens on as many lenses as it showed.
   const shown = Math.max(PAGE_SIZE, Math.ceil((Number.parseInt(sp.show ?? '', 10) || 0) / PAGE_SIZE) * PAGE_SIZE);
-  const { products, total, counts } = await catalog.searchProducts(
+  const { products, total, totalAnyPower, counts } = await catalog.searchProducts(
     { ...query, sort: query.sort ?? DEFAULT_SORT },
     { ids: collection.productIds, limit: shown },
   );
+
+  // The applied Default Rx as the shopper reads it; null when the listing isn't narrowed by one.
+  const rx = rxPairLabel(query.rx, dict);
 
   // "Xem ảnh": every card shows the chosen view and swaps to the close-up (or, on it, the model) on hover.
   const view = parseCardView(sp.view);
@@ -88,13 +91,18 @@ export default async function CollectionPage({
           </div>
           <div className="space-y-3">
             <div className="flex items-center justify-between gap-4">
-              <p className="text-sm text-muted-foreground">{total} {dict.collection.productsLabel}</p>
+              <p className="text-sm text-muted-foreground">
+                {rx
+                  ? dict.collection.rx.count.replace('{n}', String(total)).replace('{total}', String(totalAnyPower))
+                  : `${total} ${dict.collection.productsLabel}`}
+              </p>
               <div className="flex items-center gap-6">
                 <CollectionImageView dict={dict} className="hidden lg:flex" />
                 <CollectionSort dict={dict} />
               </div>
             </div>
             <CollectionImageView dict={dict} className="lg:hidden" />
+            <ActiveFilters dict={dict} />
           </div>
         {products.length === 0 ? (
           <Empty className="rounded-xl border py-16">
@@ -102,12 +110,19 @@ export default async function CollectionPage({
               <EmptyMedia variant="icon">
                 <SearchX />
               </EmptyMedia>
-              <EmptyTitle>{dict.collection.noResults}</EmptyTitle>
+              {/* Only blame the powers when dropping them would actually show lenses. */}
+              <EmptyTitle>
+                {rx && totalAnyPower > 0 ? dict.collection.rx.noResults.replace('{rx}', rx) : dict.collection.noResults}
+              </EmptyTitle>
             </EmptyHeader>
             {/* A real control, not an instruction (#43). Named for its outcome rather
                 than repeating the filter row's "clear" — two controls, one accessible name,
                 is what a screen reader would otherwise announce. */}
-            {isFiltered ? (
+            {rx && totalAnyPower > 0 ? (
+              <EmptyContent>
+                <ClearRxFilter>{dict.collection.rx.clear}</ClearRxFilter>
+              </EmptyContent>
+            ) : isFiltered ? (
               <EmptyContent>
                 <Link href={unfilteredHref} className={cn(buttonVariants({ variant: 'outline' }))}>
                   {dict.collection.showAll}
@@ -122,6 +137,7 @@ export default async function CollectionPage({
             dict={dict}
             listId={collectionListId(collection.slug, query, colors)}
             images={images}
+            rxLine={rx ? dict.collection.card.rxInStock.replace('{rx}', rx) : undefined}
             fourth={showQuizCard(sp, total) ? (
               <QuizCard
                 locale={l}

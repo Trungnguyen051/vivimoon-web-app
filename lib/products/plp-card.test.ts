@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import type { Product } from '@/lib/api/schemas/catalog';
 import { vi } from '@/lib/i18n/dictionaries/vi';
-import { activeFilterGroups, cardImage, showQuizCard, specLine } from './plp-card';
+import { activeFilterGroups, cardImage, rxPairLabel, showQuizCard, specLine } from './plp-card';
 
 const product = {
   images: ['/a.jpg', '/b.jpg'], replacement: 'monthly',
@@ -61,5 +61,16 @@ describe('quiz card rules', () => {
 
   it('hides under 6 results', () => {
     expect(showQuizCard({}, 5)).toBe(false);
+  });
+});
+
+describe('rxPairLabel (#246)', () => {
+  it('names each eye, or the pair once when both powers match', () => {
+    expect(rxPairLabel('-2.5,-3', vi)).toBe('L -2.50 / R -3.00');
+    expect(rxPairLabel('-2.5,-2.5', vi)).toBe('L & R -2.50');
+  });
+  it('is null without a valid Default Rx', () => {
+    expect(rxPairLabel(undefined, vi)).toBeNull();
+    expect(rxPairLabel('abc', vi)).toBeNull();
   });
 });
