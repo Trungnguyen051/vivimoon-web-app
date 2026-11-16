@@ -289,3 +289,13 @@ describe('parseProductQueryLoose', () => {
     expect(q).toEqual({ material: 'Hydrogel', sort: 'price-asc' });
   });
 });
+
+describe('productQuerySchema — quiz (#248)', () => {
+  it('accepts known Quiz option ids', () => {
+    expect(productQuerySchema.safeParse({ quiz: 'experience-never,look-natural,duration-allDay' }).success).toBe(true);
+  });
+  it('rejects an unknown option id, which the loose parser drops instead', () => {
+    expect(productQuerySchema.safeParse({ quiz: 'experience-never,nope' }).success).toBe(false);
+    expect(parseProductQueryLoose({ quiz: 'experience-never,nope', replacement: 'daily' })).toEqual({ replacement: 'daily' });
+  });
+});

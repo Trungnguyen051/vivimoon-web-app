@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { QuizCard, saveQuizResults } from './quiz-card';
+import { QuizCard, saveQuizAnswers } from './quiz-card';
 import { vi } from '@/lib/i18n/dictionaries/vi';
 
 const card = () => render(<QuizCard locale="vi" dict={vi} questionCount={6} socialProof="12.400 người đã tìm được lens hợp mắt" />);
@@ -16,10 +16,16 @@ describe('QuizCard', () => {
     expect(screen.getByText('12.400 người đã tìm được lens hợp mắt')).toBeInTheDocument();
   });
 
-  it('offers "Xem lại gợi ý cho bạn", linking to the saved picks, once the Quiz has been taken on this device', async () => {
-    saveQuizResults(['p-aqua-daily', 'p-sandkiss']);
+  it('offers "Xem lại gợi ý cho bạn", linking to the matches for the saved answers (#248)', async () => {
+    saveQuizAnswers('experience-never,look-natural,duration-allDay');
     card();
     expect(await screen.findByRole('link', { name: 'Xem lại gợi ý cho bạn' }))
-      .toHaveAttribute('href', `/vi/quiz?results=${encodeURIComponent('p-aqua-daily,p-sandkiss')}`);
+      .toHaveAttribute('href', '/vi/collection/all-lenses?quiz=experience-never,look-natural,duration-allDay');
+  });
+
+  it('ignores saved answers that no longer fit the Quiz', () => {
+    saveQuizAnswers('experience-never,an-old-option');
+    card();
+    expect(screen.getByRole('link', { name: 'Làm quiz chọn lens' })).toHaveAttribute('href', '/vi/quiz');
   });
 });

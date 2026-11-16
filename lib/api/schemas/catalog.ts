@@ -3,6 +3,7 @@ import { EYE_ENLARGEMENT_BANDS } from '@/lib/products/eye-enlargement';
 import { distinctColorVariants } from '@/lib/products/variant-colors';
 import { localizedTextSchema } from './editorial';
 import { defaultRxSchema, type DefaultRx } from './rx';
+import { quiz } from '@/content/quiz';
 
 /**
  * Vivimoon's own three-way category split — trong suốt (clear), có màu
@@ -458,6 +459,11 @@ export const productQuerySchema = z.object({
   material: blankToUndefined(z.string()),
   /** A Default Rx as `L,R` (#196): only lenses stocked in both eyes' powers. */
   rx: blankToUndefined(z.string().refine((v) => parseRxPair(v) !== null, 'rx must be a left and a right sph, like -2.5,-3')),
+  /** A set of Quiz answers as option ids (#248): only the Quiz Matches for them, best first unless sorted. */
+  quiz: blankToUndefined(csvOf(
+    (part) => quiz.questions.some((q) => q.options.some((o) => o.id === part)),
+    'quiz must be a comma-separated set of Quiz option ids',
+  )),
   sort: blankToUndefined(z.enum(['newest', 'price-asc', 'price-desc', 'bestselling'])),
 });
 

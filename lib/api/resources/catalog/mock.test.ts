@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { mockCatalog, minPrice, inStockForBothEyes } from './mock';
 import { PRICE_PRESETS, type Product } from '@/lib/api/schemas/catalog';
 import { accessories, reviews } from '@/content/mock';
+import { quiz } from '@/content/quiz';
+import { quizMatches } from '@/lib/products/quiz-scoring';
 
 describe('mockCatalog', () => {
   it('finds a product by slug', async () => {
@@ -308,6 +310,46 @@ describe('mockCatalog', () => {
       const { total, totalAnyPower } = await mockCatalog.searchProducts({ rx: '-2.5,-30' });
       expect(total).toBe(0);
       expect(totalAnyPower).toBeGreaterThan(0);
+    });
+  });
+
+  describe('Quiz Matches as a listing (#248)', () => {
+    const ids = 'experience-never,look-natural,duration-allDay';
+    const answers = ids.split(',').map((optionId) => ({ questionId: optionId.split('-')[0], optionId }));
+    const expected = async () =>
+      quizMatches(answers, quiz.questions, await mockCatalog.listProducts()).matches.map((m) => m.product.id);
+
+    it('keeps only the Quiz Matches, best first under the default order', async () => {
+      const all = await mockCatalog.listProducts();
+      const { products, total } = await mockCatalog.searchProducts({ quiz: ids });
+      expect(total).toBeGreaterThan(0);
+      expect(total).toBeLessThan(all.length);
+      expect(products.map((p) => p.id)).toEqual(await expected());
+    });
+
+    it('an explicit sort reorders the same matches', async () => {
+      const { products } = await mockCatalog.searchProducts({ quiz: ids, sort: 'price-asc' });
+      expect(products.map((p) => p.id).sort()).toEqual((await expected()).sort());
+      const prices = products.map(minPrice);
+      expect(prices).toEqual([...prices].sort((a, b) => a - b));
+    });
+
+    it('narrows further with a filter and with a Default Rx', async () => {
+      const matched = new Set(await expected());
+      const filtered = await mockCatalog.searchProducts({ quiz: ids, replacement: 'daily' });
+      expect(filtered.products.every((p) => matched.has(p.id) && p.replacement === 'daily')).toBe(true);
+      const { total, totalAnyPower } = await mockCatalog.searchProducts({ quiz: ids, rx: '-9,-9' });
+      expect(totalAnyPower).toBe(matched.size);
+      expect(total).toBeLessThanOrEqual(totalAnyPower);
+    });
+
+    it('counts the sidebar options within the matches', async () => {
+      const { counts, total } = await mockCatalog.searchProducts({ quiz: ids });
+      expect(Object.values(counts.replacement).reduce((a, b) => a + b, 0)).toBe(total);
+    });
+
+    it('lists the same matches through listProducts', async () => {
+      expect((await mockCatalog.listProducts({ quiz: ids })).map((p) => p.id)).toEqual(await expected());
     });
   });
 });

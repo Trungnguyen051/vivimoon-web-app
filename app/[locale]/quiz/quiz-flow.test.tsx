@@ -1,18 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QuizFlow } from './quiz-flow';
 import { apiRequest } from '@/lib/api/client';
 import { en } from '@/lib/i18n/dictionaries/en';
 import { vi as viDict } from '@/lib/i18n/dictionaries/vi';
 import type { QuizDefinition } from '@/lib/api/schemas/discovery';
-import type { Product } from '@/lib/types';
 
+const push = vi.fn();
 vi.mock('@/lib/api/client', () => ({ apiRequest: vi.fn() }));
-vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn() }), usePathname: () => '/en/quiz' }));
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push }), usePathname: () => '/en/quiz' }));
 const mockedApiRequest = vi.mocked(apiRequest);
-/** The last step's button once the live count has arrived. */
-const countButton = (n: number) => screen.findByRole('button', { name: en.quiz.submitCount.replace('{n}', String(n)) });
 
 const definition: QuizDefinition = {
   questions: [
@@ -35,21 +33,21 @@ const definition: QuizDefinition = {
   ],
 };
 
-function product(id: string): Product {
-  return {
-    id, slug: id, name: `Product ${id}`, brandId: 'vivimoon', brandName: 'Vivimoon',
-    productLine: 'trongSuot', replacement: 'daily', description: 'd', images: ['/a.jpg'], badges: [],
-    specs: { material: 'M', waterContent: '50%', baseCurve: '8.6mm', diameter: '14.2mm', origin: 'M' },
-    requiresRx: true,
-    variants: [{ id: `${id}-v1`, sku: 'S', price: 50_000, currency: 'VND', stock: 1 }],
-    rating: 4.5, reviewCount: 0,
-  };
-}
+/** The submit endpoint answering with `n` matches; only their number is read. */
+const matches = (n: number) => ({ ok: true as const, data: { recommendations: Array.from({ length: n }, () => ({})) } });
 
 beforeEach(() => {
+  push.mockClear();
   mockedApiRequest.mockReset();
+  mockedApiRequest.mockResolvedValue(matches(2) as never);
   localStorage.clear();
 });
+
+async function answerBoth(user: ReturnType<typeof userEvent.setup>) {
+  await user.click(screen.getByRole('radio', { name: 'Option A' }));
+  await user.click(screen.getByRole('button', { name: en.quiz.next }));
+  await user.click(screen.getByRole('radio', { name: 'Option C' }));
+}
 
 describe('QuizFlow', () => {
   it('blocks advancing to the next question until the current one is answered', async () => {
@@ -76,94 +74,68 @@ describe('QuizFlow', () => {
     expect(screen.getByRole('radio', { name: 'Option A' })).toHaveAttribute('aria-checked', 'true');
   });
 
-  it('submits on the last question and renders recommendations via the product grid', async () => {
-    mockedApiRequest.mockResolvedValue({ ok: true, data: { recommendations: [product('rec-1'), product('rec-2')] } });
+  it('scores the answers once the last one is picked, and the button states the match count (#247)', async () => {
     const user = userEvent.setup();
     render(<QuizFlow definition={definition} locale="en" dict={en} />);
 
     await user.click(screen.getByRole('radio', { name: 'Option A' }));
     await user.click(screen.getByRole('button', { name: en.quiz.next }));
+    expect(mockedApiRequest).not.toHaveBeenCalled();
     await user.click(screen.getByRole('radio', { name: 'Option C' }));
-    await user.click(await countButton(2));
 
+    expect(await screen.findByRole('button', { name: 'See 2 lenses that suit you' })).toBeInTheDocument();
     expect(mockedApiRequest).toHaveBeenCalledWith('/api/quiz/submit', {
       method: 'POST',
       body: { answers: [{ questionId: 'q1', optionId: 'q1-a' }, { questionId: 'q2', optionId: 'q2-a' }] },
     });
-    expect(await screen.findByText('Product rec-1')).toBeInTheDocument();
-    expect(screen.getByText('Product rec-2')).toBeInTheDocument();
   });
 
-  it('saves the picks on this device, so the PLP card can offer them again', async () => {
-    mockedApiRequest.mockResolvedValue({ ok: true, data: { recommendations: [product('rec-1'), product('rec-2')] } });
+  it('finishing opens the matches as a listing, with the answers in the address (#248)', async () => {
+    const user = userEvent.setup();
+    render(<QuizFlow definition={definition} locale="vi" dict={viDict} />);
+
+    await user.click(screen.getByRole('radio', { name: 'Lựa chọn A' }));
+    await user.click(screen.getByRole('button', { name: viDict.quiz.next }));
+    await user.click(screen.getByRole('radio', { name: 'Lựa chọn D' }));
+    await user.click(await screen.findByRole('button', { name: 'Xem 2 mẫu lens hợp với bạn' }));
+
+    expect(push).toHaveBeenCalledWith('/vi/collection/all-lenses?quiz=q1-a,q2-b');
+  });
+
+  it('still opens the results when the count never arrives', async () => {
+    mockedApiRequest.mockResolvedValue({ ok: false, error: { code: 'internal', message: 'boom' } } as never);
     const user = userEvent.setup();
     render(<QuizFlow definition={definition} locale="en" dict={en} />);
+    await answerBoth(user);
 
-    await user.click(screen.getByRole('radio', { name: 'Option A' }));
-    await user.click(screen.getByRole('button', { name: en.quiz.next }));
-    await user.click(screen.getByRole('radio', { name: 'Option C' }));
-    expect(localStorage.getItem('vivimoon:quiz-results')).toBeNull();
-    await user.click(await countButton(2));
-
-    await screen.findByText('Product rec-1');
-    expect(localStorage.getItem('vivimoon:quiz-results')).toBe('rec-1,rec-2');
+    await user.click(screen.getByRole('button', { name: en.quiz.submit }));
+    expect(push).toHaveBeenCalledWith('/en/collection/all-lenses?quiz=q1-a,q2-a');
   });
 
-  it('opens on the saved picks when revisited, and retaking starts at question 1', async () => {
-    const user = userEvent.setup();
-    render(<QuizFlow definition={definition} locale="vi" dict={viDict} savedResults={[product('rec-1')]} />);
-
-    expect(screen.getByRole('heading', { name: viDict.quiz.resultsTitle })).toBeInTheDocument();
-    expect(screen.getByText('Product rec-1')).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: viDict.quiz.retake }));
-    expect(screen.getByText('Câu hỏi thứ nhất?')).toBeInTheDocument();
-  });
-
-  it('starts a fresh quiz when none of the saved picks still exist', () => {
-    render(<QuizFlow definition={definition} locale="en" dict={en} savedResults={[]} />);
-    expect(screen.getByText('First question?')).toBeInTheDocument();
-  });
-
-  it('links from the results to every lens, marked as coming from the quiz', () => {
-    render(<QuizFlow definition={definition} locale="vi" dict={viDict} savedResults={[product('rec-1')]} />);
-    expect(screen.getByRole('link', { name: 'Xem tất cả mẫu lens' }))
-      .toHaveAttribute('href', '/vi/collection/all-lenses?from=quiz');
-  });
-
-  it('a rapid double-click on submit fires no request beyond the one that counted the matches', async () => {
-    mockedApiRequest.mockResolvedValue({ ok: true, data: { recommendations: [product('rec-1')] } });
+  it('remembers the answers on this device, so the PLP card can offer the matches again', async () => {
     const user = userEvent.setup();
     render(<QuizFlow definition={definition} locale="en" dict={en} />);
+    await answerBoth(user);
+    expect(localStorage.getItem('vivimoon:quiz-answers')).toBeNull();
 
-    await user.click(screen.getByRole('radio', { name: 'Option A' }));
-    await user.click(screen.getByRole('button', { name: en.quiz.next }));
-    await user.click(screen.getByRole('radio', { name: 'Option C' }));
-
-    const submitButton = await countButton(1);
-    // Two clicks in the same synchronous tick (fireEvent, not userEvent, so
-    // nothing awaits between them) — the ref guard, not just `isPending`
-    // state, is what has to catch the second one before any re-render.
-    fireEvent.click(submitButton);
-    fireEvent.click(submitButton);
-
-    await screen.findByText('Product rec-1');
-    expect(mockedApiRequest).toHaveBeenCalledTimes(1);
+    await user.click(await screen.findByRole('button', { name: /See 2 lenses/ }));
+    expect(localStorage.getItem('vivimoon:quiz-answers')).toBe('q1-a,q2-a');
   });
 
-  it('retaking the quiz after results returns to the first question with a clean slate', async () => {
-    mockedApiRequest.mockResolvedValue({ ok: true, data: { recommendations: [product('rec-1')] } });
+  it('"Sửa câu trả lời" reopens on the last step with the answers picked (#248)', async () => {
     const user = userEvent.setup();
-    render(<QuizFlow definition={definition} locale="en" dict={en} />);
+    render(<QuizFlow definition={definition} locale="en" dict={en} initialAnswers={['q1-b', 'q2-a', 'junk']} />);
 
-    await user.click(screen.getByRole('radio', { name: 'Option A' }));
-    await user.click(screen.getByRole('button', { name: en.quiz.next }));
-    await user.click(screen.getByRole('radio', { name: 'Option C' }));
-    await user.click(await countButton(1));
-    await screen.findByText('Product rec-1');
+    expect(screen.getByText('Step 2/2')).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: 'Option C' })).toHaveAttribute('aria-checked', 'true');
+    expect(screen.getByText(en.quiz.recap)).toHaveTextContent('Option B');
 
-    await user.click(screen.getByRole('button', { name: en.quiz.retake }));
-    expect(screen.getByText('First question?')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: en.quiz.back }));
+    expect(screen.getByRole('radio', { name: 'Option B' })).toHaveAttribute('aria-checked', 'true');
+  });
+
+  it('starts at question 1 with nothing picked when the given answers are incomplete', () => {
+    render(<QuizFlow definition={definition} locale="en" dict={en} initialAnswers={['q2-a']} />);
     expect(screen.getByText('Step 1/2')).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: 'Option A' })).toHaveAttribute('aria-checked', 'false');
   });
@@ -173,34 +145,6 @@ describe('QuizFlow', () => {
     expect(screen.getByRole('heading', { name: 'Câu hỏi thứ nhất?' })).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: 'Lựa chọn A' })).toBeInTheDocument();
     expect(screen.queryByText('First question?')).not.toBeInTheDocument();
-  });
-
-  it('shows the dictionary error, never the server message, when submit fails', async () => {
-    mockedApiRequest.mockResolvedValue({ ok: false, error: { code: 'validation', message: 'Unknown option id q2-z' } });
-    const user = userEvent.setup();
-    render(<QuizFlow definition={definition} locale="en" dict={en} />);
-
-    await user.click(screen.getByRole('radio', { name: 'Option A' }));
-    await user.click(screen.getByRole('button', { name: en.quiz.next }));
-    await user.click(screen.getByRole('radio', { name: 'Option C' }));
-    await user.click(screen.getByRole('button', { name: en.quiz.submit }));
-
-    expect(await screen.findByRole('alert')).toHaveTextContent(en.quiz.error);
-    expect(screen.queryByText(/Unknown option/)).not.toBeInTheDocument();
-  });
-  it('scores the answers once the last one is picked, and the button states the match count (#247)', async () => {
-    mockedApiRequest.mockResolvedValue({ ok: true, data: { recommendations: [product('rec-1'), product('rec-2')] } });
-    const user = userEvent.setup();
-    render(<QuizFlow definition={definition} locale="vi" dict={viDict} />);
-
-    await user.click(screen.getByRole('radio', { name: 'Lựa chọn A' }));
-    await user.click(screen.getByRole('button', { name: viDict.quiz.next }));
-    expect(mockedApiRequest).not.toHaveBeenCalled();
-    await user.click(screen.getByRole('radio', { name: 'Lựa chọn C' }));
-
-    await user.click(await screen.findByRole('button', { name: 'Xem 2 mẫu lens hợp với bạn' }));
-    expect(screen.getByText('Product rec-1')).toBeInTheDocument();
-    expect(mockedApiRequest).toHaveBeenCalledTimes(1);
   });
 
   it('recaps the earlier answers and offers ways out on every step (#247)', async () => {
