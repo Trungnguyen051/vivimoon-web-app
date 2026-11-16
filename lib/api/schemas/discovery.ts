@@ -7,6 +7,8 @@ import { localizedTextSchema } from './editorial';
 export const quizOptionSchema = z.object({
   id: z.string(),
   label: localizedTextSchema,
+  /** A short line under the label saying who the option is for ("Đi học, đi làm"). */
+  sublabel: localizedTextSchema.optional(),
   // Tag weights drawn from real product fields (type/replacement/badges) —
   // e.g. "type:colored": 2. Keys are free-form so content stays a data edit.
   tags: z.record(z.string(), z.number()),
@@ -15,6 +17,8 @@ export const quizOptionSchema = z.object({
 export const quizQuestionSchema = z.object({
   id: z.string(),
   prompt: localizedTextSchema,
+  /** What the answer will be used for, shown under the prompt. */
+  helper: localizedTextSchema.optional(),
   options: z.array(quizOptionSchema).min(2),
 });
 

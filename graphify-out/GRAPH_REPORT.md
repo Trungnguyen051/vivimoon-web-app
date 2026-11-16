@@ -1,23 +1,23 @@
 # Graph Report - vivimoon-web-app  (2026-11-16)
 
 ## Corpus Check
-- 554 files · ~316,595 words
+- 554 files · ~317,165 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2694 nodes · 7330 edges · 179 communities (127 shown, 52 thin omitted)
+- 2694 nodes · 7330 edges · 182 communities (127 shown, 55 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 49 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `4ea4e567`
+- Built from commit: `b1b1d3e7`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - nav-destinations.test.ts
 - cart.ts
-- client.ts
+- Dictionary
 - parseBody
 - order-status-timeline.tsx
 - payment-method-picker.tsx
@@ -34,7 +34,7 @@
 - Product domain type
 - mock/index.ts
 - i18n seam (locale-prefixed routes, getDictionary)
-- cn.ts
+- quick-add.tsx
 - Coolmate.me Feature & Structure Analysis
 - auth.ts
 - articles/[slug]/page.tsx
@@ -131,7 +131,7 @@
 - Vivimoon.vn — Live Site Data-Model Audit
 - review-media-field.tsx
 - SupportFaqPage
-- review-source-badge.tsx
+- lens-entries.ts
 - account/layout.tsx
 - collection-carousel.tsx
 - loyalty/mock.ts
@@ -139,24 +139,26 @@
 - lens-viewer.tsx
 - 0010-product-line-excludes-correction-complexity.md
 - 0011-eye-enlargement-derives-from-graphic-diameter.md
-- useSessionStore
+- apiRequest
 - variant-selector.tsx
 - search-box.tsx
 - media/route.test.ts
 - 0013-pages-own-their-width.md
 - 0012-unavailable-cart-lines-are-reported-not-dropped.md
 - Pages run full-bleed with 40px gutters; `PageContainer` no longer caps at `max-w-7xl`
-- apiRequest
+- comparison-tray.tsx
 - package.json
 - Cart Lines carry a Purchase Unit; a lens is priced per single lens
 - Guest orders earn Held Points, credited when an account verifies the phone
 - rx.ts
 - shipping/mock.ts
 - quiz-card.tsx
+- guide-feedback.test.tsx
 - Checkout offers QR transfer, cash on delivery and e-wallet; email becomes optional
 - An Article's inline products come from its Reading Theme, not from the Article
 - A Guide is a fixed-layout document, and not an Article
 - The Support search box filters FAQ Entries; it is not storefront search
+- newsletter-signup.test.tsx
 - @types/react
 - 0014-image-optimization-is-on.md
 - catalog/mock.ts
@@ -164,6 +166,7 @@
 - zustand
 - i18n/config.ts
 - discovery.ts
+- AddressForm
 - Order lookup is by order code alone, shown inline
 - A phone sign-up is not an account until its OTP is verified
 - pricing/mock.ts
@@ -186,7 +189,7 @@
 - occasion-header.tsx
 - spec-table.tsx
 - list-id.ts
-- lens-entries.ts
+- parseProductQueryLoose
 
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 220 edges
@@ -220,7 +223,7 @@
 - **Four swappable architecture seams (data, theming, i18n, analytics) isolating volatility** — docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productrepository, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_theming_seam, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_i18n_seam, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_analytics_seam [EXTRACTED 1.00]
 - **Coolmate apparel patterns re-modeled for Vivimoon contact-lens domain** — docs_research_coolmate_website_analysis_product_card, docs_research_coolmate_website_analysis_pdp, docs_research_coolmate_website_analysis_color_variant_url_pattern, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_productcard, docs_superpowers_specs_2026_08_16_vivimoon_storefront_baseline_design_variant [INFERRED 0.85]
 
-## Communities (179 total, 52 thin omitted)
+## Communities (182 total, 55 thin omitted)
 
 ### Community 0 - "nav-destinations.test.ts"
 Cohesion: 0.19
@@ -230,9 +233,9 @@ Nodes (12): SupportPage(), renderHub(), ADR-0022, NavItem, NavLink, segmentsOf()
 Cohesion: 0.08
 Nodes (26): BASELINE_LINES, RX, ADR-0012, bundleTagSchema, cartLineSchema, cartStateSchema, MAX_LINE_QUANTITY, nextSpendTierSchema (+18 more)
 
-### Community 2 - "client.ts"
-Cohesion: 0.09
-Nodes (32): AddressDict, AddressForm(), EMPTY_FORM, FormState, Stage, Dict, ADR-0021, SocialAuth() (+24 more)
+### Community 2 - "Dictionary"
+Cohesion: 0.11
+Nodes (32): AddressDict, EMPTY_FORM, FormState, Stage, Dict, ADR-0021, SocialAuth(), TONE (+24 more)
 
 ### Community 3 - "parseBody"
 Cohesion: 0.17
@@ -298,9 +301,9 @@ Nodes (22): approvedReviews(), ProductPage(), mockedFetchViaSelf, renderProduct(
 Cohesion: 0.11
 Nodes (19): Multi-language/locale switcher (topbar), Utility topbar (Coolmate), Task 7: i18n seam (config, dictionaries, middleware), Task 8: Analytics seam (GA4), Analytics seam (GA4 via typed track() wrapper), GA4 ecommerce events (view_item_list, select_item, view_item, add_to_cart, remove_from_cart, view_cart, begin_checkout, purchase), getDictionary(locale) function, @next/third-parties GoogleAnalytics component (+11 more)
 
-### Community 19 - "cn.ts"
-Cohesion: 0.13
-Nodes (21): LocaleError(), LocaleNotFound(), RootNotFound(), LeadArticle(), OrderActions(), fill(), HistoryLine, OrderHistoryCard() (+13 more)
+### Community 19 - "quick-add.tsx"
+Cohesion: 0.11
+Nodes (25): GENDERS, QuickAdd(), QuickAddBody(), subscribe(), useDesktop(), Dialog(), DialogClose(), DialogContent() (+17 more)
 
 ### Community 20 - "Coolmate.me Feature & Structure Analysis"
 Cohesion: 0.12
@@ -331,8 +334,8 @@ Cohesion: 0.25
 Nodes (12): ADR-0002, ADR-0019, ComfortHighlight(), ReviewsSummary(), Breadcrumb(), BreadcrumbEllipsis(), BreadcrumbItem(), BreadcrumbLink() (+4 more)
 
 ### Community 27 - "cn"
-Cohesion: 0.09
-Nodes (27): AddressCards(), ADR-0012, RadioCard(), ReadingThemeChip, ReadingThemeChips(), chips, AlertAction(), AspectRatio() (+19 more)
+Cohesion: 0.07
+Nodes (43): AddressCards(), LocaleError(), LocaleNotFound(), RootNotFound(), LeadArticle(), OrderActions(), fill(), HistoryLine (+35 more)
 
 ### Community 28 - "editorial.ts"
 Cohesion: 0.10
@@ -391,8 +394,8 @@ Cohesion: 0.18
 Nodes (11): post(), guides, ADR-0019, ADR-0019, guideFeedback, mockSupport, readMockGuideFeedback(), resetMockGuideFeedbackState() (+3 more)
 
 ### Community 42 - "reviews-list.tsx"
-Cohesion: 0.09
-Nodes (30): HelpfulButton(), Vote, QuickAdd(), QuickAddBody(), RatingStars(), fill(), ReviewCard(), ReviewsList() (+22 more)
+Cohesion: 0.12
+Nodes (20): HelpfulButton(), Vote, RatingStars(), ReviewSourceBadge(), fill(), ReviewCard(), ReviewsList(), SUB_RATINGS (+12 more)
 
 ### Community 46 - "source-files.ts"
 Cohesion: 0.20
@@ -570,9 +573,9 @@ Nodes (14): ACCEPT, fill(), Kind, kindOf(), MediaDict, MediaState, ReviewMediaFi
 Cohesion: 0.50
 Nodes (3): renderFaq(), parseTopic(), SupportFaqPage()
 
-### Community 121 - "review-source-badge.tsx"
-Cohesion: 0.60
-Nodes (3): ReviewSourceBadge(), Badge(), badgeVariants
+### Community 121 - "lens-entries.ts"
+Cohesion: 0.57
+Nodes (6): HomePage(), countLensEntry(), LENS_ENTRIES, lensEntryCollection(), lensEntryHref(), lensEntryIncludes()
 
 ### Community 122 - "account/layout.tsx"
 Cohesion: 0.27
@@ -590,9 +593,9 @@ Nodes (22): CollectionPage(), PAGE_IDENTITY, resolveTitle(), ProductCard(), quiz
 Cohesion: 0.14
 Nodes (11): LensViewer(), Slide, Tab, TABS, gallery, tones, videos, ViewerVideo (+3 more)
 
-### Community 129 - "useSessionStore"
-Cohesion: 0.07
-Nodes (29): AccountInfo(), patch(), saveAccount(), savePersonal(), fmtDob(), fmtRx(), GENDERS, push (+21 more)
+### Community 129 - "apiRequest"
+Cohesion: 0.08
+Nodes (21): AccountInfo(), patch(), saveAccount(), savePersonal(), fmtDob(), fmtRx(), push, user (+13 more)
 
 ### Community 130 - "variant-selector.tsx"
 Cohesion: 0.42
@@ -606,9 +609,9 @@ Nodes (11): readRecent(), SearchBox(), remember(), api, found, writeRecent(), po
 Cohesion: 0.12
 Nodes (9): fail(), POST(), jar, send(), sendRaw(), Upload, REVIEW_MEDIA_LIMITS, mp4DurationSeconds() (+1 more)
 
-### Community 136 - "apiRequest"
-Cohesion: 0.10
-Nodes (19): QuizFlow(), CompareToggle(), ComparisonDialog(), ComparisonTray(), mockedApiRequest, FavoriteButton(), toggle(), COMPARE_CAP (+11 more)
+### Community 136 - "comparison-tray.tsx"
+Cohesion: 0.12
+Nodes (15): CompareToggle(), ComparisonDialog(), ComparisonTray(), mockedApiRequest, COMPARE_CAP, COMPARE_STORAGE, CompareState, CompareStore (+7 more)
 
 ### Community 137 - "package.json"
 Cohesion: 0.50
@@ -698,9 +701,9 @@ Nodes (5): SpecTable(), baseSpecs, dict, ADR-0011, ProductSpecs
 Cohesion: 0.36
 Nodes (6): collectionListId(), MEMBERSHIP_FILTERS, normalizeColors(), COLLECTION_COLORS, idFor(), ProductQuery
 
-### Community 193 - "lens-entries.ts"
-Cohesion: 0.17
-Nodes (17): HomePage(), mockCatalog, parseProductQueryLoose(), ReplacementSchedule, DURATION_COLLECTION, DURATION_TILES, DurationTile, durationTileHref() (+9 more)
+### Community 193 - "parseProductQueryLoose"
+Cohesion: 0.19
+Nodes (11): mockCatalog, parseProductQueryLoose(), ReplacementSchedule, DURATION_COLLECTION, DURATION_TILES, DurationTile, durationTileHref(), DurationTileId (+3 more)
 
 ## Ambiguous Edges - Review These
 - `Cat Product Imagery (implied by filename)` → `Cat Colored (blank placeholder image)`  [AMBIGUOUS]
@@ -727,7 +730,7 @@ Nodes (17): HomePage(), mockCatalog, parseProductQueryLoose(), ReplacementSchedu
 ## Knowledge Gaps
 - **805 isolated node(s):** `npx`, `Stage`, `push`, `push`, `Dict` (+800 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **52 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **55 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_

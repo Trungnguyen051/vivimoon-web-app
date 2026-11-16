@@ -158,4 +158,22 @@ describe('QuizFlow', () => {
     await user.click(screen.getByRole('button', { name: viDict.quiz.next }));
     expect(screen.getByText(viDict.quiz.recap)).toHaveTextContent('Lựa chọn A');
   });
+  it('shows each option’s sub-label and the question’s helper line, without changing what an option is called (#263)', () => {
+    const described: QuizDefinition = {
+      questions: [{
+        ...definition.questions[0],
+        helper: { en: 'Used to pick your line', vi: 'Dùng để chọn dòng lens' },
+        options: [
+          { ...definition.questions[0].options[0], sublabel: { en: 'School or work', vi: 'Đi học, đi làm' } },
+          definition.questions[0].options[1],
+        ],
+      }],
+    };
+    render(<QuizFlow definition={described} locale="vi" dict={viDict} />);
+
+    expect(screen.getByText('Dùng để chọn dòng lens')).toBeInTheDocument();
+    const option = screen.getByRole('radio', { name: 'Lựa chọn A' });
+    expect(option).toHaveAccessibleDescription('Đi học, đi làm');
+    expect(screen.getByRole('radio', { name: 'Lựa chọn B' })).not.toHaveAccessibleDescription();
+  });
 });

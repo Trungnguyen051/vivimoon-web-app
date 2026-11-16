@@ -87,7 +87,10 @@ export function QuizFlow({
         </div>
       </div>
 
-      <h1 className="text-2xl font-semibold tracking-tight">{question.prompt[locale]}</h1>
+      <div className="space-y-2">
+        <h1 className="text-2xl font-semibold tracking-tight">{question.prompt[locale]}</h1>
+        {question.helper ? <p className="text-sm text-muted-foreground">{question.helper[locale]}</p> : null}
+      </div>
 
       <div role="radiogroup" aria-label={question.prompt[locale]} className="flex flex-col gap-3">
         {question.options.map((option) => {
@@ -98,13 +101,19 @@ export function QuizFlow({
               type="button"
               role="radio"
               aria-checked={checked}
+              // Named by its label alone; the sub-label describes it, so "Cả ngày (8h+)" is still what is announced first.
+              aria-labelledby={`${option.id}-label`}
+              aria-describedby={option.sublabel ? `${option.id}-sub` : undefined}
               onClick={() => setAnswers((prev) => ({ ...prev, [question.id]: option.id }))}
               className={cn(
                 'rounded-lg border px-4 py-3 text-left text-sm transition-colors',
                 checked ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted',
               )}
             >
-              {option.label[locale]}
+              <span id={`${option.id}-label`} className="block">{option.label[locale]}</span>
+              {option.sublabel ? (
+                <span id={`${option.id}-sub`} className="mt-0.5 block text-xs text-muted-foreground">{option.sublabel[locale]}</span>
+              ) : null}
             </button>
           );
         })}
