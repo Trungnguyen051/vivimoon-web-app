@@ -13,7 +13,9 @@ import {
 import { QuizCard } from '@/components/commerce/quiz-card';
 import { cardImage, parseCardView, rxPairLabel, showQuizCard } from '@/lib/products/plp-card';
 import { quiz, quizSocialProof } from '@/content/quiz';
-import { answersFromOptionIds } from '@/lib/products/quiz-scoring';
+import { answersFromOptionIds, quizMatches } from '@/lib/products/quiz-scoring';
+import { quizReasons } from '@/lib/products/quiz-reasons';
+import { QuizTopPick } from '@/components/commerce/quiz-top-pick';
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
@@ -23,6 +25,10 @@ import { cn } from '@/lib/utils/cn';
 import Link from 'next/link';
 import { Empty, EmptyContent, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
 import { PageContainer } from '@/components/layout/page-container';
+
+/** "Lần đầu đeo lens?" shows only for a shopper who has never worn lenses, and opens the put-in/take-out Guide. */
+const BEGINNER_ANSWER = 'experience-never';
+const FIRST_WEAR_GUIDE = 'cach-deo-va-thao-lens';
 
 function resolveTitle(dict: Dictionary, key: string): string {
   const parts = key.split('.');
@@ -63,11 +69,6 @@ export default async function CollectionPage({
     { ids: collection.productIds, limit: shown },
   );
 
-  // "12 mẫu chọn theo câu trả lời" counts the matches themselves, whatever filters the shopper adds on top.
-  const matchCount = isQuizResults
-    ? (await catalog.searchProducts({ quiz: query.quiz }, { ids: collection.productIds, limit: 0 })).total
-    : 0;
-
   // The applied Default Rx as the shopper reads it; null when the listing isn't narrowed by one.
   const rx = rxPairLabel(query.rx, dict);
 
@@ -81,6 +82,12 @@ export default async function CollectionPage({
 
   /* The colours this collection contains bound the analytics id's only free-form field. */
   const base = await catalog.getProductsByIds(collection.productIds);
+
+  // The answers' matches whatever filters the shopper adds on top: their number, and the best one to feature (#249).
+  const { matches, bestPercent } = isQuizResults
+    ? quizMatches(answers, quiz.questions, base)
+    : { matches: [], bestPercent: 0 };
+  const topPick = matches[0]?.product;
   const colors = distinctColorVariants(base.flatMap((p) => p.variants)).map((v) => v.color as string);
 
   /* The filters the page actually applied, not every query param — a utm tag must not
@@ -106,7 +113,7 @@ export default async function CollectionPage({
           <div className="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
             <p className="text-muted-foreground">
               {dict.quiz.results.summary
-                .replace('{n}', String(matchCount))
+                .replace('{n}', String(matches.length))
                 .replace('{answers}', answers.map((a) =>
                   quiz.questions.find((q) => q.id === a.questionId)?.options.find((o) => o.id === a.optionId)?.label[l],
                 ).join(' · '))}
@@ -118,6 +125,28 @@ export default async function CollectionPage({
       ) : (
         <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{resolveTitle(dict, collection.title)}</h1>
       )}
+      {topPick ? (
+        <div className="mt-6 space-y-4 md:mt-8">
+          <QuizTopPick
+            product={topPick}
+            percent={bestPercent}
+            reasons={quizReasons(topPick, answers, dict)}
+            locale={l}
+            dict={dict}
+          />
+          {answers[0]?.optionId === BEGINNER_ANSWER ? (
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2 bg-muted p-4 text-sm md:px-6">
+              <p className="font-medium">{dict.quiz.beginner.title}</p>
+              <Link href={`/${l}/support/guides/${FIRST_WEAR_GUIDE}`} className="underline underline-offset-4">
+                {dict.quiz.beginner.guide}
+              </Link>
+              <Link href={`/${l}/support`} className="text-muted-foreground underline underline-offset-4">
+                {dict.quiz.beginner.all}
+              </Link>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
       <div className="mt-6 flex items-start gap-10 md:mt-8">
         <aside className="hidden w-66 shrink-0 lg:block">
           <CollectionFilters dict={dict} counts={counts} />
