@@ -75,9 +75,9 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           seeMoreHref={`/${l}/collection/bestsellers`}
           seeMoreLabel={dict.home.moments.viewAll}
           items={[
-            { id: 'grad', label: dict.home.moments.gradPhotos, href: `/${l}/collection/bestsellers`, image: '/images/moment-grad.jpg' },
-            { id: 'wedding', label: dict.home.moments.wedding, href: `/${l}/collection/bestsellers`, image: '/images/moment-wedding.jpg' },
-            { id: 'party', label: dict.home.moments.party, href: `/${l}/collection/bestsellers`, image: '/images/moment-party.jpg' },
+            { id: 'grad', label: dict.home.moments.gradPhotos, href: `/${l}/collection/graduation`, image: '/images/moment-grad.jpg' },
+            { id: 'wedding', label: dict.home.moments.wedding, href: `/${l}/collection/wedding`, image: '/images/moment-wedding.jpg' },
+            { id: 'party', label: dict.home.moments.party, href: `/${l}/collection/party`, image: '/images/moment-party.jpg' },
           ]}
         />
 

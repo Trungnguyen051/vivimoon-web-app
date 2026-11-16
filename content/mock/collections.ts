@@ -1,4 +1,5 @@
 import type { Collection } from '@/lib/types';
+import { occasionSchema } from '@/lib/api/schemas/catalog';
 import { products } from './products';
 
 const byBadge = (badge: string) =>
@@ -44,4 +45,10 @@ export const collections: Collection[] = [
     title: 'collection.daily',
     productIds: products.filter((p) => p.replacement === 'daily').map((p) => p.id),
   },
+  // One Collection per Occasion (#251): its slug is the Occasion, its lenses the ones tagged with it.
+  ...occasionSchema.options.map((occasion) => ({
+    slug: occasion,
+    title: `filters.sidebar.occasions.${occasion}`,
+    productIds: products.filter((p) => p.occasions?.includes(occasion)).map((p) => p.id),
+  })),
 ];
