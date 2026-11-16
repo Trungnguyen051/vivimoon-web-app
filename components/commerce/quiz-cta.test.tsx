@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { QuizCta } from './quiz-cta';
+import { saveQuizAnswers } from './quiz-card';
 import { en } from '@/lib/i18n/dictionaries/en';
 import { vi as viDict } from '@/lib/i18n/dictionaries/vi';
 import { quiz } from '@/content/quiz';
@@ -14,6 +15,26 @@ const steps = [
 ];
 
 describe('QuizCta', () => {
+  beforeEach(() => localStorage.clear());
+
+  const block = () => render(
+    <QuizCta eyebrow="" title="t" subtitle="" socialProof="" ctaLabel="Làm quiz 30 giây" revisitLabel="Xem lại gợi ý cho bạn" locale="vi" steps={steps} />,
+  );
+
+  it('offers the saved matches once the Quiz has been taken on this device (#261)', async () => {
+    saveQuizAnswers('experience-never,look-natural,duration-allDay');
+    block();
+    expect(await screen.findByRole('link', { name: 'Xem lại gợi ý cho bạn' }))
+      .toHaveAttribute('href', '/vi/collection/all-lenses?quiz=experience-never,look-natural,duration-allDay');
+    expect(screen.queryByRole('link', { name: 'Làm quiz 30 giây' })).not.toBeInTheDocument();
+  });
+
+  it('keeps the first-time button when the saved answers no longer fit the Quiz', () => {
+    saveQuizAnswers('experience-never,an-old-option');
+    block();
+    expect(screen.getByRole('link', { name: 'Làm quiz 30 giây' })).toHaveAttribute('href', '/vi/quiz');
+  });
+
   it('previews all three steps with their options and opens the Quiz', () => {
     render(
       <QuizCta
@@ -22,7 +43,8 @@ describe('QuizCta', () => {
         subtitle="Trả lời vài câu hỏi nhanh"
         socialProof="12.400 người đã tìm được lens hợp mắt"
         ctaLabel="Làm quiz 30 giây"
-        href="/vi/quiz"
+        revisitLabel="Xem lại gợi ý cho bạn"
+        locale="vi"
         steps={steps}
       />,
     );

@@ -87,7 +87,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           subtitle={dict.home.quiz.subtitle}
           socialProof={quizSocialProof(dict.home.quiz.socialProof, l)}
           ctaLabel={dict.home.quiz.cta}
-          href={`/${l}/quiz`}
+          revisitLabel={dict.collection.quizCard.revisit}
+          locale={l}
           steps={dict.home.quiz.steps}
         />
       </HomeSection>
@@ -99,10 +100,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           seeMoreLabel={dict.home.makeup.viewAll}
           columns={4}
           items={[
-            { id: 'natural', label: dict.home.makeup.natural, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-natural.jpg' },
-            { id: 'pink', label: dict.home.makeup.pink, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-pink.jpg' },
-            { id: 'orange', label: dict.home.makeup.orange, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-orange.jpg' },
-            { id: 'smoky', label: dict.home.makeup.smoky, href: `/${l}/collection/colored-lenses`, image: '/images/makeup-smoky.jpg' },
+            { id: 'natural', label: dict.home.makeup.natural, href: `/${l}/collection/all-lenses?makeupStyle=natural`, image: '/images/makeup-natural.jpg' },
+            { id: 'pink', label: dict.home.makeup.pink, href: `/${l}/collection/all-lenses?makeupStyle=pink`, image: '/images/makeup-pink.jpg' },
+            { id: 'orange', label: dict.home.makeup.orange, href: `/${l}/collection/all-lenses?makeupStyle=orange`, image: '/images/makeup-orange.jpg' },
+            { id: 'smoky', label: dict.home.makeup.smoky, href: `/${l}/collection/all-lenses?makeupStyle=smoky`, image: '/images/makeup-smoky.jpg' },
           ]}
         />
       </HomeSection>

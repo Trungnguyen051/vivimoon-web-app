@@ -1,4 +1,5 @@
-import { PillLink } from '@/components/ui/pill-link';
+import type { Locale } from '@/lib/i18n/config';
+import { QuizStartLink } from './quiz-card';
 
 /** One question the Quiz previews on the homepage — presentational, so its options are text, not controls. */
 export type QuizStep = { id: string; prompt: string; options: string[] };
@@ -10,14 +11,16 @@ export type QuizStep = { id: string; prompt: string; options: string[] };
  * provisional, so any number here would drift. `quiz-cta.test.tsx` holds that line for both locales.
  */
 export function QuizCta({
-  eyebrow, title, subtitle, socialProof, ctaLabel, href, steps,
+  eyebrow, title, subtitle, socialProof, ctaLabel, revisitLabel, locale, steps,
 }: {
   eyebrow: string;
   title: string;
   subtitle: string;
   socialProof: string;
   ctaLabel: string;
-  href: string;
+  /** The button's wording once the Quiz has been taken on this device ("Xem lại gợi ý cho bạn"). */
+  revisitLabel: string;
+  locale: Locale;
   steps: QuizStep[];
 }) {
   return (
@@ -26,7 +29,7 @@ export function QuizCta({
         <p className="text-sm font-medium tracking-[0.2em] text-[#d0c1a4]">{eyebrow}</p>
         <h2 className="text-3xl font-semibold tracking-tight text-white md:text-4xl">{title}</h2>
         <p className="max-w-md text-white/60">{subtitle}</p>
-        <PillLink href={href} variant="light">{ctaLabel}</PillLink>
+        <QuizStartLink locale={locale} label={ctaLabel} revisitLabel={revisitLabel} />
         <p className="text-sm text-white/50">{socialProof}</p>
       </div>
 

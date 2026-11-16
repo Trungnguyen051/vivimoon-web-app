@@ -5,6 +5,7 @@ import { ChevronRight, Sparkle } from 'lucide-react';
 import type { Locale } from '@/lib/i18n/config';
 import type { Dictionary } from '@/lib/i18n/dictionaries';
 import { buttonVariants } from '@/components/ui/button';
+import { PillLink } from '@/components/ui/pill-link';
 import { cn } from '@/lib/utils/cn';
 import { FACET_COLLECTION } from '@/lib/products/lens-facets';
 import { answersFromOptionIds } from '@/lib/products/quiz-scoring';
@@ -32,6 +33,26 @@ function savedQuizAnswers() {
   } catch { return ''; }
 }
 
+/** This device's saved Quiz answers, or '' when there are none. The server can't see storage, so it renders ''. */
+const useSavedQuizAnswers = () => useSyncExternalStore(noSubscribe, savedQuizAnswers, () => '');
+
+/**
+ * The quiz block's button on the homepage and the Knowledge index (Figma 64:2): it opens
+ * the Quiz, or — once the Quiz has been taken on this device — the saved matches.
+ */
+export function QuizStartLink({
+  locale, label, revisitLabel,
+}: {
+  locale: Locale; label: string; revisitLabel: string;
+}) {
+  const saved = useSavedQuizAnswers();
+  return (
+    <PillLink href={saved ? quizResultsHref(locale, saved) : `/${locale}/quiz`} variant="light">
+      {saved ? revisitLabel : label}
+    </PillLink>
+  );
+}
+
 /**
  * "Chưa biết chọn mẫu nào?" — the quiz card in the PLP grid (Figma 106:51). Whether it
  * shows at all is the page's call (`showQuizCard`); this picks its copy and, after the
@@ -43,8 +64,7 @@ export function QuizCard({
   locale: Locale; dict: Dictionary; questionCount: number; socialProof: string;
 }) {
   const t = dict.collection.quizCard;
-  // The server can't see this device's storage, so it renders the first-time copy.
-  const saved = useSyncExternalStore(noSubscribe, savedQuizAnswers, () => '');
+  const saved = useSavedQuizAnswers();
 
   return (
     <div className="flex flex-col justify-center gap-3 bg-muted p-4 md:gap-4 md:p-8">

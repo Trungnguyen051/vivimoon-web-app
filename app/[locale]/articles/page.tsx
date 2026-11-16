@@ -238,7 +238,8 @@ export default async function ArticlesPage({
           subtitle={dict.home.quiz.subtitle}
           socialProof={quizSocialProof(dict.home.quiz.socialProof, locale)}
           ctaLabel={dict.home.quiz.cta}
-          href={`/${locale}/quiz`}
+          revisitLabel={dict.collection.quizCard.revisit}
+          locale={locale}
           steps={dict.home.quiz.steps}
         />
 
