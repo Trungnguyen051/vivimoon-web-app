@@ -229,7 +229,8 @@ export const vi: Dictionary = {
     left: 'L', right: 'R',
   },
   cart: {
-    title: 'Giỏ hàng', empty: 'Giỏ hàng trống', subtotal: 'Tạm tính',
+    title: 'Giỏ hàng', empty: 'Giỏ hàng của bạn đang trống', subtotal: 'Tạm tính',
+    emptyBody: 'Khám phá các mẫu lens Hàn Quốc êm, tự nhiên - hoặc để Vivimoon gợi ý cho bạn.', emptyBrowse: 'Khám phá mẫu lens',
     checkout: 'Thanh toán', remove: 'Xóa',
     accessoryOptions: { volume: 'Dung tích', type: 'Loại' },
     orderSummary: 'Tóm tắt đơn hàng', shipping: 'Phí vận chuyển', free: 'Miễn phí', total: 'Tổng thanh toán',

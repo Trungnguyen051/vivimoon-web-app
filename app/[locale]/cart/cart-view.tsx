@@ -14,7 +14,8 @@ import { usePricedCart } from '@/features/cart/use-priced-cart';
 import { useSessionStore } from '@/features/session/session-store';
 import { buttonVariants } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Empty, EmptyContent, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty';
+import { FACET_COLLECTION } from '@/lib/products/lens-facets';
 import { CartLineItem } from '@/components/commerce/cart-line-item';
 import { CartUpsell } from '@/components/commerce/cart-upsell';
 import { OrderSummary } from '@/components/commerce/order-summary';
@@ -132,10 +133,15 @@ export function CartView({ locale, dict, accessories = [], lenses = [] }: {
               <ShoppingBag />
             </EmptyMedia>
             <EmptyTitle>{dict.cart.empty}</EmptyTitle>
+            <EmptyDescription>{dict.cart.emptyBody}</EmptyDescription>
           </EmptyHeader>
-          <EmptyContent>
-            <Link href={`/${locale}`} className={buttonVariants({ size: 'xl' })}>
-              {dict.common.shopNow}
+          {/* Two ways on (Figma 64:708): the lens listing, or a recommendation. */}
+          <EmptyContent className="flex-row flex-wrap justify-center">
+            <Link href={`/${locale}/collection/${FACET_COLLECTION}`} className={buttonVariants({ size: 'xl' })}>
+              {dict.cart.emptyBrowse}
+            </Link>
+            <Link href={`/${locale}/quiz`} className={buttonVariants({ size: 'xl', variant: 'outline' })}>
+              {dict.collection.quizCard.cta}
             </Link>
           </EmptyContent>
         </Empty>

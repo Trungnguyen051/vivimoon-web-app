@@ -229,6 +229,7 @@ export const en = {
   },
   cart: {
     title: 'Your Cart', empty: 'Your cart is empty', subtotal: 'Subtotal',
+    emptyBody: 'Explore soft, natural Korean lenses - or let Vivimoon suggest some for you.', emptyBrowse: 'Explore lenses',
     checkout: 'Checkout', remove: 'Remove',
     accessoryOptions: { volume: 'Volume', type: 'Type' },
     orderSummary: 'Order summary', shipping: 'Shipping', free: 'Free', total: 'Total',

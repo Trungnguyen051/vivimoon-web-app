@@ -197,6 +197,14 @@ describe('CartPage', () => {
     await renderCartPage();
     expect(screen.queryByText('Your cart is empty')).not.toBeInTheDocument();
   });
+
+  it('an empty cart points on to the lens listing and to the Quiz (#261)', async () => {
+    useCartStore.setState({ lines: [], hydrated: true });
+    await renderCartPage();
+    expect(await screen.findByText('Your cart is empty')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Explore lenses' })).toHaveAttribute('href', '/en/collection/all-lenses');
+    expect(screen.getByRole('link', { name: 'Take the lens quiz' })).toHaveAttribute('href', '/en/quiz');
+  });
 });
 
 describe('CartPage — Spend Tier discount (#198)', () => {
