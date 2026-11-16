@@ -25,12 +25,14 @@ const THUMBS = 5;
  * saved Default Rx pre-fills it and adding opens the mini cart, as on the PDP.
  */
 export function QuickAdd({
-  product, locale, dict, onSelect, className,
+  product, locale, dict, onSelect, className, label: text = dict.common.addToCart,
 }: {
   product: Product; locale: Locale; dict: Dictionary;
   /** The list's `select_item` report, sent as Quick add opens. */
   onSelect?: () => void;
   className?: string;
+  /** The button's wording; the Quiz's top pick says "Chọn nhanh" (#249). */
+  label?: string;
 }) {
   const [open, setOpen] = useState(false);
   // The server can't know the width; it renders the closed Dialog trigger, which is the same
@@ -40,14 +42,14 @@ export function QuickAdd({
     <button
       type="button"
       onClick={onSelect}
-      aria-label={`${dict.common.addToCart} ${product.name}`}
+      aria-label={`${text} ${product.name}`}
       className={cn(buttonVariants({ variant: 'outline' }), className)}
     />
   );
   const label = (
     <>
       <ShoppingBag className="size-4 md:size-5" aria-hidden />
-      {dict.common.addToCart}
+      {text}
     </>
   );
   const body = <QuickAddBody product={product} locale={locale} dict={dict} onClose={() => setOpen(false)} />;

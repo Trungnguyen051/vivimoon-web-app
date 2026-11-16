@@ -494,6 +494,26 @@ export const vi: Dictionary = {
       breadcrumb: 'Gợi ý cho bạn', title: 'Lens hợp với bạn', summary: '{n} mẫu chọn theo câu trả lời: {answers}',
       redo: 'Làm lại quiz', edit: 'Sửa câu trả lời',
     },
+    topPick: {
+      badge: 'Phù hợp nhất · {percent}%', eyebrow: 'Gợi ý số 1 cho bạn', quickAdd: 'Chọn nhanh', details: 'Xem chi tiết',
+    },
+    // One sentence per Quiz option; {line} {material} {dia} {water} {replacement} come from the lens's specs.
+    reasons: {
+      'experience-never': 'Dòng {line} – êm, dễ đeo cho người mới',
+      'experience-few': 'Dòng {line} – dễ làm quen khi mới đeo vài lần',
+      'experience-often': 'Chất liệu {material} – hợp với người đeo thường xuyên',
+      'look-natural': '{dia} – giãn nhẹ, tự nhiên',
+      'look-bigEyes': '{dia} – mắt to, long lanh',
+      'look-sharp': '{dia} – viền rõ, sắc sảo',
+      'look-western': '{dia} – rõ nét, chuẩn look Tây',
+      'duration-allDay': 'Nước {water} – đeo êm cả ngày',
+      'duration-hours': 'Thay {replacement} – hợp đeo 4–6 tiếng mỗi lần',
+      'duration-special': 'Thay {replacement} – tiện cho dịp đặc biệt',
+    },
+    beginner: {
+      title: 'Lần đầu đeo lens?', guide: 'Xem cách đeo – tháo trong 1 phút trước khi mua',
+      all: 'Xem tất cả hướng dẫn cho người mới',
+    },
   },
   vouchers: {
     title: 'Voucher của tôi', empty: 'Hiện chưa có voucher nào khả dụng.',

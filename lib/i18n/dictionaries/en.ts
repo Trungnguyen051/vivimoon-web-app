@@ -496,6 +496,26 @@ export const en = {
       breadcrumb: 'Recommended for you', title: 'Lenses that suit you', summary: '{n} lenses picked from your answers: {answers}',
       redo: 'Retake the quiz', edit: 'Change my answers',
     },
+    topPick: {
+      badge: 'Best match · {percent}%', eyebrow: 'Your no. 1 pick', quickAdd: 'Quick add', details: 'See details',
+    },
+    // One sentence per Quiz option; {line} {material} {dia} {water} {replacement} come from the lens's specs.
+    reasons: {
+      'experience-never': '{line} line – soft and easy for a first-time wearer',
+      'experience-few': '{line} line – easy to get used to',
+      'experience-often': '{material} – suits regular wear',
+      'look-natural': '{dia} – a slight, natural enlargement',
+      'look-bigEyes': '{dia} – big, sparkling eyes',
+      'look-sharp': '{dia} – a defined, sharp edge',
+      'look-western': '{dia} – a bold Western look',
+      'duration-allDay': '{water} water – comfortable all day',
+      'duration-hours': 'A {replacement} lens – good for 4–6 hours at a time',
+      'duration-special': 'A {replacement} lens – handy for special occasions',
+    },
+    beginner: {
+      title: 'First time wearing lenses?', guide: 'See how to put them in and take them out in 1 minute before you buy',
+      all: 'See all guides for beginners',
+    },
   },
   vouchers: {
     title: 'My vouchers', empty: 'You have no vouchers available right now.',
